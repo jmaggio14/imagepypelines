@@ -14,6 +14,7 @@ dimensionality reducer
 ORB, SIFT
 Fisher Vectors
 keras pretrained wrapper
+load in images into classes (auto-labelling)
 
 ### Ryan Senior stuff
 bag of words stuff
