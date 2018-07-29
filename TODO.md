@@ -6,7 +6,7 @@ blackbody eq
 stuff to easily bind c code (to load in a DLL or .so)
 autogenerate file names
 
-### sensor tools???? --- Ryan do you have this stuff
+### sensor tools???? --- Ryan do you have this stuff?
 
 ### machine learning section
 thundersvm classifer
