@@ -2,8 +2,16 @@
 
 python 3.5 (python 2.7 backwards)
 
-This is a repo of code that I seem to find myself using in projects in
+numpy
+matplotlib
+opencv
+scipy
+keras
+scikit-*
+
+
+This is a repo of code that we seem to find ourselves using in projects in
 many academic, personal, and corporate settings. It is not made for any specific purpose,
 and is meant to act in an accessory role to assist in odd imaging tasks.
 
-I am an imaging scientist, and as such the code in this repo will be skewed towards imaging tasks
+We are imaging scientists, and as such the code in this repo will be skewed towards imaging tasks.
