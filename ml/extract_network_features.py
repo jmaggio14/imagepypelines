@@ -80,10 +80,12 @@ class extract_features(object):
         """
         retrieves the feature extraction algorithm and preprocess_fns
         from keras, only importing the desired model specified by the
-        network name
+        network name. If the network has already been instantiated, then
+        it will be retrieved from an internal cache
 
-        It will also cache the built models so they can be accessed
-        quickly later without reinstantiation
+        input::
+            network_name (str):
+                name of the network being used for feature extraction
         """
         #if the model_fn already exists, retrieve it to save time instantiating
         if network_name in self.__CACHED_MODEL_FNS:
@@ -103,8 +105,8 @@ class extract_features(object):
         #importing the proper keras model_fn and preprocess_fn
         submodule = import_module(self.__SUBMODULES[network_name])
         model_fn = getattr(submodule,self.__FUNCTION_NAMES[network_name])
-        model_fn = model_fn(include_top=False,weights='imagenet',pooling='max')
-        preprocess_fn = getattr(submodule,'preprocess_input')
+        model_fn = model_fn(include_top=False, weights='imagenet', pooling='max')
+        preprocess_fn = getattr(submodule, 'preprocess_input')
 
         #adding new models to the existing dictionary
         self.__CACHED_MODEL_FNS[network_name] = model_fn
