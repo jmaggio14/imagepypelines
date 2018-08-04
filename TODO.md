@@ -13,7 +13,7 @@
 - [ ] dimensionality reducer - Jeff
 - [ ] ORB, SIFT - Jeff
 - [ ] Fisher Vectors
-- [ ] keras pretrained wrapper
+- [x] keras pretrained wrapper
 - [ ] load in images into classes (auto-labelling)
 
 ### Ryan Senior stuff
@@ -21,17 +21,17 @@
 
 #non-imaging stuff
 - [ ] timers - Jeff
-- [ ] logging tools
+- [x] logging tools
 - [ ] retry on fail
 - [ ] add ansi codes to text
-- [ ] prevent_overwrite() - Jeff
+- [x] prevent_overwrite() - Jeff
 - [ ] Writing a series of images on the fly
-- [ ] Camera Capture
+- [x] Camera Capture
 - [ ] Image Buffer
 - [ ] Auto Grapher
 
 ## stuff from ipcv (may need to rewrite to optimize)
-- [ ] dimensions - Ryan
+- [x] dimensions
 - [ ] frequency filtering (maybe this is too close to home)
 - [ ] histogram enhancement
 - [ ] probably some segmentation algorithms
