@@ -39,13 +39,14 @@
 
 
 #other shit
-- [ ] standard test images in a repo
-- [ ] MNIST, Lenna, - Jeff
-- [ ] standard image wrapper - Jeff
+- [x] standard test images in a repo
+- [x] MNIST, Lenna, - Jeff
+- [x] standard image wrapper - Jeff
+- [ ] add text to image wrapper (cv2.putText sucks I'm sorry)
 
 
 # Image Viewer
-- [ ] frame counter - Ryan
+- [x] frame counter - Jeff
 - [ ] get ROI - Ryan
 - [ ] auto-normalize - Ryan
 
