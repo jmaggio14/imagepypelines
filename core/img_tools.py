@@ -1,4 +1,4 @@
-import imgscitools
+import imscitools
 from PIL import Image
 
 

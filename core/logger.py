@@ -1,34 +1,34 @@
 """
-This file provides functions which will be used in the imgscitools
+This file provides functions which will be used in the imscitools
 backend to print out messages
 """
 
 
 def printmsg(*messages):
-    """prints a imgscitools message without any priority markers"""
-    print('(imgscitools) ', *messages)
+    """prints a imscitools message without any priority markers"""
+    print('(imscitools) ', *messages)
 
 
 def debug(*messages):
-    """prints a imgscitools debug message"""
-    print('(imgscitools)[  DEBUG   ] ', *messages)
+    """prints a imscitools debug message"""
+    print('(imscitools)[  DEBUG   ] ', *messages)
 
 
 def info(*messages):
-    """prints a imgscitools info message"""
-    print('(imgscitools)[   INFO   ] ', *messages)
+    """prints a imscitools info message"""
+    print('(imscitools)[   INFO   ] ', *messages)
 
 
 def warning(*messages):
-    """prints a imgscitools warning message"""
-    print('(imgscitools)[ WARNING  ] ', *messages
+    """prints a imscitools warning message"""
+    print('(imscitools)[ WARNING  ] ', *messages
 
 
 def error(*messages):
-    """prints a imgscitools error message"""
-    print('(imgscitools)[  ERROR   ] ', *messages
+    """prints a imscitools error message"""
+    print('(imscitools)[  ERROR   ] ', *messages
 
 
 def critical(*messages):
-    """prints a imgscitools warning message"""
-    print('(imgscitools)[ CRITICAL ] ', *messages
+    """prints a imscitools warning message"""
+    print('(imscitools)[ CRITICAL ] ', *messages

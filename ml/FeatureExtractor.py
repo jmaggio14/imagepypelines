@@ -40,7 +40,7 @@ class FeatureExtractor(object):
     Example Use Case:
         network = FeatureExtractor('resnet50')
 
-        img = imgscitools.lenna()
+        img = imscitools.lenna()
         lenna_features = network.extract_features(img)
 
     """
@@ -79,9 +79,9 @@ class FeatureExtractor(object):
                  interpolation=cv2.INTER_AREA):
 
         # Error Checking for the network occurs in self.__keras_importer
-        if interpolation not in imgscitools.CV2_INTERPOLATION_TYPES:
+        if interpolation not in imscitools.CV2_INTERPOLATION_TYPES:
             error_string = "interpolation type must be one of {}"\
-                .format(imgscitools.CV2_INTERPOLATION_TYPES)
+                .format(imscitools.CV2_INTERPOLATION_TYPES)
             raise ValueError(error_string)
 
         self.model_fn, self.preprocess_fn, self.kerasimage\
@@ -89,7 +89,7 @@ class FeatureExtractor(object):
         self.network_name = network_name
         self.interpolation = interpolation
 
-    @imgscitools.standard_image_input
+    @imscitools.standard_image_input
     def extract_features(self, img):
         """
         Extracts image features from a the neural network specified in
@@ -137,7 +137,7 @@ class FeatureExtractor(object):
 
         # must be (batches,rows,cols,bands) --> batch should be 1 for this case
         if img.ndim <= 3:
-            r, c, b, _ = imgscitools.dimensions(img)
+            r, c, b, _ = imscitools.dimensions(img)
             img = img.reshape((1, r, c, b))
 
         # preprocessing the image
