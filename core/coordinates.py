@@ -11,55 +11,57 @@
 import marvin
 
 
-def calculate_centroid(frame):
+def centroid(img):
     """
-    finds the centroid of the given image frame
+    finds the centroid of the given image img
     input::
-        frame (np.ndarray):
-            input frame to find the centroid of
+        img (np.ndarray):
+            input img to find the centroid of
     return::
         centroid (tuple):
             centroid of the input image (height,width)
     """
-    centroid = frame.shape[0]//2,frame.shape[1]//2
+    centroid = img.shape[0]//2, img.shape[1]//2
     return centroid
 
-def calculate_frame_size(frame):
+
+def frame_size(img):
     """
-    return the height and width of a given frame
+    return the height and width of a given img
     input::
-        frame (np.ndarray):
-            input frame to find frame_size of
+        img (np.ndarray):
+            input img to find frame_size of
     return::
         frame_size (tuple):
-            height and width of the input frame
+            height and width of the input img
     """
-    frame_size = frame.shape[0],frame.shape[1]
+    frame_size = img.shape[0], img.shape[1]
     return frame_size
 
-def get_image_dimensions(frame):
+
+def dimensions(img,return_as_dict=False):
     """
     function which returns the dimensions and data_type of a given image
 
     input::
-        frame (np.ndarray):
+        img (np.ndarray):
             input image
 
     return::
         dimensions (tuple): of the form (rows, cols, bands, dtype)
     """
-    rows = frame.shape[0]
-    cols = frame.shape[1]
-    if len(frame.shape) == 3:
-        bands = frame.shape[2]
+    rows = img.shape[0]
+    cols = img.shape[1]
+    if img.ndim == 3
+        bands = img.shape[2]
     else:
         bands = 1
-    dimensions = (rows, cols, bands, frame.dtype)
-    return dimensions
+    dims = (rows, cols, bands, img.dtype)
+
+    if return_as_dict:
+        dims = dict(zip(('rows','cols','bands','dtype'), dims))
+
+    return dims
 
 
-
-
-
-
-#END
+# END

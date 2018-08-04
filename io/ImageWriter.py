@@ -34,20 +34,21 @@ class ImageWriter(object):
             writes a frame with a unique filename to the specificed
             image directory
     """
-    def __init__(self,output_dir,
-                        base_filename="image.png",
-                        size=None,
-                        interpolation=cv2.INTER_NEAREST):
 
-        assert isinstance(base_filename,str),"'base_filename' must be str"
+    def __init__(self, output_dir,
+                 base_filename="image.png",
+                 size=None,
+                 interpolation=cv2.INTER_NEAREST):
+
+        assert isinstance(base_filename, str), "'base_filename' must be str"
         self.output_dir = marvin.prevent_overwrite(output_dir,
-                                                    create_file=True)
+                                                   create_file=True)
         self.base_filename = base_filename
         self.size = size
         self.interpolation = interpolation
         self.image_number = 0
 
-    def write(self,frame):
+    def write(self, frame):
         """
         writes an image frame to the specificed directory, forces
         resizing if specified when the class is instantiated
@@ -63,7 +64,7 @@ class ImageWriter(object):
 
         if not self.size == None:
             frame = cv2.resize(frame,
-                                dsize=(self.size[1],self.size[0]),
-                                interpolation=self.interpolation)
+                               dsize=(self.size[1], self.size[0]),
+                               interpolation=self.interpolation)
 
-        cv2.imwrite(filename,frame)
+        cv2.imwrite(filename, frame)

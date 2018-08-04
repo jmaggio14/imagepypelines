@@ -1,0 +1,4 @@
+
+
+class CameraReadError(ValueError):
+    pass

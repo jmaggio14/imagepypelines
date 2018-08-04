@@ -13,6 +13,7 @@ import collections
 
 from marvin.payload import Payload
 
+
 class CaptureBuffer(Payload):
     """
     An object meant to buffer an array of marvin.Frame objects for later
@@ -65,13 +66,13 @@ class CaptureBuffer(Payload):
         None
 
     """
-    def __init__(self,buffer_size=30):
+
+    def __init__(self, buffer_size=30):
         self.buffer_size = int(buffer_size)
         self.buffer = {}
         self.order = collections.deque()
 
-
-    def retrieve(self,key_index=0):
+    def retrieve(self, key_index=0):
         """
         retrieves frames off the buffers using either a frame_id, or a
         an index into the buffer, or list of either.
@@ -94,19 +95,18 @@ class CaptureBuffer(Payload):
         if key_index == "all":
             return self.get_all()
 
-        if isinstance(key_index,str):
-            return self.get_by_id( key_index )
+        if isinstance(key_index, str):
+            return self.get_by_id(key_index)
 
-        elif isinstance(key_index,int):
-                return self.get_by_index( key_index )
+        elif isinstance(key_index, int):
+            return self.get_by_index(key_index)
 
-        elif isinstance(key_index,(list,tuple)):
-                return self.get_by_list( key_index )
+        elif isinstance(key_index, (list, tuple)):
+            return self.get_by_list(key_index)
         else:
             raise Marvin.quadcam.CaptureBufferIndexError(key_index=key_index)
 
-
-    def change_setting(self,setting,value):
+    def change_setting(self, setting, value):
         """
         changes the setting specified to the desired value
 
@@ -117,16 +117,14 @@ class CaptureBuffer(Payload):
         """
         if setting == "buffer_size":
             # checking if value is int or float
-            if isinstance(buffer_size,(int,float)):
-                self.buffer_size = int( value )
+            if isinstance(buffer_size, (int, float)):
+                self.buffer_size = int(value)
             else:
                 raise ValueError("buffer_size must be a number")
         else:
             raise ValueError("setting param must be one of ('buffer_size')")
 
-
-
-    def get_status(self,query):
+    def get_status(self, query):
         """query the capture buffer for data about its status
 
         Args:
@@ -142,11 +140,11 @@ class CaptureBuffer(Payload):
         if query == "buffer_size":
             return self.buffer_size
         elif query == "frame_ids":
-            return list( self.order )
+            return list(self.order)
         else:
             raise ValueError("query can only be 'buffer_size' or 'frame_ids'")
 
-    def capture(self,frame):
+    def capture(self, frame):
         """adds a frame to the buffer and updates the internal queue.
         if the buffer becomes larger than the specified buffer size,
          then the oldest value is deleted
@@ -156,16 +154,15 @@ class CaptureBuffer(Payload):
         return::
             None
         """
-        if isinstance(frame,marvin.Frame):
-            self.buffer[ frame.id ] = frame
-            #insert the value at the beginning of the order
-            self.order.appendleft( frame.id )
+        if isinstance(frame, marvin.Frame):
+            self.buffer[frame.id] = frame
+            # insert the value at the beginning of the order
+            self.order.appendleft(frame.id)
 
             if len(self.buffer) > self.buffer_size:
-                #deleting the last value in the buffer and the corresponding value in self.order
-                del self.buffer[ self.order[-1] ]
+                # deleting the last value in the buffer and the corresponding value in self.order
+                del self.buffer[self.order[-1]]
                 del self.order[-1]
-
 
     def close(self):
         """clears the buffer of images
@@ -178,10 +175,7 @@ class CaptureBuffer(Payload):
         self.order.clear()
         self.buffer.clear()
 
-
-
-
-    #------------------------ user_funcs ------------------------
+    # ------------------------ user_funcs ------------------------
 
     def get_newest(self):
         """
@@ -196,7 +190,6 @@ class CaptureBuffer(Payload):
         newest = self.get_by_index(0)
         return newest
 
-
     def get_oldest(self):
         """
         grabs the oldest frame off the buffer, ie the least recent one
@@ -210,7 +203,6 @@ class CaptureBuffer(Payload):
         oldest = self.get_by_index(-1)
         return oldest
 
-
     def get_all(self):
         """
         returns all the frames in the buffer in order of newest-->oldest
@@ -222,11 +214,10 @@ class CaptureBuffer(Payload):
                 newest = ret[0]
                 oldest = ret[-1]
         """
-        frames = self.get_by_list( self.order )
+        frames = self.get_by_list(self.order)
         return frames
 
-
-    def get_by_list(self,index_key_list):
+    def get_by_list(self, index_key_list):
         """
         this function will treat each value in this list as an index or
         frame_id into the buffer returns a list of frames of equal
@@ -240,11 +231,11 @@ class CaptureBuffer(Payload):
         """
         frames = []
         for i in index_key_list:
-            if isinstance(i,int):
-                frames.append( self.__get_by_index(i) )
+            if isinstance(i, int):
+                frames.append(self.__get_by_index(i))
 
-            elif isinstance(i,str):
-                frames.append( self.__get_by_id(i) )
+            elif isinstance(i, str):
+                frames.append(self.__get_by_id(i))
 
             else:
                 raise marvin.quadcam.CaptureBufferIndexError(key_index=i)
@@ -253,8 +244,7 @@ class CaptureBuffer(Payload):
 
         return frames
 
-
-    def get_by_index(self,index):
+    def get_by_index(self, index):
         """
         retrieves the frame defined by an index value into the buffer
         e.g.
@@ -268,16 +258,15 @@ class CaptureBuffer(Payload):
         """
         try:
             frame_id = self.order[index]
-            return self.get_by_id( frame_id )
+            return self.get_by_id(frame_id)
         except IndexError:
             debug_message = "INVALID INDEX: {0} for indexing into capture\
                                     buffer".format(index)
-            marvin.Status.warning( debug_message )
+            marvin.Status.warning(debug_message)
             # return marvin.DebugImage(message=debug_message)
             return None
 
-
-    def get_by_id(self,frame_id):
+    def get_by_id(self, frame_id):
         """
         retrieves the associated with that frame_id in the buffer
         e.g.
@@ -289,21 +278,20 @@ class CaptureBuffer(Payload):
             frame (marvin.Frame): the frame at self.buffer[frame_id]
         """
         try:
-            frame = self.buffer[ frame_id ]
+            frame = self.buffer[frame_id]
             marvin.Status.debug("returning frame: {0} from the buffer \
                             at index: {1}".format(frame.id,
-                                            self.getIndexOfFrameId(frame.id)))
+                                                  self.getIndexOfFrameId(frame.id)))
             return frame
         except KeyError:
             debug_message = "INVALID FRAME ID: {0} for indexing into buffer. \
                                 valid ids are {1}".format(frame_id,
-                                                        self.buffer.keys())
-            marvin.Status.warning( debug_message )
+                                                          self.buffer.keys())
+            marvin.Status.warning(debug_message)
             # return marvin.DebugImage( debug_message )
             return None
 
-
-    def get_index_of_frame_id(self,frame_id):
+    def get_index_of_frame_id(self, frame_id):
         """
         Retrieves the index of a frame_id off of the buffer, if the
         frame corresponding to that frame_id doesn't exist in the
@@ -320,10 +308,10 @@ class CaptureBuffer(Payload):
             instead of returning None
         """
         if frame_id in self.order:
-            index = self.order.index( frame_id )
+            index = self.order.index(frame_id)
         else:
-            marvin.Status.warning( "frame_id: {0} does not exist in \
-                                        this buffer".format( frame_id ) )
+            marvin.Status.warning("frame_id: {0} does not exist in \
+                                        this buffer".format(frame_id))
             index = None
 
         return index
