@@ -72,13 +72,18 @@ def get_standard_image(img_name):
     """
     if img_name in STANDARD_IMAGES:
         img = cv2.imread(STANDARD_IMAGES[img_name], cv2.IMREAD_UNCHANGED)
+        if img == None:
+            error_msg = "unable to find {name} at {path}".format(name=img_name,
+                                                path=STANDARD_IMAGES[img_name])
+            raise FileNotFoundError(error_msg)
+
         return img
 
     else:
         raise ValueError("unknown standard image key {img_name}, must be \
                             one of {std_imgs}".format(
-            img_name=img_name,
-            std_imgs=list_standard_images()))
+                                            img_name=img_name,
+                                            std_imgs=list_standard_images()))
 
 
 def lenna():
