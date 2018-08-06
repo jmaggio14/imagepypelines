@@ -1,34 +1,34 @@
 """
-This file provides functions which will be used in the imscitools
+This file provides functions which will be used in the imsciutils
 backend to print out messages
 """
 
 
 def printmsg(*messages):
-    """prints a imscitools message without any priority markers"""
-    print('(imscitools) ', *messages)
+    """prints a imsciutils message without any priority markers"""
+    print('(imsciutils) ', *messages)
 
 
 def debug(*messages):
-    """prints a imscitools debug message"""
-    print('(imscitools)[  DEBUG   ] ', *messages)
+    """prints a imsciutils debug message"""
+    print('(imsciutils)[  DEBUG   ] ', *messages)
 
 
 def info(*messages):
-    """prints a imscitools info message"""
-    print('(imscitools)[   INFO   ] ', *messages)
+    """prints a imsciutils info message"""
+    print('(imsciutils)[   INFO   ] ', *messages)
 
 
 def warning(*messages):
-    """prints a imscitools warning message"""
-    print('(imscitools)[ WARNING  ] ', *messages
+    """prints a imsciutils warning message"""
+    print('(imsciutils)[ WARNING  ] ', *messages)
 
 
 def error(*messages):
-    """prints a imscitools error message"""
-    print('(imscitools)[  ERROR   ] ', *messages
+    """prints a imsciutils error message"""
+    print('(imsciutils)[  ERROR   ] ', *messages)
 
 
 def critical(*messages):
-    """prints a imscitools warning message"""
-    print('(imscitools)[ CRITICAL ] ', *messages
+    """prints a imsciutils warning message"""
+    print('(imsciutils)[ CRITICAL ] ', *messages)

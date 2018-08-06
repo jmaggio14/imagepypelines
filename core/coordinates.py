@@ -8,9 +8,6 @@
 # work. If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 #
 #
-import marvin
-
-
 def centroid(img):
     """
     finds the centroid of the given image img
@@ -52,7 +49,7 @@ def dimensions(img,return_as_dict=False):
     """
     rows = img.shape[0]
     cols = img.shape[1]
-    if img.ndim == 3
+    if img.ndim == 3:
         bands = img.shape[2]
     else:
         bands = 1

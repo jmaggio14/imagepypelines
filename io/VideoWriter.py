@@ -9,7 +9,7 @@
 #
 #
 import cv2
-import imscitools
+import imsciutils
 
 
 class VideoWriter(object):
@@ -21,7 +21,7 @@ class VideoWriter(object):
     """
 
     def __init__(self, filename="out_video.avi", fps=30.0, fourcc="XVID"):
-        self.filename = imscitools.util.prevent_overwrite(filename)
+        self.filename = imsciutils.util.prevent_overwrite(filename)
         self._fourcc = fourcc
         self._fourcc_val = cv2.VideoWriter_fourcc(*self._fourcc)
         self._fps = float(fps)
@@ -31,7 +31,7 @@ class VideoWriter(object):
         """
         opens and initializes the videowriter
         """
-        imscitools.info("initializing the VideoWriter...")
+        imsciutils.info("initializing the VideoWriter...")
         self._h, self._w = size
         self.video_writer_kwargs = {"filename": self.filename,
                                     "fourcc": self._fourcc_val,
@@ -50,7 +50,7 @@ class VideoWriter(object):
             None
         """
         if not self.__is_initialized:
-            size = imscitools.frame_size(frame)
+            size = imsciutils.frame_size(frame)
             self.__init(size)
 
         if not self.writer.isOpened():

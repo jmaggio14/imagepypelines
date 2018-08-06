@@ -95,7 +95,7 @@ class CameraCapture(object):
             debug_message = "unable to read frame {0}"\
                 .format(self.current_frame_id)
 
-            imscitools.warning(debug_message)
+            imsciutils.warning(debug_message)
             raise CameraReadError(debug_message)
 
         return frame, metadata

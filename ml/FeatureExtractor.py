@@ -1,6 +1,7 @@
 from importlib import import_module
 import cv2
 import numpy as np
+import imsciutils
 
 
 class FeatureExtractor(object):
@@ -40,7 +41,7 @@ class FeatureExtractor(object):
     Example Use Case:
         network = FeatureExtractor('resnet50')
 
-        img = imscitools.lenna()
+        img = imsciutils.lenna()
         lenna_features = network.extract_features(img)
 
     """
@@ -79,9 +80,9 @@ class FeatureExtractor(object):
                  interpolation=cv2.INTER_AREA):
 
         # Error Checking for the network occurs in self.__keras_importer
-        if interpolation not in imscitools.CV2_INTERPOLATION_TYPES:
+        if interpolation not in imsciutils.CV2_INTERPOLATION_TYPES:
             error_string = "interpolation type must be one of {}"\
-                .format(imscitools.CV2_INTERPOLATION_TYPES)
+                .format(imsciutils.CV2_INTERPOLATION_TYPES)
             raise ValueError(error_string)
 
         self.model_fn, self.preprocess_fn, self.kerasimage\
@@ -89,7 +90,7 @@ class FeatureExtractor(object):
         self.network_name = network_name
         self.interpolation = interpolation
 
-    @imscitools.standard_image_input
+    @imsciutils.standard_image_input
     def extract_features(self, img):
         """
         Extracts image features from a the neural network specified in
@@ -137,7 +138,7 @@ class FeatureExtractor(object):
 
         # must be (batches,rows,cols,bands) --> batch should be 1 for this case
         if img.ndim <= 3:
-            r, c, b, _ = imscitools.dimensions(img)
+            r, c, b, _ = imsciutils.dimensions(img)
             img = img.reshape((1, r, c, b))
 
         # preprocessing the image
@@ -163,9 +164,9 @@ class FeatureExtractor(object):
         # checking to make sure network_name is valid
         if network_name not in self.__SUBMODULES:
             error_string = "unknown network '{network_name}', \
-                                network_name must be one of {network_list}"
-                .format(network_name=network_name,
-                        network_list=self.__SUBMODULES.keys())
+                            network_name must be one of {network_list}"\
+                                .format(network_name=network_name,
+                                        network_list=self.__SUBMODULES.keys())
             raise ValueError(error_string)
 
         # importing the proper keras model_fn and preprocess_fn

@@ -11,8 +11,8 @@ NUMPY_TYPES = (np.uint8,
                np.complex64,
                np.complex128)
 
-    CV2_INTERPOLATION_TYPES = (cv2.INTER_NEAREST,
-                               cv2.INTER_LINEAR,
-                               cv2.INTER_AREA,
-                               cv2.INTER_CUBIC,
-                               cv2.INTER_LANCZOS4,)
+CV2_INTERPOLATION_TYPES = (cv2.INTER_NEAREST,
+                           cv2.INTER_LINEAR,
+                           cv2.INTER_AREA,
+                           cv2.INTER_CUBIC,
+                           cv2.INTER_LANCZOS4,)
