@@ -10,7 +10,7 @@
 #
 
 import cv2
-
+import imsciutils
 
 class ImageWriter(object):
     """
@@ -40,8 +40,8 @@ class ImageWriter(object):
                  interpolation=cv2.INTER_NEAREST):
 
         assert isinstance(base_filename, str), "'base_filename' must be str"
-        self.output_dir = marvin.prevent_overwrite(output_dir,
-                                                   create_file=True)
+        self.output_dir = imscitools.util.prevent_overwrite(output_dir,
+                                                           create_file=True)
         self.base_filename = base_filename
         self.size = size
         self.interpolation = interpolation
@@ -57,7 +57,7 @@ class ImageWriter(object):
             None
         """
         self.image_number += 1
-        image_number = marvin.make_numbered_prefix(self.image_number)
+        image_number = imscitools.util.make_numbered_prefix(self.image_number)
         out_filename = os.path.join(self.output_dir,
                                     image_number + self.base_filename)
 
