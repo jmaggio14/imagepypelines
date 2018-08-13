@@ -11,6 +11,7 @@ Welcome to imsciutils's documentation!
    :caption: Contents:
 
    modules
+   readme
 
 Indices and tables
 ==================
