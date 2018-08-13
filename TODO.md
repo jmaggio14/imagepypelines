@@ -1,9 +1,9 @@
 ## stuff we'll have to write from scratch
-- [ ] multispectral image reading
-- [ ] multispectral image writing
+- [ ] multispectral image reading - formats?
+- [ ] multispectral image writing - formats?
 - [ ] quick plotting tools
 - [ ] blackbody eq
-- [ ] stuff to easily bind c code (to load in a DLL or .so)
+- [ ] stuff to easily bind c code (to load in a DLL or .so) - Nate?
 - [ ] autogenerate file names
 
 ### sensor tools???? --- Ryan do you have this stuff?
@@ -19,7 +19,7 @@
 ### Ryan Senior stuff
 - [ ] bag of words stuff
 
-#non-imaging stuff
+### non-imaging stuff
 - [ ] timers - Jeff
 - [x] logging tools
 - [ ] retry on fail
@@ -36,22 +36,23 @@
 - [ ] histogram enhancement
 - [ ] probably some segmentation algorithms
 - [ ] affine transforms
+- [ ] normalization - Nate?
+- [ ] clipping - Nate?
 
-
-#other shit
-- [x] standard test images in a repo
+# other shit
+- [ ] standard test images in a repo - ~broken~
 - [x] MNIST, Lenna, - Jeff
 - [x] standard image wrapper - Jeff
 - [ ] add text to image wrapper (cv2.putText sucks I'm sorry)
-
+- [ ] unit tests? lots of functionality was broken by recent restructure
+- [x] documentation - ongoing
+- [ ] remote webcam?
+- [ ] slit-scan tool
 
 # Image Viewer
 - [x] frame counter - Jeff
 - [ ] get ROI - Ryan
 - [ ] auto-normalize - Ryan
-
 - [ ] Separate Window interaction class - Ryan
-
-
-
 - [ ] auto image stitcher (something that will resize images automatically)
+- [ ] plugin system - Nate?
