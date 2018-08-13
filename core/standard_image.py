@@ -1,7 +1,7 @@
 import os
 import cv2
 
-IMAGE_SRC_DIRECTORY = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data')
+IMAGE_SRC_DIRECTORY = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'data')
 STANDARD_IMAGES = {'lenna': os.path.join(IMAGE_SRC_DIRECTORY, 'lenna.tif'),
                    'lenna_gray': os.path.join(IMAGE_SRC_DIRECTORY, 'lenna_gray.tif'),
                    'crowd': os.path.join(IMAGE_SRC_DIRECTORY, 'crowd.jpg'),
@@ -72,7 +72,7 @@ def get_standard_image(img_name):
     """
     if img_name in STANDARD_IMAGES:
         img = cv2.imread(STANDARD_IMAGES[img_name], cv2.IMREAD_UNCHANGED)
-        if img == None:
+        if img is None:
             error_msg = "unable to find {name} at {path}".format(name=img_name,
                                                 path=STANDARD_IMAGES[img_name])
             raise FileNotFoundError(error_msg)
