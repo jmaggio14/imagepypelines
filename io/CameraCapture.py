@@ -8,9 +8,9 @@
 # work. If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
 #
 #
-import cv2
 import numpy as np
 import time
+import cv2
 
 
 class CameraCapture(object):
@@ -40,6 +40,7 @@ class CameraCapture(object):
         change_setting
 
     properties::
+        None
 
     """
 
