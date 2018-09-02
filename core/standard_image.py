@@ -1,7 +1,7 @@
 import os
 import cv2
 
-IMAGE_SRC_DIRECTORY = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'data')
+IMAGE_SRC_DIRECTORY = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'data')
 STANDARD_IMAGES = {'lenna': os.path.join(IMAGE_SRC_DIRECTORY, 'lenna.tif'),
                    'lenna_gray': os.path.join(IMAGE_SRC_DIRECTORY, 'lenna_gray.tif'),
                    'crowd': os.path.join(IMAGE_SRC_DIRECTORY, 'crowd.jpg'),
