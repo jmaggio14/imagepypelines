@@ -1,3 +1,6 @@
+# Priorities!
+- [ ] Pause Development and work on docstrings
+
 ## stuff we'll have to write from scratch
 - [ ] multispectral image reading - formats?
 - [ ] multispectral image writing - formats?
