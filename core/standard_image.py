@@ -25,7 +25,8 @@ def list_standard_images():
 
 def standard_image_input(func):
     """
-    decorator which will parse a function inputs and retrieve
+    decorator which will parse a function inputs and retrieve a standard
+    test image to feed into the function
 
     This decorator assumes that the first argument it's wrapped function
     is meant to be a numpy array image.
@@ -72,7 +73,7 @@ def get_standard_image(img_name):
     """
     if img_name in STANDARD_IMAGES:
         img = cv2.imread(STANDARD_IMAGES[img_name], cv2.IMREAD_UNCHANGED)
-        if img == None:
+        if isinstance(img, type(None)):
             error_msg = "unable to find {name} at {path}".format(name=img_name,
                                                 path=STANDARD_IMAGES[img_name])
             raise FileNotFoundError(error_msg)
