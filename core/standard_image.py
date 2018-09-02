@@ -10,17 +10,16 @@ STANDARD_IMAGES = {'lenna': os.path.join(IMAGE_SRC_DIRECTORY, 'lenna.tif'),
                    'linear': os.path.join(IMAGE_SRC_DIRECTORY, 'linear.tif'),
                    'panda_color': os.path.join(IMAGE_SRC_DIRECTORY, 'panda_color.jpg'),
                    'gecko': os.path.join(IMAGE_SRC_DIRECTORY, 'gecko.jpg'),
-                   'checkerboard': os.path.join(IMAGE_SRC_DIRECTORY, 'checkerboard.tif'),
+                   # 'checkerboard': os.path.join(IMAGE_SRC_DIRECTORY, 'checkerboard.tif'),
                    'sparse_checkerboard': os.path.join(IMAGE_SRC_DIRECTORY, 'sparse_checkerboard.tif'),
                    'roger': os.path.join(IMAGE_SRC_DIRECTORY, 'roger.jpg'),
                    'pig': os.path.join(IMAGE_SRC_DIRECTORY, 'pig.jpg'),
-                   'carlenna': os.path.join(IMAGE_SRC_DIRECTORY, 'carlenna.jpg',)
+                   'carlenna': os.path.join(IMAGE_SRC_DIRECTORY, 'carlenna.png',)
                    }
 
-
 def list_standard_images():
-    """returns a list of all builtin standard images"""
-    return list(STANDARD_IMAGES.keys())
+    """returns a list of all builtin standard images sorted alphabetically"""
+    return sorted( list(STANDARD_IMAGES.keys()) )
 
 
 def standard_image_input(func):
@@ -126,10 +125,10 @@ def gecko():
     """retrieves image data for 'gecko' reference image"""
     return get_standard_image('gecko')
 
-
-def checkerboard():
-    """retrieves image data for 'checkerboard' reference image"""
-    return get_standard_image('checkerboard')
+# TODO - add source file to repo and uncomment this function
+# def checkerboard():
+#     """retrieves image data for 'checkerboard' reference image"""
+#     return get_standard_image('checkerboard')
 
 
 def sparse_checkerboard():
