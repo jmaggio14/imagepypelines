@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+import imsciutils as iu
+from datetime import datetime
 
 
 class ImageViewer(object):
@@ -28,10 +30,15 @@ class ImageViewer(object):
     """
 
     def __init__(self,
-                 window_name,
+                 window_name=None,
                  size=None,
                  interpolation=cv2.INTER_NEAREST,
                  enable_frame_counter=False):
+
+        iu.util.interpolation_type_check(interpolation)
+        if window_name is None:
+            window_name = datetime.now()
+
         self.window_name = str(window_name)
         self.size = size
         self.interpolation = interpolation
@@ -47,7 +54,7 @@ class ImageViewer(object):
         return::
             None
         """
-        cv2.namedWindow(self.window_name, cv2.WINDDW_AUTOSIZE)
+        cv2.namedWindow(self.window_name, cv2.WINDOW_AUTOSIZE)
 
     def view(self, frame, force_waitkey=True):
         """
@@ -65,6 +72,8 @@ class ImageViewer(object):
         assert isinstance(force_waitkey, (int, float)),\
             "'force_waitkey' must be an integer"
 
+        frame = frame.astype(np.uint8)
+
         if isinstance(self.size, (tuple, list)):
             frame = cv2.resize(frame,
                                dsize=(self.size[1], self.size[0]),
@@ -72,14 +81,20 @@ class ImageViewer(object):
 
         # add a frame counter to an image thin
         if self.enable_frame_counter:
+            r,c,b,_ = iu.dimensions(frame)
+            loc = int( min(r,c) * .95 )
+            color = (255,255,255)
+            if np.mean(frame[int(.9*r):r,int(.9*c):c]) > 128:
+                color = (0,0,0)
+
             frame = cv2.putText(frame,
                                 text=str(self.frame_counter),
-                                org=(0, 0),  # using bottem left origin
+                                org=(loc,loc),
                                 fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                                fontScale=4,
-                                color=(255, 255, 255),
+                                fontScale=.5,
+                                color=color,
                                 thickness=2,
-                                bottomLeftOrigin=True)
+                                bottomLeftOrigin=False)
 
         # displaying the image
         cv2.imshow(self.window_name, frame)
@@ -105,3 +120,21 @@ class ImageViewer(object):
             None
         """
         cv2.destroyWindow(self.window_name)
+
+
+def main():
+    import imsciutils as iu
+    import time
+    img_gen = [iu.get_standard_image(std_img) for std_img in iu.list_standard_images()]
+
+    v = iu.ImageViewer('std image test',
+                        size=(512,512),
+                        enable_frame_counter=True)
+    for img,name in zip(img_gen,iu.list_standard_images()):
+        iu.info("displaying ",name)
+        v.view(img)
+        time.sleep(1)
+
+
+if __name__ == "__main__":
+    main()
