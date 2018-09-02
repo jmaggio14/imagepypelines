@@ -76,11 +76,11 @@ class Timer(object):
 
     functions::
         reset(): resets the timer (runs __init__())
+        time(): time since the timer started or was last reset
+        lap(): time since lap was last accessed (or when timer was created
+        for the first access)
 
     properties::
-        time: time since the timer started or was last reset
-        lap: time since lap was last accessed (or when timer was created
-                        for the first access)
         countdown: countdown time, recalculated every time it's called.
                         never below 0
         countdown.setter: sets the value of countdown
@@ -100,10 +100,10 @@ class Timer(object):
         timer.reset()
 
         do_action()
-        print( timer.lap )
+        print( timer.lap() )
 
         do_action2()
-        print( timer.lap )
+        print( timer.lap() )
 
 
     """
@@ -119,13 +119,11 @@ class Timer(object):
         """ resets the timer start time """
         self.__init__()
 
-    @property
     def time(self):
         """returns the time since the timer started or since it was
          last reset"""
         return time.time() - self._start
 
-    @property
     def lap(self):
         """returns time since last time the lap was called"""
         now = time.time()
