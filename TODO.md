@@ -20,12 +20,12 @@
 - [ ] bag of words stuff
 
 ### non-imaging stuff
-- [ ] timers - Jeff
+- [x] timers - Jeff
 - [x] logging tools
 - [ ] retry on fail
 - [ ] add ansi codes to text
 - [x] prevent_overwrite() - Jeff
-- [ ] Writing a series of images on the fly
+- [x] Writing a series of images on the fly
 - [x] Camera Capture
 - [ ] Image Buffer
 - [ ] Auto Grapher
