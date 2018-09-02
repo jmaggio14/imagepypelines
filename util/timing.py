@@ -22,13 +22,13 @@ def function_timer(func):
             time.sleep(1)#sleep for 1 second
 
         >>> sleep_for_one_sec
-        (imsciutils)(info) ran func 'sleep_for_one_sec' in
+        (imsciutils)(info) ran func 'sleep_for_one_sec' in 1.030sec
     """
     def _function_timer(*args,**kwargs):
         start = time.time()
         ret = func(*args,**kwargs)
         run_time = round(time.time() - start,3)
-        msg = "ran function '{name}' in '{t}'sec".format(name=func.__name__,
+        msg = "ran function '{name}' in {t}sec".format(name=func.__name__,
                                                             t=run_time)
         imsciutils.info(msg)
 
@@ -148,7 +148,7 @@ class Timer(object):
         if isinstance(value,(int,float)):
             self._countdown = float(value)
         else:
-            imsciutils.critical("countdown must be set using a float \
+            imsciutils.error("countdown must be set using a float \
                     or an int, current type is {0}".format(type(value)))
 
     @property

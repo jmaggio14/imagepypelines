@@ -35,13 +35,11 @@ class ImageWriter(object):
     """
 
     def __init__(self, output_dir,
-                 base_filename="image.png",
-                 size=None,
-                 interpolation=cv2.INTER_NEAREST):
+                         base_filename="image.png",
+                         size=None,
+                         interpolation=cv2.INTER_NEAREST):
 
         assert isinstance(base_filename, str), "'base_filename' must be str"
-        self.output_dir = imsciutils.util.prevent_overwrite(output_dir,
-                                                           create_file=True)
         self.base_filename = base_filename
         self.size = size
         self.interpolation = interpolation
@@ -61,7 +59,7 @@ class ImageWriter(object):
         out_filename = os.path.join(self.output_dir,
                                     image_number + self.base_filename)
 
-        if not self.size == None:
+        if not isinstance(self.size, type(None)):
             frame = cv2.resize(frame,
                                dsize=(self.size[1], self.size[0]),
                                interpolation=self.interpolation)
