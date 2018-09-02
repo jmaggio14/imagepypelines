@@ -15,13 +15,22 @@ import imsciutils
 class ImageWriter(object):
     """
     Class that operates as a system that saves single frames to a
-    specified output directory
+    specified output directory.
+
+    every new frame passed in will be saved in the following format:
+        output_dir/000001example_filename.png
+        output_dir/000002example_filename.png
+        output_dir/000003example_filename.png
+        ...
+
+    automatic resizing is also available
 
     input::
         output_dir (str):
             path to output directory that images will be saved to
         base_filename (str) = "image.png":
-            filename common among all images
+            filename common among all images, these will be incremented
+            numerically as such
         size (tuple,None) = None:
             size of the image if forced resizing is desired, or
             None if raw write is desired
@@ -40,6 +49,8 @@ class ImageWriter(object):
                          interpolation=cv2.INTER_NEAREST):
 
         assert isinstance(base_filename, str), "'base_filename' must be str"
+        imsciutils.util.interpolation_type_check(interpolation)
+        
         self.base_filename = base_filename
         self.size = size
         self.interpolation = interpolation
@@ -55,7 +66,7 @@ class ImageWriter(object):
             None
         """
         self.image_number += 1
-        image_number = imsciutils.util.make_numbered_prefix(self.image_number)
+        image_number = imsciutils.util.make_numbered_prefix(self.image_number,6)
         out_filename = os.path.join(self.output_dir,
                                     image_number + self.base_filename)
 
