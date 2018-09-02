@@ -30,16 +30,19 @@ class FeatureExtractor(object):
     kwargs for network instantiation are:
                                         include_top=False,
                                         weights='imagenet',
-                                        pooling='max'
+                                        pooling=self.pooling_type
 
 
     Instantiation Args:
-        network_name (str): name of network to extract features from
-        interpolation (cv2 constant): type of interpolation used to
-                                        resize images
+        network_name (str) = 'densenet121':
+                    name of network to extract features from
+        pooling_type (str) = 'avg':
+                the type of pooling to perform on the features, must be
+                one of ['max','avg']
+
 
     Example Use Case:
-        network = FeatureExtractor('resnet50')
+        network = FeatureExtractor('resnet50',pooling_type='avg')
 
         img = imsciutils.lenna()
         lenna_features = network.extract_features(img)
@@ -73,19 +76,12 @@ class FeatureExtractor(object):
                         'nasnetmobile': 'NASNetMobile',
                         'mobilenetv2': 'MobileNetV2',
                         }
-    TARGET_SIZE = (299, 299)
-
     def __init__(self,
-                 network_name='inception_v3',
-                 pooling_type='avg',
-                 interpolation=cv2.INTER_AREA):
+                 network_name='densenet121',
+                 pooling_type='avg'
+                 ):
 
         # Error Checking for the network occurs in self.__keras_importer
-        if interpolation not in imsciutils.CV2_INTERPOLATION_TYPES:
-            error_string = "interpolation type must be one of {}"\
-                .format(imsciutils.CV2_INTERPOLATION_TYPES)
-            raise ValueError(error_string)
-
         self.model_fn, self.preprocess_fn, self.kerasimage\
             = self.__keras_importer(network_name,pooling_type)
         self.network_name = network_name
@@ -99,7 +95,8 @@ class FeatureExtractor(object):
         __init__
 
         input::
-            img (np.ndarray): 2 or 3 image array
+            img (np.ndarray,str): 2D or 3D image array or path to
+                            image filename
         returns::
             features (np.ndarray): features for this image
         """
@@ -128,15 +125,11 @@ class FeatureExtractor(object):
         # checking to see if img is a path to an image
         if isinstance(img, str):
             assert os.path.exists(img), "img must be valid filename or array"
-            img = image.load_img(img, target_size=self.TARGET_SIZE)
-            img = image.img_to_array(img)
+            img = self.kerasimage.load_img(img)
+            img = self.kerasimage.img_to_array(img)
         # otherwise the image must be numpy array so it can be processed
         elif not isinstance(img, np.ndarray):
             raise ValueError("img must be a numpy array or path to image file")
-
-        # checking to see if the image is the correct shape for the network
-        if img.shape[:2] != self.TARGET_SIZE:
-            img = cv2.resize(img, dsize=self.TARGET_SIZE)
 
         # must be (batches,rows,cols,bands) --> batch should be 1 for this case
         if img.ndim <= 3:
@@ -164,6 +157,8 @@ class FeatureExtractor(object):
                 function that extract features from the NN
             2) preprocess_fn (func):
                 function that preprocesses the image for the network
+            3) kerasimage (module):
+                pointer to keras.image
         """
         # checking to make sure network_name is valid
         if network_name not in self.__SUBMODULES:
@@ -184,8 +179,9 @@ class FeatureExtractor(object):
                                      pooling=pooling_type)
 
         preprocess_fn = getattr(submodule, 'preprocess_input')
+        from keras import image as kerasimage
 
-        return model_fn, preprocess_fn
+        return model_fn, preprocess_fn, kerasimage
 
 
 # END
