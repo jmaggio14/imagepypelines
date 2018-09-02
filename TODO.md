@@ -49,6 +49,10 @@
 - [ ] remote webcam?
 - [ ] slit-scan tool
 
+# Standard Image
+- [ ] get giza
+- [ ] get checkerboard
+
 # Image Viewer
 - [x] frame counter - Jeff
 - [ ] get ROI - Ryan
