@@ -1,5 +1,5 @@
 # Priorities!
-- [ ] Pause Development and work on docstrings
+- [ ] Pause Development and work on Unit Tests!
 
 ## stuff we'll have to write from scratch
 - [ ] multispectral image reading - formats?
