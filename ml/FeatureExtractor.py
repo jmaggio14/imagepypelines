@@ -77,6 +77,7 @@ class FeatureExtractor(object):
 
     def __init__(self,
                  network_name='inception_v3',
+                 pooling_type='avg',
                  interpolation=cv2.INTER_AREA):
 
         # Error Checking for the network occurs in self.__keras_importer
@@ -86,8 +87,9 @@ class FeatureExtractor(object):
             raise ValueError(error_string)
 
         self.model_fn, self.preprocess_fn, self.kerasimage\
-            = self.__keras_importer(network_name)
+            = self.__keras_importer(network_name,pooling_type)
         self.network_name = network_name
+        self.pooling_type = pooling_type
         self.interpolation = interpolation
 
     @imsciutils.standard_image_input
@@ -145,7 +147,7 @@ class FeatureExtractor(object):
         img_data = self.preprocess_fn(img)
         return img_data
 
-    def __keras_importer(self, network_name):
+    def __keras_importer(self, network_name, pooling_type):
         """
         Retrieves the feature extraction algorithm and preprocess_fns
         from keras, only importing the desired model specified by the
@@ -154,6 +156,8 @@ class FeatureExtractor(object):
         input::
             network_name (str):
                 name of the network being used for feature extraction
+            pooling_type (str):
+                type of pooling you want to use ('avg' or 'max')
 
         returns::
             1) model_fn (func):
@@ -169,13 +173,15 @@ class FeatureExtractor(object):
                                         network_list=self.__SUBMODULES.keys())
             raise ValueError(error_string)
 
+        assert pooling_type in ['avg','max'],"'pooling_type' must be one of the following strings ['avg','max']"
+
         # importing the proper keras model_fn and preprocess_fn
         submodule = import_module(self.__SUBMODULES[network_name])
         model_constructor = getattr(submodule,
                                     self.__FUNCTION_NAMES[network_name])
         model_fn = model_constructor(include_top=False,
                                      weights='imagenet',
-                                     pooling='max')
+                                     pooling=pooling_type)
 
         preprocess_fn = getattr(submodule, 'preprocess_input')
 
