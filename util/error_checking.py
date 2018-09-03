@@ -16,3 +16,15 @@ def interpolation_type_check(interp):
         raise imsciutils.InvalidInterpolationType(interp)
 
     return True
+
+
+def dtype_type_check(dtype):
+    """
+    checks to see if the interpolation type is one of the acceptable
+    values specified in opencv, otherwise raises an
+    imsciutils.InvalidInterpolationType error
+    """
+    if dtype not in imsciutils.NUMPY_TYPES:
+        raise imsciutils.InvalidNumpyType(interp)
+
+    return True

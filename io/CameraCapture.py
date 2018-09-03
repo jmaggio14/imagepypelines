@@ -28,8 +28,6 @@ class CameraCapture(object):
              camera device achieve highest frame rates with MJPG
 
     attributes::
-        payload_name (str): an id for this camera. (can be retrieved
-                from a marvin.quadcam.Frame retrieved from this payload)
         cap (cv2.VideoCapture): the cv2 camera object
         fourcc (str): the fourcc codec used for this camera
         frame_number (int): the number of frame retrieval attempts

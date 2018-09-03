@@ -13,6 +13,8 @@ from .printout import enable_printout_colors
 
 # Exceptions
 from .Exceptions import CameraReadError
+from .Exceptions import InvalidInterpolationType
+from .Exceptions import InvalidNumpyType
 
 # standard_image.py
 from .standard_image import list_standard_images
@@ -41,3 +43,13 @@ from .img_tools import quick_image_view
 from .coordinates import centroid
 from .coordinates import frame_size
 from .coordinates import dimensions
+
+
+# debug.py
+from .debug import debug
+
+# Tester.py
+from .Tester import Tester
+
+# Summarizer.py
+from .Summarizer import Summarizer

@@ -43,6 +43,8 @@ def dimensions(img,return_as_dict=False):
     input::
         img (np.ndarray):
             input image
+        return_as_dict (bool):
+            whether or not to return a dictionary
 
     return::
         dimensions (tuple): of the form (rows, cols, bands, dtype)

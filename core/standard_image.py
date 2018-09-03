@@ -45,8 +45,12 @@ def standard_image_input(func):
 
     """
     def _standard_image_input(img, *args, **kwargs):
-        if img in STANDARD_IMAGES:
-            img = get_standard_image(img)
+        if not isinstance(img,np.ndarray):
+            # must check if img is numpy array first, because numpy
+            # array are not hashable
+            if img in STANDARD_IMAGES:
+                img = get_standard_image(img)
+                
         ret = func(img, *args, **kwargs)
         return ret
     return _standard_image_input

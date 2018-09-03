@@ -48,7 +48,6 @@ def printmsg(*messages):
 
     print('(imsciutils) ', *messages)
 
-
 def debug(*messages):
     """prints a imsciutils debug message"""
     if ENABLE_COLOR:

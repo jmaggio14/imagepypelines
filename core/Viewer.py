@@ -4,7 +4,7 @@ import imsciutils as iu
 from datetime import datetime
 
 
-class ImageViewer(object):
+class Viewer(object):
     """
     Class to simplify displaying images using opencv windows. Also has
     functionality to resize images automatically if desired
