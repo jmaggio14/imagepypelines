@@ -23,7 +23,7 @@ class InvalidInterpolationType(ValueError):
 
 
 class InvalidNumpyType(ValueError):
-    def __init__(self,d):
+    def __init__(self,dtype):
         error_string = "'dtype' ({}) must be one of the following!"\
                                                             .format(dtype)
         error_string += "\n\t".join(iu.NUMPY_TYPES)
