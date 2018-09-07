@@ -125,7 +125,7 @@ class Viewer(object):
 def main():
     import imsciutils as iu
     import time
-    img_gen = [iu.get_standard_image(std_img) for std_img in iu.list_standard_images()]
+    img_gen = iu.standard_image_gen()
 
     v = iu.ImageViewer('std image test',
                         size=(512,512),
