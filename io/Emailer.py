@@ -3,7 +3,7 @@ import smtplib
 from email.message import EmailMessage
 import mimetypes
 from collections import Iterable
-
+from socket import getfqdn
 
 class Emailer(object):
     """
@@ -31,6 +31,7 @@ class Emailer(object):
         self.current_msg = EmailMessage()
         self.current_msg['Subject'] = self.subject
         self.current_msg['To'] = ', '.join(self.recipients)
+        self.current_msg['From'] = "imsciutils@{}".format(getfqdn())
         return self.current_msg
 
     def attach(self,filename):
