@@ -19,8 +19,7 @@ def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     """
     assert isinstance(src, np.ndarray), "'src' must be np.ndarray"
     assert isinstance(max_count, (int, float)), "'max_count' must be number"
-    assert isinstance(cast_type, imsciutils.NUMPY_TYPES),\
-        "'cast_type' must be a numpy number type"
+    iu.util.dtype_type_check(cast_type)
 
     img = src.astype(np.float32)
     img = (img / img.max()) * max_count
