@@ -32,8 +32,8 @@ from .standard_image import roger
 from .standard_image import pig
 from .standard_image import carlenna
 
-# ImageViewer.py
-from .ImageViewer import ImageViewer
+# Viewer.py
+from .Viewer import Viewer
 
 # img_tools.py
 from .img_tools import normalize_and_bin
