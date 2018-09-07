@@ -48,13 +48,21 @@ def test_dimensions():
     if not tester.exact_test(desired_output,lenna)
         return False
 
-
     return True
 
 
 
-# img_tools.py
-# def test_normalize_and_bin():
-#     tester = iu.Tester(iu.normalize_and_bin)
-#
-#
+img_tools.py
+def test_normalize_and_bin():
+    tester = iu.Tester(iu.normalize_and_bin)
+    lenna = iu.lenna()
+    lenna_normalized = lenna / lenna.max()
+
+    if not tester_ex
+
+
+
+
+
+
+# END
