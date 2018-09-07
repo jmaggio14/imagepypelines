@@ -1,7 +1,8 @@
 """
-Helper functions that contain canned tests that we will run frequently
+Helper functions that contain canned tests or checks that we will run
+frequently
 """
-
+import numpy as np
 import imsciutils
 
 
@@ -28,3 +29,8 @@ def dtype_type_check(dtype):
         raise imsciutils.InvalidNumpyType(interp)
 
     return True
+
+
+def is_numpy_array(arr):
+    """returns True if input is a numpy array or subclass of numpy array"""
+    return isinstance(arr,np.ndarray)
