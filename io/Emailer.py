@@ -4,13 +4,9 @@ from email.message import EmailMessage
 import mimetypes
 from collections import Iterable
 from socket import getfqdn
-import asyncore
-import threading
 
 from aiosmtpd.controller import Controller
 import asyncio
-from aiosmtpd.smtp import SMTP as Server, syntax
-from aiosmtpd.handlers import Sink
 # Class is non-functional or at least unreliable as of Sept 7th,2018
 # Believe the problem is in starting / accessing a local SMTP server?
 # mail sends, but never arrives
@@ -21,18 +17,28 @@ from aiosmtpd.handlers import Sink
 
 
 ## TODO: automatically retrieve a free port instead of hardcoding it
-PORT = 1025
-SERVER_IP = 'localhost'
-ACTIVE_SERVERS = {}
+ACTIVE_CONTROLLER = None
+class ExampleHandler:
+    """taken from https://aiosmtpd.readthedocs.io/en/latest/aiosmtpd/docs/controller.html"""
+    async def handle_RCPT(self, server, session, envelope, address, rcpt_options):
+        if not address.endswith('@example.com'):
+            return '550 not relaying to that domain'
+        envelope.rcpt_tos.append(address)
+        return '250 OK'
 
-class SmtpServer(Server):
-    @syntax('PING [ignored]')
-    async def smtp_PING(self, arg):
-        await self.push('259 Pong')
+    async def handle_DATA(self, server, session, envelope):
+        print('Message from %s' % envelope.mail_from)
+        print('Message for %s' % envelope.rcpt_tos)
+        print('Message data:\n')
+        print(envelope.content.decode('utf8', errors='replace'))
+        print('End of message')
+        return '250 Message accepted for delivery'
 
-class SmtpController(Controller):
-    def factory(self):
-        return MyServer(self.handler)
+
+def setup_smpt_server():
+    controller = Controller( ExampleHandler() )
+    controller.start()
+    return controller,controller.hostname, controller.port
 
 
 class Emailer(object):
@@ -80,9 +86,9 @@ class Emailer(object):
         self.recipients = recipients
         self.current_msg = None
 
-        # launch the smtp server
-        self.server_key = run_smtp_server(SERVER_IP,PORT)
+        self.controller, self.server_ip, self.server_port = setup_smpt_server()
 
+        # launch the smtp server
 
     def get_msg(self):
         """
@@ -144,13 +150,13 @@ class Emailer(object):
         message can be created
         """
         msg = self.get_msg()
-        with smtplib.SMTP(SERVER_IP,PORT) as server:
+        with smtplib.SMTP(self.server_ip,self.server_port) as server:
             server.send_message(msg)
 
         self.current_msg = None
 
     def close(self):
-        del ACTIVE_SERVERS[self.server_key]
+        pass
 
     def __enter__(self):
         return self
