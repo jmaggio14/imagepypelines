@@ -1,4 +1,5 @@
 import imsciutils
+import cv2
 
 class CameraReadError(ValueError):
     pass
@@ -23,7 +24,7 @@ class InvalidInterpolationType(ValueError):
 
 class InvalidNumpyType(ValueError):
     def __init__(self,d):
-        error_string = "'dtype' ({}) must be one of the following!\n"\
+        error_string = "'dtype' ({}) must be one of the following!"\
                                                             .format(dtype)
         error_string += "\n\t".join(iu.NUMPY_TYPES)
         imsciutils.error(error_string)
