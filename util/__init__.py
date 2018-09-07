@@ -1,7 +1,3 @@
-# output.py
-from .output import make_numbered_prefix
-from .output import prevent_overwrite
-
 # timing.py
 from .timing import Timer
 from .timing import function_timer
