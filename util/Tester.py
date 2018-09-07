@@ -24,13 +24,24 @@ class Tester(object):
         out = self.__run_target(*args,**kwargs)
 
         # testing the output
-        if out != desired_output:
+        if iu.util.is_numpy_array(out) and iu.util.is_numpy_array(desired_output):
+            failure_criterion = np.any(out != desired_output)
+        else:
+            failure_criterion = (out != desired_output)
+
+        if failure_criterion:
+            # converting to any numpy arrays to summaries for printout
+            if iu.util.is_numpy_array(desired_output):
+                desired_output = iu.util.Summarizer(desired_output)
+            if iu.util.is_numpy_array(out):
+                out = iu.util.Summarizer(out)
+
             iu.error("{} test failure expected output {}, but got {}"\
                             .format(self.target.__name__,desired_output, out))
-            return True
-        else:
-            iu.printmsg("{} exact test successful!".format(self.target.__name__))
             return False
+        else:
+            iu.printmsg("{} exact test success!".format(self.target.__name__))
+            return True
 
 
     def type_test(self,desired_type,*args,**kwargs):
@@ -38,7 +49,7 @@ class Tester(object):
             desired_type = [desired_type]
 
         if self.verbose:
-            print("----------TESTING '{}'----------".format(self.target.__name__))
+            print("--------TESTING '{}'--------".format(self.target.__name__))
             self.__print_args(*args,**kwargs)
 
 
@@ -47,22 +58,21 @@ class Tester(object):
         # testing the output
         if out in desired_type:
             iu.error("{} test failure expected output {}, but got {}"\
-                            .format(self.target.__name__,desired_type, type(out)))
-            return True
+                        .format(self.target.__name__,desired_type, type(out)))
 
+            return False
         else:
             iu.printmsg("{} type test successful! with type {}!"\
                             .format(self.target.__name__,type(out)))
-            return False
+            return True
 
-
-
-    def image_test(image_summary,*args,**kwargs):
-        pass
 
 
 
     def __print_args(self,*args,**kwargs):
+        """
+        prints the arguments passed into the 
+        """
         iu.printmsg("testing function '{}' with the following args:"\
                                                 .format(self.target.__name__))
         arg_string = ""
@@ -70,14 +80,14 @@ class Tester(object):
         # adds positional arguments to the printout
         for i, arg in enumerate(args):
             # summarizing an numpy array so prinout is more concise
-            if isinstance(arg, np.ndarray):
+            if iu.util.is_numpy_array(arg):
                 arg = str(iu.Summarizer(arg))
             arg_string += '\t{} : {}\n'.format(arg_names[i], arg)
 
         # adds keyword arguments to the printout
         for key, val in kwargs.items():
             # summarizing an numpy array so prinout is more concise
-            if isinstance(val, np.ndarray):
+            if iu.util.is_numpy_array(val):
                 val = str( iu.Summarizer(val) )
 
             arg_string += '\t{} : {}\n'.format(key, val)
@@ -92,7 +102,7 @@ class Tester(object):
             return out
         except Exception as e:
             iu.error("{} test failed to run!".format(self.target.__name__))
-            iu.debug(e)
+            iu.util.debug(e)
 
 
 
