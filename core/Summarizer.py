@@ -2,6 +2,35 @@ import numpy as np
 import imsciutils as iu
 
 class Summarizer(dict):
+    """
+    Summarization object for numpy array. The primary job of this
+    object is to streamline and simply printing out numpy array objects
+    which normally appear as a stream of barely comprehendable data
+
+    This dictionary subclass will return the following when printed out
+    or otherwise stringified
+
+    attributes::
+        input_array: original numpy array this object is summarizing
+        last_summary: last calculated summary dictionary
+                contains the following: shape, size, max, min, mean, dtype
+        last_string: last representation string calculated for this array
+
+
+    functions::
+        summarize(): recalculates and returns the dictionary summary
+        __str__(): returns a stringified array summary
+
+    EXAMPLE:
+        a = np.random.rand(512,512)
+        a = iu.Summarizer(a)
+
+        print(a)
+        >>> [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
+
+
+
+    """
     def __init__(self, input_array):
         # ERROR CHECKING
         if not isinstance(input_array, np.ndarray):
@@ -38,6 +67,9 @@ class Summarizer(dict):
         return self.last_summary
 
     def __update(self):
+        """
+        updates the last_summary and last_string internal attributes
+        """
         summary = {
         'shape': self.input_array.shape,
         'size': self.input_array.size,
