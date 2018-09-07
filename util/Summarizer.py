@@ -47,13 +47,13 @@ class Summarizer(dict):
         'dtype': self.input_array.dtype,
         }
 
-        string = "(SUMMARY) | "  \
+        string = "[ARRAY SUMMARY | "  \
                 + "shape: {shape} | " \
                 + "size: {size} | " \
                 + "max: {max} | " \
                 + "min: {min} | " \
                 + "mean: {mean} | " \
-                + "dtype: {dtype}"
+                + "dtype: {dtype}]"
 
         string = string.format( **summary )
 
