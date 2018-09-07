@@ -52,13 +52,10 @@ def test_dimensions():
 
 
 
-img_tools.py
-def test_normalize_and_bin():
-    tester = iu.Tester(iu.normalize_and_bin)
-    lenna = iu.lenna()
-    lenna_normalized = lenna / lenna.max()
-
-    if not tester_ex
+# img_tools.py
+# def test_normalize_and_bin():
+#     tester = iu.Tester(iu.normalize_and_bin)
+    # if not tester_ex
 
 
 
