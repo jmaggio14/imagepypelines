@@ -22,6 +22,15 @@ def list_standard_images():
     return sorted( list(STANDARD_IMAGES.keys()) )
 
 
+def standard_image_gen():
+    """
+    generator function to yield all standard images sequentially
+    useful for testing
+    """
+    for img_name in list_standard_images():
+        yield get_standard_image(img_name)
+
+
 def standard_image_input(func):
     """
     decorator which will parse a function inputs and retrieve a standard
@@ -47,10 +56,10 @@ def standard_image_input(func):
     def _standard_image_input(img, *args, **kwargs):
         if not isinstance(img,np.ndarray):
             # must check if img is numpy array first, because numpy
-            # array are not hashable
+            # arrays are not hashable
             if img in STANDARD_IMAGES:
                 img = get_standard_image(img)
-                
+
         ret = func(img, *args, **kwargs)
         return ret
     return _standard_image_input
