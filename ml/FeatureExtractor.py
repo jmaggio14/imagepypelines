@@ -89,55 +89,58 @@ class FeatureExtractor(object):
         self.interpolation = interpolation
 
     @imsciutils.standard_image_input
-    def extract_features(self, img):
+    def extract_features(self, imgs):
         """
         Extracts image features from a the neural network specified in
         __init__
 
         input::
-            img (np.ndarray,str): 2D or 3D image array or path to
-                            image filename
+            imgs (np.ndarray,str,list): 2D or 3D image array or path to
+                            image filename, or list of either
         returns::
             features (np.ndarray): features for this image
         """
         # Error checking for img occurs in __build_image_data
-        img = self.__build_image_data(img)
-        features = self.model_fn(img)
+        imgs = self.__build_image_data(imgs)
+        features = self.model_fn(imgs)
+        # splitting features into a list
+        features = [feature[i,:].flatten() for i in range(features.shape[0])]
         return features
 
-    def __build_image_data(self, img):
+    def __build_image_data(self, imgs):
         """
         this function turns an input numpy array or image path into an
         array format which keras requires for network feeding
         that format being a 4D tensor (batch,rows,cols,bands)
-        (batch size will be always be 1 in this case)
 
         input::
-            img (np.ndarray,str):
-                    image or path to image to be processed
-            preprocess_fn (func):
-                    preprocessing function for image data, output from
-                    self.__keras_importer
+            imgs (np.ndarray,str,list):
+                    image or path to image to be processed, or list of either
         returns::
             img_data (np.ndarray):
                     4D numpy array of the form (1,rows,cols,bands)
         """
-        # checking to see if img is a path to an image
-        if isinstance(img, str):
-            assert os.path.exists(img), "img must be valid filename or array"
-            img = self.kerasimage.load_img(img)
-            img = self.kerasimage.img_to_array(img)
-        # otherwise the image must be numpy array so it can be processed
-        elif not isinstance(img, np.ndarray):
-            raise ValueError("img must be a numpy array or path to image file")
+        img_data = []
+        for img in imgs:
+            # checking to see if img is a path to an image
+            if isinstance(img, str):
+                assert os.path.exists(img), "{} is not a valid filename".format(img)
+                img = self.kerasimage.load_img(img)
+                img = self.kerasimage.img_to_array(img)
+            # otherwise the image must be numpy array so it can be processed
+            elif not isinstance(img, np.ndarray):
+                raise ValueError("img must be a numpy array or path to image file")
 
-        # must be (batches,rows,cols,bands) --> batch should be 1 for this case
-        if img.ndim <= 3:
-            r, c, b, _ = imsciutils.dimensions(img)
-            img = img.reshape((1, r, c, b))
+            # must be (batches,rows,cols,bands) --> batch should be 1 for this case
+            if img.ndim <= 3:
+                r, c, b, _ = imsciutils.dimensions(img)
+                img = img.reshape((1, r, c, b))
 
+            img_data.append(img)
+        # stacking all the images into a 4D array
+        img_data = np.vstack(img_data)
         # preprocessing the image
-        img_data = self.preprocess_fn(img)
+        img_data = self.preprocess_fn(img_data)
         return img_data
 
     def __keras_importer(self, network_name, pooling_type):
@@ -180,7 +183,6 @@ class FeatureExtractor(object):
 
         preprocess_fn = getattr(submodule, 'preprocess_input')
         from keras import image as kerasimage
-
         return model_fn, preprocess_fn, kerasimage
 
 
