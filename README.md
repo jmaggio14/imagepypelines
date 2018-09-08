@@ -29,11 +29,21 @@ _____________________________
 
 # BASIC HOW TOs
 ## Getting Standard Test Imagery
-imsciutils contains helper functions to quickly retrieve imagery that
+`imsciutils` contains helper functions to quickly retrieve imagery that
 are frequently used as benchmarks in the Imaging Science community
-
-	import imsciutils as iu
-	lenna = iu.lenna()
+```python
+import imsciutils as iu
+lenna = iu.lenna()
+linear_gradient = iu.linear()
+```
+for those of you in the Imaging Science program at RIT, there are a
+couple easter eggs for ya ;)
+```python
+import imsciutils as iu
+iu.quick_image_view( iu.carlenna() )
+iu.quick_image_view( iu.roger() )
+iu.quick_image_view( iu.pig() )
+```
 
 A full list of standard images can be retrieved with `iu.list_standard_images()`
 
@@ -65,7 +75,7 @@ images when desired and an optional frame_counter, you can use the `Viewer` obje
 import imsciutils as iu
 
 # lets build our Viewer and have it auto-resize images to 512x512
-viewer = iu.Viewer('Readme Example', size=(512,512))
+viewer = iu.Viewer('Window Title Here', size=(512,512))
 
 # get all standard images
 standard_images = iu.standard_image_gen()
@@ -85,7 +95,7 @@ import numpy as np
 random_pattern = np.random.rand(512,512).astype(np.float32)
 
 display_safe = iu.normalize_and_bin(random_pattern)
-Viewer('example').view(display_safe)
+iu.Viewer().view(display_safe)
 ```
 ### Array Summarization
 when debugging an image pipeline, printing out an image
@@ -125,14 +135,44 @@ rows, cols, bands, dtype = iu.dimensions(lenna)
 
 
 
-## HIGHER LEVEL FUNCTIONALITY
-
+# HIGHER LEVEL FUNCTIONALITY
 `imsciutils` also contains objects for more specific, higher level tasks
 such as talking to a webcam, writing videos and images, extact image features
-using pretrained neural networks, etc
+using pretrained neural networks, etc.
 
-The following examples may be longer and not fully demonstrate the full capabilities
-of the objects presented. Looking at docstrings or sphinx documentation may
-become necessary
+**_The following examples may be longer and contain psuedocode_**
 
-### Camera Capture
+**_It may be necessary to look at docstrings to fully realize the capabilities of the objects presented_**
+
+## Machine learning
+
+### Configuration Permuter
+in many machine learning applications, parameters have to
+be tweaked frequently to optimize a model. This can be a tedious task
+and frequently involves a human tweaking configurations files. This
+object is meant to simplify that process by generating permutations
+from a sample of arguments and keyword arguments
+
+```python
+def run_important_test(arg1,arg2,arg3,first,second,third):
+	do_something_important()
+
+
+arg_trials = [
+				0, # the first positional will always be 0 in all permutations
+				['a','b','c'], # trials for first positional arguments
+				['y','z'], # trials for third positional argument
+				]
+
+kwarg_trials = {
+				'first':None, # this keyword will always be None in all permutations
+				'second':['I','J','K'], # trials for 'first' keyword argument
+				'third':['i','j','k'], # trials for 'first' keyword argument
+				}
+
+permuter = Permuter(*arg_trials,**kwarg_trials)
+for args,kwargs in permuter:
+	run_important_test(*args,**kwargs)
+```
+
+### Pretrained Network Feature Extraction
