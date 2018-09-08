@@ -1,15 +1,24 @@
 # constants.py
 from .constants import *
 
-# logging.py
-from .printout import printmsg
+# Printer.py
+from .Printer import get_printer
+from .Printer import whitelist_printer
+from .Printer import blacklist_printer
+from .Printer import Printer
+from .Printer import disable_printout_colors
+from .Printer import enable_printout_colors
+from .Printer import get_active_printers
+from .Printer import set_global_printout_level
+
+# printout.py 
+from .printout import get_default_printer
 from .printout import debug
 from .printout import info
 from .printout import warning
 from .printout import error
 from .printout import critical
-from .printout import disable_printout_colors
-from .printout import enable_printout_colors
+from .printout import comment
 
 # Exceptions
 from .Exceptions import CameraReadError
