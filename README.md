@@ -41,7 +41,7 @@ A full list of standard images can be retrieved with `iu.list_standard_images()`
 Viewing imagery can be an surprisingly finicky process that differs machine
 to machine or operating over X11. `imsciutils` contains helper functions and objects for this purpose
 
-#### quick image viewer:
+### quick image viewer:
 
 when you want to quickly display an image without any bells and whistles,
 you can use the `quick_image_view` function
@@ -57,7 +57,7 @@ iu.quick_image_view( lenna )
 iu.quick_image_view(lenna, normalize_and_bin=True)
 ```
 
-#### Robust Image Viewer:
+### Robust Image Viewer:
 
 When you want a tool that can display multiple images at once, resize
 images when desired and an optional frame_counter, you can use the `Viewer` object
