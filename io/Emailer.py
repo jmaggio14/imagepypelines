@@ -16,8 +16,6 @@ import asyncio
 #                                   -Jeff
 
 
-## TODO: automatically retrieve a free port instead of hardcoding it
-ACTIVE_CONTROLLER = None
 class ExampleHandler:
     """taken from https://aiosmtpd.readthedocs.io/en/latest/aiosmtpd/docs/controller.html"""
     async def handle_RCPT(self, server, session, envelope, address, rcpt_options):
