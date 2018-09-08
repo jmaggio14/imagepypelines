@@ -21,8 +21,6 @@ ACTIVE_CONTROLLER = None
 class ExampleHandler:
     """taken from https://aiosmtpd.readthedocs.io/en/latest/aiosmtpd/docs/controller.html"""
     async def handle_RCPT(self, server, session, envelope, address, rcpt_options):
-        if not address.endswith('@example.com'):
-            return '550 not relaying to that domain'
         envelope.rcpt_tos.append(address)
         return '250 OK'
 
@@ -156,7 +154,7 @@ class Emailer(object):
         self.current_msg = None
 
     def close(self):
-        pass
+        self.controller.stop()
 
     def __enter__(self):
         return self
