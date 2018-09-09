@@ -29,6 +29,18 @@ class Tester(object):
         return self.__str__()
 
     def exact_test(self, desired_output, *args, **kwargs):
+        """
+        Checks whether the target function outputs the exact output given
+        by 'desired_output'
+
+        Input::
+            desired_output (variable): the exact output the target function should return
+            *args: positional arguments for the target
+            **kwargs: keyword arguments for the target
+
+        Returns::
+            passed (boolean): whether or not the output was one of the desired_type
+        """
         # printing out args and kwargs if desired by user
         if self.verbose:
             print("----------TESTING '{}'----------".format(self.target.__name__))
@@ -58,7 +70,7 @@ class Tester(object):
             return False
         else:
             # TEST HAS SUCEEDED
-            iu.printmsg("{} exact test success!".format(self.target.__name__))
+            iu.comment("{} exact test success!".format(self.target.__name__))
             return True
 
 
@@ -70,18 +82,21 @@ class Tester(object):
         Input::
             desired_type (type or iterable of types): the type or types the output
                 function should return
+            *args: positional arguments for the target
+            **kwargs: keyword arguments for the target
+
+        Returns::
+            passed (boolean): whether or not the output was one of the desired_type
 
         EXAMPLE:
-        def output_str_or_int(a):
-            if a:
-                return "1"
-            else:
-                return 1
+            def output_str_or_int(a):
+                if a:
+                    return "1"
+                else:
+                    return 1
 
-        tester = Tester(output_str_or_int)
-        is_test_successful = tester.type_test(str, a=True)
-
-        # outputs True or False depending on whether the test was passed
+            tester = Tester(output_str_or_int)
+            is_test_successful = tester.type_test(str, a=True)
         """
         # Making desired_type a list if it isn't already
         if not isinstance(desired_type,Iterable):
@@ -104,9 +119,34 @@ class Tester(object):
             return False
         else:
             # TEST HAS SUCEEDED
-            iu.printmsg("{} type test successful! with type {}!"\
+            iu.comment("{} type test successful! with type {}!"\
                             .format(self.target.__name__,type(out)))
             return True
+
+
+    def custom_test(self,test_func,*args,**kwargs):
+        """
+        function to build custom tests using an input function
+        that will evaluate the output of the target
+
+        input::
+            test_func (callable): the function to evaluate
+            *args: positional arguments for the target
+            **kwargs: keyword arguments for the target
+
+        """
+        if self.verbose:
+            print("--------TESTING '{}'--------".format(self.target.__name__))
+            self.__print_args(*args,**kwargs)
+
+        if not callable(test_func):
+            error_msg = "'test_func' must be a function or callable object"
+            iu.error(error_msg)
+            raise TypeError(error_msg)
+
+        passed = test_func( self.target(*args,**kwargs) )
+        return passed
+
 
 
 
@@ -156,7 +196,6 @@ def main():
     desired_output = False
     tester.exact_test(desired_output, True, iu.lenna(), None, ryanisdumb="yes")
     tester.type_test(bool, True, iu.lenna(), None, ryanisdumb="yes")
-
 
 
 if __name__ == "__main__":
