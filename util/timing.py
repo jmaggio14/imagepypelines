@@ -9,7 +9,7 @@
 #
 #
 import time
-import imsciutils
+import imsciutils as iu
 
 
 def function_timer(func):
@@ -18,19 +18,20 @@ def function_timer(func):
 
     EXAMPLE:
         @function_timer
-        def sleep_for_one_sec:
-            time.sleep(1)#sleep for 1 second
+        def sleep_for_one_sec():
+            time.sleep(1) # sleep for 1 second
 
-        >>> sleep_for_one_sec
-        (imsciutils)(info) ran func 'sleep_for_one_sec' in 1.030sec
+        >>> sleep_for_one_sec()
+        (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
+    printer = iu.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
         ret = func(*args,**kwargs)
         run_time = round(time.time() - start,3)
         msg = "ran function '{name}' in {t}sec".format(name=func.__name__,
                                                             t=run_time)
-        imsciutils.info(msg)
+        printer.info(msg)
 
         return ret
 
@@ -43,19 +44,20 @@ def function_timer_ms(func):
 
     EXAMPLE:
         @function_timer
-        def sleep_for_one_sec:
-            time.sleep(1)#sleep for 1 second
+        def sleep_for_one_sec():
+            time.sleep(1) #sleep for 1 second
 
-        >>> sleep_for_one_sec
-        (imsciutils)(info) ran func 'sleep_for_one_sec' in 1005.28ms
+        >>> sleep_for_one_sec()
+        (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
+    printer = iu.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
         ret = func(*args,**kwargs)
-        run_time = round(time.time() - start,5) * 1000
+        run_time = round((time.time() - start) * 1000,3)
         msg = "ran function '{name}' in {t}ms".format(name=func.__name__,
                                                             t=run_time)
-        imsciutils.info(msg)
+        printer.info(msg)
 
         return ret
 
@@ -111,8 +113,8 @@ class Timer(object):
         self._start = time.time()
         self._last = self._start
 
-        self._last_countdown = float(0)
-        self._countdown = float(0)
+        self._countdown_timer = None
+        self._countdown_start = None
 
 
     def reset(self):
@@ -122,6 +124,10 @@ class Timer(object):
     def time(self):
         """returns the time since the timer started or since it was
          last reset"""
+        return round(time.time() - self._start,3)
+
+    def raw_time(self):
+        """returns the unrounded time since the timer started"""
         return time.time() - self._start
 
     def lap(self):
@@ -129,26 +135,68 @@ class Timer(object):
         now = time.time()
         lap = now - self._last
         self._last = now
-        return lap
+        return round(lap,3)
 
     @property
     def countdown(self):
-        """returns the current countdown time"""
-        self._countdown = self._countdown - (self.time - self._last_countdown)
-        self._last_countdown = self.time
-        if self._countdown < 0:
-            self._countdown = 0
-        return self._countdown
+        if self._countdown_timer is None:
+            return 0
+
+        countdown = max(self._countdown_start - self._countdown_timer.raw_time(),0)
+        return countdown
+
 
     @countdown.setter
     def countdown(self,value):
         """sets the countdown timer"""
-        if isinstance(value,(int,float)):
-            self._countdown = float(value)
-        else:
-            imsciutils.error("countdown must be set using a float \
-                    or an int, current type is {0}".format(type(value)))
+        if not isinstance(value,(int,float)):
+            error_msg = "countdown must be set using a float \
+                        or an int, current type is {0}".format(type(value))
+            iu.error(error_msg)
+            raise TypeError(error_msg)
+
+        self._countdown_timer = Timer()
+        self._countdown_start = float(value)
+
 
     @property
     def start(self):
         return self._start
+
+
+    def __str__(self):
+        return "Timer @{}sec".format( self.time() )
+
+    def __repr__(self):
+        return str(self)
+
+
+def main():
+    import time
+    import imsciutils as iu
+
+    @iu.util.function_timer
+    @iu.util.function_timer_ms
+    def sleep_for_one_sec():
+        time.sleep(1)
+
+    t = iu.util.Timer()
+    sleep_for_one_sec()
+    print( t.lap() )
+
+    @iu.util.function_timer
+    def _check_countdown(countdown_time):
+        t.countdown = countdown_time
+        while t.countdown:
+            pass
+
+    _check_countdown(10)
+    _check_countdown(20)
+    _check_countdown(30)
+            # print("real:",30 - t.time(),' countdown:',t.countdown)
+
+
+
+
+if __name__ == "__main__":
+    main()
