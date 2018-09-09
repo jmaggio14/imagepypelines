@@ -47,7 +47,7 @@ def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
     assert isinstance(title, str), "'title' must be a string"
 
     if normalize_and_bin:
-        img = normalize_and_bin(img, max_count=255, cast_type=np.uint8)
+        img = iu.normalize_and_bin(img, max_count=255, cast_type=np.uint8)
 
     if len(img.shape) > 2:
         img = np.flip(img, 2)
