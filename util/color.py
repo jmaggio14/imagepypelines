@@ -145,7 +145,7 @@ def color_text(text, color="r", background=None, attrs=None):
                                                 background_input=background)
         raise ValueError(error_msg)
 
-    colored_text = termcolor.colored(test,
+    colored_text = termcolor.colored(text,
                                      color=text_color,
                                      on_color=text_background,
                                      attrs=out_attrs)
