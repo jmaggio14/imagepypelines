@@ -136,7 +136,58 @@ rows, cols = iu.frame_size(lenna)
 rows, cols, bands, dtype = iu.dimensions(lenna)
 ```
 
+### Timing
+Many imaging tasks are time sensitive or computationally
+intensive. `imsciutils` includes simple tools to time your process or function
 
+#### timing Decorator
+let's say we have a function that we think may be slowing down our pipeline.
+We can add `@function_timer` on the line above the function
+and see it automatically print how long the function took to run
+```python
+from imsciutils.util import function_timer
+from imsciutils.util import function_timer_ms
+import time
+
+# add the decorator here
+@function_timer
+def we_can_time_in_seconds():
+	time.sleep(1)
+
+# we can also time the function in milliseconds using '@function_timer_ms'
+@function_timer_ms
+def or_in_milliseconds():
+	time.sleep(1)
+
+we_can_time_in_seconds()
+or_in_milliseconds()
+```
+prints the following when the above code is run
+```
+(  function_timer  )[    INFO    ] ran function 'we_can_time_in_seconds' in 1.001sec
+(  function_timer  )[    INFO    ] ran function 'or_in_milliseconds' in 1000.118ms
+```
+
+#### Timer Objects
+`imsciutils` also includes a separate timer for timing things inside a function
+or code block
+```python
+from imsciutils.util import Timer
+import time
+
+t = Timer()
+for i in range(2):
+	time.sleep(1)
+	print(i,") t.lap() resets every time it's called:", t.lap() ) # we can call the 'lap' function to get lap timing
+	print(i,') t.time() counts up always: ', t.time() ) # or the 'time' to get the total time
+```
+produces the following
+```
+0 ) t.lap() resets every time it's called: 1.0
+0 ) t.time() counts up always:  1.001
+1 ) t.lap() resets every time it's called: 1.002
+1 ) t.time() counts up always:  2.003
+```
 
 
 # HIGHER LEVEL FUNCTIONALITY
@@ -164,14 +215,14 @@ def run_important_test(arg1,arg2,arg3,first,second,third):
 
 
 arg_trials = [0, # the first positional will always be 0 in all permutations
-	['a','b','c'], # trials for second positional arguments
-	['u','w','x','y','z'], # trials for third positional argument
-	]
+			['a','b','c'], # trials for second positional arguments
+			['u','w','x','y','z'], # trials for third positional argument
+			]
 
 kwarg_trials = {'first':None, # this keyword will always be None in all permutations
-	'second':['I','J','K'], # trials for 'first' keyword argument
-	'third':['i','j','k'], # trials for 'first' keyword argument
-	}
+			'second':['I','J','K'], # trials for 'first' keyword argument
+			'third':['i','j','k'], # trials for 'first' keyword argument
+			}
 
 permuter = Permuter(*arg_trials,**kwarg_trials)
 for args,kwargs in permuter:
@@ -193,7 +244,7 @@ lenna_features = network.extract_features(lenna)
 img_batch = [iu.lenna(),iu.pig(),iu.crowd()]
 batch_features = network.extract_features(img_batch)
 
-# it even works with filenames so you can process images directly off the disk!
+# it even works with filenames
 filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
 img_features = network.extract_features(filenames)
 ```
