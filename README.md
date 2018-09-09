@@ -14,6 +14,7 @@ Module Dependencies
 - scipy
 - keras
 - scikit-*
+- termcolor
 
 ## Documentation
 There is autodoc sphinx documentation with this project, following the google docstrings format. To build / view these docs on windows::
@@ -36,6 +37,8 @@ import imsciutils as iu
 lenna = iu.lenna()
 linear_gradient = iu.linear()
 ```
+A full list of standard images can be retrieved with `iu.list_standard_images()`
+
 for those of you in the Imaging Science program at RIT, there are a
 couple easter eggs for ya ;)
 ```python
@@ -45,7 +48,6 @@ iu.quick_image_view( iu.roger() )
 iu.quick_image_view( iu.pig() )
 ```
 
-A full list of standard images can be retrieved with `iu.list_standard_images()`
 
 ## Viewing Imagery
 Viewing imagery can be an surprisingly finicky process that differs machine
@@ -73,6 +75,7 @@ When you want a tool that can display multiple images at once, resize
 images when desired and an optional frame_counter, you can use the `Viewer` object
 ```python
 import imsciutils as iu
+import time
 
 # lets build our Viewer and have it auto-resize images to 512x512
 viewer = iu.Viewer('Window Title Here', size=(512,512))
@@ -83,6 +86,7 @@ standard_images = iu.standard_image_gen()
 # now let's display all images sequentially!
 for img in standard_images:
 	viewer.view( img )
+	time.sleep(1)
 ```
 
 ### Normalizing and binning an image
@@ -147,13 +151,14 @@ using pretrained neural networks, etc.
 ## Machine learning
 
 ### Configuration Permuter
-in many machine learning applications, parameters have to
+In many machine learning applications, parameters have to
 be tweaked frequently to optimize a model. This can be a tedious task
 and frequently involves a human tweaking configurations files. This
 object is meant to simplify that process by generating permutations
 from a sample of arguments and keyword arguments
 
 ```python
+# Warning, the next two lines are psuedocode
 def run_important_test(arg1,arg2,arg3,first,second,third):
 	do_something_important()
 
@@ -176,3 +181,21 @@ for args,kwargs in permuter:
 ```
 
 ### Pretrained Network Feature Extraction
+There is a convenience wrapper around keras built into `imsciutils`
+to extract image features using pretrained networks
+```python
+import imsciutils as iu
+network = iu.ml.FeatureExtractor('resnet50',pooling_type='avg')
+
+# it works with single images
+lenna = iu.lenna()
+lenna_features = network.extract_features(lenna)
+
+# it also works with a list of images
+img_batch = [iu.lenna(),iu.pig(),iu.crowd()]
+batch_features = network.extract_features(img_batch)
+
+# it even works with filenames so you can process images directly off the disk!
+filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
+img_features = network.extract_features(filenames)
+```
