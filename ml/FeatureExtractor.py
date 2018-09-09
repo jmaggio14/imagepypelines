@@ -1,7 +1,9 @@
 from importlib import import_module
 import cv2
 import numpy as np
-import imsciutils
+import imsciutils as iu
+from collections import Iterable
+import os
 
 
 class FeatureExtractor(object):
@@ -42,9 +44,10 @@ class FeatureExtractor(object):
 
 
     Example Use Case:
-        network = FeatureExtractor('resnet50',pooling_type='avg')
+        import imsciutils as iu
+        network = iu.ml.FeatureExtractor('resnet50',pooling_type='avg')
 
-        img = imsciutils.lenna()
+        img = iu.lenna()
         lenna_features = network.extract_features(img)
 
     """
@@ -86,25 +89,39 @@ class FeatureExtractor(object):
             = self.__keras_importer(network_name,pooling_type)
         self.network_name = network_name
         self.pooling_type = pooling_type
-        self.interpolation = interpolation
+        self.printer = iu.get_printer( str(self) )
 
-    @imsciutils.standard_image_input
-    def extract_features(self, imgs):
+    def __str__(self):
+        return "{} Extractor".format(self.network_name)
+
+    def __repr__(self):
+        return str(self) + ", with {} pooling".format(self.pooling_type)
+
+    def extract_features(self, batch):
         """
         Extracts image features from a the neural network specified in
         __init__
 
         input::
-            imgs (np.ndarray,str,list): 2D or 3D image array or path to
+            batch (np.ndarray,str,list): 2D or 3D image array or path to
                             image filename, or list of either
         returns::
             features (np.ndarray): features for this image
         """
+        timer = iu.util.Timer()
+
         # Error checking for img occurs in __build_image_data
-        imgs = self.__build_image_data(imgs)
-        features = self.model_fn(imgs)
-        # splitting features into a list
-        features = [feature[i,:].flatten() for i in range(features.shape[0])]
+        batch = self.__build_image_data(batch)
+        features = self.model_fn(batch)
+
+        # returning features as a list if they entered as an interable
+        num_imgs = features.shape[0]
+        if num_imgs > 1:
+            features = np.vsplit(features,num_imgs)
+
+        # calculating and displaying the processing time for this batch
+        batch_time = timer.lap()
+        self.printer.info("processed {} images in {}sec".format(num_imgs,batch_time))
         return features
 
     def __build_image_data(self, imgs):
@@ -118,22 +135,34 @@ class FeatureExtractor(object):
                     image or path to image to be processed, or list of either
         returns::
             img_data (np.ndarray):
-                    4D numpy array of the form (1,rows,cols,bands)
+                    4D numpy array of the form (num_images,rows,cols,bands)
         """
+        if not isinstance(imgs,Iterable) or isinstance(imgs,(str,np.ndarray)):
+            imgs = [imgs]
+
         img_data = []
-        for img in imgs:
+        for i,img in enumerate(imgs):
             # checking to see if img is a path to an image
             if isinstance(img, str):
-                assert os.path.exists(img), "{} is not a valid filename".format(img)
-                img = self.kerasimage.load_img(img)
-                img = self.kerasimage.img_to_array(img)
+                if not os.path.exists(img):
+                    error_msg = "{} is not a valid filename".format(img)
+                    self.printer.error(error_msg)
+                    raise FileNotFoundError(error_msg)
+                else:
+                    self.printer.debug('loading {} off the disk...'.format(img))
+                    img = self.kerasimage.load_img(img)
+                    img = self.kerasimage.img_to_array(img)
+
             # otherwise the image must be numpy array so it can be processed
             elif not isinstance(img, np.ndarray):
-                raise ValueError("img must be a numpy array or path to image file")
+                error_msg = "img {} must be a numpy array or path to image file, currently {}"\
+                                    .format(i,type(img))
+                self.printer(error_msg)
+                raise ValueError(error_msg)
 
             # must be (batches,rows,cols,bands) --> batch should be 1 for this case
             if img.ndim <= 3:
-                r, c, b, _ = imsciutils.dimensions(img)
+                r, c, b, _ = iu.dimensions(img)
                 img = img.reshape((1, r, c, b))
 
             img_data.append(img)
@@ -179,11 +208,24 @@ class FeatureExtractor(object):
                                     self.__FUNCTION_NAMES[network_name])
         model_fn = model_constructor(include_top=False,
                                      weights='imagenet',
-                                     pooling=pooling_type)
+                                     pooling=pooling_type).predict
 
         preprocess_fn = getattr(submodule, 'preprocess_input')
-        from keras import image as kerasimage
+        from keras.preprocessing import image as kerasimage
         return model_fn, preprocess_fn, kerasimage
+
+
+
+
+if __name__ == "__main__":
+    import imsciutils as iu
+    fe = iu.ml.FeatureExtractor()
+    pig = iu.pig()
+    lenna = iu.lenna()
+
+    features1 = fe.extract_features(pig)
+    features2 = fe.extract_features(lenna)
+    import pdb; pdb.set_trace()
 
 
 # END
