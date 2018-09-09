@@ -164,14 +164,14 @@ def run_important_test(arg1,arg2,arg3,first,second,third):
 
 
 arg_trials = [0, # the first positional will always be 0 in all permutations
-						['a','b','c'], # trials for second positional arguments
-						['u','w','x','y','z'], # trials for third positional argument
-						]
+		['a','b','c'], # trials for second positional arguments
+		['u','w','x','y','z'], # trials for third positional argument
+		]
 
 kwarg_trials = {'first':None, # this keyword will always be None in all permutations
-								'second':['I','J','K'], # trials for 'first' keyword argument
-								'third':['i','j','k'], # trials for 'first' keyword argument
-								}
+		'second':['I','J','K'], # trials for 'first' keyword argument
+		'third':['i','j','k'], # trials for 'first' keyword argument
+		}
 
 permuter = Permuter(*arg_trials,**kwarg_trials)
 for args,kwargs in permuter:
