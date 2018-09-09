@@ -96,13 +96,13 @@ class Printer(object):
         'critical': 50,
         'comment': 60,
     }
-    GLOBAL_LOG_LEVEL = 0
+    GLOBAL_LOG_LEVEL = LOG_LEVELS['info']
     WHITELIST = 'all'
     BLACKLIST = []
     ENABLE_COLOR = True
-    MAX_NAME_SIZE = 32
+    MAX_NAME_SIZE = 18
 
-    def __init__(self, name, log_level='info'):
+    def __init__(self, name, log_level=0):
         if log_level in self.LOG_LEVELS:
             log_level = self.LOG_LEVELS[log_level]
 
@@ -111,7 +111,7 @@ class Printer(object):
         self.name = name
         self.log_level = log_level
 
-        buf = ' ' * ((MAX_NAME_SIZE - len(self.name)) // 2)
+        buf = ' ' * max(((self.MAX_NAME_SIZE - len(self.name)) // 2),0)
         self.level_text = {
             'debug':   '({1}{0}{1})[    DEBUG   ]'.format(self.name, buf),
             'info':    '({1}{0}{1})[    INFO    ]'.format(self.name, buf),
@@ -143,11 +143,11 @@ class Printer(object):
         return:
             None
         """
-        if not should_print('debug', *messages):
+        if not self.should_print('debug'):
             return
 
         prefix = self.level_text['debug']
-        if ENABLE_COLOR:
+        if self.ENABLE_COLOR:
             prefix = iu.util.blue(prefix)
             messages = [iu.util.blue(str(msg)) for msg in messages]
 
@@ -162,14 +162,10 @@ class Printer(object):
         return:
             None
         """
-        if not should_print('info', *messages):
+        if not self.should_print('info'):
             return
 
         prefix = self.level_text['info']
-        if ENABLE_COLOR:
-            prefix = iu.util.blue(prefix)
-            messages = [iu.util.blue(str(msg)) for msg in messages]
-
         print(prefix, *messages)
 
     def warning(self, *messages):
@@ -181,11 +177,11 @@ class Printer(object):
         return:
             None
         """
-        if not should_print('warning', *messages):
+        if not self.should_print('warning'):
             return
 
         prefix = self.level_text['warning']
-        if ENABLE_COLOR:
+        if self.ENABLE_COLOR:
             prefix = iu.util.yellow(prefix)
             messages = [iu.util.yellow(str(msg)) for msg in messages]
 
@@ -200,11 +196,11 @@ class Printer(object):
         return:
             None
         """
-        if not should_print('error', *messages):
+        if not self.should_print('error'):
             return
 
         prefix = self.level_text['error']
-        if ENABLE_COLOR:
+        if self.ENABLE_COLOR:
             prefix = iu.util.red(prefix)
             messages = [iu.util.red(str(msg)) for msg in messages]
 
@@ -219,11 +215,11 @@ class Printer(object):
         return:
             None
         """
-        if not should_print('critical', *messages):
+        if not self.should_print('critical'):
             return
 
         prefix = self.level_text['critical']
-        if ENABLE_COLOR:
+        if self.ENABLE_COLOR:
             prefix = iu.util.red(prefix, bold=True)
             messages = [iu.util.red(str(msg), bold=True) for msg in messages]
 
@@ -238,23 +234,23 @@ class Printer(object):
         return:
             None
         """
-        if not should_print('comment', *messages):
+        if not self.should_print('comment'):
             return
 
         prefix = self.level_text['comment']
-        if ENABLE_COLOR:
+        if self.ENABLE_COLOR:
             prefix = iu.util.green(prefix, bold=True)
             messages = [iu.util.green(str(msg), bold=True) for msg in messages]
 
         print(prefix, *messages)
 
-    def should_print(self, message_level, *messages):
+    def should_print(self, message_level):
         """
         Determines whether or not the given message level should print
         to the terminal
         """
-        if message_level in LOG_LEVELS:
-            message_level = LOG_LEVELS[message_level]
+        if message_level in self.LOG_LEVELS:
+            message_level = self.LOG_LEVELS[message_level]
 
         # if message level is less than the global or local log_level
         if message_level < max(self.log_level, self.GLOBAL_LOG_LEVEL):
@@ -278,4 +274,4 @@ class Printer(object):
 
     def __del__(self):
         if self.name in self.ACTIVE_PRINTERS:
-            del ACTIVE_PRINTERS[self.name]
+            del self.ACTIVE_PRINTERS[self.name]
