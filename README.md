@@ -201,6 +201,27 @@ using pretrained neural networks, etc.
 
 ## Machine learning
 
+
+### Pretrained Network Feature Extraction
+There is a convenience wrapper around keras built into `imsciutils`
+to extract image features using pretrained networks
+```python
+import imsciutils as iu
+network = iu.ml.FeatureExtractor('resnet50', pooling_type='avg')
+
+# it works with single images
+lenna = iu.lenna()
+lenna_features = network.extract_features(lenna)
+
+# it also works with a list of images
+img_batch = [iu.lenna(), iu.pig(), iu.crowd()]
+batch_features = network.extract_features(img_batch)
+
+# it even works with filenames
+filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
+img_features = network.extract_features(filenames)
+```
+
 ### Configuration Permuter
 In many machine learning applications, parameters have to
 be tweaked frequently to optimize a model. This can be a tedious task
@@ -227,24 +248,4 @@ kwarg_trials = {'first':None, # this keyword will always be None in all permutat
 permuter = Permuter(*arg_trials,**kwarg_trials)
 for args,kwargs in permuter:
 	run_important_test(*args,**kwargs)
-```
-
-### Pretrained Network Feature Extraction
-There is a convenience wrapper around keras built into `imsciutils`
-to extract image features using pretrained networks
-```python
-import imsciutils as iu
-network = iu.ml.FeatureExtractor('resnet50',pooling_type='avg')
-
-# it works with single images
-lenna = iu.lenna()
-lenna_features = network.extract_features(lenna)
-
-# it also works with a list of images
-img_batch = [iu.lenna(),iu.pig(),iu.crowd()]
-batch_features = network.extract_features(img_batch)
-
-# it even works with filenames
-filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
-img_features = network.extract_features(filenames)
 ```
