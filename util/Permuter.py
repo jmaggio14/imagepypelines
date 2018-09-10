@@ -85,7 +85,7 @@ class Permuter(object):
         return self._remaining
 
     def __str__(self):
-        out = "Permuter ({1} permutations remaining)".format(self.remaining())
+        out = "Permuter ({} permutations remaining)".format(self.remaining())
         return out
 
 
