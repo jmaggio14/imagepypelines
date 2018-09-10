@@ -1,3 +1,5 @@
+import numpy as np
+
 def get_mnist():
     """
     retrieves the mnist dataset using keras
@@ -18,7 +20,7 @@ def get_fashion_mnist():
         data (tuple): (train_data,train_label), (test_data,test_labels)
     """
     from keras.datasets import fashion_mnist
-    fashion_mnist.load_data()
+    return fashion_mnist.load_data()
 
 
 def get_cifar10():
@@ -46,4 +48,8 @@ def get_cifar100(fine=True):
         label_mode = 'fine'
     else:
         label_mode = 'coarse'
-    cifar100.load_data()
+    return cifar100.load_data()
+
+
+def dataset_to_list(arr):
+    return np.vsplit(arr, arr.shape[0])
