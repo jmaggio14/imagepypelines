@@ -8,7 +8,7 @@ class Tester(object):
     """
     Testing object used to simply unit testing for a target function. This object
     can perform exact and type check tests on a target function and interally
-    w
+
 
 
     """
@@ -19,7 +19,7 @@ class Tester(object):
             raise TypeError(error_msg)
 
         self.target = target
-        self.verbose = verbose  # Unused
+        self.verbose = verbose
 
 
     def __str__(self):
