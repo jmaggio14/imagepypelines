@@ -11,7 +11,7 @@ from .Printer import enable_printout_colors
 from .Printer import get_active_printers
 from .Printer import set_global_printout_level
 
-# printout.py 
+# printout.py
 from .printout import get_default_printer
 from .printout import debug
 from .printout import info
@@ -63,3 +63,7 @@ from .Tester import Tester
 
 # Summarizer.py
 from .Summarizer import Summarizer
+
+# version_control.py
+from .version_control import depreciated
+from .version_control import experimental
