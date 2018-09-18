@@ -3,7 +3,12 @@ from .color import red
 from .color import blue
 from .color import green
 from .color import yellow
+from .color import magenta
+from .color import cyan
 from .color import color_text
+
+# ConfigFactory.py
+from .ConfigFactory import ConfigFactory
 
 # error_checking.py
 from .error_checking import interpolation_type_check
