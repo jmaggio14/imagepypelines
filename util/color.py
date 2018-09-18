@@ -57,6 +57,19 @@ def yellow(text, bold=False):
         return color_text(text, color='yellow', attrs=['bold'])
     return color_text(text, color='yellow')
 
+def magenta(text, bold=False):
+    """adds ansi codes to text so it appears to be magenta when printed"""
+    if bold:
+        return color_text(text, color='magenta', attrs=['bold'])
+    return color_text(text, color='magenta')
+
+def cyan(text, bold=False):
+    """adds ansi codes to text so it appears to be cyan when printed"""
+    if bold:
+        return color_text(text, color='cyan', attrs=['bold'])
+    return color_text(text, color='cyan')
+
+
 
 def color_text(text, color="r", background=None, attrs=None):
     """
