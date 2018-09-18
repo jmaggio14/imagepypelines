@@ -100,7 +100,7 @@ class Printer(object):
     WHITELIST = 'all'
     BLACKLIST = []
     ENABLE_COLOR = True
-    MAX_NAME_SIZE = 18
+    MIN_NAME_SIZE = 18
 
     def __init__(self, name, log_level=0):
         if log_level in self.LOG_LEVELS:
@@ -111,14 +111,14 @@ class Printer(object):
         self.name = name
         self.log_level = log_level
 
-        buf = ' ' * max(((self.MAX_NAME_SIZE - len(self.name)) // 2),0)
+        buf = ' ' * max(((self.MIN_NAME_SIZE - len(self.name)) // 2),0)
         self.level_text = {
             'debug':   '({1}{0}{1})[    DEBUG   ]'.format(self.name, buf),
             'info':    '({1}{0}{1})[    INFO    ]'.format(self.name, buf),
             'warning': '({1}{0}{1})[   WARNING  ]'.format(self.name, buf),
             'error':   '({1}{0}{1})[    ERROR   ]'.format(self.name, buf),
             'critical':'({1}{0}{1})[  CRITICAL  ]'.format(self.name, buf),
-            'comment': '({1}{0}{1})[  COMMENT  ]'.format(self.name, buf),
+            'comment': '({1}{0}{1})[   COMMENT  ]'.format(self.name, buf),
         }
 
         self.ACTIVE_PRINTERS[self.name] = self
@@ -148,8 +148,8 @@ class Printer(object):
 
         prefix = self.level_text['debug']
         if self.ENABLE_COLOR:
-            prefix = iu.util.blue(prefix)
-            messages = [iu.util.blue(str(msg)) for msg in messages]
+            prefix = iu.util.cyan(prefix)
+            messages = [iu.util.cyan(str(msg)) for msg in messages]
 
         print(prefix, *messages)
 
