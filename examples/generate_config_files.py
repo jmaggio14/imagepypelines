@@ -1,9 +1,14 @@
 """
-This is a script to generate YAML config files using the imsciutils package
+Every come up with a situation where you have have a lot of parameters
+
+
+
+This is a script  config files using the imsciutils package
 created by Jeff Maggio with help from Ryan Hartzell and Nathan Dileas
 https://github.com/jmaggio14/imsciutils
 
-To use
+To use this script, simply modify the 'CONFIGS' variable with all variations
+of a parameter you want to test. This
 """
 
 import imsciutils as iu
@@ -57,7 +62,7 @@ for _,configs in permutation_generator:
     iu.info(permutation_generator)
     # saving the config file
     with open(filename,'w') as f:
-        file_str = yaml.dump({'CONFIGS':configs}, default_flow_style=False)
+        file_str = yaml.dump(configs, default_flow_style=False)
         f.write(file_str)
 
     index += 1
