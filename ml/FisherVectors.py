@@ -25,11 +25,12 @@ class FisherVectors(object):
 
 
     def __validate_data(self,data):
+        pass
 
 
     def fit(self,data):
         self.__validate_data(data)
-        
+
 
     def predict(self, data):
         self.__validate_data(data)
