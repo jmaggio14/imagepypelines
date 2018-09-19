@@ -222,14 +222,18 @@ filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
 img_features = network.extract_features(filenames)
 ```
 
-### Configuration Permuter
+### Configuration Factory
 In many machine learning applications, parameters have to
 be tweaked frequently to optimize a model. This can be a tedious task
 and frequently involves a human tweaking configurations files. This
-object is meant to simplify that process by generating permutations
-from a sample of arguments and keyword arguments
+object is meant to simplify that process by **generating config permutations
+from a sample of arguments and keyword arguments**
 
+#### simple example
 ```python
+import imsciutils as iu
+from imsciutils.util import ConfigFactory
+
 # Warning, the next two lines are psuedocode
 def run_important_test(arg1,arg2,arg3,first,second,third):
 	do_something_important()
@@ -245,7 +249,9 @@ kwarg_trials = {'first':None, # this keyword will always be None in all permutat
 			'third':['i','j','k'], # trials for 'first' keyword argument
 			}
 
-permuter = Permuter(*arg_trials,**kwarg_trials)
-for args,kwargs in permuter:
+config_factory = ConfigFactory(*arg_trials,**kwarg_trials)
+for args,kwargs in config_factory:
 	run_important_test(*args,**kwargs)
 ```
+#### real world example
+let's say we are training a DNN classifier and we want to test

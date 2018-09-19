@@ -17,6 +17,9 @@ from .error_checking import is_numpy_array
 from .error_checking import is_iterable
 from .error_checking import type_error_message
 
+# format.py
+from .format import format_dict
+
 # permute.py
 from .Permuter import Permuter
 

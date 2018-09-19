@@ -81,21 +81,7 @@ class Viewer(object):
 
         # add a frame counter to an image thin
         if self.enable_frame_counter:
-            r,c,b,_ = iu.dimensions(frame)
-            loc = int( min(r,c) * .95 )
-            color = (255,255,255)
-            if np.mean(frame[int(.9*r):r,int(.9*c):c]) > 128:
-                color = (0,0,0)
-
-            frame = cv2.putText(frame,
-                                text=str(self.frame_counter),
-                                org=(loc,loc),
-                                fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-                                fontScale=.5,
-                                color=color,
-                                thickness=2,
-                                bottomLeftOrigin=False)
-
+            frame = iu.number_image(frame,self.frame_counter)
         # displaying the image
         cv2.imshow(self.window_name, frame)
         if force_waitkey:

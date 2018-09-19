@@ -49,6 +49,7 @@ from .Viewer import Viewer
 # img_tools.py
 from .img_tools import normalize_and_bin
 from .img_tools import quick_image_view
+from .img_tools import number_image
 
 # coordinates.py
 from .coordinates import centroid

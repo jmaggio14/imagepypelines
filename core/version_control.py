@@ -5,7 +5,7 @@ import imsciutils as iu
 DEFAULT_PRINTER = 'version conTROLL'
 
 
-def depreciated_msg(depreciation_msg, printer=None):
+def depreciated(depreciation_msg, printer=None):
     if printer is None:
         printer = iu.get_printer(DEFAULT_PRINTER)
     else:
@@ -21,7 +21,7 @@ def depreciated_msg(depreciation_msg, printer=None):
 
 
 
-def experimental_msg(experimental_msg=None, printer=None):
+def experimental(experimental_msg=None, printer=None):
     if printer is None:
         printer = iu.get_printer(DEFAULT_PRINTER)
     else:

@@ -54,3 +54,32 @@ def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
 
     img = Image.fromarray(img)
     img.show(title)
+
+
+def number_image(img,num):
+    """
+    Adds a number to the corner of an image
+
+    input::
+        img (np.ndarray): image
+        num (int): number to put in the corner of the image
+
+    returns::
+        img (np.ndarray): numbered image
+    """
+    r,c,b,_ = iu.dimensions(img)
+    loc = int( min(r,c) * .95 )
+    color = (255,255,255)
+    if np.mean(img[int(.9*r):r,int(.9*c):c]) > 128:
+        color = (0,0,0)
+
+    img = cv2.putText(img,
+                        text=str(num),
+                        org=(loc,loc),
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=.5,
+                        color=color,
+                        thickness=2,
+                        bottomLeftOrigin=False)
+
+    img
