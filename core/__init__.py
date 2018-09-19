@@ -5,6 +5,7 @@ from .constants import *
 from .Printer import get_printer
 from .Printer import whitelist_printer
 from .Printer import blacklist_printer
+from .Printer import reset_printer_lists
 from .Printer import Printer
 from .Printer import disable_printout_colors
 from .Printer import enable_printout_colors
