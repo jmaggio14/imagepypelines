@@ -26,7 +26,7 @@
 - [x] timers - Jeff
 - [x] logging tools
 - [ ] retry on fail
-- [ ] add ansi codes to text
+- [x] add ansi codes to text - Jeff
 - [x] prevent_overwrite() - Jeff
 - [x] Writing a series of images on the fly
 - [x] Camera Capture
@@ -43,7 +43,7 @@
 - [ ] clipping - Nate?
 
 # other shit
-- [ ] standard test images in a repo - ~broken~
+- [x] standard test images in a repo - Jeff
 - [x] MNIST, Lenna, - Jeff
 - [x] standard image wrapper - Jeff
 - [ ] add text to image wrapper (cv2.putText sucks I'm sorry)
