@@ -10,7 +10,7 @@ from functools import partial
 @iu.experimental()
 class FisherVectors(object):
     def __init__(self,n_clusters):
-        self.n_clusters = self.__error_check(n_clusters):
+        self.n_clusters = self.__error_check(n_clusters)
 
         self.gmm = cv2.ml.EM_create()
         self.gmm.setClustersNumber(self.n_clusters)
