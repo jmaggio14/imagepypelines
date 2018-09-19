@@ -15,7 +15,7 @@ import cv2
 
 class CameraCapture(object):
     """
-    Payload child used to talk to pull imagery from UVC camera.
+    object used to talk to pull imagery from UVC camera (webcam)
 
     Instantiation Args::
         cam (str,int) = 0:
@@ -34,7 +34,7 @@ class CameraCapture(object):
 
     functions::
         retrieve
-        get_status
+        metadata
         change_setting
 
     properties::
@@ -49,14 +49,13 @@ class CameraCapture(object):
         if isinstance(cam, str):
             if "/dev/video" in cam:
                 cam = cam.replace("/dev/video", "")
-            self.cam = int(cam)
 
         # openning the camera
+        self.cam = int(cam)
         self.open()
 
         # setting the codec
-        self.change_setting('fourcc', fourcc)
-        self.__changeable_settings = {
+        self._changeable_settings = {
             "width": cv2.CAP_PROP_FRAME_WIDTH,
             "height": cv2.CAP_PROP_FRAME_HEIGHT,
             "fps": cv2.CAP_PROP_FPS,
@@ -65,10 +64,12 @@ class CameraCapture(object):
             "hue": cv2.CAP_PROP_HUE,
             "gain": cv2.CAP_PROP_GAIN,
             "exposure": cv2.CAP_PROP_EXPOSURE,
-            "foucc": cv2.CAP_PROP_FOURCC}
+            "fourcc": cv2.CAP_PROP_FOURCC}
+        self.change_setting('fourcc', fourcc)
+        self.fourcc = fourcc
 
-    def open():
-        self.cap = cv2.VideoCapture(cam)
+    def open(self):
+        self.cap = cv2.VideoCapture(self.cam)
         self.frame_number = 0
 
     def retrieve(self):
@@ -87,8 +88,7 @@ class CameraCapture(object):
         self.current_frame_id = str(self.frame_number)
 
         if self.cap.isOpened():
-            status, raw_frame = self.cap.read()
-            metadata = self.get_status()
+            status, frame = self.cap.read()
 
         elif not status or not self.cap.isOpened():
             debug_message = "unable to read frame {0}"\
@@ -97,9 +97,9 @@ class CameraCapture(object):
             imsciutils.warning(debug_message)
             raise CameraReadError(debug_message)
 
-        return frame, metadata
+        return frame
 
-    def get_status(self):
+    def metadata(self):
         """
         grabs all metadata from the frame using the metadata properties
         and outputs it in an easy to use dictionary. also adds key
@@ -124,7 +124,7 @@ class CameraCapture(object):
             "exposure": self.__get_prop(cv2.CAP_PROP_EXPOSURE),
             "writer_dims": (self.__get_prop(cv2.CAP_PROP_FRAME_HEIGHT),
                             self.__get_prop(cv2.CAP_PROP_FRAME_WIDTH)),
-            "fourcc": self._fourcc,
+            "fourcc": self.fourcc,
             "fourcc_val": self.__get_prop(cv2.CAP_PROP_FOURCC),
             "capture_time": time.time(),
             "frame_number": self.current_frame_id
@@ -137,15 +137,16 @@ class CameraCapture(object):
         return::
             None
         """
-        if setting in self.__changeable_settings.keys():
-            flag = self.__changeable_settings[setting]
-            if flag == "foucc":
-                value = cv2.VideoWriter_fourcc(*value)
-            ret = self.cap.set(flag, value)
-            return ret
-        else:
+        if setting not in self._changeable_settings:
             raise ValueError("settings must be one of {0}"
-                             .format(self.__changeable_settings.keys()))
+                    .format(self._changeable_settings.keys()))
+
+
+        flag = self._changeable_settings[setting]
+        if setting == 'fourcc':
+            value = cv2.VideoWriter_fourcc(*value)
+        ret = self.cap.set(flag, value)
+        return ret
 
     def __get_prop(self, flag):
         """
@@ -163,3 +164,22 @@ class CameraCapture(object):
 
     def close(self):
         self.cap.release()
+
+
+
+
+def main():
+    import imsciutils as iu
+    cap = iu.io.CameraCapture()
+    viewer = iu.Viewer("Camera Capture Test")
+    timer = iu.util.Timer()
+    timer.countdown = 30
+    while timer.countdown:
+        img = cap.retrieve()
+        metadata = cap.metadata()
+        viewer.view(img)
+        print(metadata)
+
+
+if __name__ == "__main__":
+    main()
