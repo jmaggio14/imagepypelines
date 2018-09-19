@@ -42,6 +42,12 @@ def blacklist_printer(name):
     if name not in Printer.BLACKLIST:
         Printer.BLACKLIST.append(name)
 
+def reset_printer_lists():
+    """
+    resets the white and black lists to their default values
+    """
+    Printer.WHITELIST = 'all'
+    Printer.BLACKLIST = []
 
 def disable_printout_colors():
     """disables colored printouts for imsciutils printout messages"""
@@ -55,7 +61,7 @@ def enable_printout_colors():
 
 def get_active_printers():
     """gets a list of the names of currently active printers"""
-    return sorted(list(Printer.ACTIVE_PRINTERS.keys()))
+    return sorted(Printer.ACTIVE_PRINTERS.keys())
 
 def set_global_printout_level(log_level):
     """
@@ -133,6 +139,34 @@ class Printer(object):
 
         if not isinstance(name, str):
             raise TypeError("'name' of Printer must be a string")
+
+    def should_print(self, message_level):
+        """
+        Determines whether or not the given message level should print
+        to the terminal
+        """
+        if message_level in self.LOG_LEVELS:
+            message_level = self.LOG_LEVELS[message_level]
+
+        # if message level is less than the global or local log_level
+        if message_level < max(self.log_level, self.GLOBAL_LOG_LEVEL):
+            return False
+
+        # if printer is in the whitelist
+        if self.WHITELIST != 'all':
+            if self.name in self.WHITELIST:
+                return True
+            else:
+                return False
+
+        # if printer is in blacklist
+        if self.BLACKLIST != []:
+            if self.name not in self.BLACKLIST:
+                return True
+            else:
+                return False
+
+        return True
 
     def debug(self, *messages):
         """
@@ -243,34 +277,6 @@ class Printer(object):
             messages = [iu.util.green(str(msg), bold=True) for msg in messages]
 
         print(prefix, *messages)
-
-    def should_print(self, message_level):
-        """
-        Determines whether or not the given message level should print
-        to the terminal
-        """
-        if message_level in self.LOG_LEVELS:
-            message_level = self.LOG_LEVELS[message_level]
-
-        # if message level is less than the global or local log_level
-        if message_level < max(self.log_level, self.GLOBAL_LOG_LEVEL):
-            return False
-
-        # if printer is in the whitelist
-        if self.WHITELIST != 'all':
-            if self.name in self.WHITELIST:
-                return True
-            else:
-                return False
-
-        # if printer is in blacklist
-        if self.BLACKLIST != []:
-            if self.name not in self.BLACKLIST:
-                return True
-            else:
-                return False
-
-        return True
 
     def __del__(self):
         if self.name in self.ACTIVE_PRINTERS:
