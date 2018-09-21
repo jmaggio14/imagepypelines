@@ -115,7 +115,7 @@ class Printer(object):
         self.__error_check(name, log_level)
 
         self.name = name
-        self.log_level = log_level
+        self.set_log_level(log_level)
 
         buf = ' ' * max(((self.MIN_NAME_SIZE - len(self.name)) // 2),0)
         self.level_text = {
@@ -167,6 +167,13 @@ class Printer(object):
                 return False
 
         return True
+
+    def set_log_level(self,log_level):
+        if log_level in self.LOG_LEVELS:
+            log_level = self.LOG_LEVELS[log_level]
+        self.__error_check(self.name, log_level)
+        self.log_level = log_level
+
 
     def debug(self, *messages):
         """
@@ -281,7 +288,7 @@ class Printer(object):
     def __del__(self):
         if self.name in self.ACTIVE_PRINTERS:
             del self.ACTIVE_PRINTERS[self.name]
-            
+
         if self.name in self.BLACKLIST:
             self.BLACKLIST.remove(self.name)
 
