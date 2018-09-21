@@ -10,8 +10,9 @@
 #
 
 import cv2
-import imsciutils
+import imsciutils as iu
 
+@iu.experimental()
 class ImageWriter(object):
     """
     Class that operates as a system that saves single frames to a
@@ -50,7 +51,7 @@ class ImageWriter(object):
 
         assert isinstance(base_filename, str), "'base_filename' must be str"
         imsciutils.util.interpolation_type_check(interpolation)
-        
+
         self.base_filename = base_filename
         self.size = size
         self.interpolation = interpolation

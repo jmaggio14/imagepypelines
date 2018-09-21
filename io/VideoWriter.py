@@ -9,9 +9,9 @@
 #
 #
 import cv2
-import imsciutils
+import imsciutils as iu
 
-
+@iu.experimental()
 class VideoWriter(object):
     """
     a wrapper class for the cv2 Video Writer:
