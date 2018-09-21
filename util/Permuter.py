@@ -5,7 +5,7 @@ import numpy as np
 import imsciutils as iu
 from imsciutils.util import ConfigFactory
 
-@iu.depreciated("'Permuter' has been renamed to 'ConfigFactory', references to 'Permuter' will be removed in a future version")
+@iu.deprecated("'Permuter' has been renamed to 'ConfigFactory', references to 'Permuter' will be removed in a future version")
 class Permuter(ConfigFactory):
     pass
 

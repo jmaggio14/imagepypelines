@@ -355,12 +355,12 @@ This way it's easy track what stage of the pipeline your code is in, because eac
 ## development decorators
 `imsciutils` contains four decorators that are made for use by developers in the backend
 
-### @depreciated
-made to decorate functions or classes that are depreciated
+### @deprecated
+made to decorate functions or classes that are deprecated
 ```python
 import imsciutils as iu
 
-@iu.depreciated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
+@iu.deprecated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
 def old_function():
 	pass # real code will do something
 

@@ -4,26 +4,26 @@ from termcolor import colored
 import inspect
 import collections
 
-def depreciated(depreciation_msg):
+def deprecated(depreciation_msg):
     """
-    Decorator for functions that are depreciated but still extant,
+    Decorator for functions that are deprecated but still extant,
 
     Input:
         depreciation_msg (str,None): msg to print to the terminal when this function runs
 
     Example:
-        @iu.depreciated("custom depreciation message here")
+        @iu.deprecated("custom depreciation message here")
         def new_feature():
             do_something()
 
     """
-    def _depreciated(func):
-        def __depreciated(*args,**kwargs):
+    def _deprecated(func):
+        def __deprecated(*args,**kwargs):
             iu.warning("DEPRECIATION WARNING:", depreciation_msg)
             return func(*args,**kwargs)
 
-        return __depreciated
-    return _depreciated
+        return __deprecated
+    return _deprecated
 
 
 
