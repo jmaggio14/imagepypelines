@@ -10,14 +10,18 @@ Module Dependencies
 -------------------
 - numpy
 - matplotlib
-- opencv
 - scipy
 - keras
-- scikit-*
+- scikit-learn
 - termcolor
 - opencv3
 - Pillow
 - colorama (on windows)
+
+Install Dependencies
+```
+pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama --user
+```
 
 ## Documentation
 There is autodoc sphinx documentation with this project, following the google docstrings format. To build / view these docs on windows::
