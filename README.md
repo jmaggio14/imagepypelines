@@ -15,6 +15,9 @@ Module Dependencies
 - keras
 - scikit-*
 - termcolor
+- opencv3
+- Pillow
+- colorama (on windows)
 
 ## Documentation
 There is autodoc sphinx documentation with this project, following the google docstrings format. To build / view these docs on windows::
