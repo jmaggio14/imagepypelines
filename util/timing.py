@@ -124,7 +124,7 @@ class Timer(object):
     def time(self):
         """returns the time since the timer started or since it was
          last reset"""
-        return round(time.time() - self._start,3)
+        return round(self.raw_time(),3)
 
     def raw_time(self):
         """returns the unrounded time since the timer started"""
@@ -142,7 +142,8 @@ class Timer(object):
         if self._countdown_timer is None:
             return 0
 
-        countdown = max(self._countdown_start - self._countdown_timer.raw_time(),0)
+        countdown = self._countdown_start - self._countdown_timer.raw_time()
+        countdown = max(countdown,0)
         return countdown
 
 
