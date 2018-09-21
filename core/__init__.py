@@ -45,17 +45,19 @@ from .standard_image import list_standard_images
 from .standard_image import standard_image_gen
 from .standard_image import get_standard_image
 from .standard_image import standard_image_input
-from .standard_image import lenna
-from .standard_image import lenna_gray
-from .standard_image import crowd
-from .standard_image import redhat
-from .standard_image import linear
-from .standard_image import panda
-from .standard_image import panda_color
-from .standard_image import gecko
-from .standard_image import roger
-from .standard_image import pig
-from .standard_image import carlenna
+
+# ND 9/7/18 - dynamically load each of the previously created convience funcs
+# into the current namespace
+from .standard_image import STANDARD_IMAGES
+from .standard_image import funcs
+import sys
+
+curr_module = sys.modules[__name__]
+for img_name in STANDARD_IMAGES.keys():
+	setattr(curr_module, img_name, getattr(funcs, img_name))
+
+# ND 9/7/18 - delete these so that the imsciutils namespace is not polluted
+del sys, curr_module, img_name, funcs, STANDARD_IMAGES
 
 # Viewer.py
 from .Viewer import Viewer
