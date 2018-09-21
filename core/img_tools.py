@@ -82,4 +82,4 @@ def number_image(img,num):
                         thickness=2,
                         bottomLeftOrigin=False)
 
-    img
+    return img
