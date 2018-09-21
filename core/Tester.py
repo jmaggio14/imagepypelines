@@ -15,11 +15,12 @@ class Tester(object):
     def __init__(self, target, verbose=True):
         if not callable(target):
             error_msg = "'target' must be a callable class or function!"
-            iu.error(error_msg)
+            self.printer.error(error_msg)
             raise TypeError(error_msg)
 
         self.target = target
         self.verbose = verbose
+        self.printer = iu.get_printer(target.__name__ + " Tester")
 
 
     def __str__(self):
@@ -43,7 +44,6 @@ class Tester(object):
         """
         # printing out args and kwargs if desired by user
         if self.verbose:
-            print("----------TESTING '{}'----------".format(self.target.__name__))
             self.__print_args(*args,**kwargs)
 
 
@@ -51,7 +51,7 @@ class Tester(object):
         out = self.__run_target(*args,**kwargs)
 
         # testing the output
-        if iu.is_numpy_array(out) and iu.is_numpy_array(desired_output):
+        if iu.util.is_numpy_array(out) and iu.util.is_numpy_array(desired_output):
             has_failed = not np.all(out == desired_output)
         else:
             has_failed = (out != desired_output)
@@ -60,17 +60,17 @@ class Tester(object):
         if has_failed:
             # TEST HAS FAILED
             # converting to any numpy arrays to summaries for printout
-            if iu.is_numpy_array(desired_output):
+            if iu.util.is_numpy_array(desired_output):
                 desired_output = iu.util.Summarizer(desired_output)
-            if iu.is_numpy_array(out):
+            if iu.util.is_numpy_array(out):
                 out = iu.util.Summarizer(out)
 
-            iu.error("{} test failure expected output {}, but got {}"\
+            self.printer.error("{} test failure expected output {}, but got {}"\
                             .format(self.target.__name__,desired_output, out))
             return False
         else:
             # TEST HAS SUCEEDED
-            iu.comment("{} exact test success!".format(self.target.__name__))
+            self.printer.comment("{} exact test success!".format(self.target.__name__))
             return True
 
 
@@ -104,7 +104,6 @@ class Tester(object):
 
         # print out args and kwargs if desired
         if self.verbose:
-            print("--------TESTING '{}'--------".format(self.target.__name__))
             self.__print_args(*args,**kwargs)
 
         # run the target function
@@ -113,13 +112,13 @@ class Tester(object):
         # testing the output
         if not isinstance(out,tuple(desired_type)):
             # TEST HAS FAILED
-            iu.error("{} test failure expected output {}, but got {}"\
+            self.printer.error("{} test failure expected output {}, but got {}"\
                         .format(self.target.__name__,desired_type, type(out)))
 
             return False
         else:
             # TEST HAS SUCEEDED
-            iu.comment("{} type test successful! with type {}!"\
+            self.printer.comment("{} type test successful! with type {}!"\
                             .format(self.target.__name__,type(out)))
             return True
 
@@ -136,12 +135,11 @@ class Tester(object):
 
         """
         if self.verbose:
-            print("--------TESTING '{}'--------".format(self.target.__name__))
             self.__print_args(*args,**kwargs)
 
         if not callable(test_func):
             error_msg = "'test_func' must be a function or callable object"
-            iu.error(error_msg)
+            self.printer.error(error_msg)
             raise TypeError(error_msg)
 
         passed = test_func( self.target(*args,**kwargs) )
@@ -155,26 +153,78 @@ class Tester(object):
         """
         prints the arguments passed into the target
         """
-        iu.info("testing function '{}' with the following args:"\
-                                                .format(self.target.__name__))
-        arg_string = ""
-        arg_names = inspect.getfullargspec(self.target).args
-        # adds positional arguments to the printout
-        for i, arg in enumerate(args):
-            # summarizing an numpy array so prinout is more concise
-            if iu.is_numpy_array(arg):
-                arg = str(iu.Summarizer(arg))
-            arg_string += '\t{} : {}\n'.format(arg_names[i], arg)
+        POSITIONAL    = '(  positional  )'
+        KEYWORD       = '(   keyword    )'
+        VARPOSITIONAL = '(var-positional)'
+        VARKEYWORD    = '( var-keyword  )'
 
-        # adds keyword arguments to the printout
-        for key, val in kwargs.items():
-            # summarizing an numpy array so printout is more concise
-            if iu.is_numpy_array(val):
+        arg_dict = collections.OrderedDict()
+        vtypes = {}
+        def __add_to_arg_dict(key,val,vtype):
+            if iu.util.is_numpy_array(val):
                 val = str( iu.Summarizer(val) )
+            arg_dict[key] = val
+            vtypes[key] = vtype
 
-            arg_string += '\t{} : {}\n'.format(key, val)
 
-        print(arg_string)
+        spec = inspect.getfullargspec(self.target)
+        specdefaults = [] if spec.defaults is None else spec.defaults
+        specargs = [] if spec.args is None else spec.args
+        speckwonlyargs = [] if spec.kwonlyargs is None else spec.kwonlyargs
+        speckwonlydefaults = {} if spec.kwonlydefaults is None else spec.kwonlydefaults
+
+        num_positional_passed_in = len(args)
+        num_required = len(specargs) - len(specdefaults)
+
+        # adding default positional args values to the dictionary
+        for i,var_name in enumerate(specargs):
+            if i < num_required:
+                var = iu.util.red("No argument was passed in!",bold=True)
+            else:
+                var = specdefaults[i - num_required]
+
+            vtype = POSITIONAL
+            __add_to_arg_dict(var_name,var,vtype)
+
+        # positional arguments passed in and varargs passed in
+        for i in range(num_positional_passed_in):
+            if i < num_required:
+                var_name = specargs[i]
+                vtype = POSITIONAL
+            else:
+                var_name = 'arg{}'.format(i)
+                vtype = VARPOSITIONAL
+            var = args[i]
+            __add_to_arg_dict(var_name,var,vtype)
+
+        # adding keyword only args to the dict
+        for var_name in speckwonlyargs:
+            var = iu.util.red("No argument was passed in!",bold=True)
+            vtype = KEYWORD
+            __add_to_arg_dict(var_name,var,vtype)
+        for var_name,var in speckwonlydefaults.items():
+            vtype = KEYWORD
+            __add_to_arg_dict(var_name,var,vtype)
+
+        # keyword arguments passed in
+        for var_name in kwargs:
+            if var_name in specargs:
+                vtype = KEYWORD
+            else:
+                vtype = VARKEYWORD
+            var = kwargs[var_name]
+            __add_to_arg_dict(var_name,var,vtype)
+
+        # formatting the actual string to be printed out
+        iu.info("running '{}' with the following args:\n".format(self.target.__name__))
+        longest_arg_name = max(len(k) for k in arg_dict)
+        arg_string = ""
+        arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
+                                                            buf1=' ' * (len(POSITIONAL) // 2 - 4),
+                                                            buf2=' ' * (longest_arg_name // 2 - 7),)
+        arg_string += '\t' + '='*50 + '\n'
+        arg_string += ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
+        print( arg_string )
 
 
     def __run_target(self,*args,**kwargs):
@@ -183,18 +233,18 @@ class Tester(object):
             out = self.target(*args, *kwargs)
             return out
         except Exception as e:
-            iu.error("{} test failed to run!".format(self.target.__name__))
+            self.printer.error("{} test failed to run!".format(self.target.__name__))
             iu.util.debug(e)
 
 
 
 def main():
-    def test_target(a, b, c, ryanisdumb):
+    def test_target(a, b, c, ryanisdumb='yes'):
         return a
 
     tester = Tester(test_target)
     desired_output = False
-    tester.exact_test(desired_output, True, iu.lenna(), None, ryanisdumb="yes")
+    tester.exact_test(desired_output, True, iu.lenna(), None)
     tester.type_test(bool, True, iu.lenna(), None, ryanisdumb="yes")
 
 
