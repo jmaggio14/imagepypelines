@@ -35,7 +35,7 @@ def experimental(experimental_msg=None):
         experimental_msg (str,None): msg to print to the terminal when this function runs
 
     Example:
-        @iu.experimental()
+        @iu.experimental("optional message - you can leave blank")
         def new_feature():
             do_something()
 
@@ -63,7 +63,7 @@ def human_test(func):
     or interaction with displays
 
     Example:
-        iu.human_test # no parantheses are needed!
+        @iu.human_test # no parantheses are needed!
         def function_that_displays_something():
             do_something()
 
