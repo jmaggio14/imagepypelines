@@ -47,7 +47,7 @@ def experimental(experimental_msg=None):
     def _experimental(func):
         def __experimental(*args,**kwargs):
             if create_message:
-                experimental_msg = "'{}' is an experimental feature. Its functionality may be buggy or exhibit undefined behavior!".format(func.__name__)
+                experimental_msg = "'{}' is an experimental feature".format(func.__name__)
             iu.warning("EXPERIMENTAL WARNING:", experimental_msg)
             return func(*args,**kwargs)
 
