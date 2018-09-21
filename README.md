@@ -344,10 +344,10 @@ produces the following
 ```
 This way it's easy track what stage of the pipeline your code is in, because each object will have it's own printer and be distinguishable in the terminal!
 
-### development decorators
+## development decorators
 `imsciutils` contains four decorators that are made for use by developers in the backend
 
-#### @depreciated
+### @depreciated
 made to decorate functions or classes that are depreciated
 ```python
 import imsciutils as iu
@@ -363,7 +363,7 @@ produces the following
 ```
 (    imsciutils    )[   WARNING  ] DEPRECIATION WARNING: 'old_function' has been renamed to 'new_function'. references will be removed in a future version!
 ```
-#### @experimental
+### @experimental
 made to decorate functions or classes that are experimental and may not be fully tested yet
 ```python
 import imsciutils as iu
@@ -379,7 +379,7 @@ produces the following
 (    imsciutils    )[   WARNING  ] EXPERIMENTAL WARNING: 'new_feature' is an experimental feature
 ```
 
-#### @human_test
+### @human_test
 This is a decorator made for unit tests which require a human to verify functionality. (for example: functions that display images)
 
 **WARNING: unlike most decorators, this will not return the output of the wrapped function, but instead True or False.
@@ -400,7 +400,7 @@ did the test for 'display_image' succeed? Yes? No?
 ```
 
 
-#### @print_args
+### @print_args
 Decorator to print out the arguments a function is running with. Unlike other decorators described here, we encourage you to use this decorator frequently in your code during development to avoid silly mistakes
 ```python
 import imsciutils as iu
