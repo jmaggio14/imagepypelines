@@ -399,7 +399,7 @@ _lenna will display_
 
 produces the following the terminal for the user to answer
 ```
-did the test for 'display_image' succeed? Yes? No?
+did the test for 'unit_test_for_quick_image_view' succeed? Yes? No?
 ```
 
 
