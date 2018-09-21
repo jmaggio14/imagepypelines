@@ -295,9 +295,14 @@ class ExampleClass(object):
 	def do_something(self):
 		self.printer.warning("did something!")
 
+ExampleClass()
 ```
-
-
+produces the following
+```
+(   ExampleClass   )[    INFO    ] object instantiated!
+(   ExampleClass   )[   WARNING  ] did something!
+```
+This way it's easy track what stage of the pipeline your code is in, because each object will have it's own printer and be distinguishable in the terminal!
 
 ### development decorators
 `imsciutils` contains four decorators that are made for use by developers in the backend
