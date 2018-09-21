@@ -96,4 +96,4 @@ class Summarizer(dict):
 
 
     def __repr__(self):
-        return self.__str__().replace("|",'\n')
+        return str(self)
