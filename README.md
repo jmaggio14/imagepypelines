@@ -17,6 +17,7 @@ Module Dependencies
 - opencv3
 - Pillow
 - colorama (on windows)
+- Sphinx (for autodocumentation)
 
 Install Dependencies
 ```
