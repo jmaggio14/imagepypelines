@@ -16,3 +16,7 @@ CV2_INTERPOLATION_TYPES = (cv2.INTER_NEAREST,
                            cv2.INTER_AREA,
                            cv2.INTER_CUBIC,
                            cv2.INTER_LANCZOS4,)
+
+
+
+IMAGE_EXTENSIONS = ['.png','.jpg','.tiff','.tif','.bmp','.dib','.jp2','.jpe','.webp','.pbm','.pgm','.ppm','.sr','.ras']
