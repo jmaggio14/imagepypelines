@@ -258,3 +258,87 @@ for args,kwargs in config_factory:
 ```
 #### real world example
 let's say we are training a DNN classifier and we want to test
+
+
+
+# Development Tools in `imsciutils`
+**_This section is for developers of `imsciutils` or people who want `imsciutils` closely integrated with their projects_**
+
+## Printers
+Are you a Scientist or student???
+If so, then you probably use lots of print statements to debug your code. (don't worry, we are all guilty of it)
+
+
+
+`imsciutils` encourages the use of traceability through the use of an object known as a **`Printer`**. Printers are objects that simply print out what's happening in a manner that's easy to read, color coded, and traceable to the object that is performing the current action
+
+The functionality is similar to python's [`logging`](https://docs.python.org/3.7/library/logging.html) module
+
+
+### default printer
+
+
+
+### class printers
+a good strategy to encourage traceability is to create a printer object as a class instance attribute
+```python
+import imsciutils as iu
+
+class ExampleClass(object):
+	def __init__(self,*args,**kwargs):
+		name_of_class = self.__class__.__name__
+		self.printer = iu.get_printer(name_of_class)
+		self.printer.info("object instantiated!")
+
+		self.do_something()
+
+	def do_something(self):
+		self.printer.warning("did something!")
+
+```
+
+
+
+### development decorators
+`imsciutils` contains four decorators that are made for use by developers in the backend
+
+#### @depreciated
+made to decorate functions or classes that are depreciated
+```python
+import imsciutils as iu
+
+@iu.depreciated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
+def old_function():
+	pass # real code will do something
+
+old_function()
+```
+
+produces the following
+```
+(    imsciutils    )[   WARNING  ] DEPRECIATION WARNING: 'old_function' has been renamed to 'new_function'. references will be removed in a future version!
+```
+#### @experimental
+made to decorate functions or classes that are experimental and may not be fully tested yet
+```python
+import imsciutils as iu
+
+@iu.experimental() # you can include a custom message here if you want
+def new_feature():
+	pass
+
+new_feature()
+```
+produces the following
+```
+(    imsciutils    )[   WARNING  ] EXPERIMENTAL WARNING: 'new_feature' is an experimental feature
+```
+
+#### @human_test
+#### @print_args
+
+
+### Testers
+
+
+###
