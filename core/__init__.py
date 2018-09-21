@@ -1,6 +1,24 @@
 # constants.py
 from .constants import *
 
+# coordinates.py
+from .coordinates import centroid
+from .coordinates import frame_size
+from .coordinates import dimensions
+
+# debug.py
+from .debug import debug
+
+# development_decorators.py
+from .development_decorators import depreciated
+from .development_decorators import experimental
+from .development_decorators import human_test
+from .development_decorators import print_args
+# Exceptions
+from .Exceptions import CameraReadError
+from .Exceptions import InvalidInterpolationType
+from .Exceptions import InvalidNumpyType
+
 # Printer.py
 from .Printer import get_printer
 from .Printer import whitelist_printer
@@ -21,10 +39,6 @@ from .printout import error
 from .printout import critical
 from .printout import comment
 
-# Exceptions
-from .Exceptions import CameraReadError
-from .Exceptions import InvalidInterpolationType
-from .Exceptions import InvalidNumpyType
 
 # standard_image.py
 from .standard_image import list_standard_images
@@ -51,21 +65,10 @@ from .img_tools import normalize_and_bin
 from .img_tools import quick_image_view
 from .img_tools import number_image
 
-# coordinates.py
-from .coordinates import centroid
-from .coordinates import frame_size
-from .coordinates import dimensions
 
-
-# debug.py
-from .debug import debug
 
 # Tester.py
 from .Tester import Tester
 
 # Summarizer.py
 from .Summarizer import Summarizer
-
-# version_control.py
-from .version_control import depreciated
-from .version_control import experimental
