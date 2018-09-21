@@ -93,6 +93,34 @@ def human_test(func):
 
 
 def print_args(func):
+    """
+    Decorator to print out the arguments a function is running with,
+    this includes:
+            arguments passed in
+            default values that are unspecified
+            varargs (*args)
+            varkwargs (**kwargs)
+
+        Example:
+        import imsciutils as iu
+
+        iu.print_args
+        def func_with_lots_of_args(a, b, c=3, d=4):
+            pass
+        #
+        func_with_lots_of_args(1, b=2, c='not 3')
+
+        # produces the following in the terminal
+        >>>            type    | arg_name |  value
+        >>>    ==================================================
+        >>>    (  positional  ) a : 1
+        >>>    (   keyword    ) b : 2
+        >>>    (   keyword    ) c : not 3
+        >>>    (  positional  ) d : 4
+
+
+    """
+
     def _print_args(*args,**kwargs):
         """
         prints the arguments passed into the target
