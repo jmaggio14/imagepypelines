@@ -29,8 +29,8 @@ class ConfigFactory(object):
 
         kwarg_trials = {
                     'first':None, # trials for 'first' keyword argument
-                    'second':['I','J','K'], # trials for 'first' keyword argument
-                    'third':['i','j','k'], # trials for 'first' keyword argument
+                    'second':['I','J','K'], # trials for 'second' keyword argument
+                    'third':['i','j','k'], # trials for 'third' keyword argument
                     }
 
         permuter = ConfigFactory(*arg_trials,**kwarg_trials)
@@ -85,8 +85,14 @@ class ConfigFactory(object):
         return self._remaining
 
     def __str__(self):
-        out = "ConfigFactory ({} permutations remaining)".format(self.remaining())
+        num_remaining = "unknown"
+        if hasattr(self,'_remaining'):
+            num_remaining = self.remaining()
+        out = "ConfigFactory ({} permutations remaining)".format(num_remaining)
         return out
+
+    def __repr__(self):
+        return str(self) + ' @{}'.format( id(self) )
 
 
 def main():
