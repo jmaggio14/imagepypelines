@@ -265,19 +265,58 @@ let's say we are training a DNN classifier and we want to test
 **_This section is for developers of `imsciutils` or people who want `imsciutils` closely integrated with their projects_**
 
 ## Printers
-Are you a Scientist or student???
-If so, then you probably use lots of print statements to debug your code. (don't worry, we are all guilty of it)
+Are you a scientist???
+If so, then you probably use millions of print statements to debug your code. (don't worry, we are all guilty of it)
 
-
-
-`imsciutils` encourages the use of traceability through the use of an object known as a **`Printer`**. Printers are objects that simply print out what's happening in a manner that's easy to read, color coded, and traceable to the object that is performing the current action
+`imsciutils` encourages code traceability through the use of an object known as a **`Printer`**. Printers are objects that simply print out what's happening in a manner that's easy to read, color coded, and traceable to the object that is performing the current action. **Printers are extremely low overhead and will not affect the speed of your code more than a print statement.**
 
 The functionality is similar to python's [`logging`](https://docs.python.org/3.7/library/logging.html) module
 
+### making printers
+printers can be created or retrieved using the `get_printer` function
+```python
+printer = iu.get_printer('name your printer here')
+```
+
+### printer levels
+printer messages can be filtered be priority so that only desired messages can be seen. In `imsciutils`, printer levels are also color coded so they can be read easily in a console
+```
+debug --> 10 - blue text
+info --> 20 - white text
+warning --> 30 - yellow text
+comment --> 30 - green text
+error --> 40 - red text
+critical --> 50 - bold red text
+```
+Any level that is less than the current `GLOBAL_LOG_LEVEL` will **NOT** be printed. This makes it easy to filter out statements which may be erroneous or too numerous to make sense of.
+
+this value can be set with the `set_global_printout_level` function
+```python
+import imsciutils as iu
+iu.set_global_printout_level('warning') # debug and info statements will not print now
+```
+local printer levels can be set with `Printer.set_log_level`
+```python
+import imsciutils as iu
+printer = iu.get_printer('Example Printer')
+printer.set_log_level('error') # only error and critical functions will print
+```
+
+
+
+
+(this system is exactly the same as log_levels in python's [`logging`](https://docs.python.org/3.7/library/logging.html) module )
 
 ### default printer
-
-
+there's a default printer in `imsciutils` which is accessible through functions in the main module
+```python
+iu.debug('debug message') # level=10 --> (    imsciutils    )[    DEBUG    ] debug message
+iu.info('info message') # level=20 --> (    imsciutils    )[    INFO    ] debug message
+iu.warning('warning message') # level=30 --> (    imsciutils    )[    WARNING    ] warning message
+iu.error('error message') # level=40 --> (    imsciutils    )[    ERROR    ] error message
+iu.critical('critical message') # level=50 --> (    imsciutils    )[    CRITICAL    ] critical message
+iu.comment('comment message') # level=30 --> (    imsciutils    )[    COMMENT    ] comment message
+```
 
 ### class printers
 a good strategy to encourage traceability is to create a printer object as a class instance attribute
