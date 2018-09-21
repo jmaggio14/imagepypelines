@@ -102,15 +102,15 @@ def print_args(func):
             varkwargs (**kwargs)
 
         Example:
-        import imsciutils as iu
-
-        iu.print_args
-        def func_with_lots_of_args(a, b, c=3, d=4):
-            pass
-        #
-        func_with_lots_of_args(1, b=2, c='not 3')
-
-        # produces the following in the terminal
+        >>> import imsciutils as iu
+        >>>
+        >>> @iu.print_args
+        >>> def func_with_lots_of_args(a, b, c=3, d=4):
+        >>>     pass
+        >>>
+        >>> func_with_lots_of_args(1, b=2, c='not 3')
+        >>>
+        >>> # produces the following in the terminal
         >>>            type    | arg_name |  value
         >>>    ==================================================
         >>>    (  positional  ) a : 1
