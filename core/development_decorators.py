@@ -68,13 +68,15 @@ def human_test(func):
             do_something()
 
     """
+    query_string = "did the test for '{}' succeed? {Y}es? {N}o?\n".format(func.__name__,
+                                                                    Y=colored('Y',attrs=['bold']),
+                                                                    N=colored('N',attrs=['bold']))
     def _ask_input():
         if six.PY2:
-            input = raw_input
+            out = raw_input(query_string)
+        else:
+            out = input(query_string)
 
-        out = input("did the test for '{}' succeed? {Y}es? {N}o".format(func.__name__,
-                                                                        Y=colored('Y',attrs=['bold']),
-                                                                        N=colored('N',attrs=['bold'])))
         if out.lower() in ['yes','y']:
             return True
         elif out.lower() in ['no','n']:
@@ -129,6 +131,7 @@ def print_args(func):
         KEYWORD       = '(   keyword    )'
         VARPOSITIONAL = '(var-positional)'
         VARKEYWORD    = '( var-keyword  )'
+        DEFAULT       = '(   default    )'
 
         arg_dict = collections.OrderedDict()
         vtypes = {}
@@ -155,7 +158,7 @@ def print_args(func):
             else:
                 var = specdefaults[i - num_required]
 
-            vtype = POSITIONAL
+            vtype = DEFAULT
             __add_to_arg_dict(var_name,var,vtype)
 
         # positional arguments passed in and varargs passed in
@@ -175,7 +178,7 @@ def print_args(func):
             vtype = KEYWORD
             __add_to_arg_dict(var_name,var,vtype)
         for var_name,var in speckwonlydefaults.items():
-            vtype = KEYWORD
+            vtype = DEFAULT
             __add_to_arg_dict(var_name,var,vtype)
 
         # keyword arguments passed in
