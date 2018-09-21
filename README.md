@@ -20,7 +20,7 @@ Module Dependencies
 
 Install Dependencies
 ```
-pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama --user
+pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama Sphinx --user
 ```
 
 ## Documentation
