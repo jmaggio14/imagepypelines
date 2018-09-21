@@ -216,8 +216,8 @@ class Printer(object):
 
         prefix = self.level_text['warning']
         if self.ENABLE_COLOR:
-            prefix = iu.util.yellow(prefix)
-            messages = [iu.util.yellow(str(msg)) for msg in messages]
+            prefix = iu.util.yellow(prefix,bold=True)
+            messages = [iu.util.yellow(str(msg),bold=True) for msg in messages]
 
         print(prefix, *messages)
 
