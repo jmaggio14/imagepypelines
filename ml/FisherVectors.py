@@ -23,8 +23,17 @@ class FisherVectors(object):
             iu.error(error_msg)
             raise TypeError(error_msg)
 
+        return int(n_clusters)
 
-    def __validate_data(self,data):
+
+    def validate_data(self,data):
+        """
+        Asserts that the data passed in is a 3D array of the proper datatypes
+        and shape = (n_imgs, n_descriptors, n_features_per_descriptor)
+        for most applications, this is synonomous with (n_imgs, n_keypoints, descriptor_length)
+
+
+        """
         pass
 
 
