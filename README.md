@@ -282,6 +282,8 @@ printer = iu.get_printer('name your printer here')
 ### printer levels
 printer messages can be filtered be priority so that only desired messages can be seen. In `imsciutils`, printer levels are also color coded so they can be read easily in a console
 ```python
+import imsciutils as iu
+
 example_printer = iu.get_printer('example!')
 example_printer.debug('message') # prints 'message' at level 10 - blue text
 example_printer.info('message') # prints 'message' at level 20 - white text
