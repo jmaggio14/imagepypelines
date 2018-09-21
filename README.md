@@ -380,10 +380,43 @@ produces the following
 ```
 
 #### @human_test
+This is a decorator made for unit tests which require a human to verify functionality. (for example: functions that display images)
+
+**WARNING: unlike most decorators, this will not return the output of the wrapped function, but instead True or False.
+This is because it is meant for Unit Tests, NOT actual use in a pipeline**
+```python
+import imsciutils as iu
+@iu.human_test
+def display_image():
+	iu.quick_image_view( iu.lenna() )
+
+print('test succeeded ': display_image())
+```
+_lenna will display_
+
+produces the following the terminal for the user to answer
+```
+did the test for 'display_image' succeed? Yes? No?
+```
+
+
 #### @print_args
+Decorator to print out the arguments a function is running with. Unlike other decorators described here, we encourage you to use this decorator frequently in your code during development to avoid silly mistakes
+```python
+import imsciutils as iu
+@iu.print_args
+def func_with_lots_of_args(a, b, c=3, d=4):
+			pass
+func_with_lots_of_args(1, b=2, c='not 3')
+```
+produces the following in the terminal
+```
+(    imsciutils    )[    INFO    ] running 'func_with_lots_of_args' with the following args:
 
-
-### Testers
-
-
-###
+            type    | arg_name |  value
+        ==================================================
+        (  positional  ) a : 1
+        (   keyword    ) b : 2
+        (   keyword    ) c : not 3
+        (   default    ) d : 4
+```
