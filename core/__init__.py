@@ -10,7 +10,7 @@ from .coordinates import dimensions
 from .debug import debug
 
 # development_decorators.py
-from .development_decorators import depreciated
+from .development_decorators import deprecated
 from .development_decorators import experimental
 from .development_decorators import human_test
 from .development_decorators import print_args
