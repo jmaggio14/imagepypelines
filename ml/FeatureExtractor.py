@@ -9,7 +9,7 @@ import os
 class FeatureExtractor(object):
     """
     Class to extract features from pretrained neural networks
-    trained on imagenet with max pooling applied.
+    trained on imagenet with pooling applied.
 
     This class utilizes keras to automatically leverage
     hardware resources and retrieve pretrained networks.
