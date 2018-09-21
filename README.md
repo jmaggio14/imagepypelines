@@ -275,6 +275,7 @@ The functionality is similar to python's [`logging`](https://docs.python.org/3.7
 ### making printers
 printers can be created or retrieved using the `get_printer` function
 ```python
+import imsciutils as iu
 printer = iu.get_printer('name your printer here')
 ```
 
