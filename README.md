@@ -390,10 +390,10 @@ This is because it is meant for Unit Tests, NOT actual use in a pipeline**
 ```python
 import imsciutils as iu
 @iu.human_test
-def display_image():
+def unit_test_for_quick_image_view():
 	iu.quick_image_view( iu.lenna() )
 
-print('test succeeded ': display_image())
+print('test succeeded ': unit_test_for_quick_image_view())
 ```
 _lenna will display_
 
