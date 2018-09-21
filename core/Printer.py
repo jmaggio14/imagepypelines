@@ -281,3 +281,10 @@ class Printer(object):
     def __del__(self):
         if self.name in self.ACTIVE_PRINTERS:
             del self.ACTIVE_PRINTERS[self.name]
+            
+        if self.name in self.BLACKLIST:
+            self.BLACKLIST.remove(self.name)
+
+        if self.WHITELIST != 'all':
+            if self.name in self.WHITELIST:
+                self.WHITELIST.remove(self.name)
