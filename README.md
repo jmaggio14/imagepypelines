@@ -281,13 +281,14 @@ printer = iu.get_printer('name your printer here')
 
 ### printer levels
 printer messages can be filtered be priority so that only desired messages can be seen. In `imsciutils`, printer levels are also color coded so they can be read easily in a console
-```
-debug --> 10 - blue text
-info --> 20 - white text
-warning --> 30 - yellow text
-comment --> 30 - green text
-error --> 40 - red text
-critical --> 50 - bold red text
+```python
+example_printer = iu.get_printer('example!')
+example_printer.debug('message') # prints 'message' at level 10 - blue text
+example_printer.info('message') # prints 'message' at level 20 - white text
+example_printer.warning('message') # prints 'message' at level 30 - yellow text
+example_printer.comment('message') # prints 'message' at level 30 - green text
+example_printer.error('message') # prints 'message' at level 40 - red text
+example_printer.critical('message') # prints 'message' at level 50 - bold red text
 ```
 Any level that is less than the current `GLOBAL_LOG_LEVEL` will **NOT** be printed. This makes it easy to filter out statements which may be erroneous or too numerous to make sense of.
 
