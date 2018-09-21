@@ -1,6 +1,7 @@
 from marrow.mailer import Mailer, Message
 import socket
 
+@iu.experimental()
 class Emailer(object):
     def __init__(self,recipients,subject="noreply: imsciutils automated email"):
         # build the list of recipients as a single string

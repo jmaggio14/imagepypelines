@@ -36,7 +36,7 @@ def setup_smpt_server():
     controller.start()
     return controller,controller.hostname, controller.port
 
-
+@iu.experimental()
 class Emailer(object):
     """
     WIP!
