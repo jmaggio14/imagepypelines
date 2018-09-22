@@ -1,9 +1,18 @@
+#!/usr/bin/env python
+
+"""
+Adds testing functions in this file, any functions you write will
+be automatically run
+    -JM
+"""
+
+
 import imsciutils as iu
 
 # constants.py
 def test_constants():
-    testing_printer = iu.get_printer('test_constants')
     import imsciutils as iu
+    testing_printer = iu.get_printer('test_constants')
     if not 'CV2_INTERPOLATION_TYPES' in dir(iu):
         return False
     if not 'NUMPY_TYPES' in dir(iu):
@@ -16,6 +25,7 @@ def test_constants():
 
 # coordinates.py
 def test_centroid():
+    import imsciutils as iu
     testing_printer = iu.get_printer('test_centroid')
     tester = iu.util.Tester(iu.centroid)
     lenna = iu.lenna()
@@ -27,23 +37,25 @@ def test_centroid():
 
 
 def test_frame_size():
+    import imsciutils as iu
     testing_printer = iu.get_printer('test_frame_size')
     tester = iu.util.Tester(iu.frame_size)
     lenna = iu.lenna()
     desired_output = tuple( lenna.shape[:2] )
-    if not tester.exact_test(desired_output,lenna)
+    if not tester.exact_test(desired_output,lenna):
         return False
 
     return True
 
 
 def test_dimensions():
+    import imsciutils as iu
     testing_printer = iu.get_printer('test_dimensions')
     tester = iu.Tester(iu.dimensions)
     lenna = iu.lenna()
     # tuple test
     desired_output = (lenna.shape[0],lenna.shape[1],lenna.shape[2],lenna.dtype)
-    if not tester.exact_test(desired_output,lenna)
+    if not tester.exact_test(desired_output,lenna):
         return False
     # dimensions test
     desired_output = {
@@ -52,7 +64,7 @@ def test_dimensions():
                         'bands':lenna.shape[2],
                         'dtype':lenna.dtype,
                         }
-    if not tester.exact_test(desired_output,lenna)
+    if not tester.exact_test(desired_output,lenna):
         return False
 
     return True
@@ -61,11 +73,12 @@ def test_dimensions():
 
 # img_tools.py
 def test_normalize_and_bin():
+    import imsciutils as iu
     testing_printer = iu.get_printer('test_normalize_and_bin')
     tester = iu.Tester(iu.normalize_and_bin)
     lenna = iu.lenna()
-    desired_output= = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
-    if not tester.exact_test(desired_output,lenna)
+    desired_output = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
+    if not tester.exact_test(desired_output,lenna):
         return False
 
     return True
@@ -73,6 +86,25 @@ def test_normalize_and_bin():
 
 
 
+
+
+
+
+
+def main():
+    """
+    runs all other function in this file automatically and prints out success
+    or failure
+    """
+    import sys
+    from imsciutils import unit_test
+
+    unit_tests = [unit_test(var) for var in globals().values() if callable(var)]
+    for test in unit_tests:
+        test()
+
+if __name__ == '__main__':
+    main()
 
 
 
