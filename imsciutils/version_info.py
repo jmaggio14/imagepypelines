@@ -4,3 +4,5 @@ __copyright__ = "Copyright 2018"
 __credits__ = ["Jeff Maggio", "Nathan Dileas", "Ryan Hartzell"]
 __license__ = "MIT"
 __status__ = "Experimental"
+__email__ = "jmaggio14@gmail.com"
+__url__ = 'https://github.com/jmaggio14/imsciutils'
