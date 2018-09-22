@@ -16,13 +16,13 @@ def function_timer(func):
     """
     Decorator to time how long a func takes to run in seconds
 
-    EXAMPLE:
+    Example:
         @function_timer
         def sleep_for_one_sec():
             time.sleep(1) # sleep for 1 second
 
-        >>> sleep_for_one_sec()
-        (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
+        sleep_for_one_sec()
+        # (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
     printer = iu.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
@@ -42,13 +42,13 @@ def function_timer_ms(func):
     """
     Decorator to time how long a func takes to run in milliseconds
 
-    EXAMPLE:
+    Example:
         @function_timer
         def sleep_for_one_sec():
             time.sleep(1) #sleep for 1 second
 
-        >>> sleep_for_one_sec()
-        (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
+        sleep_for_one_sec()
+        # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
     printer = iu.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
@@ -69,24 +69,12 @@ class Timer(object):
     """
     Timer which can be used to time processes
 
-    attributes::
+    Attributes:
         _start (float): start time in seconds since the epoch
         _last (float): last time the lap timer was called
         _countdown (float): countdown time if set (recalculated with
                             the countdown property)
         _last_countdown (float): last countdown time check
-
-    functions::
-        reset(): resets the timer (runs __init__())
-        time(): time since the timer started or was last reset
-        lap(): time since lap was last accessed (or when timer was created
-        for the first access)
-
-    properties::
-        countdown: countdown time, recalculated every time it's called.
-                        never below 0
-        countdown.setter: sets the value of countdown
-
 
     Example:
         #we need to do an action for 10 seconds

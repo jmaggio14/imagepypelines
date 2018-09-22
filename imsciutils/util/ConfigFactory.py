@@ -16,14 +16,14 @@ class ConfigFactory(object):
     object is meant to simplify that process by generating permutations
     from a sample of arguments and keyword arguments
 
-    Example::
+    Example:
         def run_important_test(arg1,arg2,arg3,first,second,third):
             do_something_important()
 
 
         arg_trials = [
                 [1,2,3], # trials for first positional argument
-                ['a','b','c'], # trials for first positional arguments
+                ['a','b','c'], # trials for second positional arguments
                 ['y','z'], # trials for third positional argument
                 ]
 
