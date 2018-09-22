@@ -22,6 +22,7 @@ def frame_size(img):
 
     Args:
         img (np.ndarray): input img to find frame_size of
+
     Returns:
         tuple: frame_size, height and width of the input img
 
