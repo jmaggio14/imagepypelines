@@ -71,6 +71,7 @@ class CameraCapture(object):
 
         Args:
             None
+            
         Returns:
             np.ndarray: image frame from the Capture Stream
         """
@@ -101,6 +102,7 @@ class CameraCapture(object):
 
         Args:
             None
+
         Returns:
             dict: dictionary containing all metadata values
         """

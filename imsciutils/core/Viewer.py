@@ -52,6 +52,7 @@ class Viewer(object):
 
         Args:
             None
+            
         Returns:
             None
         """
@@ -63,6 +64,7 @@ class Viewer(object):
 
         Args:
             frame (np.ndarray): image to be displayed
+
         Returns:
             force_waitkey (int) = 1:
                 if greater than zero, then call a waitkey for the
@@ -102,9 +104,10 @@ class Viewer(object):
     def close(self):
         """
         closes the image viewing window
-        
+
         Args:
             None
+
         Returns:
             None
         """

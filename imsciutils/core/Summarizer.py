@@ -59,6 +59,7 @@ class Summarizer(dict):
 
         Args:
             None
+            
         Returns:
             summary (dict): dict containing the following [shape, size, max,
                 min, mean, dtype]

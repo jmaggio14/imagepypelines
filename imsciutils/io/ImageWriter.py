@@ -61,6 +61,7 @@ class ImageWriter(object):
 
         Args:
             frame (np.ndarray): frame to be saved to the output_dir
+            
         Returns:
             None
         """

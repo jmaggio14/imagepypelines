@@ -272,6 +272,7 @@ class Printer(object):
 
         Args:
             *messages: objects or messages to print out at critical level
+
         Returns:
             None
         """
@@ -291,6 +292,7 @@ class Printer(object):
 
         Args:
             *messages: objects or messages to print out at comment level
+            
         Returns:
             None
         """
