@@ -34,6 +34,14 @@ And on every other platform::
 	cd docs && make html
 
 Then the html documentation will be available at docs/build/html/index.html
+
+If you modify the import structure, you may need to regenerate the autodoc statements. From the root:
+
+```
+sphinx-apidoc -o docs/source imsciutils
+```
+
+Then rebuild and check that your module was properly included. Don't forget to add the modified (or new) files to the commit.
 _____________________________
 
 # BASIC HOW TOs
