@@ -2,7 +2,7 @@
 def test_quick_image_view():
     """THIS TEST REQUIRES A HUMAN TO VIEW THE IMAGE"""
     import imsciutils as iu
-    testing_printer = iu.get_printer('TESTING')
+    testing_printer = iu.get_printer('test_quick_image_view')
 
     pig = iu.pig()
     iu.quick_image_view(pig,'quick_image_view test')
@@ -11,7 +11,7 @@ def test_quick_image_view():
 @iu.human_test
 def test_number_image():
     import imsciutils as iu
-    testing_printer = iu.get_printer('TESTING')
+    testing_printer = iu.get_printer('test_number_image')
 
     pig = iu.pig()
     linear = iu.linear()

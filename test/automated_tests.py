@@ -2,7 +2,7 @@ import imsciutils as iu
 
 # constants.py
 def test_constants():
-    testing_printer = iu.get_printer('TESTING')
+    testing_printer = iu.get_printer('test_constants')
     import imsciutils as iu
     if not 'CV2_INTERPOLATION_TYPES' in dir(iu):
         return False
@@ -16,7 +16,7 @@ def test_constants():
 
 # coordinates.py
 def test_centroid():
-    testing_printer = iu.get_printer('TESTING')
+    testing_printer = iu.get_printer('test_centroid')
     tester = iu.util.Tester(iu.centroid)
     lenna = iu.lenna()
     desired_output = (256,256)
@@ -27,7 +27,7 @@ def test_centroid():
 
 
 def test_frame_size():
-    testing_printer = iu.get_printer('TESTING')
+    testing_printer = iu.get_printer('test_frame_size')
     tester = iu.util.Tester(iu.frame_size)
     lenna = iu.lenna()
     desired_output = tuple( lenna.shape[:2] )
@@ -38,7 +38,7 @@ def test_frame_size():
 
 
 def test_dimensions():
-    testing_printer = iu.get_printer('TESTING')
+    testing_printer = iu.get_printer('test_dimensions')
     tester = iu.Tester(iu.dimensions)
     lenna = iu.lenna()
     # tuple test
@@ -61,7 +61,7 @@ def test_dimensions():
 
 # img_tools.py
 def test_normalize_and_bin():
-    testing_printer = iu.get_printer('TESTING')
+    testing_printer = iu.get_printer('test_normalize_and_bin')
     tester = iu.Tester(iu.normalize_and_bin)
     lenna = iu.lenna()
     desired_output= = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
