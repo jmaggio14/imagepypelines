@@ -4,17 +4,18 @@ from PIL import Image
 
 
 def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
-    """
+    """normalizes and bins an image
+
     normalizes and bins the bins the input image to a given bit depth
     and max_count
 
-    input::
+    Args:
         src (np.ndarray): input image
         max_count (int,float): max value in output image
         cast_type (numpy.dtype): np.dtype the final array is casted to
 
-    return::
-        img (np.ndarray): normalized and binned image
+    Returns:
+        np.ndarray: normalized and binned image
 
     """
     assert isinstance(src, np.ndarray), "'src' must be np.ndarray"
@@ -30,16 +31,17 @@ def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
 def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
     """
     quickly displays the image using a PIL Image Viewer
-    (which uses ImageMagick -- this will work over ssh)
+    (which uses ImageMagick over X11 -- this will work over ssh)
 
-    input::
-        img (np.ndarray):
-            input image you want to view
-        normalize_and_bin (bool) = False:
+    Args:
+        img (np.ndarray): input image you want to view
+        normalize_and_bin (bool, optional): Defaults to False
             boolean value indicating whether or not to normalize
             and bin the image
+        title (str, optional): title for the image window.
+            Default is 'quick view image'
 
-    return::
+    Returns:
         None
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
@@ -56,16 +58,15 @@ def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
     img.show(title)
 
 
-def number_image(img,num):
-    """
-    Adds a number to the corner of an image
+def number_image(img, num):
+    """Adds a number to the corner of an image
 
-    input::
+    Args:
         img (np.ndarray): image
-        num (int): number to put in the corner of the image
+        num (int,str): number to put in the corner of the image
 
-    returns::
-        img (np.ndarray): numbered image
+    Returns:
+        np.ndarray: numbered image
     """
     r,c,b,_ = iu.dimensions(img)
     loc = int( min(r,c) * .95 )

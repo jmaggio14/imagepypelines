@@ -17,7 +17,7 @@ class CameraCapture(object):
     """
     object used to talk to pull imagery from UVC camera (webcam)
 
-    Instantiation Args::
+    Args:
         cam (str,int) = 0:
             the file path to the camera, or alternatively the camera's
             numerical device id (on linux, this number is at the end of
@@ -27,18 +27,10 @@ class CameraCapture(object):
              the codec used to encode images off the camera. Many UVC
              camera device achieve highest frame rates with MJPG
 
-    attributes::
+    Attributes:
         cap (cv2.VideoCapture): the cv2 camera object
         fourcc (str): the fourcc codec used for this camera
         frame_number (int): the number of frame retrieval attempts
-
-    functions::
-        retrieve
-        metadata
-        change_setting
-
-    properties::
-        None
 
     """
 
@@ -77,11 +69,10 @@ class CameraCapture(object):
         reads an image from the capture stream, returns a static debug
         frame if it fails to read the frame
 
-        input::
+        Args:
             None
-        return::
-            frame (marvin.Frame) image frame from the Capture Stream
-            or debugging frame if there is a problem with the capture
+        Returns:
+            np.ndarray: image frame from the Capture Stream
         """
         status = False
         self.frame_number += 1
@@ -108,10 +99,10 @@ class CameraCapture(object):
         WARNING - what metadata is available is dependent on what
         camera is attached!
 
-        input::
+        Args:
             None
-        return::
-            metadata (dict): dictionary containing all metadata values
+        Returns:
+            dict: dictionary containing all metadata values
         """
         metadata = {
             "width": self.__get_prop(cv2.CAP_PROP_FRAME_WIDTH),
@@ -134,7 +125,15 @@ class CameraCapture(object):
     def change_setting(self, setting, value):
         """changes a setting on the capture object
         acceptable
-        return::
+
+        Args:
+            setting (str): The setting to modify. Must be one of
+                [width,height,fps,contrast,brightness,hue,gain,
+                exposure,writer_dims,fourcc,fourcc_val,
+                capture_time,frame_number]
+            value (variable): The value to switch the setting to
+
+        Returns:
             None
         """
         if setting not in self._changeable_settings:
@@ -153,10 +152,10 @@ class CameraCapture(object):
         gets a camera property
         wrapper for VideoCapture.get function
 
-        input::
+        Args:
             flag (opencv constant): flag indicating what metadata to get
 
-        return::
+        Returns:
             the camera property requested
         """
 

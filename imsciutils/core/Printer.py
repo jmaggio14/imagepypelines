@@ -4,6 +4,13 @@ import imsciutils as iu
 def get_printer(name, log_level='info'):
     """
     creates or retrieves a printer object
+
+    Args:
+        name (str): name of the Printer to create or retrieve
+        log_level (str,int): local log level for the Printer
+
+    Returns:
+        iu.Printer: printer with the given name
     """
     if name in Printer.ACTIVE_PRINTERS:
         return Printer.ACTIVE_PRINTERS[name]
@@ -16,6 +23,9 @@ def whitelist_printer(name):
     whitelisted the given printer
 
     only whitelisted printers will print to the terminal
+
+    Args:
+        name (str): name of the printer to whilelist
     """
     # remove from blacklist if it's currently on it
     if name in Printer.BLACKLIST:
@@ -33,6 +43,9 @@ def blacklist_printer(name):
     Blacklists the given printer
 
     When a printer is blacklisted, it will not print out to the terminal
+
+    Args:
+        name (str): name of the printer to blacklist
     """
     # remove from whitelist if it currently exists
     if name in Printer.WHITELIST:
@@ -43,9 +56,7 @@ def blacklist_printer(name):
         Printer.BLACKLIST.append(name)
 
 def reset_printer_lists():
-    """
-    resets the white and black lists to their default values
-    """
+    """resets the white and black lists to their default values"""
     Printer.WHITELIST = 'all'
     Printer.BLACKLIST = []
 
@@ -66,18 +77,19 @@ def get_active_printers():
 def set_global_printout_level(log_level):
     """
     sets the global log level
-    input:
+    Args:
         log_level (int,str):
             the log level to set the global log level
 
-    return:
+    Returns:
         None
     """
     if log_level in Printer.LOG_LEVELS:
         log_level = Printer.LOG_LEVELS[log_level]
 
     if not isinstance(log_level,(int,float)):
-        iu.error("unable to set log_level to {}, must be an integer".format(log_level))
+        iu.error("unable to set log_level to {}, must be an integer".format(
+                                                                    log_level))
         return
 
     Printer.GLOBAL_LOG_LEVEL = log_level
@@ -144,6 +156,12 @@ class Printer(object):
         """
         Determines whether or not the given message level should print
         to the terminal
+
+        Args:
+            message_level (str,int): level of the message
+
+        Returns:
+            bool: Whether or not the printer should print at that level
         """
         if message_level in self.LOG_LEVELS:
             message_level = self.LOG_LEVELS[message_level]
@@ -169,6 +187,7 @@ class Printer(object):
         return True
 
     def set_log_level(self,log_level):
+        """sets the local log_level for this printer"""
         if log_level in self.LOG_LEVELS:
             log_level = self.LOG_LEVELS[log_level]
         self.__error_check(self.name, log_level)
@@ -178,10 +197,10 @@ class Printer(object):
     def debug(self, *messages):
         """
         prints out objects at debug level for this printer
-        input:
-            *messages (unpacked args):
-                objects or messages to print out at debug level
-        return:
+
+        Args:
+            *messages: objects or messages to print out at debug level
+        Returns:
             None
         """
         if not self.should_print('debug'):
@@ -197,10 +216,10 @@ class Printer(object):
     def info(self, *messages):
         """
         prints out objects at info level for this printer
-        input:
-            *messages (unpacked args):
-                objects or messages to print out at info level
-        return:
+
+        Args:
+            *messages: objects or messages to print out at info level
+        Returns:
             None
         """
         if not self.should_print('info'):
@@ -212,10 +231,10 @@ class Printer(object):
     def warning(self, *messages):
         """
         prints out objects at warning level for this printer
-        input:
-            *messages (unpacked args):
-                objects or messages to print out at warning level
-        return:
+
+        Args:
+            *messages: objects or messages to print out at warning level
+        Returns:
             None
         """
         if not self.should_print('warning'):
@@ -231,10 +250,10 @@ class Printer(object):
     def error(self, *messages):
         """
         prints out objects at error level for this printer
-        input:
-            *messages (unpacked args):
-                objects or messages to print out at error level
-        return:
+
+        Args:
+            *messages: objects or messages to print out at error level
+        Returns:
             None
         """
         if not self.should_print('error'):
@@ -250,10 +269,10 @@ class Printer(object):
     def critical(self, *messages):
         """
         prints out objects at critical level for this printer
-        input:
-            *messages (unpacked args):
-                objects or messages to print out at critical level
-        return:
+
+        Args:
+            *messages: objects or messages to print out at critical level
+        Returns:
             None
         """
         if not self.should_print('critical'):
@@ -269,10 +288,10 @@ class Printer(object):
     def comment(self, *messages):
         """
         prints out objects at comment level for this printer
-        input:
-            *messages (unpacked args):
-                objects or messages to print out at comment level
-        return:
+
+        Args:
+            *messages: objects or messages to print out at comment level
+        Returns:
             None
         """
         if not self.should_print('comment'):

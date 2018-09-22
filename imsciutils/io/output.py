@@ -14,16 +14,15 @@ def prevent_overwrite(filename,create_file=False):
         PROCESS -- it is much more efficient to keep track of filenames
         internally in your application
 
-    input::
-        filename (str):
-                the full file or directory path to be
-                overwrite protected
-        create_file (bool) = False:
-                boolean indicating whether or not to create the file
-                before returning
+    Args:
+        filename (str): the full file or directory path to be
+            overwrite protected
+        create_file (bool): Default is False
+            boolean indicating whether or not to create the file
+            before returning
 
-    return::
-        out_filename (str): the assuredly unique output filename
+    Returns:
+        str: the assuredly unique output filename
     """
     base_filename,extension = os.path.splitext(filename)
     out_filename = filename
@@ -65,14 +64,13 @@ def make_numbered_prefix(file_number,number_digits=5):
         "00001example_output_file.txt"
         "00002example_output_file.txt"
 
-    input::
-        file_number (int):
-                    the number you want to prefix
-        number_digits (int) = 5:
-                    minimum number of digits in the output string
-    return::
-        numbered_string (str): string of numbers with standard
-            at least 'number_digits' of digits
+    Args:
+        file_number (int): the number you want to prefix
+        number_digits (int): minimum number of digits in the output
+            string. Default is 5
+    Returns:
+        str: string of numbers with standard at least
+            'number_digits' of digits
     """
     file_number = int( file_number )
     if file_number < 0:

@@ -5,16 +5,17 @@ import inspect
 import collections
 
 def deprecated(depreciation_msg):
-    """
-    Decorator for functions that are deprecated but still extant,
+    """Decorator for functions that are deprecated but still extant,
 
-    Input:
-        depreciation_msg (str,None): msg to print to the terminal when this function runs
+    Args:
+        depreciation_msg (str): msg to print to the terminal when this
+            function runs.
 
     Example:
+        import imsciutils as iu
         @iu.deprecated("custom depreciation message here")
         def new_feature():
-            do_something()
+            pass
 
     """
     def _deprecated(func):
@@ -31,10 +32,12 @@ def experimental(experimental_msg=None):
     """
     Decorator for functions that are considered experimental,
 
-    Input:
-        experimental_msg (str,None): msg to print to the terminal when this function runs
+    Args:
+        experimental_msg (str, None): msg to print to the terminal when this
+            function runs
 
     Example:
+        import imsciutils as iu
         @iu.experimental("optional message - you can leave blank")
         def new_feature():
             do_something()
@@ -62,7 +65,11 @@ def human_test(func):
     such as tests that perform complicated segmentation, classification, graphing
     or interaction with displays
 
+    Args:
+        func (callable): function or other callable to wrap in a unit test
+
     Example:
+        import imsciutils as iu
         @iu.human_test # no parantheses are needed!
         def function_that_displays_something():
             do_something()
@@ -103,22 +110,24 @@ def print_args(func):
             varargs (*args)
             varkwargs (**kwargs)
 
-        Example:
-        >>> import imsciutils as iu
-        >>>
-        >>> @iu.print_args
-        >>> def func_with_lots_of_args(a, b, c=3, d=4):
-        >>>     pass
-        >>>
-        >>> func_with_lots_of_args(1, b=2, c='not 3')
-        >>>
-        >>> # produces the following in the terminal
-        >>>            type    | arg_name |  value
-        >>>    ==================================================
-        >>>    (  positional  ) a : 1
-        >>>    (   keyword    ) b : 2
-        >>>    (   keyword    ) c : not 3
-        >>>    (  positional  ) d : 4
+    Args:
+        func (callable): function or callable to print input arguments of
+
+    Example:
+        import imsciutils as iu
+        @iu.print_args
+        def func_with_lots_of_args(a, b, c=3, d=4):
+            pass
+
+        func_with_lots_of_args(1, b=2, c='not 3')
+
+        # produces the following in the terminal
+        #         type    | arg_name |  value
+        # ==================================================
+        # (  positional  ) a : 1
+        # (   keyword    ) b : 2
+        # (   keyword    ) c : not 3
+        # (  positional  ) d : 4
 
 
     """

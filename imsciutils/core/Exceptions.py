@@ -2,9 +2,18 @@ import imsciutils
 import cv2
 
 class CameraReadError(ValueError):
+    """Exception raised when the CameraCapture device is unable to
+    read the camera
+    """
     pass
 
-class InvalidInterpolationType(ValueError):
+class InvalidInterpolationType(TypeError):
+    """
+    Exception for an invalid interpolation Type where it's applicable
+
+    Args:
+        interp (cv2.constant): interpolation type
+    """
     def __init__(self,interp):
         interp_string = """cv2.INTER_NEAREST --> {}
                         cv2.INTER_LINEAR --> {}
@@ -14,7 +23,7 @@ class InvalidInterpolationType(ValueError):
                                                             cv2.INTER_LINEAR,
                                                             cv2.INTER_AREA,
                                                             cv2.INTER_CUBIC,
-                                                            cv2.INTER_LANCZOS4,)
+                                                            cv2.INTER_LANCZOS4)
         error_string = "'interpolation' ({}) must be one of the following!"\
                                                             .format(interp)
         error_string = error_string + '\n' + interp_string
@@ -22,7 +31,13 @@ class InvalidInterpolationType(ValueError):
         super(InvalidInterpolationType,self).__init__(error_string)
 
 
-class InvalidNumpyType(ValueError):
+class InvalidNumpyType(TypeError):
+    """
+    Exception for an invalid interpolation Type where it's applicable
+
+    Args:
+        dtype (np.dtype): numpy datatype
+    """
     def __init__(self,dtype):
         error_string = "'dtype' ({}) must be one of the following!"\
                                                             .format(dtype)

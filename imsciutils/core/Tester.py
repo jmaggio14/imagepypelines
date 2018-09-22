@@ -9,8 +9,9 @@ class Tester(object):
     Testing object used to simply unit testing for a target function. This object
     can perform exact and type check tests on a target function and interally
 
-
-
+    Args:
+        target (callable): function target to test
+        verbose (bool): whether or not to be verbose
     """
     def __init__(self, target, verbose=True):
         if not callable(target):
@@ -34,13 +35,15 @@ class Tester(object):
         Checks whether the target function outputs the exact output given
         by 'desired_output'
 
-        Input::
-            desired_output (variable): the exact output the target function should return
+        Args:
+            desired_output (variable): the exact output the target
+                function should return
             *args: positional arguments for the target
             **kwargs: keyword arguments for the target
 
-        Returns::
-            passed (boolean): whether or not the output was one of the desired_type
+        Returns:
+            bool: whether or not the output is the same as the
+                desired_output
         """
         # printing out args and kwargs if desired by user
         if self.verbose:
@@ -79,16 +82,16 @@ class Tester(object):
         Checks whether the target function outputs the correct type or types
         given a set of args and kwargs
 
-        Input::
-            desired_type (type or iterable of types): the type or types the output
-                function should return
+        Args:
+            desired_type (type,Iterable of types): the type or types
+                the output function should return
             *args: positional arguments for the target
             **kwargs: keyword arguments for the target
 
-        Returns::
+        Returns:
             passed (boolean): whether or not the output was one of the desired_type
 
-        EXAMPLE:
+        Example:
             def output_str_or_int(a):
                 if a:
                     return "1"
@@ -128,7 +131,7 @@ class Tester(object):
         function to build custom tests using an input function
         that will evaluate the output of the target
 
-        input::
+        Args:
             test_func (callable): the function to evaluate
             *args: positional arguments for the target
             **kwargs: keyword arguments for the target

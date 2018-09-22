@@ -26,22 +26,19 @@ class ImageWriter(object):
 
     automatic resizing is also available
 
-    input::
+    Args:
         output_dir (str):
             path to output directory that images will be saved to
-        base_filename (str) = "image.png":
+        base_filename (str): default is 'image.png'
             filename common among all images, these will be incremented
-            numerically as such
-        size (tuple,None) = None:
+            numerically with each new image saved
+        size (tuple,None): Default is None
             size of the image if forced resizing is desired, or
             None if raw write is desired
-        interpolation (cv2 interpolation type) = cv2.INTER_NEAREST:
+        interpolation (cv2 interpolation type):
+            Default is cv2.INTER_NEAREST
             interpolation method to be used if resizing is desired
 
-    functions::
-        write(frame):
-            writes a frame with a unique filename to the specificed
-            image directory
     """
 
     def __init__(self, output_dir,
@@ -61,9 +58,10 @@ class ImageWriter(object):
         """
         writes an image frame to the specificed directory, forces
         resizing if specified when the class is instantiated
-        input::
+
+        Args:
             frame (np.ndarray): frame to be saved to the output_dir
-        return::
+        Returns:
             None
         """
         self.image_number += 1

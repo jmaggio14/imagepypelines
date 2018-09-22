@@ -1,7 +1,3 @@
-"""
-This file provides functions which will be used in the imsciutils
-backend to print out messages
-"""
 import os
 import imsciutils as iu
 

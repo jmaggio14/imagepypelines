@@ -1,53 +1,53 @@
-#
-# marvin (c) by Jeffrey Maggio, Hunter Mellema, Joseph Bartelmo
-#
-# marvin is licensed under a
-# Creative Commons Attribution-ShareAlike 4.0 International License.
-#
-# You should have received a copy of the license along with this
-# work. If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
-#
-#
+import imsciutils as iu
+
 def centroid(img):
-    """
-    finds the centroid of the given image img
-    input::
+    """finds the centroid of the given image img
+
+    Args:
         img (np.ndarray):
             input img to find the centroid of
-    return::
-        centroid (tuple):
-            centroid of the input image (height,width)
+    Returns:
+        tuple: centroid of the input image (height,width)
+
+    Example:
+        import imsciutils as iu
+        lenna_centroid = centroid( iu.lenna() )
     """
     centroid = img.shape[0]//2, img.shape[1]//2
     return centroid
 
 
 def frame_size(img):
-    """
-    return the height and width of a given img
-    input::
-        img (np.ndarray):
-            input img to find frame_size of
-    return::
-        frame_size (tuple):
-            height and width of the input img
+    """return the height and width of a given img
+
+    Args:
+        img (np.ndarray): input img to find frame_size of
+    Returns:
+        tuple: frame_size, height and width of the input img
+
+    Example:
+        import imsciutils as iu
+        lenna_framesize = frame_size( iu.lenna() )
     """
     frame_size = img.shape[0], img.shape[1]
     return frame_size
 
 
-def dimensions(img,return_as_dict=False):
+def dimensions(img, return_as_dict=False):
     """
     function which returns the dimensions and data_type of a given image
 
-    input::
-        img (np.ndarray):
-            input image
-        return_as_dict (bool):
-            whether or not to return a dictionary
+    Args:
+        img (np.ndarray): input image
+        return_as_dict (bool): whether or not to return a dictionary.
+            Default is False
 
-    return::
-        dimensions (tuple): of the form (rows, cols, bands, dtype)
+    Returns:
+        tuple: dimensions of the form (rows, cols, bands, dtype)
+
+    Example:
+        import imsciutils as iu
+        dims = dimensions( iu.lenna() )
     """
     rows = img.shape[0]
     cols = img.shape[1]

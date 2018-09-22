@@ -10,28 +10,34 @@ class Summarizer(dict):
     This dictionary subclass will return the following when printed out
     or otherwise stringified
 
-    attributes::
+    Args:
+        input_array (np.ndarray): input array to summarize
+
+    Attributes:
         input_array: original numpy array this object is summarizing
         last_summary: last calculated summary dictionary
                 contains the following: shape, size, max, min, mean, dtype
         last_string: last representation string calculated for this array
 
 
-    functions::
-        summarize(): recalculates and returns the dictionary summary
-        __str__(): returns a stringified array summary
-
-    EXAMPLE:
+    Example:
+        import imsciutils as iu
         a = np.random.rand(512,512)
         a = iu.Summarizer(a)
 
         print(a)
-        >>> [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
+        # [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
 
 
 
     """
     def __init__(self, input_array):
+        """Instantiations function
+
+        Args:
+            input_array (np.ndarray): input array to summarize
+
+        """
         # ERROR CHECKING
         if not isinstance(input_array, np.ndarray):
             error_msg = "'input_array' input must be a np.ndarray"
@@ -51,16 +57,11 @@ class Summarizer(dict):
     def summarize(self):
         """returns an output dictionary of array attributes
 
-        Input:
+        Args:
             None
         Returns:
-            summary (dict): dict containing the following
-                    shape
-                    size
-                    max
-                    min
-                    mean
-                    dtype
+            summary (dict): dict containing the following [shape, size, max,
+                min, mean, dtype]
         """
 
         self.__update()

@@ -45,8 +45,11 @@ class VideoWriter(object):
         """
         writes a frame to the video file.
         automatically opens a video writer set to the input frame size
-            frame: input frame to save to file
-        return::
+
+        Args:
+            frame (np.ndarray): input frame to save to file
+
+        Returns:
             None
         """
         if not self.__is_initialized:

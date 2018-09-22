@@ -14,7 +14,7 @@ class Viewer(object):
     the view function with the argument 'force_waitkey'
 
 
-    Instantian Args:
+    Args:
         window_name (str): the name of the window
         size (2 element tuple, None): (height, width) to resize image to
         interpolation (cv2 constant): cv2 interpolation flag for resizing
@@ -49,9 +49,10 @@ class Viewer(object):
     def open(self):
         """
         opens the image viewer, automatically called in __init__
-        input::
+
+        Args:
             None
-        return::
+        Returns:
             None
         """
         cv2.namedWindow(self.window_name, cv2.WINDOW_AUTOSIZE)
@@ -59,9 +60,10 @@ class Viewer(object):
     def view(self, frame, force_waitkey=True):
         """
         displays the frame passed into it, reopens itself if it
-        input::
+
+        Args:
             frame (np.ndarray): image to be displayed
-        return::
+        Returns:
             force_waitkey (int) = 1:
                 if greater than zero, then call a waitkey for the
                 duration of the time given. this is required on some
@@ -100,9 +102,10 @@ class Viewer(object):
     def close(self):
         """
         closes the image viewing window
-        input::
+        
+        Args:
             None
-        return::
+        Returns:
             None
         """
         cv2.destroyWindow(self.window_name)

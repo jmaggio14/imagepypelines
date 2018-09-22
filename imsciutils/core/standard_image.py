@@ -44,7 +44,7 @@ def standard_image_input(func):
     This decorator assumes that the first argument it's wrapped function
     is meant to be a numpy array image.
 
-    e.g.
+    Example:
         import numpy as np
         import cv2
 
@@ -54,7 +54,7 @@ def standard_image_input(func):
             return img + 1
 
         lenna_plus_one = add_one_to_image('lenna')
-        #these are now equivalent
+        # these are now equivalent
         lenna_plus_one = add_one_to_image( cv2.imread('lenna.jpg') )
 
     """
@@ -73,18 +73,17 @@ def standard_image_input(func):
 def get_standard_image(img_name):
     """ retrieves the numpy array of standard image given a string key
 
-    input::
-        img_name (str):
-                name of the standard image to retrieve, must be in
-                list_standard_images()
+    Args:
+        img_name (str): name of the standard image to retrieve, must be in
+            list_standard_images()
 
-    return::
-        img (np.ndarray): image data for the given standard image
+    Returns:
+        np.ndarray: image data for the given standard image
 
-    raises::
-        ValueError if invalid img_name is provided
+    Raises:
+        ValueError: if invalid img_name is provided
 
-    example::
+    Example:
         lenna_data = get_standard_image('lenna')
     """
     if img_name in STANDARD_IMAGES:
