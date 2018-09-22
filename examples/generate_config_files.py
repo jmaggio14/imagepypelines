@@ -4,7 +4,7 @@ Every come up with a situation where you have have a lot of parameters
 
 
 This is a script  config files using the imsciutils package
-created by Jeff Maggio with help from Ryan Hartzell and Nathan Dileas
+created by Jeff Maggio, Ryan Hartzell, Nathan Dileas
 https://github.com/jmaggio14/imsciutils
 
 To use this script, simply modify the 'CONFIGS' variable with all variations
