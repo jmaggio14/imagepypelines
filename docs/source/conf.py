@@ -14,14 +14,15 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../..'))
+sys.path.insert(0, os.path.abspath('../..'))
+
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'imsciutils'
-copyright = '2018, Jeff Maggio, Ryan Hartzell, Nathan Dileas'
-author = 'Jeff Maggio, Ryan Hartzell, Nathan Dileas'
+copyright = '2018, Nathan Dileas, Ryan Hartzell, Jeff Maggio'
+author = 'Nathan Dileas, Ryan Hartzell, Jeff Maggio'
 
 # The short X.Y version
 version = ''
@@ -41,7 +42,8 @@ release = ''
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',   # nD: support for google style docstrings
+    'm2r'   # ND: add support for MarkDown, to allow readme importing
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -49,9 +51,10 @@ templates_path = ['_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-#
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+
+# ND: add support for MarkDown, to allow readme importing, m2r 
+source_suffix = ['.rst', '.md']
+
 
 # The master toctree document.
 master_doc = 'index'
@@ -65,11 +68,11 @@ language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-# This pattern also affects html_static_path and html_extra_path .
+# This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = None
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -132,7 +135,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'imsciutils.tex', 'imsciutils Documentation',
-     'Jeff Maggio, Ryan Hartzell, Nathan Dileas', 'manual'),
+     'Nathan Dileas, Ryan Hartzell, Jeff Maggio', 'manual'),
 ]
 
 
@@ -156,6 +159,24 @@ texinfo_documents = [
      author, 'imsciutils', 'One line description of project.',
      'Miscellaneous'),
 ]
+
+
+# -- Options for Epub output -------------------------------------------------
+
+# Bibliographic Dublin Core info.
+epub_title = project
+
+# The unique identifier of the text. This can be a ISBN number
+# or the project homepage.
+#
+# epub_identifier = ''
+
+# A unique identification for the text.
+#
+# epub_uid = ''
+
+# A list of files that should not be packed into the epub file.
+epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------

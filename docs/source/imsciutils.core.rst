@@ -1,6 +1,13 @@
 imsciutils.core package
 =======================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    imsciutils.core.unit_tests
+
 Submodules
 ----------
 
@@ -12,10 +19,34 @@ imsciutils.core.Exceptions module
     :undoc-members:
     :show-inheritance:
 
-imsciutils.core.ImageViewer module
-----------------------------------
+imsciutils.core.Printer module
+------------------------------
 
-.. automodule:: imsciutils.core.ImageViewer
+.. automodule:: imsciutils.core.Printer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.core.Summarizer module
+---------------------------------
+
+.. automodule:: imsciutils.core.Summarizer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.core.Tester module
+-----------------------------
+
+.. automodule:: imsciutils.core.Tester
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.core.Viewer module
+-----------------------------
+
+.. automodule:: imsciutils.core.Viewer
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,6 +67,22 @@ imsciutils.core.coordinates module
     :undoc-members:
     :show-inheritance:
 
+imsciutils.core.debug module
+----------------------------
+
+.. automodule:: imsciutils.core.debug
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.core.development\_decorators module
+----------------------------------------------
+
+.. automodule:: imsciutils.core.development_decorators
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 imsciutils.core.img\_tools module
 ---------------------------------
 
@@ -44,10 +91,10 @@ imsciutils.core.img\_tools module
     :undoc-members:
     :show-inheritance:
 
-imsciutils.core.logger module
------------------------------
+imsciutils.core.printout module
+-------------------------------
 
-.. automodule:: imsciutils.core.logger
+.. automodule:: imsciutils.core.printout
     :members:
     :undoc-members:
     :show-inheritance:
