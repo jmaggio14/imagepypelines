@@ -43,7 +43,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',   # nD: support for google style docstrings
-    'm2r'   # ND: add support for MarkDown, to allow readme importing
+    'm2r',   # ND: add support for MarkDown, to allow readme importing,
+    'sphinx.ext.githubpages', # JM add .nojekyll creation for github
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -52,7 +53,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 
-# ND: add support for MarkDown, to allow readme importing, m2r 
+# ND: add support for MarkDown, to allow readme importing, m2r
 source_suffix = ['.rst', '.md']
 
 
