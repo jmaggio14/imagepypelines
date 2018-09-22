@@ -35,15 +35,15 @@ class FeatureExtractor(object):
                                         pooling=self.pooling_type
 
 
-    Instantiation Args:
-        network_name (str) = 'densenet121':
-                    name of network to extract features from
-        pooling_type (str) = 'avg':
-                the type of pooling to perform on the features, must be
-                one of ['max','avg']
+    Args:
+        network_name (str): name of network to extract features from
+            Default is 'densenet121'
+        pooling_type (str): the type of pooling to perform on the
+            features, must be one of ['max','avg'].
+            Default is 'avg'
 
 
-    Example Use Case:
+    Example:
         import imsciutils as iu
         network = iu.ml.FeatureExtractor('resnet50',pooling_type='avg')
 
@@ -102,11 +102,13 @@ class FeatureExtractor(object):
         Extracts image features from a the neural network specified in
         __init__
 
-        input::
+        Args:
             batch (np.ndarray,str,list): 2D or 3D image array or path to
                             image filename, or list of either
-        returns::
+
+        Returns:
             features (np.ndarray): features for this image
+
         """
         timer = iu.util.Timer()
 
@@ -130,12 +132,14 @@ class FeatureExtractor(object):
         array format which keras requires for network feeding
         that format being a 4D tensor (batch,rows,cols,bands)
 
-        input::
-            imgs (np.ndarray,str,list):
-                    image or path to image to be processed, or list of either
-        returns::
-            img_data (np.ndarray):
-                    4D numpy array of the form (num_images,rows,cols,bands)
+        Args:
+            imgs (np.ndarray,str,list): image or path to image to be
+                processed, or list of either
+
+        Returns:
+            img_data (np.ndarray): 4D numpy array of the form
+                (num_images,rows,cols,bands)
+
         """
         if not isinstance(imgs,Iterable) or isinstance(imgs,(str,np.ndarray)):
             imgs = [imgs]
@@ -178,16 +182,16 @@ class FeatureExtractor(object):
         from keras, only importing the desired model specified by the
         network name.
 
-        input::
+        Args:
             network_name (str):
                 name of the network being used for feature extraction
             pooling_type (str):
                 type of pooling you want to use ('avg' or 'max')
 
-        returns::
-            1) model_fn (func):
+        Returns:
+            1) model_fn (callable):
                 function that extract features from the NN
-            2) preprocess_fn (func):
+            2) preprocess_fn (callable):
                 function that preprocesses the image for the network
             3) kerasimage (module):
                 pointer to keras.image

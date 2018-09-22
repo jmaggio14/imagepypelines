@@ -6,7 +6,7 @@ from functools import partial
 
 
 
-
+# THIS IS A WIP
 @iu.experimental()
 class FisherVectors(object):
     def __init__(self,n_clusters):
