@@ -213,3 +213,21 @@ def print_args(func):
         ret = func(*args,**kwargs)
         return ret
     return _print_args
+
+
+
+
+
+def unit_test(func):
+    """
+    Decorator which prints a colored message
+    """
+    def _unit_test(*args,**kwargs):
+        passed = print_args( func )(*args,**kwargs)
+
+        if passed:
+            msg = iu.util.green("{} test passed!".format(func.__name__))
+        else:
+            msg = iu.util.red("{} test failed!".format(func.__name__))
+
+        print(msg)
