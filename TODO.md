@@ -39,7 +39,7 @@
 - [ ] histogram enhancement
 - [ ] probably some segmentation algorithms
 - [ ] affine transforms
-- [ ] normalization - Nate?
+- [x] normalization - Nate?
 - [ ] clipping - Nate?
 
 # other shit
@@ -50,7 +50,7 @@
 - [ ] unit tests? lots of functionality was broken by recent restructure
 - [x] documentation - ongoing
 - [ ] remote webcam?
-- [ ] slit-scan tool
+- [ ] slit-scan tool - Nate
 
 # Standard Image
 - [ ] get giza
@@ -59,7 +59,7 @@
 # Image Viewer
 - [x] frame counter - Jeff
 - [ ] get ROI - Ryan
-- [ ] auto-normalize - Ryan
+- [ ] auto-normalize - Ryan - ND: I wrote some normalization functions
 - [ ] Separate Window interaction class - Ryan
 - [ ] auto image stitcher (something that will resize images automatically)
 - [ ] plugin system - Nate?
