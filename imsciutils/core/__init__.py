@@ -14,7 +14,7 @@ from .development_decorators import deprecated
 from .development_decorators import experimental
 from .development_decorators import human_test
 from .development_decorators import print_args
-from .development_decoratots import unit_test
+from .development_decorators import unit_test
 
 # Exceptions
 from .Exceptions import CameraReadError

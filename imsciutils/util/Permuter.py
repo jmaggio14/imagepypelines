@@ -2,11 +2,12 @@ from collections import Iterable
 import itertools
 import numpy as np
 
-import imsciutils as iu
+from .ConfigFactory import ConfigFactory
+from .. import core
 
-@iu.deprecated("'Permuter' has been renamed to 'ConfigFactory', references to\
+@core.deprecated("'Permuter' has been renamed to 'ConfigFactory', references to\
     'Permuter' will be removed in a future version")
-class Permuter(iu.util.ConfigFactory):
+class Permuter(ConfigFactory):
     pass
 
 def main():
