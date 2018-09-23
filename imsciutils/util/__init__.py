@@ -27,3 +27,5 @@ from .Permuter import Permuter
 from .timing import Timer
 from .timing import function_timer
 from .timing import function_timer_ms
+
+from .normalize import norm_01, norm_ab, norm_dtype
