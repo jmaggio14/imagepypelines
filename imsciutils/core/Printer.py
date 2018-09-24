@@ -17,6 +17,13 @@ def get_printer(name, log_level='info'):
     else:
         return Printer(name, log_level)
 
+def disable_all_printers():
+    """disables all printers
+    sets the global log level to infinity to effectively disable all
+    printers
+    """
+    set_global_printout_level( float('inf') )
+
 
 def whitelist_printer(name):
     """
@@ -292,7 +299,7 @@ class Printer(object):
 
         Args:
             *messages: objects or messages to print out at comment level
-            
+
         Returns:
             None
         """
