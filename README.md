@@ -1,7 +1,6 @@
 # imsciutils
-This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role programmatic manipulation and processing of imagery.
+This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role for programmatic manipulation and processing of imagery, computer vision, and machine learning tasks.
 
-We are imaging scientists, and as such the code in this repo will be skewed towards imaging tasks.
 
 ## Compatibility
 python 3.5+ (python 2.7 backwards)
@@ -319,10 +318,11 @@ printer = iu.get_printer('Example Printer')
 printer.set_log_level('error') # only error and critical functions will print
 ```
 
-
-
-
 (this system is exactly the same as log_levels in python's [`logging`](https://docs.python.org/3.7/library/logging.html) module )
+
+### disable or enabling certain printers
+Sometimes you may only want to see printouts from a specific class or function. you can do this
+with the `whitelist_printer`, `blacklist_printer`, or `disable_all_printers` functions
 
 ### default printer
 there's a default printer in `imsciutils` which is accessible through functions in the main module
