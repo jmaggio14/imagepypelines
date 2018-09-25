@@ -12,7 +12,6 @@ IMAGE_SRC_DIRECTORY = os.path.abspath(
         '..',
         'data',
         'standard_images'))
-breakpoint()
 
 # ND 9/7/18 - dynamically populate paths to the standard test images
 # assumes the only thing in the IMAGE_SRC_DIRECTORY are images
