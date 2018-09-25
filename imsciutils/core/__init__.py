@@ -59,7 +59,7 @@ for img_name in STANDARD_IMAGES.keys():
 	setattr(curr_module, img_name, getattr(funcs, img_name))
 
 # ND 9/7/18 - delete these so that the imsciutils namespace is not polluted
-del sys, curr_module, img_name, funcs, STANDARD_IMAGES
+del sys, curr_module, funcs, STANDARD_IMAGES
 
 # Viewer.py
 from .Viewer import Viewer
