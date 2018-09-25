@@ -78,6 +78,7 @@ def test_dimensions():
 @iu.unit_test
 def test_normalize_and_bin():
     import imsciutils as iu
+    import numpy as np
     testing_printer = iu.get_printer('test_normalize_and_bin')
     tester = iu.Tester(iu.normalize_and_bin)
     lenna = iu.lenna()
