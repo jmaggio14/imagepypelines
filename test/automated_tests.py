@@ -28,7 +28,7 @@ def test_constants():
 def test_centroid():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_centroid')
-    tester = iu.util.Tester(iu.centroid)
+    tester = iu.Tester(iu.centroid)
     lenna = iu.lenna()
     desired_output = (256,256)
     if not tester.exact_test(desired_output, lenna):
@@ -41,7 +41,7 @@ def test_centroid():
 def test_frame_size():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_frame_size')
-    tester = iu.util.Tester(iu.frame_size)
+    tester = iu.Tester(iu.frame_size)
     lenna = iu.lenna()
     desired_output = tuple( lenna.shape[:2] )
     if not tester.exact_test(desired_output,lenna):
