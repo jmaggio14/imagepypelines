@@ -206,7 +206,8 @@ def print_args(func):
         # formatting the actual string to be printed out
         iuinfo("running '{}' with the following args:\n".format(func.__name__))
         if len(arg_dict) == 0:
-            __add_to_arg_dict('None','None','None')
+            __add_to_arg_dict('None','','')
+        longest_arg_name = max(len(k) for k in arg_dict)
         arg_string = ""
         arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
                                                             buf1=' ' * (len(POSITIONAL) // 2 - 4),
