@@ -1,7 +1,8 @@
-import imsciutils as iu
 import numpy as np
 import inspect
 from collections import Iterable
+from .Printer import get_printer
+from .. import util 
 
 
 class Tester(object):
@@ -21,7 +22,7 @@ class Tester(object):
 
         self.target = target
         self.verbose = verbose
-        self.printer = iu.get_printer(target.__name__ + " Tester")
+        self.printer = get_printer(target.__name__ + " Tester")
 
 
     def __str__(self):

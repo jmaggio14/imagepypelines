@@ -1,4 +1,7 @@
-import imsciutils as iu
+from .printout import warning as iuwarning
+from .printout import info as iuinfo
+
+
 import six
 from termcolor import colored
 import inspect
@@ -20,7 +23,7 @@ def deprecated(depreciation_msg):
     """
     def _deprecated(func):
         def __deprecated(*args,**kwargs):
-            iu.warning("DEPRECIATION WARNING:", depreciation_msg)
+            iuwarning("DEPRECIATION WARNING:", depreciation_msg)
             return func(*args,**kwargs)
 
         return __deprecated
@@ -51,7 +54,7 @@ def experimental(experimental_msg=None):
         def __experimental(*args,**kwargs):
             if create_message:
                 experimental_msg = "'{}' is an experimental feature".format(func.__name__)
-            iu.warning("EXPERIMENTAL WARNING:", experimental_msg)
+            iuwarning("EXPERIMENTAL WARNING:", experimental_msg)
             return func(*args,**kwargs)
 
         return __experimental
@@ -200,7 +203,7 @@ def print_args(func):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        iu.info("running '{}' with the following args:\n".format(func.__name__))
+        iuinfo("running '{}' with the following args:\n".format(func.__name__))
         longest_arg_name = max(len(k) for k in arg_dict)
         arg_string = ""
         arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
@@ -232,5 +235,5 @@ def unit_test(func):
 
         print(msg)
         return passed
-        
+
     return _unit_test

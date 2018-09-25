@@ -4,6 +4,8 @@ import numpy as np
 import imsciutils as iu
 from collections import Iterable
 import os
+from .. import core
+from .. import util
 
 
 class FeatureExtractor(object):
@@ -89,7 +91,7 @@ class FeatureExtractor(object):
             = self.__keras_importer(network_name,pooling_type)
         self.network_name = network_name
         self.pooling_type = pooling_type
-        self.printer = iu.get_printer( str(self) )
+        self.printer = core.get_printer( str(self) )
 
     def __str__(self):
         return "{} Extractor".format(self.network_name)
@@ -110,7 +112,7 @@ class FeatureExtractor(object):
             features (np.ndarray): features for this image
 
         """
-        timer = iu.util.Timer()
+        timer = util.Timer()
 
         # Error checking for img occurs in __build_image_data
         batch = self.__build_image_data(batch)
@@ -166,7 +168,7 @@ class FeatureExtractor(object):
 
             # must be (batches,rows,cols,bands) --> batch should be 1 for this case
             if img.ndim <= 3:
-                r, c, b, _ = iu.dimensions(img)
+                r, c, b, _ = core.dimensions(img)
                 img = img.reshape((1, r, c, b))
 
             img_data.append(img)

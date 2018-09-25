@@ -1,9 +1,6 @@
 from collections import Iterable
 import itertools
 import numpy as np
-import imsciutils as iu
-
-
 
 class ConfigFactory(object):
     """

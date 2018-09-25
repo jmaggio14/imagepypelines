@@ -1,7 +1,7 @@
 import imsciutils
 import numpy as np
 from PIL import Image
-
+from .coordinates import dimensions
 
 def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     """normalizes and bins an image
@@ -49,7 +49,9 @@ def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
     assert isinstance(title, str), "'title' must be a string"
 
     if normalize_and_bin:
-        img = iu.normalize_and_bin(img, max_count=255, cast_type=np.uint8)
+        img = globals()['normalize_and_bin'](img,
+                                                max_count=255,
+                                                cast_type=np.uint8)
 
     if len(img.shape) > 2:
         img = np.flip(img, 2)
@@ -68,7 +70,7 @@ def number_image(img, num):
     Returns:
         np.ndarray: numbered image
     """
-    r,c,b,_ = iu.dimensions(img)
+    r,c,b,_ = dimensions(img)
     loc = int( min(r,c) * .95 )
     color = (255,255,255)
     if np.mean(img[int(.9*r):r,int(.9*c):c]) > 128:

@@ -1,5 +1,5 @@
 import numpy as np
-import imsciutils as iu
+from .printout import error as iuerror
 
 class Summarizer(dict):
     """
@@ -41,7 +41,7 @@ class Summarizer(dict):
         # ERROR CHECKING
         if not isinstance(input_array, np.ndarray):
             error_msg = "'input_array' input must be a np.ndarray"
-            iu.error(error_msg)
+            iuerror(error_msg)
             raise TypeError(error_msg)
         # END ERROR CHECKING
         self.input_array = input_array
@@ -59,7 +59,7 @@ class Summarizer(dict):
 
         Args:
             None
-            
+
         Returns:
             summary (dict): dict containing the following [shape, size, max,
                 min, mean, dtype]

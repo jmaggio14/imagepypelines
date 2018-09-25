@@ -1,13 +1,14 @@
 import cv2
-import imsciutils as iu
 from collections import Iterable
 import numpy as np
 from functools import partial
 
+import .. import util
+from .. import core
 
 
 # THIS IS A WIP
-@iu.experimental()
+@core.experimental()
 class FisherVectors(object):
     def __init__(self,n_clusters):
         self.n_clusters = self.__error_check(n_clusters)
@@ -19,8 +20,8 @@ class FisherVectors(object):
     def __error_check(self,n_clusters):
         """checks the instantation args of this class for errors"""
         if not isinstance(n_clusters,(int,float)):
-            error_msg = iu.util.type_error_message(n_clusters,'n_clusters',(int,float))
-            iu.error(error_msg)
+            error_msg = util.type_error_message(n_clusters,'n_clusters',(int,float))
+            core.error(error_msg)
             raise TypeError(error_msg)
 
         return int(n_clusters)
@@ -54,7 +55,7 @@ class FisherVectors(object):
 #     def __init__(self,n_clusters):
 #         self.printer = iu.get_printer('Fisher Vector Extractor')
 #         if not isinstance(n_clusters,(float,int)):
-#             error_msg = iu.util.type_error_message(n_clusters,'n_clusters',(float,int))
+#             error_msg = util.type_error_message(n_clusters,'n_clusters',(float,int))
 #             self.printer.error(error_msg)
 #             raise TypeError(error_msg)
 #
@@ -85,7 +86,7 @@ class FisherVectors(object):
 #             return stacked_data, partial(self.array_to_batches, batch_indices=batch_indices)
 #
 #         except Exception as e:
-#             iu.util.debug(e)
+#             util.debug(e)
 #             error_msg = "unable to properly stack data into numpy array!"
 #             self.printer.error(error_msg)
 #             raise ValueError(error_msg)
@@ -102,7 +103,7 @@ class FisherVectors(object):
 #             train_data (np.ndarray): (n_samples,n_features)
 #             batch_return_function (callable): function to return
 #         """
-#         if iu.util.is_numpy_array(data):
+#         if util.is_numpy_array(data):
 #             is_batches = False
 #             if data.ndim != 2:
 #                 error_msg = "'data' must be an array of shape (n_samples,n_features)"
@@ -110,7 +111,7 @@ class FisherVectors(object):
 #                 raise ValueError(error_msg)
 #             return data, is_batches
 #
-#         elif iu.util.is_iterable(data):
+#         elif util.is_iterable(data):
 #             is_batches = True
 #             is_stackable = all( (data[0].shape[1:] == d.shape[1:] and d.ndim == 2) for d in data)
 #             if not is_stackable:
@@ -120,7 +121,7 @@ class FisherVectors(object):
 #             return data, is_batches
 #
 #         else:
-#             error_msg = iu.util.type_error_message(data,"data",(Iterable,np.ndarray))
+#             error_msg = util.type_error_message(data,"data",(Iterable,np.ndarray))
 #             self.printer.error(error_msg)
 #             raise TypeError(error_msg)
 #

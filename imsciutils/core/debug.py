@@ -1,7 +1,7 @@
 import os
 import sys
 import traceback
-import imsciutils as iu
+from .printout import error as iuerror
 
 def debug(exception):
 	"""
@@ -32,4 +32,4 @@ def debug(exception):
 				exc_type=exc_type,
 				exception=exception)
 
-	iu.error(error_msg)
+	iuerror(error_msg)

@@ -3,8 +3,9 @@ Helper functions that contain canned tests or checks that we will run
 frequently
 """
 import numpy as np
-import imsciutils
 from collections import Iterable
+
+from .. import core
 
 
 def interpolation_type_check(interp):
@@ -13,8 +14,8 @@ def interpolation_type_check(interp):
     values specified in opencv, otherwise raises an
     imsciutils.InvalidInterpolationType error
     """
-    if interp not in imsciutils.CV2_INTERPOLATION_TYPES:
-        raise imsciutils.InvalidInterpolationType(interp)
+    if interp not in core.CV2_INTERPOLATION_TYPES:
+        raise core.InvalidInterpolationType(interp)
 
     return True
 
@@ -25,8 +26,8 @@ def dtype_type_check(dtype):
     values specified in opencv, otherwise raises an
     imsciutils.InvalidInterpolationType error
     """
-    if dtype not in imsciutils.NUMPY_TYPES:
-        raise imsciutils.InvalidNumpyType(interp)
+    if dtype not in core.NUMPY_TYPES:
+        raise core.InvalidNumpyType(interp)
 
     return True
 

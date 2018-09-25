@@ -1,8 +1,10 @@
 import cv2
 import numpy as np
-import imsciutils as iu
 from datetime import datetime
 
+import imsciutils as iu
+from .. import util
+from .img_tools import number_image
 
 class Viewer(object):
     """
@@ -35,7 +37,7 @@ class Viewer(object):
                  interpolation=cv2.INTER_NEAREST,
                  enable_frame_counter=False):
 
-        iu.util.interpolation_type_check(interpolation)
+        util.interpolation_type_check(interpolation)
         if window_name is None:
             window_name = datetime.now()
 
@@ -52,7 +54,7 @@ class Viewer(object):
 
         Args:
             None
-            
+
         Returns:
             None
         """
@@ -85,7 +87,7 @@ class Viewer(object):
 
         # add a frame counter to an image thin
         if self.enable_frame_counter:
-            frame = iu.number_image(frame,self.frame_counter)
+            frame = number_image(frame,self.frame_counter)
         # displaying the image
         cv2.imshow(self.window_name, frame)
         if force_waitkey:

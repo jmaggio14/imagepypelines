@@ -1,15 +1,17 @@
 import os
 import glob
-import imsciutils as iu
 import random
 import itertools
 from collections import deque
 
-@iu.experimental()
+import imsciutils as iu
+from .. import core
+
+@core.experimental()
 class DatasetManager(object):
     def __init__(self,input_dir,k_folds,extensions=None,recursive=False,random_seed=None):
         # building printer and checking instantation args
-        self.printer = iu.get_printer(self.__class__.__name__)
+        self.printer = core.get_printer(self.__class__.__name__)
 
         if extensions is None:
             extensions = ['']

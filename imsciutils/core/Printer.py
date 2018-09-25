@@ -1,4 +1,4 @@
-import imsciutils as iu
+from .. import util
 
 
 def get_printer(name, log_level='info'):
@@ -215,8 +215,8 @@ class Printer(object):
 
         prefix = self.level_text['debug']
         if self.ENABLE_COLOR:
-            prefix = iu.util.cyan(prefix)
-            messages = [iu.util.cyan(str(msg)) for msg in messages]
+            prefix = util.cyan(prefix)
+            messages = [util.cyan(str(msg)) for msg in messages]
 
         print(prefix, *messages)
 
@@ -249,8 +249,8 @@ class Printer(object):
 
         prefix = self.level_text['warning']
         if self.ENABLE_COLOR:
-            prefix = iu.util.yellow(prefix,bold=True)
-            messages = [iu.util.yellow(str(msg),bold=True) for msg in messages]
+            prefix = util.yellow(prefix,bold=True)
+            messages = [util.yellow(str(msg),bold=True) for msg in messages]
 
         print(prefix, *messages)
 
@@ -268,8 +268,8 @@ class Printer(object):
 
         prefix = self.level_text['error']
         if self.ENABLE_COLOR:
-            prefix = iu.util.red(prefix)
-            messages = [iu.util.red(str(msg)) for msg in messages]
+            prefix = util.red(prefix)
+            messages = [util.red(str(msg)) for msg in messages]
 
         print(prefix, *messages)
 
@@ -288,8 +288,8 @@ class Printer(object):
 
         prefix = self.level_text['critical']
         if self.ENABLE_COLOR:
-            prefix = iu.util.red(prefix, bold=True)
-            messages = [iu.util.red(str(msg), bold=True) for msg in messages]
+            prefix = util.red(prefix, bold=True)
+            messages = [util.red(str(msg), bold=True) for msg in messages]
 
         print(prefix, *messages)
 
@@ -308,8 +308,8 @@ class Printer(object):
 
         prefix = self.level_text['comment']
         if self.ENABLE_COLOR:
-            prefix = iu.util.green(prefix, bold=True)
-            messages = [iu.util.green(str(msg), bold=True) for msg in messages]
+            prefix = util.green(prefix, bold=True)
+            messages = [util.green(str(msg), bold=True) for msg in messages]
 
         print(prefix, *messages)
 

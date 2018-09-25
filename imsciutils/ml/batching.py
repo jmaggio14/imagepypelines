@@ -2,11 +2,13 @@ import cv2
 from collections import Iterable
 import numpy as np
 
+from .. import core
+
 
 def batches(data_list,batch_size):
     if batch_size > len(data_list):
         error_msg = "batch_size cannot be greater than the length of your dataset"
-        iu.error(error_msg)
+        core.error(error_msg)
         raise ValueError(error_msg)
 
     data_length = len(data_list)
@@ -25,10 +27,10 @@ def load_and_stack_images(img_list):
         try:
             loaded = cv2.imread(img,cv2.IMREAD_UNCHANGED)
         except Exception as e:
-            iu.debug(e)
-            iu.error( "unable to open img: {}".format(img) )
+            core.debug(e)
+            core.error( "unable to open img: {}".format(img) )
 
-        r,c,b,_ = iu.dimensions(img)
+        r,c,b,_ = core.dimensions(img)
         loaded = loaded.reshape( (1,r,c,b) )
         imgs.append(load)
 

@@ -1,16 +1,5 @@
-#
-# marvin (c) by Jeffrey Maggio, Hunter Mellema, Joseph Bartelmo
-#
-# marvin is licensed under a
-# Creative Commons Attribution-ShareAlike 4.0 International License.
-#
-# You should have received a copy of the license along with this
-# work. If not, see <http://creativecommons.org/licenses/by-sa/4.0/>.
-#
-#
 import time
-import imsciutils as iu
-
+from .. import core
 
 def function_timer(func):
     """
@@ -24,7 +13,7 @@ def function_timer(func):
         sleep_for_one_sec()
         # (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
-    printer = iu.get_printer('function_timer')
+    printer = core.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
         ret = func(*args,**kwargs)
@@ -50,7 +39,7 @@ def function_timer_ms(func):
         sleep_for_one_sec()
         # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
-    printer = iu.get_printer('function_timer')
+    printer = core.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
         ret = func(*args,**kwargs)
@@ -141,7 +130,7 @@ class Timer(object):
         if not isinstance(value,(int,float)):
             error_msg = "countdown must be set using a float \
                         or an int, current type is {0}".format(type(value))
-            iu.error(error_msg)
+            core.error(error_msg)
             raise TypeError(error_msg)
 
         self._countdown_timer = Timer()

@@ -10,9 +10,10 @@
 #
 
 import cv2
-import imsciutils as iu
+from .. import core
 
-@iu.experimental()
+
+@core.experimental()
 class ImageWriter(object):
     """
     Class that operates as a system that saves single frames to a
@@ -61,7 +62,7 @@ class ImageWriter(object):
 
         Args:
             frame (np.ndarray): frame to be saved to the output_dir
-            
+
         Returns:
             None
         """
