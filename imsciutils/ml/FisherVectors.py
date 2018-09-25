@@ -3,7 +3,7 @@ from collections import Iterable
 import numpy as np
 from functools import partial
 
-import .. import util
+from .. import util
 from .. import core
 
 

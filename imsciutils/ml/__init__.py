@@ -10,3 +10,9 @@ from .FeatureExtractor import FeatureExtractor
 
 # FisherVectors.py
 from .FisherVectors import FisherVectors
+
+# ConfigFactory.py
+from .ConfigFactory import ConfigFactory
+
+# permute.py
+from .Permuter import Permuter
