@@ -149,7 +149,7 @@ def print_args(func):
         arg_dict = collections.OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
-            if iu.util.is_numpy_array(val):
+            if util.is_numpy_array(val):
                 val = str( iu.Summarizer(val) )
             arg_dict[key] = val
             vtypes[key] = vtype
@@ -167,7 +167,7 @@ def print_args(func):
         # adding default positional args values to the dictionary
         for i,var_name in enumerate(specargs):
             if i < num_required:
-                var = iu.util.red("No argument was passed in!",bold=True)
+                var = util.red("No argument was passed in!",bold=True)
             else:
                 var = specdefaults[i - num_required]
 
@@ -187,7 +187,7 @@ def print_args(func):
 
         # adding keyword only args to the dict
         for var_name in speckwonlyargs:
-            var = iu.util.red("No argument was passed in!",bold=True)
+            var = util.red("No argument was passed in!",bold=True)
             vtype = KEYWORD
             __add_to_arg_dict(var_name,var,vtype)
         for var_name,var in speckwonlydefaults.items():
