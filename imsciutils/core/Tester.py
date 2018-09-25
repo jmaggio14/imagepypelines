@@ -1,8 +1,9 @@
 import numpy as np
 import inspect
-from collections import Iterable
+from collections import Iterable, OrderedDict
 from .Printer import get_printer
 from .. import util
+from .Summarizer import Summarizer
 
 
 class Tester(object):
@@ -162,11 +163,11 @@ class Tester(object):
         VARPOSITIONAL = '(var-positional)'
         VARKEYWORD    = '( var-keyword  )'
 
-        arg_dict = collections.OrderedDict()
+        arg_dict = OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
             if util.is_numpy_array(val):
-                val = str( iu.Summarizer(val) )
+                val = str( Summarizer(val) )
             arg_dict[key] = val
             vtypes[key] = vtype
 
@@ -220,7 +221,7 @@ class Tester(object):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        iu.info("running '{}' with the following args:\n".format(self.target.__name__))
+        self.printer.info("running '{}' with the following args:\n".format(self.target.__name__))
         longest_arg_name = max(len(k) for k in arg_dict)
         arg_string = ""
         arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
