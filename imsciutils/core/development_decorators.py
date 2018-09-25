@@ -231,3 +231,6 @@ def unit_test(func):
             msg = iu.util.red("{} test failed!".format(func.__name__))
 
         print(msg)
+        return passed
+        
+    return _unit_test
