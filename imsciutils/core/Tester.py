@@ -2,7 +2,7 @@ import numpy as np
 import inspect
 from collections import Iterable
 from .Printer import get_printer
-from .. import util 
+from .. import util
 
 
 class Tester(object):
@@ -55,7 +55,7 @@ class Tester(object):
         out = self.__run_target(*args,**kwargs)
 
         # testing the output
-        if iu.util.is_numpy_array(out) and iu.util.is_numpy_array(desired_output):
+        if util.is_numpy_array(out) and util.is_numpy_array(desired_output):
             has_failed = not np.all(out == desired_output)
         else:
             has_failed = (out != desired_output)
@@ -64,10 +64,10 @@ class Tester(object):
         if has_failed:
             # TEST HAS FAILED
             # converting to any numpy arrays to summaries for printout
-            if iu.util.is_numpy_array(desired_output):
-                desired_output = iu.util.Summarizer(desired_output)
-            if iu.util.is_numpy_array(out):
-                out = iu.util.Summarizer(out)
+            if util.is_numpy_array(desired_output):
+                desired_output = util.Summarizer(desired_output)
+            if util.is_numpy_array(out):
+                out = util.Summarizer(out)
 
             self.printer.error("{} test failure expected output {}, but got {}"\
                             .format(self.target.__name__,desired_output, out))
@@ -165,7 +165,7 @@ class Tester(object):
         arg_dict = collections.OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
-            if iu.util.is_numpy_array(val):
+            if util.is_numpy_array(val):
                 val = str( iu.Summarizer(val) )
             arg_dict[key] = val
             vtypes[key] = vtype
@@ -183,7 +183,7 @@ class Tester(object):
         # adding default positional args values to the dictionary
         for i,var_name in enumerate(specargs):
             if i < num_required:
-                var = iu.util.red("No argument was passed in!",bold=True)
+                var = util.red("No argument was passed in!",bold=True)
             else:
                 var = specdefaults[i - num_required]
 
@@ -203,7 +203,7 @@ class Tester(object):
 
         # adding keyword only args to the dict
         for var_name in speckwonlyargs:
-            var = iu.util.red("No argument was passed in!",bold=True)
+            var = util.red("No argument was passed in!",bold=True)
             vtype = KEYWORD
             __add_to_arg_dict(var_name,var,vtype)
         for var_name,var in speckwonlydefaults.items():
@@ -238,7 +238,7 @@ class Tester(object):
             return out
         except Exception as e:
             self.printer.error("{} test failed to run!".format(self.target.__name__))
-            iu.util.debug(e)
+            util.debug(e)
 
 
 
