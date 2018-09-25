@@ -1,5 +1,3 @@
-import imsciutils as iu
-
 def centroid(img):
     """finds the centroid of the given image img
 
