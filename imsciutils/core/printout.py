@@ -1,9 +1,10 @@
 import os
-import imsciutils as iu
+
+from .Printer import get_printer
 
 def get_default_printer():
     """gets the imsciutils default printer"""
-    return iu.get_printer('imsciutils')
+    return get_printer('imsciutils')
 
 def debug(*messages):
     """prints a 'debug' level message to the imsciutils default printer"""
