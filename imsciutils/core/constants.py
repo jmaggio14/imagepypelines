@@ -1,5 +1,12 @@
 import numpy as np
 import cv2
+
+# MODIFY THIS VARIABLE EVERY TIME A NEW IMPORTABLE CONSTANT IS ADDED
+__all__ = ['NUMPY_TYPES',
+            'CV2_INTERPOLATION_TYPES',
+            'IMAGE_EXTENSIONS']
+
+
 # ------------------Standard Type Tables------------------
 NUMPY_TYPES = (np.uint8,
                np.int8,
@@ -36,4 +43,4 @@ IMAGE_EXTENSIONS = ['.png',
                     '.ppm',
                     '.sr',
                     '.ras']
-"""module variable which contains all image extensions openable by opencv"""
+"""module variable which contains all image extensions openable by opencv's imread"""
