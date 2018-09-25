@@ -42,7 +42,7 @@ setup(name='imsciutils',
                         'scikit-learn',
                         'colorama',
                         'termcolor',
-                        'opencv3',
+                        'opencv-python',
                         'Pillow',
                         ],
       )
