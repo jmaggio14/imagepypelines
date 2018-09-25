@@ -1,5 +1,6 @@
 from .printout import warning as iuwarning
 from .printout import info as iuinfo
+from .. import util
 
 
 import six
@@ -204,7 +205,10 @@ def print_args(func):
 
         # formatting the actual string to be printed out
         iuinfo("running '{}' with the following args:\n".format(func.__name__))
-        longest_arg_name = max(len(k) for k in arg_dict)
+        if len(arg_dict) > 0:
+            longest_arg_name = max(len(k) for k in arg_dict)
+        else:
+            longest_arg_name = 0
         arg_string = ""
         arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
                                                             buf1=' ' * (len(POSITIONAL) // 2 - 4),
@@ -229,9 +233,9 @@ def unit_test(func):
         passed = print_args( func )(*args,**kwargs)
 
         if passed:
-            msg = iu.util.green("{} test passed!".format(func.__name__))
+            msg = util.green("{} test passed!".format(func.__name__))
         else:
-            msg = iu.util.red("{} test failed!".format(func.__name__))
+            msg = util.red("{} test failed!".format(func.__name__))
 
         print(msg)
         return passed
