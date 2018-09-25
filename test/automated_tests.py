@@ -6,10 +6,10 @@ be automatically run
     -JM
 """
 
-
 import imsciutils as iu
 
 # constants.py
+@iu.unit_test
 def test_constants():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_constants')
@@ -24,6 +24,7 @@ def test_constants():
 
 
 # coordinates.py
+@iu.unit_test
 def test_centroid():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_centroid')
@@ -36,6 +37,7 @@ def test_centroid():
     return True
 
 
+@iu.unit_test
 def test_frame_size():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_frame_size')
@@ -48,6 +50,7 @@ def test_frame_size():
     return True
 
 
+@iu.unit_test
 def test_dimensions():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_dimensions')
@@ -72,6 +75,7 @@ def test_dimensions():
 
 
 # img_tools.py
+@iu.unit_test
 def test_normalize_and_bin():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_normalize_and_bin')
@@ -99,7 +103,7 @@ def main():
     import sys
     from imsciutils import unit_test
 
-    unit_tests = [unit_test(var) for var in globals().values() if callable(var)]
+    unit_tests = [var for var in globals().values() if callable(var)]
     for test in unit_tests:
         test()
 
