@@ -161,7 +161,7 @@ def enforce_header(unformatted_license, directory, modify=False):
     return returns
 
 if __name__ == '__main__':
-    RESULT = enforce_header(LICENSE_HEADER, './imsciutils', True)
+    RESULT = enforce_header(LICENSE_HEADER, './imsciutils', False)
     if RESULT == 0:
         print('Successful enforcement')
     else:
