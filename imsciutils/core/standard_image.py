@@ -5,9 +5,10 @@ from types import SimpleNamespace
 
 import cv2
 import numpy as np
+from functools import partial
 
 IMAGE_SRC_DIRECTORY = os.path.join(
-    os.path.abspath(os.path.dirname(__file__)), '..', 'data')
+    os.path.abspath(os.path.dirname(__file__)), '..', 'data','standard_images')
 
 # ND 9/7/18 - dynamically populate paths to the standard test images
 # assumes the only thing in the IMAGE_SRC_DIRECTORY are images
@@ -19,7 +20,7 @@ STANDARD_IMAGES = {os.path.basename(impath).split(
 # images as attributes of func
 funcs = SimpleNamespace()
 for img_name in STANDARD_IMAGES.keys():
-    setattr(funcs, img_name, lambda img_name=img_name: get_standard_image(img_name))
+    setattr(funcs, img_name, partial(get_standard_image,img_name) )
 
 
 def list_standard_images():
