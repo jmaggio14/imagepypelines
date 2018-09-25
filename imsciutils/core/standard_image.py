@@ -6,24 +6,7 @@ from types import SimpleNamespace
 import cv2
 import numpy as np
 from functools import partial
-IMAGE_SRC_DIRECTORY = os.path.abspath(
-    os.path.join(
-        os.path.abspath(os.path.dirname(__file__)),
-        '..',
-        'data',
-        'standard_images'))
-
-# ND 9/7/18 - dynamically populate paths to the standard test images
-# assumes the only thing in the IMAGE_SRC_DIRECTORY are images
-STANDARD_IMAGE_PATHS = list(glob.glob(os.path.join(IMAGE_SRC_DIRECTORY, '*')))
-STANDARD_IMAGES = {os.path.basename(impath).split(
-    '.')[0]: impath for impath in STANDARD_IMAGE_PATHS}
-
-# ND 9/7/18 - create convenience functions to load each of the standard test
-# images as attributes of func
-funcs = SimpleNamespace()
-for img_name in STANDARD_IMAGES.keys():
-    setattr(funcs, img_name, partial(get_standard_image, img_name))
+import pkg_resources
 
 
 def list_standard_images():
@@ -104,6 +87,29 @@ def get_standard_image(img_name):
                             one of {std_imgs}".format(
             img_name=img_name,
             std_imgs=list_standard_images()))
+
+
+
+# uses the pkg_resources provider to load in data in the .egg file
+from .. import STANDARD_IMAGE_DIRECTORY
+# ND 9/7/18 - dynamically populate paths to the standard test images
+# assumes the only thing in the STANDARD_IMAGE_DIRECTORY are images
+# STANDARD_IMAGE_DIRECTORY = os.path.abspath(
+#     os.path.join(
+#         os.path.abspath(os.path.dirname(__file__)),
+#         '..',
+#         'data',
+#         'standard_images'))
+STANDARD_IMAGE_PATHS = list(glob.glob(os.path.join(STANDARD_IMAGE_DIRECTORY, '*')))
+STANDARD_IMAGES = {os.path.basename(impath).split(
+    '.')[0]: impath for impath in STANDARD_IMAGE_PATHS}
+
+# ND 9/7/18 - create convenience functions to load each of the standard test
+# images as attributes of func
+funcs = SimpleNamespace()
+for img_name in STANDARD_IMAGES.keys():
+    setattr(funcs, img_name, partial(get_standard_image, img_name))
+
 
 
 def main():
