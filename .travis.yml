@@ -19,4 +19,4 @@ script:
   - python enforcer.py
 
   #NOTE: separate automated_tests down here::
-  - python test\automated_tests.py
+  - python test/automated_tests.py
