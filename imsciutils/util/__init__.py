@@ -14,13 +14,6 @@ from .color import magenta
 from .color import cyan
 from .color import color_text
 
-# error_checking.py
-from .error_checking import interpolation_type_check
-from .error_checking import dtype_type_check
-from .error_checking import is_numpy_array
-from .error_checking import is_iterable
-from .error_checking import type_error_message
-
 # format.py
 from .format import format_dict
 
