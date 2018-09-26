@@ -211,16 +211,12 @@ def print_args(func):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        iuinfo("running '{}' with the following args:\n".format(func.__name__))
+        iuinfo("running '{}' with the following args:".format(func.__name__))
         if len(arg_dict) == 0:
             __add_to_arg_dict('None','','')
         longest_arg_name = max(len(k) for k in arg_dict)
         arg_string = ""
-        arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
-                                                            buf1=' ' * (len(POSITIONAL) // 2 - 4),
-                                                            buf2=' ' * (longest_arg_name // 2 - 7),)
-        arg_string += '\t' + '='*50 + '\n'
-        arg_string += ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
+        arg_string += ''.join(["{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
         print( arg_string )
 
         ret = func(*args,**kwargs)
@@ -236,7 +232,7 @@ def unit_test(func):
     Decorator which prints a colored message
     """
     def _unit_test(*args,**kwargs):
-        passed = print_args( func )(*args,**kwargs)
+        passed = func(*args,**kwargs)
 
         if passed:
             msg = util.green("{} test passed!".format(func.__name__))
