@@ -316,7 +316,7 @@ class Printer(object):
         prefix = self.level_text['comment']
         if self.ENABLE_COLOR:
             prefix = colored(prefix,'green',attrs=['bold'])
-            messages = [colored('green',green(str(msg), bold=True) for msg in messages]
+            messages = [colored('green',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
