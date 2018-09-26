@@ -67,7 +67,7 @@ class Tester(object):
         if is_numpy_array(out) and is_numpy_array(desired_output):
             has_failed = not np.all(out == desired_output)
         else:
-            has_failed = not np.all( np.array(out != desired_output) )
+            has_failed = not np.all( np.array(out == desired_output) )
 
 
         if has_failed:
