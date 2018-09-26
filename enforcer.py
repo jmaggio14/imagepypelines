@@ -6,6 +6,8 @@ if desired, this script can also modify each file and add the license and copyri
 to each file
 
 Example:
+    default (no modification, directory is ./imsciutils):
+        $ python enforcer.py
 
     without modification:
         $ python enforcer.py --directory='path_to_directory'
