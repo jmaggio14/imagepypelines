@@ -9,6 +9,7 @@ import imsciutils
 import numpy as np
 from PIL import Image
 from .coordinates import dimensions
+from .. import util
 
 def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     """normalizes and bins an image
@@ -27,7 +28,7 @@ def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     """
     assert isinstance(src, np.ndarray), "'src' must be np.ndarray"
     assert isinstance(max_count, (int, float)), "'max_count' must be number"
-    iu.util.dtype_type_check(cast_type)
+    util.dtype_type_check(cast_type)
 
     img = src.astype(np.float32)
     img = (img / img.max()) * max_count
