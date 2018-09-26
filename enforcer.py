@@ -91,7 +91,9 @@ def check_valid_header(header, filename):
     Checks to see if the given file contents has a valid header on top
     """
     with open(filename, 'r') as filestream:
-        content = filestream.read()
+        ext = os.path.splitext(filename)[1].replace('.','')
+        content = filestream.read().replace(EXTENSIONS_DICT[ext]+' ','')
+        content = content.replace(EXTENSIONS_DICT[ext],'')
         if LICENSE_HEADER not in content:
             return False
     return True
