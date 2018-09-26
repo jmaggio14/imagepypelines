@@ -41,11 +41,12 @@ Example:
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 import sys
 import os
 import glob
 import six
+import fnmatch
+
 
 SKIP = ['.git',
         'LICENSE',
@@ -153,8 +154,6 @@ def enforce_header(unformatted_license, directory, modify=False):
         for ext in ACCEPTABLE_EXTS:
             filenames.extend(glob.glob(directory + '/**/*' + ext, recursive=True))
     else:
-        import fnmatch
-        import os
         matches = []
         for ext in ACCEPTABLE_EXTS:
             for root, dirnames, filenames in os.walk(directory):

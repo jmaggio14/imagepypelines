@@ -11,6 +11,7 @@ frequently
 """
 import numpy as np
 from collections import Iterable
+from __future__ import absolute_import
 
 from .. import core
 
