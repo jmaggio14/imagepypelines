@@ -10,7 +10,7 @@ import inspect
 from collections import Iterable, OrderedDict
 from .Printer import get_printer
 from .. import util
-from .. import core
+from .debug import debug
 from .Summarizer import Summarizer
 
 
@@ -247,7 +247,7 @@ class Tester(object):
             return out
         except Exception as e:
             self.printer.error("{} test failed to run!".format(self.target.__name__))
-            core.debug(e)
+            debug(e)
 
 
 
