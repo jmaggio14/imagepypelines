@@ -18,10 +18,6 @@ Example:
         $ python enforcer.py --directory='path_to_directory' --modify
 
 """
-
-
-
-
 #!/usr/bin/env python
 
 # MIT License
@@ -45,15 +41,7 @@ Example:
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-#
-# @Author: Jeffrey Maggio, Nathan Dileas, Ryan Hartzell
-# @Date:   2018-09-25T18:42:16-04:00
-# @Email:  jmaggio14@gmail.com
-# @Project: imsciutils
-# @Filename: enforcer.py
-# @Last modified by:   Jeffrey Maggio, Nathan Dileas, Ryan Hartzell
-# @Last modified time: 2018-09-25T18:58:24-04:00
-# @License: MIT License
+
 import sys
 import os
 import glob
@@ -71,27 +59,9 @@ ACCEPTABLE_EXTS = ['.py']
 LICENSE_HEADER = """
 @Email:  jmaggio14@gmail.com
 
-MIT License
+MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
 
 Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
 """
 
 EXTENSIONS_DICT = {'py': '#'}
