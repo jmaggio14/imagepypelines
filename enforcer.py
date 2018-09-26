@@ -1,3 +1,23 @@
+"""
+This is a script that will verify that all .py contained in our repo
+contain our license and copyright.
+
+if desired, this script can also modify each file and add the license and copyright
+to each file
+
+Example:
+
+    without modification:
+        $ python enforcer.py --directory='path_to_directory'
+
+    with modification:
+        $ python enforcer.py --directory='path_to_directory' --modify
+
+"""
+
+
+
+
 #!/usr/bin/env python
 
 # MIT License
@@ -163,7 +183,26 @@ def enforce_header(unformatted_license, directory, modify=False):
     return returns
 
 if __name__ == '__main__':
-    RESULT = enforce_header(LICENSE_HEADER, './imsciutils', False)
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--modify',
+                        help='whether or not to modify the files in questions',
+                        action='store_true',
+                        )
+
+    parser.add_argument('--directory',
+                        help='the directory to enforce recursively',
+                        default='./imsciutils',
+                        )
+    args = parser.parse_args()
+
+
+    if args.modify:
+        print("enforcing directory '{}' with modification".format(args.directory))
+    else:
+        print("enforcing directory '{}' without modification".format(args.directory))
+
+    RESULT = enforce_header(LICENSE_HEADER, args.directory, args.modify )
     if RESULT == 0:
         print('Successful enforcement')
     else:
