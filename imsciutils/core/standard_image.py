@@ -16,7 +16,7 @@ else:
     # JM:
     # creates a new class called 'SimpleNamespace' if running python2
     # as types modules does not contain 'SimpleNamespace' in 2.7
-    SimpleNamespace = type('SimpleNamespace',(,),{})
+    SimpleNamespace = type('SimpleNamespace',tuple(),{})
 
 import cv2
 import numpy as np
