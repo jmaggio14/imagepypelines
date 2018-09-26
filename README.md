@@ -1,5 +1,7 @@
 # imsciutils
-[build]: https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=develop "build success"
+![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=develop "build success")
+
+
 This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role for programmatic manipulation and processing of imagery, computer vision, and machine learning tasks.
 
 
