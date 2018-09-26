@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 import numpy as np
 from collections import Iterable
-from .. import core
+from ..core import NUMPY_TYPES, CV2_INTERPOLATION_TYPES
+from ..core import InvalidInterpolationType, InvalidNumpyType
 #
 # @Email:  jmaggio14@gmail.com
 #
@@ -21,8 +22,8 @@ def interpolation_type_check(interp):
     values specified in opencv, otherwise raises an
     imsciutils.InvalidInterpolationType error
     """
-    if interp not in core.CV2_INTERPOLATION_TYPES:
-        raise core.InvalidInterpolationType(interp)
+    if interp not in CV2_INTERPOLATION_TYPES:
+        raise InvalidInterpolationType(interp)
 
     return True
 
@@ -33,8 +34,8 @@ def dtype_type_check(dtype):
     values specified in opencv, otherwise raises an
     imsciutils.InvalidInterpolationType error
     """
-    if dtype not in core.NUMPY_TYPES:
-        raise core.InvalidNumpyType(interp)
+    if dtype not in NUMPY_TYPES:
+        raise InvalidNumpyType(interp)
 
     return True
 
