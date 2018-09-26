@@ -243,7 +243,7 @@ class Tester(object):
     def __run_target(self,*args,**kwargs):
         # testing to make sure the function will run
         try:
-            out = self.target(*args, *kwargs)
+            out = self.target(*args, **kwargs)
             return out
         except Exception as e:
             self.printer.error("{} test failed to run!".format(self.target.__name__))
