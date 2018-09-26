@@ -27,7 +27,6 @@ class Tester(object):
     def __init__(self, target, verbose=False):
         if not callable(target):
             error_msg = "'target' must be a callable class or function!"
-            self.printer.error(error_msg)
             raise TypeError(error_msg)
 
         self.target = target
@@ -65,7 +64,7 @@ class Tester(object):
         out = self.__run_target(*args,**kwargs)
 
         # testing the output
-        if util.is_numpy_array(out) and util.is_numpy_array(desired_output):
+        if is_numpy_array(out) and is_numpy_array(desired_output):
             has_failed = not np.all(out == desired_output)
         else:
             has_failed = (out != desired_output)
@@ -74,9 +73,9 @@ class Tester(object):
         if has_failed:
             # TEST HAS FAILED
             # converting to any numpy arrays to summaries for printout
-            if util.is_numpy_array(desired_output):
+            if is_numpy_array(desired_output):
                 desired_output = util.Summarizer(desired_output)
-            if util.is_numpy_array(out):
+            if is_numpy_array(out):
                 out = util.Summarizer(out)
 
             self.printer.error("{} test failure expected output {}, but got {}"\
@@ -175,7 +174,7 @@ class Tester(object):
         arg_dict = OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
-            if util.is_numpy_array(val):
+            if is_numpy_array(val):
                 val = str( Summarizer(val) )
             arg_dict[key] = val
             vtypes[key] = vtype
