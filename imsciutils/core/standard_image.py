@@ -8,7 +8,15 @@
 import os
 import glob
 import sys
-from types import SimpleNamespace
+import six
+
+if six.PY3:
+    from types import SimpleNamespace
+else:
+    # JM:
+    # creates a new class called 'SimpleNamespace' if running python2
+    # as types modules does not contain 'SimpleNamespace' in 2.7
+    SimpleNamespace = type('SimpleNamespace',None,{})
 
 import cv2
 import numpy as np
