@@ -6,6 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import util
+from __future__ import print_function
 
 
 def get_printer(name, log_level='info'):
