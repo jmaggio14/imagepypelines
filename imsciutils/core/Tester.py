@@ -67,16 +67,16 @@ class Tester(object):
         if is_numpy_array(out) and is_numpy_array(desired_output):
             has_failed = not np.all(out == desired_output)
         else:
-            has_failed = (out != desired_output)
+            has_failed = not np.all( np.array(out != desired_output) )
 
 
         if has_failed:
             # TEST HAS FAILED
             # converting to any numpy arrays to summaries for printout
             if is_numpy_array(desired_output):
-                desired_output = util.Summarizer(desired_output)
+                desired_output = Summarizer(desired_output)
             if is_numpy_array(out):
-                out = util.Summarizer(out)
+                out = Summarizer(out)
 
             self.printer.error("{} test failure expected output {}, but got {}"\
                             .format(self.target.__name__,desired_output, out))
