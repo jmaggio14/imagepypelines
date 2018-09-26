@@ -5,6 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
+from __future__ import absolute_import
 import time
 from .. import core
 
