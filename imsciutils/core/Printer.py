@@ -6,8 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from __future__ import print_function
-from .. import util
-
+from termcolor import colored
 
 def get_printer(name, log_level='info'):
     """
@@ -223,8 +222,8 @@ class Printer(object):
 
         prefix = self.level_text['debug']
         if self.ENABLE_COLOR:
-            prefix = util.cyan(prefix)
-            messages = [util.cyan(str(msg)) for msg in messages]
+            prefix = colored(prefix,'cyan',attrs=['bold'])
+            messages = [colored(prefix,'cyan',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -257,8 +256,8 @@ class Printer(object):
 
         prefix = self.level_text['warning']
         if self.ENABLE_COLOR:
-            prefix = util.yellow(prefix,bold=True)
-            messages = [util.yellow(str(msg),bold=True) for msg in messages]
+            prefix = colored(prefix,'yellow',attrs=['bold'])
+            messages = [colored(prefix,'yellow',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -276,8 +275,8 @@ class Printer(object):
 
         prefix = self.level_text['error']
         if self.ENABLE_COLOR:
-            prefix = util.red(prefix)
-            messages = [util.red(str(msg)) for msg in messages]
+            prefix = colored(prefix,'red',attrs=['bold'])
+            messages = [colored(prefix,'red',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -296,8 +295,8 @@ class Printer(object):
 
         prefix = self.level_text['critical']
         if self.ENABLE_COLOR:
-            prefix = util.red(prefix, bold=True)
-            messages = [util.red(str(msg), bold=True) for msg in messages]
+            prefix = colored(prefix,'red')
+            messages = [colored(prefix,'red') for msg in messages]
 
         print(prefix, *messages)
 
@@ -316,8 +315,8 @@ class Printer(object):
 
         prefix = self.level_text['comment']
         if self.ENABLE_COLOR:
-            prefix = util.green(prefix, bold=True)
-            messages = [util.green(str(msg), bold=True) for msg in messages]
+            prefix = colored(prefix,'green',attrs=['bold'])
+            messages = [colored('green',green(str(msg), bold=True) for msg in messages]
 
         print(prefix, *messages)
 
