@@ -6,6 +6,7 @@ from setuptools import setup, find_packages
 # load __version__, __author__, __email__, etc variables
 exec(open('imsciutils/version_info.py').read())
 
+
 long_description = ''
 if os.path.exists('README.md'):
     with open('README.md', 'r') as f:
@@ -45,7 +46,7 @@ setup(name='imsciutils',
           'colorama>=0.3.9',
           'CommonMark>=0.5.4',
           'cycler>=0.10.0',
-          'dask>=0.19.2',
+          'dask==0.19.2',
           'decorator>=4.3.0',
           'docutils>=0.14',
           'h5py>=2.8.0',

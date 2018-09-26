@@ -6,7 +6,7 @@ cloudpickle>=0.5.6
 colorama>=0.3.9
 CommonMark>=0.5.4
 cycler>=0.10.0
-dask>=0.19.2
+dask==0.19.2
 decorator>=4.3.0
 docutils>=0.14
 h5py>=2.8.0
