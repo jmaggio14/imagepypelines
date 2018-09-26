@@ -67,7 +67,7 @@ def test_dimensions():
                         'bands':lenna.shape[2],
                         'dtype':lenna.dtype,
                         }
-    if not tester.exact_test(desired_output,lenna):
+    if not tester.exact_test(desired_output,lenna,return_as_dict=True):
         return False
 
     return True
@@ -102,11 +102,20 @@ def main():
     or failure
     """
     import sys
-    from imsciutils import unit_test
-
+    print('running main')
     unit_tests = [var for var in globals().values() if callable(var)]
-    for test in unit_tests:
-        test()
+
+    success = []
+    for test_func in unit_tests:
+        if test_func.__name__ == 'main':
+            # skipping main function to avoid recursion loop
+            continue
+        else:
+            success.append( test_func() )
+
+    # Exit with a 1 code if more than 1 unit test failed
+    sys.exit( not all(success) )
+
 
 if __name__ == '__main__':
     main()
