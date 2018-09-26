@@ -223,7 +223,7 @@ class Printer(object):
         prefix = self.level_text['debug']
         if self.ENABLE_COLOR:
             prefix = colored(prefix,'cyan',attrs=['bold'])
-            messages = [colored(prefix,'cyan',attrs=['bold']) for msg in messages]
+            messages = [colored(msg,'cyan',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -257,7 +257,7 @@ class Printer(object):
         prefix = self.level_text['warning']
         if self.ENABLE_COLOR:
             prefix = colored(prefix,'yellow',attrs=['bold'])
-            messages = [colored(prefix,'yellow',attrs=['bold']) for msg in messages]
+            messages = [colored(msg,'yellow',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -276,7 +276,7 @@ class Printer(object):
         prefix = self.level_text['error']
         if self.ENABLE_COLOR:
             prefix = colored(prefix,'red',attrs=['bold'])
-            messages = [colored(prefix,'red',attrs=['bold']) for msg in messages]
+            messages = [colored(msg,'red',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -296,7 +296,7 @@ class Printer(object):
         prefix = self.level_text['critical']
         if self.ENABLE_COLOR:
             prefix = colored(prefix,'red')
-            messages = [colored(prefix,'red') for msg in messages]
+            messages = [colored(msg,'red') for msg in messages]
 
         print(prefix, *messages)
 
@@ -316,7 +316,7 @@ class Printer(object):
         prefix = self.level_text['comment']
         if self.ENABLE_COLOR:
             prefix = colored(prefix,'green',attrs=['bold'])
-            messages = [colored(prefix,'green',attrs=['bold']) for msg in messages]
+            messages = [colored(msg,'green',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
