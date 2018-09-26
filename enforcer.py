@@ -45,6 +45,7 @@ Example:
 import sys
 import os
 import glob
+import six
 
 SKIP = ['.git',
         'LICENSE',
@@ -66,6 +67,7 @@ Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
 EXTENSIONS_DICT = {'py': '#'}
 
+
 def generate_header(unformatted_license, filename):
     """
     Generates the list of strings specific to the given character as
@@ -77,20 +79,22 @@ def generate_header(unformatted_license, filename):
         print('Warning: unknown extension associated with:', filename)
         return []
     char = EXTENSIONS_DICT[extension]
-    return [(char + ' ' + line).rstrip()\
+    return [(char + ' ' + line).rstrip()
             for line in unformatted_license.split('\n')]
+
 
 def check_valid_header(header, filename):
     """
     Checks to see if the given file contents has a valid header on top
     """
     with open(filename, 'r') as filestream:
-        ext = os.path.splitext(filename)[1].replace('.','')
-        content = filestream.read().replace(EXTENSIONS_DICT[ext]+' ','')
-        content = content.replace(EXTENSIONS_DICT[ext],'')
+        ext = os.path.splitext(filename)[1].replace('.', '')
+        content = filestream.read().replace(EXTENSIONS_DICT[ext]+' ', '')
+        content = content.replace(EXTENSIONS_DICT[ext], '')
         if LICENSE_HEADER not in content:
             return False
     return True
+
 
 def print_valid_header(header, filename):
     """
@@ -101,6 +105,7 @@ def print_valid_header(header, filename):
         return 0
     print('Invalid', filename)
     return -1
+
 
 def apply_header(header, filename):
     """
@@ -117,6 +122,7 @@ def apply_header(header, filename):
         filestream.write(content)
     return 0
 
+
 def evaluate_header(header, filename, modify):
     """
     Runs either the apply_header or print_valid_header
@@ -128,6 +134,7 @@ def evaluate_header(header, filename, modify):
         return print_valid_header(header, filename)
     except UnicodeDecodeError:
         return 0
+
 
 def enforce_header(unformatted_license, directory, modify=False):
     """
@@ -142,8 +149,19 @@ def enforce_header(unformatted_license, directory, modify=False):
         header = generate_header(unformatted_license, directory)
         return evaluate_header(header, directory, modify)
     filenames = []
-    for ext in ACCEPTABLE_EXTS:
-        filenames.extend( glob.glob(directory + '/**/*' + ext, recursive=True) )
+    if six.PY3:
+        for ext in ACCEPTABLE_EXTS:
+            filenames.extend(glob.glob(directory + '/**/*' + ext, recursive=True))
+    else:
+        import fnmatch
+        import os
+        matches = []
+        for ext in ACCEPTABLE_EXTS:
+            for root, dirnames, filenames in os.walk(directory):
+                for filename in fnmatch.filter(filenames, '*' + ext):
+                    matches.append(os.path.join(root, filename))
+
+        filenames = matches
 
     for obj in filenames:
         if obj not in SKIP:
@@ -151,10 +169,11 @@ def enforce_header(unformatted_license, directory, modify=False):
                 header = generate_header(unformatted_license, obj)
                 if evaluate_header(header, obj, modify) == -1:
                     returns = -1
-            elif enforce_header(unformatted_license,\
-                    os.path.join(directory, obj)) == -1:
+            elif enforce_header(unformatted_license,
+                                os.path.join(directory, obj)) == -1:
                 returns = -1
     return returns
+
 
 if __name__ == '__main__':
     import argparse
@@ -170,13 +189,12 @@ if __name__ == '__main__':
                         )
     args = parser.parse_args()
 
-
     if args.modify:
         print("enforcing directory '{}' with modification".format(args.directory))
     else:
         print("enforcing directory '{}' without modification".format(args.directory))
 
-    RESULT = enforce_header(LICENSE_HEADER, args.directory, args.modify )
+    RESULT = enforce_header(LICENSE_HEADER, args.directory, args.modify)
     if RESULT == 0:
         print('Successful enforcement')
     else:
