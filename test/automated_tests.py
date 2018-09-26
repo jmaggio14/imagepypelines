@@ -7,7 +7,7 @@ be automatically run
 """
 
 import imsciutils as iu
-
+VERBOSE = False
 # constants.py
 @iu.unit_test
 def test_constants():
@@ -28,7 +28,7 @@ def test_constants():
 def test_centroid():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_centroid')
-    tester = iu.Tester(iu.centroid,verbose=False)
+    tester = iu.Tester(iu.centroid,verbose=VERBOSE)
     lenna = iu.lenna()
     desired_output = (256,256)
     if not tester.exact_test(desired_output, lenna):
@@ -41,7 +41,7 @@ def test_centroid():
 def test_frame_size():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_frame_size')
-    tester = iu.Tester(iu.frame_size,verbose=False)
+    tester = iu.Tester(iu.frame_size,verbose=VERBOSE)
     lenna = iu.lenna()
     desired_output = tuple( lenna.shape[:2] )
     if not tester.exact_test(desired_output,lenna):
@@ -54,7 +54,7 @@ def test_frame_size():
 def test_dimensions():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_dimensions')
-    tester = iu.Tester(iu.dimensions,verbose=False)
+    tester = iu.Tester(iu.dimensions,verbose=VERBOSE)
     lenna = iu.lenna()
     # tuple test
     desired_output = (lenna.shape[0],lenna.shape[1],lenna.shape[2],lenna.dtype)
@@ -80,7 +80,7 @@ def test_normalize_and_bin():
     import imsciutils as iu
     import numpy as np
     testing_printer = iu.get_printer('test_normalize_and_bin')
-    tester = iu.Tester(iu.normalize_and_bin,verbose=False)
+    tester = iu.Tester(iu.normalize_and_bin,verbose=VERBOSE)
     lenna = iu.lenna()
     desired_output = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
     if not tester.exact_test(desired_output,lenna):
@@ -96,16 +96,21 @@ def test_normalize_and_bin():
 
 
 
-def main():
+def main(verbose=False):
     """
     runs all other function in this file automatically and prints out success
     or failure
     """
-    import sys
-    print('running main')
-    unit_tests = [var for var in globals().values() if callable(var)]
     import imsciutils as iu
-    iu.disable_all_printers()
+    if verbose:
+        global VERBOSE
+        VERBOSE = True
+    else:
+        iu.disable_all_printers()
+
+
+    import sys
+    unit_tests = [var for var in globals().values() if callable(var)]
     success = []
     for test_func in unit_tests:
         if test_func.__name__ == 'main':
@@ -119,7 +124,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--verbose',
+                        help='whether or not to print out the arguments passed into functions that use Tester',
+                        action='store_true')
+    args = parser.parse_args()
+    main(args.verbose)
 
 
 
