@@ -11,6 +11,18 @@ Subpackages
     imsciutils.ml
     imsciutils.util
 
+Submodules
+----------
+
+imsciutils.version\_info module
+-------------------------------
+
+.. automodule:: imsciutils.version_info
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 

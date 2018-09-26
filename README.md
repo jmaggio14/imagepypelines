@@ -1,7 +1,6 @@
 # imsciutils
-This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role programmatic manipulation and processing of imagery.
+This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role for programmatic manipulation and processing of imagery, computer vision, and machine learning tasks.
 
-We are imaging scientists, and as such the code in this repo will be skewed towards imaging tasks.
 
 ## Compatibility
 python 3.5+ (python 2.7 backwards)
@@ -17,10 +16,11 @@ Module Dependencies
 - opencv3
 - Pillow
 - colorama (on windows)
+- Sphinx (for autodocumentation)
 
 Install Dependencies
 ```
-pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama --user
+pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama Sphinx --user
 ```
 
 ## Documentation
@@ -33,6 +33,14 @@ And on every other platform::
 	cd docs && make html
 
 Then the html documentation will be available at docs/build/html/index.html
+
+If you modify the import structure, you may need to regenerate the autodoc statements. From the root:
+
+```
+sphinx-apidoc -o docs/source imsciutils
+```
+
+Then rebuild and check that your module was properly included. Don't forget to add the modified (or new) files to the commit.
 _____________________________
 
 # BASIC HOW TOs
@@ -310,10 +318,11 @@ printer = iu.get_printer('Example Printer')
 printer.set_log_level('error') # only error and critical functions will print
 ```
 
-
-
-
 (this system is exactly the same as log_levels in python's [`logging`](https://docs.python.org/3.7/library/logging.html) module )
+
+### disable or enabling certain printers
+Sometimes you may only want to see printouts from a specific class or function. you can do this
+with the `whitelist_printer`, `blacklist_printer`, or `disable_all_printers` functions
 
 ### default printer
 there's a default printer in `imsciutils` which is accessible through functions in the main module
@@ -354,12 +363,12 @@ This way it's easy track what stage of the pipeline your code is in, because eac
 ## development decorators
 `imsciutils` contains four decorators that are made for use by developers in the backend
 
-### @depreciated
-made to decorate functions or classes that are depreciated
+### @deprecated
+made to decorate functions or classes that are deprecated
 ```python
 import imsciutils as iu
 
-@iu.depreciated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
+@iu.deprecated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
 def old_function():
 	pass # real code will do something
 

@@ -12,6 +12,22 @@ imsciutils.io.CameraCapture module
     :undoc-members:
     :show-inheritance:
 
+imsciutils.io.Emailer module
+----------------------------
+
+.. automodule:: imsciutils.io.Emailer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.io.Emailer2 module
+-----------------------------
+
+.. automodule:: imsciutils.io.Emailer2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 imsciutils.io.ImageWriter module
 --------------------------------
 
@@ -24,6 +40,14 @@ imsciutils.io.VideoWriter module
 --------------------------------
 
 .. automodule:: imsciutils.io.VideoWriter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.io.output module
+---------------------------
+
+.. automodule:: imsciutils.io.output
     :members:
     :undoc-members:
     :show-inheritance:

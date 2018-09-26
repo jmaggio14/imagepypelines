@@ -1,4 +1,4 @@
 ================
 README
 ================
-.. include:: ../../readme.rst
+.. mdinclude:: ../../README.md
