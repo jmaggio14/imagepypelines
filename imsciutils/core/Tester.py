@@ -12,6 +12,7 @@ from .Printer import get_printer
 from .. import util
 from .debug import debug
 from .Summarizer import Summarizer
+from .error_checking import is_numpy_array
 
 
 class Tester(object):
