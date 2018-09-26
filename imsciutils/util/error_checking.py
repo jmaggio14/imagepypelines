@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+import numpy as np
+from collections import Iterable
+from .. import core
 #
 # @Email:  jmaggio14@gmail.com
 #
@@ -9,11 +13,6 @@
 Helper functions that contain canned tests or checks that we will run
 frequently
 """
-import numpy as np
-from collections import Iterable
-from __future__ import absolute_import
-
-from .. import core
 
 
 def interpolation_type_check(interp):
