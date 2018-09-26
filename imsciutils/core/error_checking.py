@@ -1,7 +1,10 @@
 from __future__ import absolute_import
 import numpy as np
 from collections import Iterable
-from .. import core
+from .constants import CV2_INTERPOLATION_TYPES
+from .constants import NUMPY_TYPES
+from .Exceptions import InvalidInterpolationType
+from .Exceptions import InvalidNumpyType
 #
 # @Email:  jmaggio14@gmail.com
 #
