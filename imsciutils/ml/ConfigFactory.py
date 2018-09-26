@@ -96,7 +96,7 @@ class ConfigFactory(object):
         return out
 
     def __repr__(self):
-        return str(self) + ' @{}'.format( id(self) )
+        return str(self) + ' @{}'.format( hex(id(self)) )
 
 
 def main():
