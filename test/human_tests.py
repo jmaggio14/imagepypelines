@@ -1,3 +1,5 @@
+import imsciutils as iu
+
 @iu.human_test
 def test_quick_image_view():
     """THIS TEST REQUIRES A HUMAN TO VIEW THE IMAGE"""
