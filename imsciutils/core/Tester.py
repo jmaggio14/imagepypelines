@@ -22,7 +22,7 @@ class Tester(object):
         target (callable): function target to test
         verbose (bool): whether or not to be verbose
     """
-    def __init__(self, target, verbose=True):
+    def __init__(self, target, verbose=False):
         if not callable(target):
             error_msg = "'target' must be a callable class or function!"
             self.printer.error(error_msg)
