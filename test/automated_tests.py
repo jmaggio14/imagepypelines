@@ -28,7 +28,7 @@ def test_constants():
 def test_centroid():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_centroid')
-    tester = iu.Tester(iu.centroid)
+    tester = iu.Tester(iu.centroid,verbose=False)
     lenna = iu.lenna()
     desired_output = (256,256)
     if not tester.exact_test(desired_output, lenna):
@@ -41,7 +41,7 @@ def test_centroid():
 def test_frame_size():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_frame_size')
-    tester = iu.Tester(iu.frame_size)
+    tester = iu.Tester(iu.frame_size,verbose=False)
     lenna = iu.lenna()
     desired_output = tuple( lenna.shape[:2] )
     if not tester.exact_test(desired_output,lenna):
@@ -54,7 +54,7 @@ def test_frame_size():
 def test_dimensions():
     import imsciutils as iu
     testing_printer = iu.get_printer('test_dimensions')
-    tester = iu.Tester(iu.dimensions)
+    tester = iu.Tester(iu.dimensions,verbose=False)
     lenna = iu.lenna()
     # tuple test
     desired_output = (lenna.shape[0],lenna.shape[1],lenna.shape[2],lenna.dtype)
@@ -80,7 +80,7 @@ def test_normalize_and_bin():
     import imsciutils as iu
     import numpy as np
     testing_printer = iu.get_printer('test_normalize_and_bin')
-    tester = iu.Tester(iu.normalize_and_bin)
+    tester = iu.Tester(iu.normalize_and_bin,verbose=False)
     lenna = iu.lenna()
     desired_output = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
     if not tester.exact_test(desired_output,lenna):
@@ -104,7 +104,8 @@ def main():
     import sys
     print('running main')
     unit_tests = [var for var in globals().values() if callable(var)]
-
+    import imsciutils as iu
+    iu.disable_all_printers()
     success = []
     for test_func in unit_tests:
         if test_func.__name__ == 'main':

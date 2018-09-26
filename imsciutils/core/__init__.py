@@ -37,6 +37,7 @@ from .Exceptions import InvalidNumpyType
 
 # Printer.py
 from .Printer import get_printer
+from .Printer import disable_all_printers
 from .Printer import whitelist_printer
 from .Printer import blacklist_printer
 from .Printer import reset_printer_lists

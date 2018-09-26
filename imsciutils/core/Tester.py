@@ -8,11 +8,14 @@
 import numpy as np
 import inspect
 from collections import Iterable, OrderedDict
+import collections
 from .Printer import get_printer
 from .. import util
 from .debug import debug
 from .Summarizer import Summarizer
 from .error_checking import is_numpy_array
+from .printout import warning as iuwarning
+from .printout import info as iuinfo
 
 
 class Tester(object):
@@ -24,7 +27,7 @@ class Tester(object):
         target (callable): function target to test
         verbose (bool): whether or not to be verbose
     """
-    def __init__(self, target, verbose=False):
+    def __init__(self, target, verbose=True):
         if not callable(target):
             error_msg = "'target' must be a callable class or function!"
             raise TypeError(error_msg)
@@ -166,12 +169,13 @@ class Tester(object):
         """
         prints the arguments passed into the target
         """
-        POSITIONAL    = '(  positional  )'
-        KEYWORD       = '(   keyword    )'
-        VARPOSITIONAL = '(var-positional)'
-        VARKEYWORD    = '( var-keyword  )'
+        POSITIONAL    = 'positional    |'
+        KEYWORD       = 'keyword       |'
+        VARPOSITIONAL = 'var-positional|'
+        VARKEYWORD    = 'var-keyword   |'
+        DEFAULT       = 'default       |'
 
-        arg_dict = OrderedDict()
+        arg_dict = collections.OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
             if is_numpy_array(val):
@@ -196,7 +200,7 @@ class Tester(object):
             else:
                 var = specdefaults[i - num_required]
 
-            vtype = POSITIONAL
+            vtype = DEFAULT
             __add_to_arg_dict(var_name,var,vtype)
 
         # positional arguments passed in and varargs passed in
@@ -216,7 +220,7 @@ class Tester(object):
             vtype = KEYWORD
             __add_to_arg_dict(var_name,var,vtype)
         for var_name,var in speckwonlydefaults.items():
-            vtype = KEYWORD
+            vtype = DEFAULT
             __add_to_arg_dict(var_name,var,vtype)
 
         # keyword arguments passed in
@@ -229,16 +233,12 @@ class Tester(object):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        self.printer.info("running '{}' with the following args:\n".format(self.target.__name__))
+        self.printer.info("running '{}' with the following args:".format(self.target.__name__))
+        if len(arg_dict) == 0:
+            __add_to_arg_dict('None','','')
         longest_arg_name = max(len(k) for k in arg_dict)
-        arg_string = ""
-        arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
-                                                            buf1=' ' * (len(POSITIONAL) // 2 - 4),
-                                                            buf2=' ' * (longest_arg_name // 2 - 7),)
-        arg_string += '\t' + '='*50 + '\n'
-        arg_string += ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
+        arg_string = ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
         print( arg_string )
-
 
     def __run_target(self,*args,**kwargs):
         # testing to make sure the function will run

@@ -8,6 +8,8 @@
 from .printout import warning as iuwarning
 from .printout import info as iuinfo
 from .. import util
+from .error_checking import is_numpy_array
+from .Printer import get_printer
 
 
 import six
@@ -147,17 +149,18 @@ def print_args(func):
         """
         prints the arguments passed into the target
         """
-        POSITIONAL    = '(  positional  )'
-        KEYWORD       = '(   keyword    )'
-        VARPOSITIONAL = '(var-positional)'
-        VARKEYWORD    = '( var-keyword  )'
-        DEFAULT       = '(   default    )'
+        POSITIONAL    = 'positional    |'
+        KEYWORD       = 'keyword       |'
+        VARPOSITIONAL = 'var-positional|'
+        VARKEYWORD    = 'var-keyword   |'
+        DEFAULT       = 'default       |'
+        PRINTER = get_printer(func.__name__)
 
         arg_dict = collections.OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
-            if util.is_numpy_array(val):
-                val = str( iu.Summarizer(val) )
+            if is_numpy_array(val):
+                val = str( Summarizer(val) )
             arg_dict[key] = val
             vtypes[key] = vtype
 
@@ -211,12 +214,11 @@ def print_args(func):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        iuinfo("running '{}' with the following args:".format(func.__name__))
+        PRINTER.info("running '{}' with the following args:".format(func.__name__))
         if len(arg_dict) == 0:
             __add_to_arg_dict('None','','')
         longest_arg_name = max(len(k) for k in arg_dict)
-        arg_string = ""
-        arg_string += ''.join(["{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
+        arg_string = ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
         print( arg_string )
 
         ret = func(*args,**kwargs)
