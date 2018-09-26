@@ -5,6 +5,8 @@ contain our license and copyright.
 if desired, this script can also modify each file and add the license and copyright
 to each file
 
+travis will run it with default arguments automatically, but for human use
+
 Example:
     default (no modification, directory is ./imsciutils):
         $ python enforcer.py
