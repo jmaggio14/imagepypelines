@@ -7,7 +7,7 @@
 #
 from __future__ import absolute_import
 import time
-from .. import core
+
 
 def function_timer(func):
     """
@@ -21,6 +21,9 @@ def function_timer(func):
         sleep_for_one_sec()
         # (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
+    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues 
+    # TODO: JM: remove relative imports inside these functions and move to top of file
+    from .. import core
     printer = core.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
@@ -47,6 +50,9 @@ def function_timer_ms(func):
         sleep_for_one_sec()
         # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
+    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues 
+    # TODO: JM: remove relative imports inside these functions and move to top of file
+    from .. import core
     printer = core.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
