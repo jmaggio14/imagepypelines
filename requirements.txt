@@ -13,9 +13,9 @@ h5py>=2.8.0
 idna>=2.7
 imagesize>=1.1.0
 Jinja2>=2.10
-keras>=2.2.2
-keras-applications>=1.0.4
-keras-preprocessing>=1.0.2
+keras==2.2.2
+keras-applications==1.0.4
+keras-preprocessing==1.0.2
 kiwisolver>=1.0.1
 m2r>=0.2.0
 MarkupSafe>=1.0
