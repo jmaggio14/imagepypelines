@@ -1,30 +1,12 @@
 #
 # @Email:  jmaggio14@gmail.com
 #
-# MIT License
+# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-#
-from .. import util
-
+from __future__ import print_function
+from termcolor import colored
 
 def get_printer(name, log_level='info'):
     """
@@ -240,8 +222,8 @@ class Printer(object):
 
         prefix = self.level_text['debug']
         if self.ENABLE_COLOR:
-            prefix = util.cyan(prefix)
-            messages = [util.cyan(str(msg)) for msg in messages]
+            prefix = colored(prefix,'cyan',attrs=['bold'])
+            messages = [colored(msg,'cyan',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -274,8 +256,8 @@ class Printer(object):
 
         prefix = self.level_text['warning']
         if self.ENABLE_COLOR:
-            prefix = util.yellow(prefix,bold=True)
-            messages = [util.yellow(str(msg),bold=True) for msg in messages]
+            prefix = colored(prefix,'yellow',attrs=['bold'])
+            messages = [colored(msg,'yellow',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -293,8 +275,8 @@ class Printer(object):
 
         prefix = self.level_text['error']
         if self.ENABLE_COLOR:
-            prefix = util.red(prefix)
-            messages = [util.red(str(msg)) for msg in messages]
+            prefix = colored(prefix,'red',attrs=['bold'])
+            messages = [colored(msg,'red',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 
@@ -313,8 +295,8 @@ class Printer(object):
 
         prefix = self.level_text['critical']
         if self.ENABLE_COLOR:
-            prefix = util.red(prefix, bold=True)
-            messages = [util.red(str(msg), bold=True) for msg in messages]
+            prefix = colored(prefix,'red')
+            messages = [colored(msg,'red') for msg in messages]
 
         print(prefix, *messages)
 
@@ -333,8 +315,8 @@ class Printer(object):
 
         prefix = self.level_text['comment']
         if self.ENABLE_COLOR:
-            prefix = util.green(prefix, bold=True)
-            messages = [util.green(str(msg), bold=True) for msg in messages]
+            prefix = colored(prefix,'green',attrs=['bold'])
+            messages = [colored(msg,'green',attrs=['bold']) for msg in messages]
 
         print(prefix, *messages)
 

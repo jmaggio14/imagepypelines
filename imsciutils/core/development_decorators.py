@@ -1,31 +1,15 @@
 #
 # @Email:  jmaggio14@gmail.com
 #
-# MIT License
+# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 #
 from .printout import warning as iuwarning
 from .printout import info as iuinfo
 from .. import util
+from .error_checking import is_numpy_array
+from .Printer import get_printer
 
 
 import six
@@ -165,17 +149,18 @@ def print_args(func):
         """
         prints the arguments passed into the target
         """
-        POSITIONAL    = '(  positional  )'
-        KEYWORD       = '(   keyword    )'
-        VARPOSITIONAL = '(var-positional)'
-        VARKEYWORD    = '( var-keyword  )'
-        DEFAULT       = '(   default    )'
+        POSITIONAL    = 'positional    |'
+        KEYWORD       = 'keyword       |'
+        VARPOSITIONAL = 'var-positional|'
+        VARKEYWORD    = 'var-keyword   |'
+        DEFAULT       = 'default       |'
+        PRINTER = get_printer(func.__name__)
 
         arg_dict = collections.OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
-            if util.is_numpy_array(val):
-                val = str( iu.Summarizer(val) )
+            if is_numpy_array(val):
+                val = str( Summarizer(val) )
             arg_dict[key] = val
             vtypes[key] = vtype
 
@@ -229,16 +214,11 @@ def print_args(func):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        iuinfo("running '{}' with the following args:\n".format(func.__name__))
+        PRINTER.info("running '{}' with the following args:".format(func.__name__))
         if len(arg_dict) == 0:
             __add_to_arg_dict('None','','')
         longest_arg_name = max(len(k) for k in arg_dict)
-        arg_string = ""
-        arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
-                                                            buf1=' ' * (len(POSITIONAL) // 2 - 4),
-                                                            buf2=' ' * (longest_arg_name // 2 - 7),)
-        arg_string += '\t' + '='*50 + '\n'
-        arg_string += ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
+        arg_string = ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
         print( arg_string )
 
         ret = func(*args,**kwargs)
@@ -254,7 +234,7 @@ def unit_test(func):
     Decorator which prints a colored message
     """
     def _unit_test(*args,**kwargs):
-        passed = print_args( func )(*args,**kwargs)
+        passed = func(*args,**kwargs)
 
         if passed:
             msg = util.green("{} test passed!".format(func.__name__))

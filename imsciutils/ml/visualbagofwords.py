@@ -1,27 +1,9 @@
 #
 # @Email:  jmaggio14@gmail.com
 #
-# MIT License
+# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 #
 import numpy as np
 import cv2
@@ -38,7 +20,7 @@ class VBOW(object):
 
 		desc_norms = np.sum(descriptors, axis=1)/len(descriptors[0])
 		self.desc_norms = np.asarray([[norm] for norm in desc_norms])
-		
+
 		codes = np.arange(0, 256, self.step)
 		self.codes = np.asarray([[code] for code in codes])
 
@@ -53,12 +35,12 @@ class VBOW(object):
 	def construct_vector(self):
 		"""For now, technically only supports SIFT (ORB needs special attention)"""
 		idx, _ = vq(self.desc_norms, self.codes)
-		
+
 		for i in range(len(self.codes)):
 
 			hist = len(self.desc_norms[idx==i])
 			self.histogram.append(hist)
-		
+
 		return np.asarray(self.histogram)
 
 def compare_euclidean(hist1, hist2):

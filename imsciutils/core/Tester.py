@@ -1,34 +1,21 @@
 #
 # @Email:  jmaggio14@gmail.com
 #
-# MIT License
+# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
 #
 import numpy as np
 import inspect
 from collections import Iterable, OrderedDict
+import collections
 from .Printer import get_printer
 from .. import util
+from .debug import debug
 from .Summarizer import Summarizer
+from .error_checking import is_numpy_array
+from .printout import warning as iuwarning
+from .printout import info as iuinfo
 
 
 class Tester(object):
@@ -43,7 +30,6 @@ class Tester(object):
     def __init__(self, target, verbose=True):
         if not callable(target):
             error_msg = "'target' must be a callable class or function!"
-            self.printer.error(error_msg)
             raise TypeError(error_msg)
 
         self.target = target
@@ -81,19 +67,19 @@ class Tester(object):
         out = self.__run_target(*args,**kwargs)
 
         # testing the output
-        if util.is_numpy_array(out) and util.is_numpy_array(desired_output):
+        if is_numpy_array(out) and is_numpy_array(desired_output):
             has_failed = not np.all(out == desired_output)
         else:
-            has_failed = (out != desired_output)
+            has_failed = not np.all( np.array(out == desired_output) )
 
 
         if has_failed:
             # TEST HAS FAILED
             # converting to any numpy arrays to summaries for printout
-            if util.is_numpy_array(desired_output):
-                desired_output = util.Summarizer(desired_output)
-            if util.is_numpy_array(out):
-                out = util.Summarizer(out)
+            if is_numpy_array(desired_output):
+                desired_output = Summarizer(desired_output)
+            if is_numpy_array(out):
+                out = Summarizer(out)
 
             self.printer.error("{} test failure expected output {}, but got {}"\
                             .format(self.target.__name__,desired_output, out))
@@ -183,15 +169,16 @@ class Tester(object):
         """
         prints the arguments passed into the target
         """
-        POSITIONAL    = '(  positional  )'
-        KEYWORD       = '(   keyword    )'
-        VARPOSITIONAL = '(var-positional)'
-        VARKEYWORD    = '( var-keyword  )'
+        POSITIONAL    = 'positional    |'
+        KEYWORD       = 'keyword       |'
+        VARPOSITIONAL = 'var-positional|'
+        VARKEYWORD    = 'var-keyword   |'
+        DEFAULT       = 'default       |'
 
-        arg_dict = OrderedDict()
+        arg_dict = collections.OrderedDict()
         vtypes = {}
         def __add_to_arg_dict(key,val,vtype):
-            if util.is_numpy_array(val):
+            if is_numpy_array(val):
                 val = str( Summarizer(val) )
             arg_dict[key] = val
             vtypes[key] = vtype
@@ -213,7 +200,7 @@ class Tester(object):
             else:
                 var = specdefaults[i - num_required]
 
-            vtype = POSITIONAL
+            vtype = DEFAULT
             __add_to_arg_dict(var_name,var,vtype)
 
         # positional arguments passed in and varargs passed in
@@ -233,7 +220,7 @@ class Tester(object):
             vtype = KEYWORD
             __add_to_arg_dict(var_name,var,vtype)
         for var_name,var in speckwonlydefaults.items():
-            vtype = KEYWORD
+            vtype = DEFAULT
             __add_to_arg_dict(var_name,var,vtype)
 
         # keyword arguments passed in
@@ -246,25 +233,21 @@ class Tester(object):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        self.printer.info("running '{}' with the following args:\n".format(self.target.__name__))
+        self.printer.info("running '{}' with the following args:".format(self.target.__name__))
+        if len(arg_dict) == 0:
+            __add_to_arg_dict('None','','')
         longest_arg_name = max(len(k) for k in arg_dict)
-        arg_string = ""
-        arg_string += "\t{buf1}type{buf1}|{buf2} arg_name {buf2}|  value\n".format(
-                                                            buf1=' ' * (len(POSITIONAL) // 2 - 4),
-                                                            buf2=' ' * (longest_arg_name // 2 - 7),)
-        arg_string += '\t' + '='*50 + '\n'
-        arg_string += ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
+        arg_string = ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
         print( arg_string )
-
 
     def __run_target(self,*args,**kwargs):
         # testing to make sure the function will run
         try:
-            out = self.target(*args, *kwargs)
+            out = self.target(*args, **kwargs)
             return out
         except Exception as e:
             self.printer.error("{} test failed to run!".format(self.target.__name__))
-            util.debug(e)
+            debug(e)
 
 
 
