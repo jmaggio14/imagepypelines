@@ -1,13 +1,6 @@
 imsciutils.core package
 =======================
 
-Subpackages
------------
-
-.. toctree::
-
-    imsciutils.core.unit_tests
-
 Submodules
 ----------
 
@@ -79,6 +72,14 @@ imsciutils.core.development\_decorators module
 ----------------------------------------------
 
 .. automodule:: imsciutils.core.development_decorators
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.core.error\_checking module
+--------------------------------------
+
+.. automodule:: imsciutils.core.error_checking
     :members:
     :undoc-members:
     :show-inheritance:

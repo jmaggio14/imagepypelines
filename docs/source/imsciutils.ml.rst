@@ -4,6 +4,14 @@ imsciutils.ml package
 Submodules
 ----------
 
+imsciutils.ml.ConfigFactory module
+----------------------------------
+
+.. automodule:: imsciutils.ml.ConfigFactory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 imsciutils.ml.DatasetManager module
 -----------------------------------
 
@@ -32,6 +40,14 @@ imsciutils.ml.FisherVectors module
 ----------------------------------
 
 .. automodule:: imsciutils.ml.FisherVectors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imsciutils.ml.Permuter module
+-----------------------------
+
+.. automodule:: imsciutils.ml.Permuter
     :members:
     :undoc-members:
     :show-inheritance:
