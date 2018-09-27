@@ -9,6 +9,7 @@ import os
 import glob
 import sys
 import six
+from types import FunctionType
 
 if six.PY3:
     from types import SimpleNamespace
@@ -16,7 +17,7 @@ else:
     # JM:
     # creates a new class called 'SimpleNamespace' if running python2
     # as types modules does not contain 'SimpleNamespace' in 2.7
-    SimpleNamespace = type('SimpleNamespace',tuple(),{})
+    SimpleNamespace = type('SimpleNamespace', tuple(), {})
 
 import cv2
 import numpy as np
@@ -104,12 +105,12 @@ def get_standard_image(img_name):
             std_imgs=list_standard_images()))
 
 
-
 # uses the pkg_resources provider to load in data in the .egg file
 from .. import STANDARD_IMAGE_DIRECTORY
 # ND 9/7/18 - dynamically populate paths to the standard test images
 # assumes the only thing in the STANDARD_IMAGE_DIRECTORY are images
-STANDARD_IMAGE_PATHS = list(glob.glob(os.path.join(STANDARD_IMAGE_DIRECTORY, '*')))
+STANDARD_IMAGE_PATHS = list(
+    glob.glob(os.path.join(STANDARD_IMAGE_DIRECTORY, '*')))
 STANDARD_IMAGES = {os.path.basename(impath).split(
     '.')[0]: impath for impath in STANDARD_IMAGE_PATHS}
 
@@ -118,10 +119,13 @@ STANDARD_IMAGES = {os.path.basename(impath).split(
 funcs = SimpleNamespace()
 for img_name in STANDARD_IMAGES.keys():
     # JM: modifies function creation to also include docstrings
-    std_img_func = partial(get_standard_image, img_name)
+    partial_func = partial(get_standard_image, img_name)
+    # ND changed partial funcs to FunctionType
+    std_img_func = FunctionType(
+        partial_func.func.__code__, globals(), img_name, partial_func.args)
+
     std_img_func.__doc__ = "standard image retrieval for {}".format(img_name)
     setattr(funcs, img_name, std_img_func)
-
 
 
 def main():
