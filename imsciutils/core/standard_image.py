@@ -109,12 +109,6 @@ def get_standard_image(img_name):
 from .. import STANDARD_IMAGE_DIRECTORY
 # ND 9/7/18 - dynamically populate paths to the standard test images
 # assumes the only thing in the STANDARD_IMAGE_DIRECTORY are images
-# STANDARD_IMAGE_DIRECTORY = os.path.abspath(
-#     os.path.join(
-#         os.path.abspath(os.path.dirname(__file__)),
-#         '..',
-#         'data',
-#         'standard_images'))
 STANDARD_IMAGE_PATHS = list(glob.glob(os.path.join(STANDARD_IMAGE_DIRECTORY, '*')))
 STANDARD_IMAGES = {os.path.basename(impath).split(
     '.')[0]: impath for impath in STANDARD_IMAGE_PATHS}
