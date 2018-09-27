@@ -113,7 +113,6 @@ def main(verbose=False):
     else:
         iu.disable_all_printers()
 
-
     import sys
     unit_tests = [var for var in globals().values() if callable(var)]
     success = []
