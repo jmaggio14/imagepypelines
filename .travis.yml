@@ -8,6 +8,7 @@ python:
   - 3.6
   # - 3.7
 
+# JM:
 # enabling 3.7 workaround in accordance with this post:
 # https://github.com/travis-ci/travis-ci/issues/9815
 matrix:
@@ -19,12 +20,29 @@ matrix:
 # ------------------------------------------
 
 install:
+  # ND
   - pip install -r requirements.txt
   - pip install .
 
 script:
-  #running license enforcer
+  # JM: running license enforcer
   - python enforcer.py
 
-  #NOTE: separate automated_tests down here::
+  # JM: separate automated_tests down here::
   - python test/automated_tests.py --verbose
+
+  # JM: Building documentation
+  - cd docs && make html
+  # JM: listing the local directory for traceability reasons / setting local-dir
+  - pwd
+
+# JM: for github pages setup.
+# target branch defaults to 'gh-pages'
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # JM: references environmental variable I setup from github
+  keep-history: true
+  local-dir: ./build/html
+  on:
+    branch: master
