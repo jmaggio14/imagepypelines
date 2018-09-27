@@ -16,6 +16,7 @@ from .Summarizer import Summarizer
 from .error_checking import is_numpy_array
 from .printout import warning as iuwarning
 from .printout import info as iuinfo
+import six
 
 
 class Tester(object):
@@ -183,6 +184,12 @@ class Tester(object):
             arg_dict[key] = val
             vtypes[key] = vtype
 
+        if six.PY2:
+            # JM:
+            # skipping this function is using python2 because
+            # inspect.getfullargspec is python3+ only
+            self.printer.warning('argument printout is not available in python2')
+            return
 
         spec = inspect.getfullargspec(self.target)
         specdefaults = [] if spec.defaults is None else spec.defaults

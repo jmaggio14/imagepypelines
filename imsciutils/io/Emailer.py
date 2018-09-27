@@ -61,10 +61,6 @@ class Emailer(object):
     with the current implementation. Mind taking a look?
                                      -Jeff
 
-    I've seen tons of examples using a gmail account, but we want something
-    that sends from the local machine....
-    as far as I'm concerned, we can just use subprocess calls to a terminal
-
     Example:
         emailer = iu.io.Emailer(['recipient1@example.com'],subject='example')
 

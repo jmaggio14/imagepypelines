@@ -10,6 +10,7 @@ import numpy as np
 from PIL import Image
 from .coordinates import dimensions
 from .error_checking import dtype_type_check
+import cv2
 
 def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     """normalizes and bins an image
