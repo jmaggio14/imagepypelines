@@ -117,7 +117,10 @@ STANDARD_IMAGES = {os.path.basename(impath).split(
 # images as attributes of func
 funcs = SimpleNamespace()
 for img_name in STANDARD_IMAGES.keys():
-    setattr(funcs, img_name, partial(get_standard_image, img_name))
+    # JM: modifies function creation to also include docstrings
+    std_img_func = partial(get_standard_image, img_name)
+    std_img_func.__doc__ = "standard image retrieval for {}".format(img_name)
+    setattr(funcs, img_name, std_img_func)
 
 
 
