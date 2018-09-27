@@ -4,7 +4,6 @@ language: python
 
 python:
   - 2.7
-  # - 3.4
   - 3.5
   - 3.6
   # - 3.7
@@ -28,4 +27,4 @@ script:
   - python enforcer.py
 
   #NOTE: separate automated_tests down here::
-  - python test/automated_tests.py
+  - python test/automated_tests.py --verbose
