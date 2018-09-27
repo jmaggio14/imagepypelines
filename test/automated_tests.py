@@ -102,9 +102,14 @@ def main(verbose=False):
     or failure
     """
     import imsciutils as iu
+    import six
+
     if verbose:
-        global VERBOSE
-        VERBOSE = True
+        if six.PY2:
+            print('verbose options are not available in python2')
+        else:
+            global VERBOSE
+            VERBOSE = True
     else:
         iu.disable_all_printers()
 
