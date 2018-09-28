@@ -12,6 +12,7 @@ from datetime import datetime
 import imsciutils as iu
 from .. import util
 from .img_tools import number_image
+from .error_checking import interpolation_type_check
 
 class Viewer(object):
     """
@@ -44,14 +45,14 @@ class Viewer(object):
                  interpolation=cv2.INTER_NEAREST,
                  enable_frame_counter=False):
 
-        util.interpolation_type_check(interpolation)
+        interpolation_type_check(interpolation)
         if window_name is None:
             window_name = datetime.now()
 
         self.window_name = str(window_name)
         self.size = size
         self.interpolation = interpolation
-        self.enable_frame_counter = enable_frame_counter
+        self._enable_frame_counter = enable_frame_counter
         self.open()
         self.frame_counter = 1
 
@@ -93,7 +94,7 @@ class Viewer(object):
                                interpolation=self.interpolation)
 
         # add a frame counter to an image thin
-        if self.enable_frame_counter:
+        if self._enable_frame_counter:
             frame = number_image(frame,self.frame_counter)
         # displaying the image
         cv2.imshow(self.window_name, frame)
@@ -104,11 +105,11 @@ class Viewer(object):
 
     def enable_frame_counter(self):
         """enable the frame counter"""
-        self.enable_frame_counter = True
+        self._enable_frame_counter = True
 
     def disable_frame_counter(self):
         """disable the frame counter"""
-        self.enable_frame_counter = False
+        self._enable_frame_counter = False
 
     def close(self):
         """
