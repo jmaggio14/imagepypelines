@@ -125,7 +125,11 @@ for img_name in STANDARD_IMAGES.keys():
         partial_func.func.__code__, globals(), img_name, partial_func.args)
 
     std_img_func.__doc__ = "standard image retrieval for {}".format(img_name)
+    globals()[img_name] = std_img_func
     setattr(funcs, img_name, std_img_func)
+
+# JM: deletes last remaining partial function from scope to remove Sphinx warning
+del partial_func
 
 
 def main():
