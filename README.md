@@ -97,6 +97,8 @@ import time
 
 # lets build our Viewer and have it auto-resize images to 512x512
 viewer = iu.Viewer('Window Title Here', size=(512,512))
+# let's enable the frame counter, so we know what image we are on
+viewer.enable_frame_counter()
 
 # get all standard images
 standard_images = iu.standard_image_gen()
@@ -123,7 +125,7 @@ iu.Viewer().view(display_safe)
 when debugging an image pipeline, printing out an image
 can be counter productive. Imaging scientists frequently default
 to printing out the shape or size of the data. `imsciutils` contains
-a helper class to quickly summarize an image in formated string
+a helper class to quickly summarize an image in a formatted string
 ```python
 import imsciutils as iu
 lenna = iu.lenna()
