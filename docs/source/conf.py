@@ -87,7 +87,7 @@ html_theme = 'classic'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {collapsiblesidebar: 'True',
+html_theme_options = {collapsiblesidebar: True,
                       footerbgcolor: (28, 12, 46),
                       footertextcolor: (232, 220, 193)}
 
