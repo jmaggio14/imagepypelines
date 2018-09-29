@@ -88,8 +88,8 @@ html_theme = 'classic'
 # documentation.
 #
 html_theme_options = {collapsiblesidebar=True,
-                      footerbgcolor=0xE8DCC1,
-                      footertextcolor=0x1C0C2E}
+                      footerbgcolor='#E8DCC1',
+                      footertextcolor='#1C0C2E'}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
