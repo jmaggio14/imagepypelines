@@ -98,7 +98,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "Demo",
+    'navbar_title': "ImSciUtils",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Site",
@@ -110,10 +110,7 @@ html_theme_options = {
     #    (name, "http://example.com", True) # arbitrary absolute url
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
-    'navbar_links': [
-        ("Examples", "examples"),
-        ("Link", "http://example.com", True),
-    ],
+    'navbar_links': [("Contributors", "http://example.com", True)],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': True,
@@ -139,15 +136,15 @@ html_theme_options = {
 
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
-    'navbar_class': "navbar navbar-inverse",
+    'navbar_class': "navbar",
 
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"
-    'navbar_fixed_top': "true",
+    'navbar_fixed_top': "false",
 
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
-    'source_link_position': "nav",
+    'source_link_position': "footer",
 
     # Bootswatch (http://bootswatch.com/) theme.
     #
