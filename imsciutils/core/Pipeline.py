@@ -30,9 +30,11 @@ class Pipeline(object):
         self.verbose = verbose
         self.printer = get_printer(self.name)
 
+        # set log level to infinity if non-verbose is desired
         if not self.verbose:
             self.printer.set_log_level( float('inf') )
 
+        # checking to make sure blocks is a list
         if not isinstance(blocks,list):
             error_msg = "'blocks' must be a list"
             self.printer.error(error_msg)
@@ -42,19 +44,24 @@ class Pipeline(object):
 
     def add(self, block):
         """adds processing block to the pipeline processing chain"""
+        # checking to make sure block is a real block
         if not isinstance(block, BaseBlock):
             error_msg = "'block' must be a subclass of iu.BaseBlock"
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 
-        self.blocks.append(block) # add block
+        # appends to instance block list
+        self.blocks.append(block)
 
     def train(self, x_data):
         """trains all processing blocks in the pipeline"""
         timer = util.Timer()
+        # runs training for each block and then processes the data for
+        # the next block to train with
         for block in self.blocks:
             block.run_train(x_data)
             x_data = block.run_process(x_data)
+            # printing for traceability
             self.printer.info("{}: trained in {} seconds on {} datums".format(
                                                                 block.name,
                                                                 timer.lap(),
@@ -65,11 +72,13 @@ class Pipeline(object):
     def process(self, x_data):
         """processed x_data by sequentially running data through all blocks"""
         timer = util.Timer()
+        # process the data through each block
         for block in self.blocks:
-            self.printer.info("{}: processing {} datums...".format(block.name,
-                                                               len(x_data)))
             x_data = block.run_process(x_data)
-            self.printer.info("{}: trained in {}seconds".format(block.name,
-                                                                timer.lap()))
+            # printing for traceability
+            self.printer.info("{}: trained in {} seconds on {} datums".format(
+                                                                block.name,
+                                                                timer.lap(),
+                                                                len(x_data)))
 
-        return x_data # processes data
+        return x_data
