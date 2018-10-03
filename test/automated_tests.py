@@ -156,7 +156,9 @@ def main(verbose=False):
             success.append( test_func() )
 
     # Exit with a 1 code if more than 1 unit test failed
-    sys.exit( not all(success) )
+    if not all(success):
+        print('not all unit tests passed. add --verbose for more details')
+        sys.exit( 1 )
 
 
 if __name__ == '__main__':
