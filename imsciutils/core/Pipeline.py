@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .. import core
+from .Printer import get_printer
 from .. import ml
 from .. import util
 
@@ -28,7 +28,7 @@ class Pipeline(object):
 
         self.name = name
         self.verbose = verbose
-        self.printer = core.get_printer(self.name)
+        self.printer = get_printer(self.name)
 
         if not self.verbose:
             self.printer.set_log_level( float('inf') )
