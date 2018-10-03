@@ -107,7 +107,7 @@ def test_orb_pipeline():
     empty = np.zeros(lenna.shape)
 
     # stacking images for pipeline
-    img_stack = np.vstack( (empty,lenna) )
+    img_stack = np.vstack( (lenna,empty) )
 
 
     # processing test

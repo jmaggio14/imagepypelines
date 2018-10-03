@@ -1,4 +1,6 @@
 from .. import BaseBlock
+from ... import core
+# from .. import ..core as core
 import cv2
 import numpy as np
 
@@ -39,6 +41,7 @@ class Orb(BaseBlock):
             img = x_data[i,:,:,:].reshape((x_data.shape[1],x_data.shape[2]))
             # DEBUG
             self.printer.warning("input image shape is {}".format(img.shape))
+            core.quick_image_view(img)
             # END DEBUG
             _,des = self.orb.detectAndCompute(img,None)
             descriptors[i,0:des.shape[0],:] = des
