@@ -6,7 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .Printer import get_printer
-from .BaseBlock import BaseBaseBlock
+from .BaseBlock import BaseBlock
 from .. import util
 
 
