@@ -23,9 +23,3 @@ from .ConfigFactory import ConfigFactory
 
 # permute.py
 from .Permuter import Permuter
-
-# BaseBlock.py
-from .BaseBlock import BaseBlock
-
-# builtin blocks
-from .builtin_blocks import *

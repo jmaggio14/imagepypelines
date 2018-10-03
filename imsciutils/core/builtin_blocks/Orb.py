@@ -6,8 +6,6 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import BaseBlock
-from ... import core
-# from .. import ..core as core
 import cv2
 import numpy as np
 

@@ -5,6 +5,13 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
+
+# BaseBlock.py
+from .BaseBlock import BaseBlock
+
+# builtin_blocks/
+from .builtin_blocks import *
+
 # constants.py
 from .constants import *
 

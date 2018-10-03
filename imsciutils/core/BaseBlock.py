@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .. import core
+from .Printer import get_printer
 
 
 class BaseBlock(object):
@@ -32,7 +32,7 @@ class BaseBlock(object):
         name = name + str(self.extant[name])
 
         self.name = name
-        self.printer = core.get_printer(name)
+        self.printer = get_printer(name)
         self.is_trained = False
 
     def setup(self, **kwargs): #setups the special arguments for this block

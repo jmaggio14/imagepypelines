@@ -6,7 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .Printer import get_printer
-from .. import ml
+from .BaseBlock import BaseBaseBlock
 from .. import util
 
 
@@ -42,8 +42,8 @@ class Pipeline(object):
 
     def add(self, block):
         """adds processing block to the pipeline processing chain"""
-        if not isinstance(block, ml.BaseBlock):
-            error_msg = "'block' must be a subclass of iu.ml.BaseBlock"
+        if not isinstance(block, BaseBlock):
+            error_msg = "'block' must be a subclass of iu.BaseBlock"
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 
