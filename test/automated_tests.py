@@ -98,7 +98,7 @@ def test_orb_pipeline():
     N_KEYPOINTS = 120
     # adding orb to a pipeline
     pipeline = iu.Pipeline(name='test_orb_pipeline')
-    orb = iu.ml.Orb('test_orb').setup(n_keypoints=N_KEYPOINTS)
+    orb = iu.Orb('test_orb').setup(n_keypoints=N_KEYPOINTS)
     pipeline.add(orb)
 
     # loading an empty array and lenna
