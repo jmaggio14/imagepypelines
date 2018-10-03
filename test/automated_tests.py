@@ -115,10 +115,18 @@ def test_orb_pipeline():
     des = pipeline.process(img_stack)
 
     # checking to make sure the empty array has zero valued descriptors
-    empty_works = np.all( des[0,:,:] == 0 )
+    empty_works = np.all( des[1,:,:] == 0 )
+    if empty_works:
+        testing_printer.info('empty array input is success')
+    else:
+        testing_printer.warning('empty array input is failure')
 
     # checking to make sure the array is the correct shape
     correct_shape = des.shape == (2,N_KEYPOINTS,32)
+    if correct_shape:
+        testing_printer.info('shape of output is success')
+    else:
+        testing_printer.warning('shape of output is failure')
 
     return (empty_works and correct_shape)
 
