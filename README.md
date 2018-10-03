@@ -209,8 +209,10 @@ produces the following
 1 ) t.time() counts up always:  2.003
 ```
 
+# Constructing Image Pipelines
 
-# HIGHER LEVEL FUNCTIONALITY
+
+# Higher Level Functionality
 `imsciutils` also contains objects for more specific, higher level tasks
 such as talking to a webcam, writing videos and images, extact image features
 using pretrained neural networks, etc.
@@ -432,12 +434,7 @@ func_with_lots_of_args(1, b=2, c='not 3')
 ```
 produces the following in the terminal
 ```
-(    imsciutils    )[    INFO    ] running 'func_with_lots_of_args' with the following args:
-
-            type    | arg_name |  value
-        ==================================================
-        (  positional  ) a : 1
-        (   keyword    ) b : 2
-        (   keyword    ) c : not 3
-        (   default    ) d : 4
+(dimensions Tester)[    INFO    ] running 'dimensions' with the following args:
+	positional    | img            : [ARRAY SUMMARY | shape: (512, 512, 3) | size: 786432 | max: 255 | min: 3 | mean: 128.228 | dtype: uint8]
+	default       | return_as_dict : False
 ```
