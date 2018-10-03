@@ -39,11 +39,11 @@ class Orb(BaseBlock):
         descriptors = np.zeros( (x_data.shape[0],self.n_keypoints,32) )
         for i in range(x_data.shape[0]):
             img = x_data[i,:,:,:].reshape((x_data.shape[1],x_data.shape[2]))
-            # DEBUG
-            self.printer.warning("input image shape is {}".format(img.shape))
-            core.quick_image_view(img)
-            # END DEBUG
+            img = np.uint8(img)
             _,des = self.orb.detectAndCompute(img,None)
+            if des is None:
+                #JM: for edge case where no descriptors are found
+                continue
             descriptors[i,0:des.shape[0],:] = des
 
         return descriptors

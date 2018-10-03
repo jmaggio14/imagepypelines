@@ -115,7 +115,7 @@ def test_orb_pipeline():
     des = pipeline.process(img_stack)
 
     # checking to make sure the empty array has zero valued descriptors
-    empty_works = np.all( des[0,:,:,:] == 0 )
+    empty_works = np.all( des[0,:,:] == 0 )
 
     # checking to make sure the array is the correct shape
     correct_shape = des.shape == (2,N_KEYPOINTS,32)

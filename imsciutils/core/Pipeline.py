@@ -46,12 +46,12 @@ class Pipeline(object):
         """trains all processing blocks in the pipeline"""
         timer = util.Timer()
         for block in self.blocks:
-            self.printer.info("{}: training on {} datums".format(block.name,
-                                                                len(x_data)))
             block.run_train(x_data)
             x_data = block.run_process(x_data)
-            self.printer.info("{}: trained in {}seconds".format(block.name,
-                                                                timer.lap()))
+            self.printer.info("{}: trained in {} seconds on {} datums".format(
+                                                                block.name,
+                                                                timer.lap(),
+                                                                len(x_data)))
         self.printer.info("all blocks trained: {}seconds".format(timer.time()))
         return x_data # trains all blocks if required
 
