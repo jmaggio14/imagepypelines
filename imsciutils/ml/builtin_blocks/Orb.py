@@ -28,6 +28,7 @@ class Orb(BaseBlock):
 
         Args:
             x_data (np.ndarray): 4D numpy array to process
+                (n_img,height,width,bands)
 
         Returns:
             descriptors(np.ndarray): 3D array of ORB descriptors
