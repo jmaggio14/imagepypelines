@@ -48,17 +48,16 @@ def standard_image_input(func):
     is meant to be a numpy array image.
 
     Example:
-        import numpy as np
-        import cv2
+        >>> import numpy as np
+        >>> import cv2
+        >>> @standard_image_input
+        >>> def add_one_to_image(img):
+        ...    assert isinstance(img,np.ndarray) #forcing a np.ndarray input type
+        ...    return img + 1
 
-        @standard_image_input
-        def add_one_to_image(img):
-            assert isinstance(img,np.ndarray) #forcing a np.ndarray input type
-            return img + 1
-
-        lenna_plus_one = add_one_to_image('lenna')
-        # these are now equivalent
-        lenna_plus_one = add_one_to_image( cv2.imread('lenna.jpg') )
+        >>> lenna_plus_one = add_one_to_image('lenna')
+        >>> # these are now equivalent
+        >>> lenna_plus_one = add_one_to_image( cv2.imread('lenna.jpg') )
 
     """
     def _standard_image_input(img, *args, **kwargs):

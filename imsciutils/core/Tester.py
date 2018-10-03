@@ -106,14 +106,14 @@ class Tester(object):
             passed (boolean): whether or not the output was one of the desired_type
 
         Example:
-            def output_str_or_int(a):
-                if a:
-                    return "1"
-                else:
-                    return 1
+            >>> def output_str_or_int(a):
+            ...    if a:
+            ...        return "1"
+            ...    else:
+            ...        return 1
 
-            tester = Tester(output_str_or_int)
-            is_test_successful = tester.type_test(str, a=True)
+            >>> tester = Tester(output_str_or_int)
+            >>> is_test_successful = tester.type_test(str, a=True)
         """
         # Making desired_type a list if it isn't already
         if not isinstance(desired_type,Iterable):

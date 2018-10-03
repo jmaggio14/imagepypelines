@@ -55,11 +55,13 @@ def is_iterable(var):
 def type_error_message(variable,variable_name,desired_types):
     """
     returns an error message for a type error_msg
-    inputs:
+
+    Args:
         variable (the variable you want raise an error for):
         variable_name (the name of variable):
         desired_types (type,iterable of desired types):
-    returns:
+
+    Returns:
         error_msg (str): formatted error message string
     """
     if not isinstance(desired_types,Iterable):
