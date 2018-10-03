@@ -14,14 +14,14 @@ def function_timer(func):
     Decorator to time how long a func takes to run in seconds
 
     Example:
-        @function_timer
-        def sleep_for_one_sec():
-            time.sleep(1) # sleep for 1 second
+        >>> @function_timer
+        >>> def sleep_for_one_sec():
+        ...    time.sleep(1) # sleep for 1 second
 
-        sleep_for_one_sec()
-        # (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
+        >>> sleep_for_one_sec()
+        (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
-    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues 
+    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
     from .. import core
     printer = core.get_printer('function_timer')
@@ -50,7 +50,7 @@ def function_timer_ms(func):
         sleep_for_one_sec()
         # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
-    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues 
+    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
     from .. import core
     printer = core.get_printer('function_timer')

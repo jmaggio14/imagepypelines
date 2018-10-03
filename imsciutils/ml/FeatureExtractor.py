@@ -53,11 +53,10 @@ class FeatureExtractor(object):
 
 
     Example:
-        import imsciutils as iu
-        network = iu.ml.FeatureExtractor('resnet50',pooling_type='avg')
-
-        img = iu.lenna()
-        lenna_features = network.extract_features(img)
+        >>> import imsciutils as iu
+        >>> network = iu.ml.FeatureExtractor('resnet50',pooling_type='avg')
+        >>> img = iu.lenna()
+        >>> lenna_features = network.extract_features(img)
 
     """
     __SUBMODULES = {'xception': 'keras.applications.xception',
