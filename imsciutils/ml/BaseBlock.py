@@ -11,15 +11,24 @@ class BaseBlock(object):
         name (str): the name of this block, default will be the name of the class
 
     """
+    extant = {}
     def __init__(self, name=None):
         # JM: making printer for this class
         if name is None:
             name = self.__class__.__name__
+
+        # keeping track of names internally in a class variable
+        if name in self.extant:
+            self.extant[name] += 1
+        else:
+            self.extant[name] = 1
+        name = name + str(self.extant[name])
+
         self.name = name
         self.printer = core.get_printer(name)
         self.is_trained = False
 
-    def setup(self, **kwargs):
+    def setup(self, **kwargs): #setups the special arguments for this block
         """(Optional overload)checks the instantiation kwargs
 
         Function to overload to check the instantiation keywords for this
@@ -37,10 +46,9 @@ class BaseBlock(object):
                 self.param1 = param1
                 self.param2 = param2
         """
-        raise NotImplementedError("'setup' must be overloaded in all Block children")
+        raise NotImplementedError("'setup' must be overloaded in all Block children") #setups the special arguments for this block
 
-
-    def train(self, x_data):
+    def train(self, x_data): #trains the feature generator if required
         """(Optional overload)trains this processing block
 
         If this processing block requires training, this function can be
@@ -54,7 +62,7 @@ class BaseBlock(object):
         """
         pass
 
-    def process(self, x_data):
+    def process(self, x_data): # applies the algorithm to the data
         """(Required overload)applys this blocks algorithm to the input data
 
         Applies this blocks algorithm to the input data and returns the
@@ -69,7 +77,7 @@ class BaseBlock(object):
         """
         raise NotImplementedError("'process' must be overloaded in all Block children")
 
-    def validate_data(x_data):
+    def validate_data(x_data):#validates input data
         """(Optional overload)validates the data is of the correct type
 
         This function should be overloaded to check and make sure the input data
@@ -88,14 +96,13 @@ class BaseBlock(object):
         """
         pass
 
-
-    def run_train(self, x_data):
+    def run_train(self, x_data):#JM: only called by Pipeline
         """convienence function to validate input data and train the block"""
         self.validate_data(x_data)
         self.train(x_data)
         self.is_trained = True
 
-    def run_process(self, x_data):
+    def run_process(self, x_data): #JM: only called by Pipeline
         """convienence function to validate input data and process the data"""
         if not self.is_trained:
             error_msg = "the block must be trained before processing"
