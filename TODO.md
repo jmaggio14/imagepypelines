@@ -63,3 +63,19 @@
 - [ ] Separate Window interaction class - Ryan
 - [ ] auto image stitcher (something that will resize images automatically)
 - [ ] plugin system - Nate?
+
+
+# Pipelining system
+## builtin blocks
+- SIFT
+- ORB
+- Pretrained NN
+- Fisher Vectors
+- Ryan's Summary thingy
+- histogram
+- quantization
+## utility
+- Image loader
+- Resize
+- reshaper
+- normalize

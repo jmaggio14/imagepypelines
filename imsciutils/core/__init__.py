@@ -5,6 +5,13 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
+
+# BaseBlock.py
+from .BaseBlock import BaseBlock
+
+# builtin_blocks/
+from .builtin_blocks import *
+
 # constants.py
 from .constants import *
 
@@ -30,10 +37,13 @@ from .error_checking import is_numpy_array
 from .error_checking import is_iterable
 from .error_checking import type_error_message
 
-# Exceptions
+# Exceptions.py
 from .Exceptions import CameraReadError
 from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
+
+# Pipeline.py
+from .Pipeline import Pipeline
 
 # Printer.py
 from .Printer import get_printer
