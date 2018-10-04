@@ -106,7 +106,7 @@ standard_images = iu.standard_image_gen()
 # now let's display all images sequentially!
 for img in standard_images:
 	viewer.view( img )
-	time.sleep(1)
+	time.sleep(.1)
 ```
 
 ### Normalizing and binning an image
