@@ -43,6 +43,8 @@ from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
 
 # Pipeline.py
+from .Pipeline import BasePipeline
+from .Pipeline import SupervisedPipeline
 from .Pipeline import Pipeline
 
 # Printer.py
