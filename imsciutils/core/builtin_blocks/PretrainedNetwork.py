@@ -7,12 +7,6 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from importlib import import_module
-import cv2
-import numpy as np
-import imsciutils as iu
-from collections import Iterable
-import os
-import cv2
 import numpy as np
 from .. import BatchBlock
 from ..coordinates import dimensions
@@ -84,9 +78,19 @@ class PretrainedNetwork(BatchBlock):
 
 
     """
-    def setup(self,network='densenet121',pooling_type='avg'):
+    def __init__(self,network='densenet121',pooling_type='avg',name=None):
+        self.network = network
+        self.pooling_type = pooling_type
+
+        # defining input_shape
+        input_shape = [None,None], [None,None,None]
+        output_shape = [1,None]
+
+        # building the keras network
         self.model_fn, self.preprocess_fn \
-            = self._keras_importer(network_name,pooling_type)
+            = self._keras_importer(network,pooling_type)
+
+        super(PretrainedNetwork,self).__init__(input_shape,output_shape)
 
     def batch_process(self,batch_data,batch_labels=None):
         # verify that all images are the same size
