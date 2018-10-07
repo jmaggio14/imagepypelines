@@ -11,7 +11,7 @@ import cv2
 class ImageLoader(SimpleBlock):
     def __init__(self,name=None):
         input_shape = str
-        output_shape = [None,None], [None,None,3], [None,None,4]
+        output_shape = [None,None], [None,None,3]
         super(ImageLoader,self).__init__(input_shape=input_shape,
                                             output_shape=output_shape,
                                             name=name,
@@ -26,7 +26,7 @@ class ImageLoader(SimpleBlock):
         Returns:
             image (np.ndarray): 2D or 3D array of image data
         """
-        image = cv2.imread(datum, cv2.IMREAD_UNCHANGED)
+        image = cv2.imread(datum)
 
         # throws error if unable to read image
         if image is None:
