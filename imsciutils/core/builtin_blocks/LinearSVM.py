@@ -3,7 +3,7 @@ from sklearn import svm
 
 
 class LinearSVM(BatchBlock):
-    def __init__(self,C=1,name=None):
+    def __init__(self,C=1):
         self.C = C
 
         input_shape = [1,None]
@@ -11,7 +11,6 @@ class LinearSVM(BatchBlock):
 
         super(Resizer,self).__init__(input_shape=input_shape,
                                             output_shape=output_shape,
-                                            name=name,
                                             requires_training=True)
 
     def train(self,train_data,train_labels):

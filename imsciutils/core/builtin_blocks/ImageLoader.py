@@ -9,12 +9,11 @@ import cv2
 
 
 class ImageLoader(SimpleBlock):
-    def __init__(self,name=None):
+    def __init__(self):
         input_shape = str
         output_shape = [None,None], [None,None,3]
         super(ImageLoader,self).__init__(input_shape=input_shape,
                                             output_shape=output_shape,
-                                            name=name,
                                             requires_training=False)
 
     def process(self,datum):

@@ -11,7 +11,7 @@ import numpy as np
 
 class Orb(SimpleBlock):\
 
-    def __init__(self,n_keypoints=100,name=None):
+    def __init__(self,n_keypoints=100):
         if not isinstance(n_keypoints,(int,float)):
             error_msg = "'n_keypoints' must be int"
             self.printer.error(error_msg)
@@ -24,7 +24,6 @@ class Orb(SimpleBlock):\
         output_shape = [None,32] #[n_keypoints_detected,32]
         super(Orb,self).__init__(input_shape=input_shape,
                                             output_shape=output_shape,
-                                            name=name,
                                             requires_training=False)
 
     def process(self,datum):

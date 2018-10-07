@@ -1,10 +1,10 @@
 from .. import SimpleBlock
+from ..coordinates import dimensions
 import cv2
 
 class Color2Gray(SimpleBlock):
     def __init__(self,
-                    order='rgb',
-                    name=None):
+                    order='rgb'):
 
         if order == 'rgb':
             self.flag = cv2.COLOR_RGB2GRAY
@@ -13,13 +13,16 @@ class Color2Gray(SimpleBlock):
         else:
             raise ValueError("unknown channel order, must be 'rgb' or 'bgr'")
 
-        input_shape = [None,None,3]
+        input_shape = [None,None,3],[None,None]
         output_shape = [None,None]
 
         super(Resizer,self).__init__(input_shape=input_shape,
                                             output_shape=output_shape,
-                                            name=name,
                                             requires_training=False)
     def process(self,datum):
+        if datum.ndim == 2:
+            # Image is already grayscale
+            return datum
+
         gray = cv2.cvtColor(datum, self.flag)
         return gray

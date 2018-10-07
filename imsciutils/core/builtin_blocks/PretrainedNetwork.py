@@ -78,7 +78,7 @@ class PretrainedNetwork(BatchBlock):
 
 
     """
-    def __init__(self,network='densenet121',pooling_type='avg',name=None):
+    def __init__(self,network='densenet121',pooling_type='avg'):
         self.network = network
         self.pooling_type = pooling_type
 
@@ -90,7 +90,9 @@ class PretrainedNetwork(BatchBlock):
         self.model_fn, self.preprocess_fn \
             = self._keras_importer(network,pooling_type)
 
-        super(PretrainedNetwork,self).__init__(input_shape,output_shape)
+        super(PretrainedNetwork,self).__init__(input_shape,
+                                                output_shape,
+                                                requires_training=False)
 
     def batch_process(self,batch_data,batch_labels=None):
         # verify that all images are the same size
