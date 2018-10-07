@@ -160,6 +160,16 @@ class SupervisedPipeline(BasePipeline):
 
 
 
+class Pipeline(BasePipeline):
+    def train(self,data):
+        processed,_ = super(SupervisedPipeline,self).train(data,None)
+        return processed
+
+    def process(self,data):
+        processed,_ = super(SupervisedPipeline,self).process(data,None)
+        return processed
+
+
 
 
     #
