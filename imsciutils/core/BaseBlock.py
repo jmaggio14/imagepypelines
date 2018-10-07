@@ -13,7 +13,7 @@ def simple_block(process_fn,
                     name=None):
     if name is None:
         name = process_fn.__name__
-
+    process_fn = staticmethod(process_fn)
     block_cls = type(name,(SimpleBlock,),{'process':process_fn})
     block =  block_cls(input_shape=input_shape,
                         output_shape=output_shape,
