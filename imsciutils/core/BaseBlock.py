@@ -6,47 +6,15 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .Printer import get_printer
-def create_lazy_block(processing_fn,
-                        input_shape=None,
-                        output_shape=None,
-                        process_group=False,
-                        name=None,
-                        args=tuple(),
-                        kwargs={}):
-
-    # making the process_fn static so it can operate inside of a class
-    process_fn = staticmethod(processing_fn)
-    # create a new block using a metaclass instance
-    block_cls = type(processing_fn.__name__,
-                        (BaseBlock,),
-                        {'process_fn':process_fn})
-
-    block = block_cls(input_shape=input_shape,
-                        output_shape=output_shape,
-                        name=name,
-                        process_group=process_group,
-                        requires_training=False, #JM: func is only for lazy blocks
-                        args=args,
-                        kwargs=kwargs)
-    return block
-
-# class Transfer(object):
-#     def __init__(self,shape,):
-#         self.shape = shape
-#
-#     def compatible(self,shape):
-#         return self.shape == shape
-
 class BaseBlock(object):
     self.EXTANT = {}
     def __init__(self,
                     input_shape,
                     output_shape,
-                    name,
-                    process_group=False,
+                    name=None,
                     requires_training=False,
-                    args=tuple(),
-                    kwargs={},):
+                    setup_args=tuple(),
+                    setup_kwargs={},):
         # ----------- building a unique name for this block ------------
         if name is None:
             name = self.__class__.__name__
@@ -63,8 +31,8 @@ class BaseBlock(object):
         self.process_group = process_group
         self.name = name
         self.requires_training = requires_training
-        self.args = args
-        self.kwargs = kwargs
+        self.setup_args = setup_args
+        self.setup_kwargs = setup_kwargs
 
         self.trained = False
         if not self.requires_training:
@@ -72,29 +40,68 @@ class BaseBlock(object):
 
         self.printer = get_printer(self.name)
 
-    def process_fn(self,data,*args,**kwargs):
-        raise NotImplementedError("'process_fn' must be overloaded")
-
-    def train(self,x_data):
+    def setup(self,*args,**kwargs):
         pass
 
-    def run_train(self,x_data):
-        self.train(x_data)
+    def train(self,batch_data,batch_labels=None):
+        pass
+
+    def before_process(batch_data,batch_labels=None):
+        pass
+
+    def after_process(self):
+        pass
+
+    def _pipeline_train(self,batch_data,batch_labels=None):
+        self.train(self,batch_data,batch_labels)
         self.trained = True
 
-    def run_process(self,x_data):
-        if not self.trained:
-            error_msg = "'{}' must be trained before processing can occur"\
-                        .format(self.name)
-            raise RunTimeError(error_msg)
 
-        if process_group:
-            out = self.process_fn(x_data,*self.args,**self.kwargs)
-        else:
-            out = [self.process_fn(d,*self.args,**self.kwargs) for d in x_data]
-        return out
+class SimpleBlock(BaseBlock):
+    def process(self,datum):
+        raise NotImplementedError("'process' must be overloaded in all children")
 
+    def label(lbl):
+        return lbl
 
+    def _pipeline_process(self,batch_data,batch_labels=None):
+        if batch_labels is None:
+            batch_labels = [None] * len(batch_data)
+
+        #running prep function
+        self.before_process(batch_data,batch_labels)
+
+        # processing data
+        processed = [self.process(datum) for datum in batch_data]
+        labels = [self.label(lbl) for lbl in batch_labels]
+
+        # running post-process / cleanup function
+        self.after_process()
+
+        return processed, labels
+
+class BatchBlock(BaseBlock):
+    def batch_process(self,batch_data):
+        raise NotImplementedError("'batch_process' must be overloaded in all children")
+
+    def batch_labels(batch_labels):
+        return batch_labels
+
+    def _pipeline_process(self,batch_data,batch_labels=None):
+        if batch_labels is None:
+            batch_labels = [None] * len(batch_data)
+
+        #running prep function
+        self.before_process(batch_data,batch_labels)
+
+        # processing data
+        processed = self.batch_process(batch_data)
+        labels = self.batch_labels(batch_labels)
+
+        # running post-process / cleanup function
+        self.after_process()
+
+        return processed, labels
 
 
 #
