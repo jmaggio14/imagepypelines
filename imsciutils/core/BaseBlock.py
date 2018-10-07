@@ -6,6 +6,23 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .Printer import get_printer
+
+def simple_block(process_fn,
+                    input_shape,
+                    output_shape,
+                    name=None):
+    if name is None:
+        name = process_fn.__name__
+
+    block_cls = type(name,(SimpleBlock,),{'process':process_fn})
+    block =  block_cls(input_shape=input_shape,
+                        output_shape=output_shape,
+                        name=name)
+    return block
+
+
+
+
 class BaseBlock(object):
     self.EXTANT = {}
     def __init__(self,
@@ -56,6 +73,29 @@ class BaseBlock(object):
         self.train(self,batch_data,batch_labels)
         self.trained = True
 
+    def _pipeline_process(self,batch_data,batch_labels=None):
+        if batch_labels is None:
+            batch_labels = [None] * len(batch_data)
+
+        #running prep function
+        self.before_process(batch_data,batch_labels)
+
+        # processing data
+        processed = self.process_strategy(batch_data)
+        labels = self.label_strategy(batch_labels)
+
+        # running post-process / cleanup function
+        self.after_process()
+
+        return processed, labels
+
+    def process_strategy(self,batch_data,batch_labels=None):
+        raise NotImplementedError("'process_strategy' must be overloaded in all children")
+
+    def label_strategy(self,batch_data,batch_labels=None):
+        raise NotImplementedError("'label_strategy' must be overloaded in all children")
+
+
 
 class SimpleBlock(BaseBlock):
     def process(self,datum):
@@ -64,21 +104,14 @@ class SimpleBlock(BaseBlock):
     def label(lbl):
         return lbl
 
-    def _pipeline_process(self,batch_data,batch_labels=None):
-        if batch_labels is None:
-            batch_labels = [None] * len(batch_data)
+    def process_strategy(self,batch_data):
+        return [self.process(datum) for datum in batch_data]
 
-        #running prep function
-        self.before_process(batch_data,batch_labels)
+    def label_strategy(self,batch_labels):
+        return [self.label(lbl) for lbl in batch_labels]
 
-        # processing data
-        processed = [self.process(datum) for datum in batch_data]
-        labels = [self.label(lbl) for lbl in batch_labels]
 
-        # running post-process / cleanup function
-        self.after_process()
 
-        return processed, labels
 
 class BatchBlock(BaseBlock):
     def batch_process(self,batch_data):
@@ -87,22 +120,11 @@ class BatchBlock(BaseBlock):
     def batch_labels(batch_labels):
         return batch_labels
 
-    def _pipeline_process(self,batch_data,batch_labels=None):
-        if batch_labels is None:
-            batch_labels = [None] * len(batch_data)
+    def process_strategy(self,batch_data):
+        return self.batch_process(batbatch_data=)
 
-        #running prep function
-        self.before_process(batch_data,batch_labels)
-
-        # processing data
-        processed = self.batch_process(batch_data)
-        labels = self.batch_labels(batch_labels)
-
-        # running post-process / cleanup function
-        self.after_process()
-
-        return processed, labels
-
+    def label_strategy(self,batch_labels):
+        return self.batch_labels(batch_labels)
 
 #
 #
