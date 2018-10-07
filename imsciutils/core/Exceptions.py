@@ -51,3 +51,15 @@ class InvalidNumpyType(TypeError):
         error_string += "\n\t".join(iu.NUMPY_TYPES)
         iuerror(error_string)
         super(InvalidNumpyType,self).__init__(error_string)
+
+
+
+
+class CrackedPipeline(ValueError):
+    def __init__(self,block_pairs,pipeline_name):
+        error_msg = "{}: incompatible blocks".format(pipeline_name)
+        for pair in block_pairs:
+            error_msg += " {}-->{},"\
+                .format(pair[0].name,pair[1].name)
+        iuerror(error_msg)
+        super(CrackedPipeline,self).__init__(error_msg)
