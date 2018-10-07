@@ -5,51 +5,34 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .. import BaseBlock
+from .. import SimpleBlock
 import cv2
 import numpy as np
 
-class Orb(BaseBlock):
+class Orb(SimpleBlock):
     def setup(self,n_keypoints=100):
-        assert isinstance(n_keypoints,(int,float)),"'n_keypoints' must be int"
-        self.n_keypoints = n_keypoints
+        if not isinstance(n_keypoints,(int,float)):
+            error_msg = "'n_keypoints' must be int"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
-        return self
 
-    def validate_data(self,x_data):
-        """makes sure the input data is the correct type
-
-        validates that 'x_data' is a numpy array of shape (n_img,height,width,bands)
-        """
-        assert isinstance(x_data,np.ndarray),"'x_data' must be a 4D np.ndarray"
-        assert x_data.ndim == 4,"'x_data' must be a 4D np.ndarray"
-        assert x_data.shape[-1] == 1,"'x_data' must be a grayscale"
-
-    def process(self,x_data):
+    def process(self,datum):
         """calculates descriptors on a 4D img_stack (n_img,height,width,bands)
 
         If there are not enough keypoints calculated to populate the output
         array, the descriptor vectors will be replaced with zeros
 
         Args:
-            x_data (np.ndarray): 4D numpy array to process
-                (n_img,height,width,bands)
+            datum (np.ndarray): image numpy array to process
+                shape = (width,bands)
 
         Returns:
-            descriptors(np.ndarray): 3D array of ORB descriptors
-                (n_imgs,n_keypoints,32)
+            descriptors(np.ndarray): 2D array of ORB descriptors
+                shape = (n_keypoints,32)
 
         """
-        # JM: storage array for all image descriptors
-        # (n_images,n_keypoints,32)
-        descriptors = np.zeros( (x_data.shape[0],self.n_keypoints,32) )
-        for i in range(x_data.shape[0]):
-            img = x_data[i,:,:,:].reshape((x_data.shape[1],x_data.shape[2]))
-            img = np.uint8(img)
-            _,des = self.orb.detectAndCompute(img,None)
-            if des is None:
-                #JM: for edge case where no descriptors are found
-                continue
-            descriptors[i,0:des.shape[0],:] = des
-
-        return descriptors
+        _,des = self.orb.detectAndCompute(img,None)
+        return des
