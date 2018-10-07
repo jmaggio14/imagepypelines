@@ -41,6 +41,29 @@ class BaseBlock(object):
         else:
             self.EXTANT[name] = 1
         name = name + str(self.EXTANT[name])
+        # ------ making input/output types lists of shapes --------
+        if isinstance(input_shape,(list,tuple)):
+            # JM:
+            # check if there is more than one shape
+            # if not, then put it in another list
+            # (this makes comparison easier later)
+            if not isinstance(input_shape[0],(list,tuple)):
+                input_shape = [input_shape]
+        else:
+            # if it's not already a list or tuple, then put it in one
+            input_shape = [input_shape]
+
+        if isinstance(output_shape,(list,tuple)):
+            # JM:
+            # check if there is more than one shape
+            # if not, then put it in another list
+            # (this makes comparison easier later)
+            if not isinstance(output_shape[0],(list,tuple)):
+                output_shape = [output_shape]
+        else:
+            # if it's not already a list or tuple, then put it in one
+            output_shape = [output_shape]
+
 
         self.input_shape = input_shape
         self.output_shape = output_shape
@@ -104,6 +127,12 @@ class SimpleBlock(BaseBlock):
     def label_strategy(self,batch_labels):
         return [self.label(lbl) for lbl in batch_labels]
 
+    def __str__(self):
+        return "{}-(SimpleBlock)".format(self.name)
+
+    def __repr__(self):
+        return str(self)
+
 
 
 
@@ -119,6 +148,12 @@ class BatchBlock(BaseBlock):
 
     def label_strategy(self,batch_labels):
         return self.batch_labels(batch_labels)
+
+    def __str__(self):
+        return "{}-(BatchBlock)".format(self.name)
+
+    def __repr__(self):
+        return str(self)
 
 #
 #
