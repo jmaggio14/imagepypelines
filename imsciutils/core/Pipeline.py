@@ -17,6 +17,7 @@ class Pipeline(object):
 
     """
     EXTANT = {}
+
     def __init__(self, name=None, blocks=[], verbose=True):
         if name is None:
             name = self.__class__.__name__
@@ -34,16 +35,15 @@ class Pipeline(object):
 
         # set log level to infinity if non-verbose is desired
         if not self.verbose:
-            self.printer.set_log_level( float('inf') )
+            self.printer.set_log_level(float('inf'))
 
         # checking to make sure blocks is a list
-        if not isinstance(blocks,list):
+        if not isinstance(blocks, list):
             error_msg = "'blocks' must be a list"
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 
         self.blocks = blocks
-
 
     def add(self, block):
         """adds processing block to the pipeline processing chain"""
@@ -57,17 +57,17 @@ class Pipeline(object):
         self.blocks.append(block)
 
     def validate(self):
-        #JM: get output_shapes, last block's output is irrelevant
+        # JM: get output_shapes, last block's output is irrelevant
         out_blocks = [b for b in self.blocks[:-1]]
-        #JM: get input blocks, first block's input is irrelevant
+        # JM: get input blocks, first block's input is irrelevant
         in_blocks = [b for b in self.blocks[1:]]
 
         raise_error = False
-        for b_out,b_in in zip(out_blocks,in_blocks):
+        for b_out, b_in in zip(out_blocks, in_blocks):
             if not (b_out.output_shape == b_in.input_shape):
                 error_msg = "incompatible shapes between {}-->{}".format(
-                                                                b_out.name,
-                                                                b_in.name)
+                    b_out.name,
+                    b_in.name)
                 self.printer.error(error_msg)
                 raise_error = True
 
@@ -77,11 +77,28 @@ class Pipeline(object):
             self.printer.critical(crit_msg)
             raise RuntimeError(crit_msg)
 
-    def train(self,x_data):
+    def train(self, train_data, train_labels=None):
         self.validate()
-        
+        t = util.Timer()
 
-    def process(self,x_data):
+        for b in self.blocks:
+            b._pipeline_train(train_data, train_labels)
+            train_data, train_labels = b._pipeline_process(train_data, train_labels)
+
+            # print for traceability
+            train_time = t.lap()
+            self.printer.info("{}: trained in {} sec".format(
+                b.name,
+                train_time,
+            ))
+
+        self.printer.info("training complete")
+        if train_labels is None:
+            return train_data
+
+        return train_data, train_labels
+
+    def process(self, batch_data, batch_labels=None):
         self.validate()
         # JM: TODO: add auto batching and intermediate data retrieval
         # JM: verifying that all blocks have been trained
@@ -96,33 +113,32 @@ class Pipeline(object):
         # JM: processing all data
         t = util.Timer()
         for b in self.blocks:
-            num = len(x_data)
-            x_data = b.run_process(x_data)
-            b_time = t.lap() # time for this block
+            num = len(batch_data)
+            batch_data, batch_labels = b._pipeline_process(batch_data, batch_labels)
+            b_time = t.lap()  # time for this block
             # printing time for this block
             self.printer.info("{}: processed in {} seconds".format(b.name,
-                                                                    b_time))
+                                                                   b_time))
             # printing individual datum time
             self.printer.debug("(approx {}sec per datum)".format(
-                                                        round(b_time / num,3)))
-
-
+                round(b_time / num, 3)))
 
         self.printer.info("all data processed in {} seconds".format(t.time()))
 
-        return x_data
+        if batch_labels is None:
+            return batch_data
 
-
+        return batch_data, batch_labels
 
     def graph(self):
         """TODO: Placeholder function for @Ryan to create"""
         pass
 
-    def save(self,filename=None):
+    def save(self, filename=None):
         if filename is None:
             filename = self.name + '.pck'
-        with open(filename,'wb') as f:
-            pickle.dump(self,f)
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
 
     #
     # def train(self, x_data):
