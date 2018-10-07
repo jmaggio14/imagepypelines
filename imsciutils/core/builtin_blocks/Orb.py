@@ -42,5 +42,5 @@ class Orb(SimpleBlock):\
                 shape = (n_keypoints,32)
 
         """
-        _,des = self.orb.detectAndCompute(img,None)
+        _,des = self.orb.detectAndCompute(datum,None)
         return des
