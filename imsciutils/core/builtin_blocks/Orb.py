@@ -9,8 +9,9 @@ from .. import SimpleBlock
 import cv2
 import numpy as np
 
-class Orb(SimpleBlock):
-    def setup(self,n_keypoints=100):
+class Orb(SimpleBlock):\
+
+    def __init__(self,n_keypoints=100,name=None):
         if not isinstance(n_keypoints,(int,float)):
             error_msg = "'n_keypoints' must be int"
             self.printer.error(error_msg)
@@ -18,6 +19,13 @@ class Orb(SimpleBlock):
 
         self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
+
+        input_shape = [None,None] #[Width,Height]
+        output_shape = [None,32] #[n_keypoints_detected,32]
+        super(Orb,self).__init__(input_shape=input_shape,
+                                            output_shape=output_shape,
+                                            name=name,
+                                            requires_training=False)
 
     def process(self,datum):
         """calculates descriptors on a 4D img_stack (n_img,height,width,bands)
