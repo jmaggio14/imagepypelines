@@ -7,17 +7,17 @@
 #
 from .Printer import get_printer
 from .BaseBlock import BaseBlock
+from .Exceptions import CrackedPipeline
 from .. import util
 import pickle
 import collections
 
 
-class Pipeline(object):
+class BasePipeline(object):
     """Pipeline object to apply a sequence of algorithms to input data
 
     """
     EXTANT = {}
-
     def __init__(self, name=None, blocks=[], verbose=True):
         if name is None:
             name = self.__class__.__name__
@@ -62,28 +62,29 @@ class Pipeline(object):
         # JM: get input blocks, first block's input is irrelevant
         in_blocks = [b for b in self.blocks[1:]]
 
-        raise_error = False
+        broken_pairs = []
         for b_out, b_in in zip(out_blocks, in_blocks):
-            if not (b_out.output_shape == b_in.input_shape):
-                error_msg = "incompatible shapes between {}-->{}".format(
-                    b_out.name,
-                    b_in.name)
-                self.printer.error(error_msg)
-                raise_error = True
+            for out in out_block.output_shape:
+                is_broken = False
+                if out not in in_block.input_shape:
+                    error_msg = "{} shape {} must be among {}'s inputs : {}"\
+                        .format(b_out.name, out, b_in.name, b_in.input_shape)
+                    self.printer.error(error_msg)
+                    is_broken = True
 
-        # JM: TODO: make special exception for this purpose
-        if raise_error:
-            crit_msg = "All blocks must have compatible shapes"
-            self.printer.critical(crit_msg)
-            raise RuntimeError(crit_msg)
+                if is_broken:
+                    broken_pairs.append( [b_out,b_in] )
 
-    def train(self, train_data, train_labels=None):
+        if len(broken_pairs) > 0:
+            raise CrackedPipeline(broken_pairs,self.name)
+
+    def train(self, data, labels):
         self.validate()
         t = util.Timer()
 
         for b in self.blocks:
-            b._pipeline_train(train_data, train_labels)
-            train_data, train_labels = b._pipeline_process(train_data, train_labels)
+            b._pipeline_train(data, labels)
+            data, labels = b._pipeline_process(data, labels)
 
             # print for traceability
             train_time = t.lap()
@@ -93,12 +94,10 @@ class Pipeline(object):
             ))
 
         self.printer.info("training complete")
-        if train_labels is None:
-            return train_data
 
-        return train_data, train_labels
+        return data, labels
 
-    def process(self, batch_data, batch_labels=None):
+    def process(self, data, labels):
         self.validate()
         # JM: TODO: add auto batching and intermediate data retrieval
         # JM: verifying that all blocks have been trained
@@ -113,8 +112,8 @@ class Pipeline(object):
         # JM: processing all data
         t = util.Timer()
         for b in self.blocks:
-            num = len(batch_data)
-            batch_data, batch_labels = b._pipeline_process(batch_data, batch_labels)
+            num = len(data)
+            data, labels = b._pipeline_process(data, labels)
             b_time = t.lap()  # time for this block
             # printing time for this block
             self.printer.info("{}: processed in {} seconds".format(b.name,
@@ -125,10 +124,7 @@ class Pipeline(object):
 
         self.printer.info("all data processed in {} seconds".format(t.time()))
 
-        if batch_labels is None:
-            return batch_data
-
-        return batch_data, batch_labels
+        return data, labels
 
     def graph(self):
         """TODO: Placeholder function for @Ryan to create"""
@@ -139,6 +135,32 @@ class Pipeline(object):
             filename = self.name + '.pck'
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
+
+
+class SupervisedPipeline(BasePipeline):
+    def train(self,data,labels):
+        if len(data) != len(labels):
+            error_msg = "there must be an equal number of datapoints ({}) and"\
+                        + "labels ({})".format(len(data),len(labels))
+            self.printer.error(error_msg)
+            raise RuntimeError(error_msg)
+
+        processed,labels = super(SupervisedPipeline,self).train(data,labels)
+        return processed, labels
+
+    def process(self,data,labels):
+        if len(data) != len(labels):
+            error_msg = "there must be an equal number of datapoints ({}) and"\
+                        + "labels ({})".format(len(data),len(labels))
+            self.printer.error(error_msg)
+            raise RuntimeError(error_msg)
+
+        processed,labels = super(SupervisedPipeline,self).process(data,labels)
+        return processed, labels
+
+
+
+
 
     #
     # def train(self, x_data):
