@@ -30,8 +30,7 @@ class BaseBlock(object):
                     output_shape,
                     name=None,
                     requires_training=False,
-                    setup_args=tuple(),
-                    setup_kwargs={},):
+                    ):
         # ----------- building a unique name for this block ------------
         if name is None:
             name = self.__class__.__name__
@@ -48,17 +47,12 @@ class BaseBlock(object):
         self.process_group = process_group
         self.name = name
         self.requires_training = requires_training
-        self.setup_args = setup_args
-        self.setup_kwargs = setup_kwargs
 
         self.trained = False
         if not self.requires_training:
             self.trained = True
 
         self.printer = get_printer(self.name)
-
-    def setup(self,*args,**kwargs):
-        pass
 
     def train(self,batch_data,batch_labels=None):
         pass
