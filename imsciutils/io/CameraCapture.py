@@ -9,6 +9,7 @@ import numpy as np
 import time
 import cv2
 
+from .. import core
 
 class CameraCapture(object):
     """
@@ -82,9 +83,7 @@ class CameraCapture(object):
         elif not status or not self.cap.isOpened():
             debug_message = "unable to read frame {0}"\
                 .format(self.current_frame_id)
-
-            imsciutils.warning(debug_message)
-            raise CameraReadError(debug_message)
+            raise core.CameraReadError(debug_message)
 
         return frame
 
