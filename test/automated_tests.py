@@ -111,7 +111,7 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
     standard_image_filenames = iu.standard_image_filenames()
     processed = pipeline.process(standard_image_filenames)
 
-    if all(p.shape == (ORB_KEYPOINTS,32) for p in processed ):
+    if all(p.shape == (ORB_KEYPOINTS,32) for p in processed):
         return True
     else:
         testing_printer.info("incorrect shape of outputs")
