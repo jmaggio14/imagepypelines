@@ -159,7 +159,7 @@ class BaseBlock(object):
         """
         pass
 
-    def before_process(data,labels=None):
+    def before_process(self,data,labels=None):
         """(optional overload)function that runs before processing for
         optional functionality. this function takes in the full data list and
         label list. does nothing unless overloaded
