@@ -8,6 +8,8 @@
 
 # BaseBlock.py
 from .BaseBlock import BaseBlock
+from .BaseBlock import SimpleBlock
+from .BaseBlock import BatchBlock
 
 # builtin_blocks/
 from .builtin_blocks import *
@@ -43,6 +45,8 @@ from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
 
 # Pipeline.py
+from .Pipeline import BasePipeline
+from .Pipeline import SupervisedPipeline
 from .Pipeline import Pipeline
 
 # Printer.py
@@ -69,6 +73,7 @@ from .printout import comment
 
 # standard_image.py
 from .standard_image import list_standard_images
+from .standard_image import standard_image_filenames
 from .standard_image import standard_image_gen
 from .standard_image import get_standard_image
 from .standard_image import standard_image_input

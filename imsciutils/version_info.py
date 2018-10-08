@@ -6,7 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 __author__ = 'Jeff Maggio, Nathan Dileas, and Ryan Hartzell'
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __copyright__ = "Copyright 2018"
 __credits__ = ["Jeff Maggio", "Nathan Dileas", "Ryan Hartzell"]
 __license__ = "MIT"

@@ -5,51 +5,78 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .. import BaseBlock
+from .. import SimpleBlock
 import cv2
 import numpy as np
 
-class Orb(BaseBlock):
-    def setup(self,n_keypoints=100):
-        assert isinstance(n_keypoints,(int,float)),"'n_keypoints' must be int"
-        self.n_keypoints = n_keypoints
+class Orb(SimpleBlock):
+    """Block to calculate ORB features upon input grayscale imagery
+
+    Args:
+        n_keypoints(int): maximum number of keypoints to detect
+
+    Example:
+        >>> import imsciutils as iu
+        >>> orb = iu.ORB(n_keypoints=120)
+        >>>
+        >>> pipeline = iu.Pipeline()
+        >>> pipeline.add( orb )
+        >>>
+        >>> lenna_gray = iu.lenna_gray()
+        >>> lenna_gray_descriptors = pipeline.process( [lenna_gray] )[0]
+    """
+    def __init__(self,n_keypoints=100):
+        if not isinstance(n_keypoints,(int,float)):
+            error_msg = "'n_keypoints' must be int"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
-        return self
 
-    def validate_data(self,x_data):
-        """makes sure the input data is the correct type
+        input_shape = [None,None] #[Width,Height]
+        output_shape = [None,32] #[n_keypoints_detected,32]
+        super(Orb,self).__init__(input_shape=input_shape,
+                                            output_shape=output_shape,
+                                            requires_training=False)
 
-        validates that 'x_data' is a numpy array of shape (n_img,height,width,bands)
-        """
-        assert isinstance(x_data,np.ndarray),"'x_data' must be a 4D np.ndarray"
-        assert x_data.ndim == 4,"'x_data' must be a 4D np.ndarray"
-        assert x_data.shape[-1] == 1,"'x_data' must be a grayscale"
-
-    def process(self,x_data):
+    def process(self,datum):
         """calculates descriptors on a 4D img_stack (n_img,height,width,bands)
 
         If there are not enough keypoints calculated to populate the output
         array, the descriptor vectors will be replaced with zeros
 
         Args:
-            x_data (np.ndarray): 4D numpy array to process
-                (n_img,height,width,bands)
+            datum (np.ndarray): image numpy array to process
+                shape = (width,bands)
 
         Returns:
-            descriptors(np.ndarray): 3D array of ORB descriptors
-                (n_imgs,n_keypoints,32)
+            descriptors(np.ndarray): 2D array of ORB descriptors
+                shape = (n_keypoints,32)
 
         """
-        # JM: storage array for all image descriptors
-        # (n_images,n_keypoints,32)
-        descriptors = np.zeros( (x_data.shape[0],self.n_keypoints,32) )
-        for i in range(x_data.shape[0]):
-            img = x_data[i,:,:,:].reshape((x_data.shape[1],x_data.shape[2]))
-            img = np.uint8(img)
-            _,des = self.orb.detectAndCompute(img,None)
-            if des is None:
-                #JM: for edge case where no descriptors are found
-                continue
-            descriptors[i,0:des.shape[0],:] = des
+        _,des = self.orb.detectAndCompute(datum,None)
 
-        return descriptors
+
+        #JM:
+        # return masked values in case there aren't enough keypoints in the image
+        # this is to make sure that stacking systems later don't break
+        if des is None:
+            zeros = np.zeros( (self.n_keypoints,32) )
+            mask = np.ones(zeros.shape).astype(int)
+            des = np.ma.masked_array(zeros,mask)
+        elif des.shape[0] < self.n_keypoints:
+            zeros = np.zeros( (self.n_keypoints-des.shape,32) )
+            mask = np.vstack( ( np.zeros((des.shape,32)),np.ones(zeros.shape)) )
+            des = np.ma.masked_array( np.vstack(des,zeros),mask )
+
+        # JM: DEBUG #TEMP
+        # for some reason, maximum number of features set in ORB doesn't
+        # seem to operating correctly -- we get 16 keypoints for sparse_checkerboard
+        # when 10 is set as out maximum
+        # AS A TEMPORARY FIX, I am cutting out descriptors past the maximum
+        # so other parts of the pipeline can be test
+        if des.shape[0] > self.n_keypoints:
+            des = des[:self.n_keypoints,:]
+        # END DEBUG, END TEMP
+        return des
