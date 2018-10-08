@@ -105,8 +105,8 @@ def main(verbose=False):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--verbose',
+    parser.add_argument('--quiet-mode',
                         help='whether or not to print out the arguments passed into functions that use Tester',
                         action='store_true')
     args = parser.parse_args()
-    main(args.verbose)
+    main(not args.quiet_mode)
