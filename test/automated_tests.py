@@ -117,38 +117,6 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         testing_printer.info("incorrect shape of outputs")
         return False
 
-@iu.unit_test
-def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
-    import imsciutils as iu
-    import numpy as np
-    testing_printer = iu.get_printer('test->imageloader->resizer->color2gray->viewer->orb->pipeline')
-    ORB_KEYPOINTS = 10
-    # creating all the blocks for the pipeline
-    image_loader = iu.ImageLoader()
-    resizer = iu.Resizer(to_height=512,to_width=512)
-    color2gray = iu.Color2Gray('rgb')
-    viewer = iu.BlockViewer()
-    orb = iu.Orb(n_keypoints=ORB_KEYPOINTS)
-
-    # creating pipeline with all blocks
-    pipeline = iu.Pipeline(name=None,
-                            blocks=[image_loader,resizer,viewer,color2gray,orb])
-
-
-    # getting sample data for this system
-    standard_image_filenames = iu.standard_image_filenames()
-    processed = pipeline.process(standard_image_filenames)
-
-    if all(p.shape == (ORB_KEYPOINTS,32) for p in processed):
-        return True
-    else:
-        testing_printer.info("incorrect shape of outputs")
-        return False
-
-
-
-
-
 
 def main(verbose=False):
     """
