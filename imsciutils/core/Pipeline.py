@@ -268,17 +268,15 @@ class SupervisedPipeline(BasePipeline):
         processed,labels = super(SupervisedPipeline,self).train(data,labels)
         return processed, labels
 
-    def process(self,data,labels):
+    def process(self,data):
         """processes data using every block in the pipeline
 
         Args:
             data(list): list of individual datums for the first block
                 in the pipeline
-            labels(list): list of labels for each datum
 
         Returns:
             processed_data(list): list of processed data
-            labels(list): list of corresponding labels
         """
         if len(data) != len(labels):
             error_msg = "there must be an equal number of datapoints ({}) and"\
@@ -286,8 +284,8 @@ class SupervisedPipeline(BasePipeline):
             self.printer.error(error_msg)
             raise RuntimeError(error_msg)
 
-        processed,labels = super(SupervisedPipeline,self).process(data,labels)
-        return processed, labels
+        processed,_ = super(SupervisedPipeline,self).process(data,None)
+        return processed
 
 
 
