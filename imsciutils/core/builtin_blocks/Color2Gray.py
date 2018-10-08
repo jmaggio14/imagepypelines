@@ -27,7 +27,7 @@ class Color2Gray(SimpleBlock):
         input_shape = [None,None,3],[None,None]
         output_shape = [None,None]
 
-        super(Resizer,self).__init__(input_shape=input_shape,
+        super(Color2Gray,self).__init__(input_shape=input_shape,
                                             output_shape=output_shape,
                                             requires_training=False)
     def process(self,datum):
