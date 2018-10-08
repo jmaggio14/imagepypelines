@@ -97,38 +97,7 @@ def test_orb_pipeline():
     testing_printer = iu.get_printer('test_orb_pipeline')
     N_KEYPOINTS = 120
     # adding orb to a pipeline
-    pipeline = iu.Pipeline(name='test_orb_pipeline')
-    orb = iu.Orb('test_orb').setup(n_keypoints=N_KEYPOINTS)
-    pipeline.add(orb)
 
-    # loading an empty array and lenna
-    lenna = iu.lenna_gray()
-    lenna = lenna.reshape((1, lenna.shape[0], lenna.shape[1],1))
-    empty = np.zeros(lenna.shape)
-
-    # stacking images for pipeline
-    img_stack = np.vstack( (lenna,empty) )
-
-
-    # processing test
-    pipeline.train(img_stack)
-    des = pipeline.process(img_stack)
-
-    # checking to make sure the empty array has zero valued descriptors
-    empty_works = np.all( des[1,:,:] == 0 )
-    if empty_works:
-        testing_printer.info('empty array input is success')
-    else:
-        testing_printer.warning('empty array input is failure')
-
-    # checking to make sure the array is the correct shape
-    correct_shape = des.shape == (2,N_KEYPOINTS,32)
-    if correct_shape:
-        testing_printer.info('shape of output is success')
-    else:
-        testing_printer.warning('shape of output is failure')
-
-    return (empty_works and correct_shape)
 
 
 
@@ -146,7 +115,7 @@ def main(verbose=False):
 
     if verbose:
         if six.PY2:
-            print('verbose options are not available in python2')
+            print('verbose options are not available in python2!')
         else:
             global VERBOSE
             VERBOSE = True
