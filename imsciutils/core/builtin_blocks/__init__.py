@@ -9,6 +9,10 @@
 __all__ = ['BlockViewer',
             'CameraBlock',
             'Color2Gray',
+            'FFT',
+            'Lowpass',
+            'Highpass',
+            'IFFT',
             'ImageLoader',
             'LinearSVM',
             'Orb',
@@ -19,6 +23,10 @@ __all__ = ['BlockViewer',
 from .BlockViewer import BlockViewer
 from .CameraBlock import CameraBlock
 from .Color2Gray import Color2Gray
+from .FFT import FFT
+from .Filters import Lowpass
+from .Filters import Highpass
+from .IFFT import IFFT
 from .ImageLoader import ImageLoader
 from .LinearSVM import LinearSVM
 from .Orb import Orb

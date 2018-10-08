@@ -39,6 +39,10 @@ from .error_checking import is_numpy_array
 from .error_checking import is_iterable
 from .error_checking import type_error_message
 
+# filters.py
+from .filters import low_pass
+from .filters import high_pass
+
 # Exceptions.py
 from .Exceptions import CameraReadError
 from .Exceptions import InvalidInterpolationType
