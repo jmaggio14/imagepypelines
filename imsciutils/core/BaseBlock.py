@@ -77,7 +77,7 @@ class BaseBlock(object):
             registered to 'name'
 
     """
-    self.EXTANT = {}
+    EXTANT = {}
     def __init__(self,
                     input_shape,
                     output_shape,
