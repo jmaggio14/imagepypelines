@@ -56,4 +56,27 @@ class Orb(SimpleBlock):
 
         """
         _,des = self.orb.detectAndCompute(datum,None)
+
+
+        #JM:
+        # return masked values in case there aren't enough keypoints in the image
+        # this is to make sure that stacking systems later don't break
+        if des is None:
+            zeros = np.zeros( (self.n_keypoints,32) )
+            mask = np.ones(zeros.shape).astype(int)
+            des = np.ma.masked_array(zeros,mask)
+        elif des.shape[0] < self.n_keypoints:
+            zeros = np.zeros( (self.n_keypoints-des.shape,32) )
+            mask = np.vstack( ( np.zeros((des.shape,32)),np.ones(zeros.shape)) )
+            des = np.ma.masked_array( np.vstack(des,zeros),mask )
+
+        # JM: DEBUG #TEMP
+        # for some reason, maximum number of features set in ORB doesn't
+        # seem to operating correctly -- we get 16 keypoints for sparse_checkerboard
+        # when 10 is set as out maximum
+        # AS A TEMPORARY FIX, I am cutting out descriptors past the maximum
+        # so other parts of the pipeline can be test
+        if des.shape[0] > self.n_keypoints:
+            des = des[:self.n_keypoints,:]
+        # END DEBUG, END TEMP
         return des
