@@ -15,6 +15,19 @@ class Orb(SimpleBlock):
     Args:
         n_keypoints(int): maximum number of keypoints to detect
 
+    Attributes:
+        n_keypoints(int): maximum number of keypoints to detect
+        orb(cv2.ORB): orb computation object from opencv
+        input_shape(tuple): tuple of acceptable input shapes
+        output_shape(tuple): tuple of acceptable output shapes
+        name(str): unique name for this block
+        requires_training(bool): whether or not this block will require
+            training
+        trained(bool): whether or not this block has been trained, True
+            by default if requires_training = False
+        printer(iu.Printer): printer object for this block,
+            registered to 'name'
+
     Example:
         >>> import imsciutils as iu
         >>> orb = iu.ORB(n_keypoints=120)

@@ -76,6 +76,24 @@ class PretrainedNetwork(BatchBlock):
             features, must be one of ['max','avg'].
             Default is 'avg'
 
+    Attributes:
+        network_name (str): name of network to extract features from
+            Default is 'densenet121'
+        pooling_type (str): the type of pooling to perform on the
+            features, must be one of ['max','avg'].
+            Default is 'avg'
+        model_fn(callable): function to generate features on an image stack
+        preprocess_fn(callable): function to preprocess an image stack
+        input_shape(tuple): tuple of acceptable input shapes
+        output_shape(tuple): tuple of acceptable output shapes
+        name(str): unique name for this block
+        requires_training(bool): whether or not this block will require
+            training
+        trained(bool): whether or not this block has been trained, True
+            by default if requires_training = False
+        printer(iu.Printer): printer object for this block,
+            registered to 'name'
+
 
     """
     def __init__(self,network='densenet121',pooling_type='avg'):

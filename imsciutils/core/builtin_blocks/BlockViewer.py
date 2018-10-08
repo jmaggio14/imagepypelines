@@ -18,6 +18,19 @@ class BlockViewer(SimpleBlock):
     Args:
         pause_time (int,float): time in seconds to pause after displaying
             the imagery. default is 0.1seconds
+
+    Attributes:
+        pause_time (int,float): time in seconds to pause after displaying
+            the imagery. default is 0.1seconds
+        input_shape(tuple): tuple of acceptable input shapes
+        output_shape(tuple): tuple of acceptable output shapes
+        name(str): unique name for this block
+        requires_training(bool): whether or not this block will require
+            training
+        trained(bool): whether or not this block has been trained, True
+            by default if requires_training = False
+        printer(iu.Printer): printer object for this block,
+            registered to 'name'
     """
     def __init__(self,pause_time=0.1):
         self.pause_time = pause_time

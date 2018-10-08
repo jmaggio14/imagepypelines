@@ -5,12 +5,65 @@ from .. import BatchBlock
 
 
 class CameraBlock(BatchBlock):
+    """block to retrieve imagery from a camera
+
+    This block is meant to serve as a entry point for a pipeline by capturing
+    images from a UVC-compatible camera. Unlike most blocks in imsciutils,
+    this block will have more outputs than inputs. The number of images that should
+    be captured is specified be a single element list: [num]
+
+    if mode is set to 'time', then num will represent the duration of time
+    in seconds to capture images for
+
+    if mode is set to 'count', then num will represent the number of images
+    to capture regardless of time
+
+    N pics to capture (length=1) --> CameraBlock --> N images (length=N)
+
+    Args:
+        device(int,str):
+            the file path to the camera, or alternatively the camera's
+            numerical device id (on linux, this number is at the end of
+            the camera's file path eg: "/dev/video0")
+            default is 0.
+        fourcc(str):
+            the codec used to encode images off the camera. Many UVC
+            camera device achieve highest frame rates with MJPG
+            default is 'MJPG'.
+            see: https://docs.microsoft.com/en-us/windows/desktop/medfound/video-fourccs
+        mode(str):
+            the mode for this block to operate in, either 'count' mode or 'time'
+            mode. default is 'count'
+
+    Attributes:
+        device(int,str):
+            the file path to the camera, or alternatively the camera's
+            numerical device id (on linux, this number is at the end of
+            the camera's file path eg: "/dev/video0")
+        fourcc(str):
+            the codec used to encode images off the camera. Many UVC
+            camera device achieve highest frame rates with MJPG
+            default is 'MJPG'.
+            see: https://docs.microsoft.com/en-us/windows/desktop/medfound/video-fourccs
+        mode(str):
+            the mode for this block to operate in, either 'count' mode or 'time'
+            mode. default is 'count'
+        input_shape(tuple): tuple of acceptable input shapes
+        output_shape(tuple): tuple of acceptable output shapes
+        name(str): unique name for this block
+        requires_training(bool): whether or not this block will require
+            training
+        trained(bool): whether or not this block has been trained, True
+            by default if requires_training = False
+        printer(iu.Printer): printer object for this block,
+            registered to 'name'
+    """
     def __init__(self,device=0,fourcc='MJPG',mode='count'):
         #JM: error checking for these values will occur in io.CameraCapture
         self.device = device
         self.fourcc = fourcc
 
-        assert mode in ['count','time'], "'mode' must set to 'time' or 'count'"
+        assert mode in ['count','time'], "mode must set to 'time' or 'count'"
         self.mode = mode
 
         input_shape = int,float # number of frames to capture or duration
