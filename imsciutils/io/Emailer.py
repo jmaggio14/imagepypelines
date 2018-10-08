@@ -7,6 +7,8 @@
 # #
 # import imsciutils as iu
 import smtplib
+import getpass
+from .. import core
 
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
@@ -20,25 +22,25 @@ class Emailer(object):
     simplicity trumps functionality here, we mostly want it to be easy to use
 
     Example:
-        emailer = iu.io.Emailer(['recipient1@example.com'], subject='example')
-
-        # edit the body
-        emailer.body("this is a sample body")
-
-        # attach a file
-        emailer.attach('filename.txt')
-
-        # send
-        emailer.send()
-
-
+        >>> import os
+        >>> with Emailer(os.environ['GMAIL_USER'], [os.environ['GMAIL_USER']]) as emailer:
+        ...     emailer.body('this is a test:\n\n\n\nblah -nate')
+        ...     emailer.send(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+        >>>
     """
 
-    def __init__(self, sender, recipients, subject="noreply: imsciutils automated email", server_name='smtp.gmail.com', server_port=465):
+    def __init__(self,
+                sender,
+                recipients,
+                subject="noreply: imsciutils automated email",
+                server_name='smtp.gmail.com',
+                server_port=465):
         self.subject = subject
 
         # TODO verify that recipients are valid here
         # ND: what is the rationale here?
+        # JM: for a line in get_msg: self.current_msg['To'] = ', '.join(self.recipients)
+        # my thinking a list or a single address can be passed in, it's admittedly a lil awk
         if isinstance(recipients, str):
             recipients = [recipients]
 
@@ -71,7 +73,7 @@ class Emailer(object):
         msg = self.get_msg()
 
         if not os.path.isfile(filename):
-            iu.error("file '{}' does not exist or is inaccessible,\
+            core.error("file '{}' does not exist or is inaccessible,\
                             skipping attachment!".format(filename))
             return
 
@@ -90,11 +92,14 @@ class Emailer(object):
         msg = self.get_msg()
         msg.attach(MIMEText(text, 'plain'))
 
-    def send(self, user, password):
+    def send(self, password=None):
         """
         sends the current message and clears the template so a new
         message can be created
         """
+        if password is None:
+            password = getpass.getpass()
+
         msg = self.get_msg()
 
         server = smtplib.SMTP_SSL(self.server_name, self.server_port)
