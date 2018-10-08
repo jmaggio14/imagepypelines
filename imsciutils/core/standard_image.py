@@ -8,16 +8,9 @@
 import os
 import glob
 import sys
-import six
 from types import FunctionType
 
-if six.PY3:
-    from types import SimpleNamespace
-else:
-    # JM:
-    # creates a new class called 'SimpleNamespace' if running python2
-    # as types modules does not contain 'SimpleNamespace' in 2.7
-    SimpleNamespace = type('SimpleNamespace', tuple(), {})
+SimpleNamespace = type('SimpleNamespace', tuple(), {})
 
 import cv2
 import numpy as np
@@ -29,6 +22,11 @@ def list_standard_images():
     """returns a list of all builtin standard images sorted alphabetically"""
     return sorted(list(STANDARD_IMAGES.keys()))
 
+def standard_image_filenames():
+    """returns a list of standard image filenames on the local machine"""
+    sorted_keys = list_standard_images()
+    filenames = [STANDARD_IMAGES[k] for k in sorted_keys]
+    return filenames
 
 def standard_image_gen():
     """

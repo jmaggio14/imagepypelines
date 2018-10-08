@@ -71,6 +71,7 @@ from .printout import comment
 
 # standard_image.py
 from .standard_image import list_standard_images
+from .standard_image import standard_image_filenames
 from .standard_image import standard_image_gen
 from .standard_image import get_standard_image
 from .standard_image import standard_image_input
