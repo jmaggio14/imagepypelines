@@ -24,7 +24,7 @@ class Resizer(SimpleBlock):
                                             output_shape=output_shape,
                                             requires_training=False)
     def process(self,datum):
-        resize = cv2.resize(datum,
+        resized = cv2.resize(datum,
                        dsize=(self.to_width,self.to_height),
                        interpolation=self.interpolation)
         return resized
