@@ -1,4 +1,3 @@
-from ... import io
 from ... import util
 from .. import BatchBlock
 
@@ -14,8 +13,11 @@ class CameraBlock(BatchBlock):
         assert mode in ['count','time'], "'mode' must set to 'time' or 'count'"
         self.mode = mode
 
-        input_shape = int,float
-        output_shape = [None,None],[None,None,3]
+        input_shape = int,float # number of frames to capture or duration
+        output_shape = [None,None],[None,None,3] # color or grayscale imagery
+
+
+        from ... import io
         self.cap = io.CameraCapture(self.device,self.fourcc)
         super(CameraBlock,self).__init__(input_shape,
                                             output_shape,
@@ -30,7 +32,7 @@ class CameraBlock(BatchBlock):
 
 
         if self.mode == 'count':
-            # data in this case should be a 1 element list with the number
+            # JM: data in this case should be a 1 element list with the number
             # of images to capture
             num_images = int(data[0])
             lbl = labels[0]
@@ -40,7 +42,7 @@ class CameraBlock(BatchBlock):
                 images_labels.append(lbl)
 
         elif self.mode == 'time':
-            # data in this case should be a 1 element list with the number
+            # JM: data in this case should be a 1 element list with the number
             # of seconds to capture frames for
             num_seconds = float(data[0])
             lbl = labels[0]
