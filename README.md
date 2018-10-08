@@ -5,48 +5,62 @@
 This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role for programmatic manipulation and processing of imagery, computer vision, and machine learning tasks.
 
 
-## Compatibility
-python 3.5+ (python 2.7 backwards)
 
-Module Dependencies
--------------------
-- numpy
-- matplotlib
-- scipy
-- keras
-- scikit-learn
-- termcolor
-- opencv3
-- Pillow
-- colorama (on windows)
-- Sphinx (for autodocumentation)
 
-Install Dependencies
+## Installation
+python compatibility:  3.5+ (python 2.7 backwards)
+via pip:
 ```
-pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama Sphinx --user
+*placeholder until we get it on pypi*
 ```
+from source:
+```console
+git clone https://github.com/jmaggio14/imsciutils.git
+cd imsciutils
+python setup.py install
+```
+
 
 ## Documentation
-There is autodoc sphinx documentation with this project, following the google docstrings format. To build / view these docs on windows::
+Full Documentation for imsciutils can be found on our website: https://jmaggio14.github.io/imsciutils
 
-	docs\make.bat html
 
-And on every other platform::
+# The Pipeline
+`imsciutils` most powerful feature is a high level interface to create image processing pipelines that will apply a sequence of algorithms to input data automatically
 
-	cd docs && make html
+In our experience as imaging scientists, processing pipelines in both corporate or academic settings are frequently build from a hodge-podge of scripts and not always easy to adapt for new purposes and are relegated to _proof-of-concept_ applications only. Another problem such a system is it's traceability and debugging ease in case of failure.
 
-Then the html documentation will be available at docs/build/html/index.html
 
-If you modify the import structure, you may need to regenerate the autodoc statements. From the root:
 
-```
-sphinx-apidoc -o docs/source imsciutils
-```
+![travis-ci-tests](https://imgs.xkcd.com/comics/data_pipeline.png "master build success")
 
-Then rebuild and check that your module was properly included. Don't forget to add the modified (or new) files to the commit.
-_____________________________
 
-# BASIC HOW TOs
+
+`imsciutils` aims to solve the problem (source [XKCD](https://www.xkcd.com/2054/)) described to aptly through our `Pipeline` tool, which provides a high-level interface to create processing pipelines, ensure their end-end compatibility, assisted debugging
+
+
+## building a pipeline
+Let's say we have a lot of images that we want to calculate ORB features on
+
+
+This is all well and good, but maybe you want to view the images at an intermediate stage to make sure they are correct?
+
+#### builtin Pipelines Include:
+
+#### builtin processing blocks include:
+- Camera Capture
+- Image Loading
+- ORB keypoint and descriptors
+- Support Vector machine
+- Pretrained Neural Networks for image feature generations
+
+#### Designing your own processing blocks
+
+
+## chaining multiple pipelines together
+
+
+# Imaging Science Convenience functions
 ## Getting Standard Test Imagery
 `imsciutils` contains helper functions to quickly retrieve imagery that
 are frequently used as benchmarks in the Imaging Science community
@@ -208,77 +222,6 @@ produces the following
 1 ) t.lap() resets every time it's called: 1.002
 1 ) t.time() counts up always:  2.003
 ```
-
-# Constructing Image Pipelines
-
-
-# Higher Level Functionality
-`imsciutils` also contains objects for more specific, higher level tasks
-such as talking to a webcam, writing videos and images, extact image features
-using pretrained neural networks, etc.
-
-**_The following examples may be longer and contain psuedocode_**
-
-**_It may be necessary to look at docstrings to fully realize the capabilities of the objects presented_**
-
-## Machine learning
-
-
-### Pretrained Network Feature Extraction
-There is a convenience wrapper around keras built into `imsciutils`
-to extract image features using pretrained networks
-```python
-import imsciutils as iu
-network = iu.ml.FeatureExtractor('resnet50', pooling_type='avg')
-
-# it works with single images
-lenna = iu.lenna()
-lenna_features = network.extract_features(lenna)
-
-# it also works with a list of images
-img_batch = [iu.lenna(), iu.pig(), iu.crowd()]
-batch_features = network.extract_features(img_batch)
-
-# it even works with filenames
-filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
-img_features = network.extract_features(filenames)
-```
-
-### Configuration Factory
-In many machine learning applications, parameters have to
-be tweaked frequently to optimize a model. This can be a tedious task
-and frequently involves a human tweaking configurations files. This
-object is meant to simplify that process by **generating config permutations
-from a sample of arguments and keyword arguments**
-
-#### simple example
-```python
-import imsciutils as iu
-from imsciutils.util import ConfigFactory
-
-# Warning, the next two lines are psuedocode
-def run_important_test(arg1,arg2,arg3,first,second,third):
-	do_something_important()
-
-
-arg_trials = [0, # the first positional will always be 0 in all permutations
-			['a','b','c'], # trials for second positional arguments
-			['u','w','x','y','z'], # trials for third positional argument
-			]
-
-kwarg_trials = {'first':None, # this keyword will always be None in all permutations
-			'second':['I','J','K'], # trials for 'first' keyword argument
-			'third':['i','j','k'], # trials for 'first' keyword argument
-			}
-
-config_factory = ConfigFactory(*arg_trials,**kwarg_trials)
-for args,kwargs in config_factory:
-	run_important_test(*args,**kwargs)
-```
-#### real world example
-let's say we are training a DNN classifier and we want to test
-
-
 
 # Development Tools in `imsciutils`
 **_This section is for developers of `imsciutils` or people who want `imsciutils` closely integrated with their projects_**
