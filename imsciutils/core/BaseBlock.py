@@ -35,12 +35,13 @@ class BaseBlock(object):
         if name is None:
             name = self.__class__.__name__
 
-        # keeping track of names in base class variable
+        # JM: keeping track of names in base class variable
         if name in self.EXTANT:
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
         name = name + str(self.EXTANT[name])
+
         # ------ making input/output types lists of shapes --------
         if isinstance(input_shape,(list,tuple)):
             # JM:
@@ -76,6 +77,19 @@ class BaseBlock(object):
             self.trained = True
 
         self.printer = get_printer(self.name)
+
+        # JM:
+        # update docstring with default values for input_shape, output_shape
+        # training_status
+        self.__doc__ += \
+        """
+        Shapes:
+            input_shapes:{}
+            output_shapes:{}
+
+        Training:
+            requires_training: {}
+        """.format(self.input_shape,self.output_shape,self.requires_training)
 
     def train(self,batch_data,batch_labels=None):
         pass
@@ -144,7 +158,7 @@ class BatchBlock(BaseBlock):
         return batch_labels
 
     def process_strategy(self,batch_data):
-        return self.batch_process(batbatch_data=)
+        return self.batch_process(batch_data)
 
     def label_strategy(self,batch_labels):
         return self.batch_labels(batch_labels)
