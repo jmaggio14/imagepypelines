@@ -66,7 +66,9 @@ def type_error_message(variable,variable_name,desired_types):
     """
     if not isinstance(desired_types,Iterable):
         desired_types = [desired_types]
-    error_msg =  "'{name}' must be on of [{desired}], currently is {cur}".format(name=variable_name,
-                                                                                desired=','.join(desired_types),
-                                                                                cur=type(variable))
+    error_msg =  "'{name}' must be on of [{desired}], currently is {cur}"\
+        .format(
+            name=variable_name,
+            desired=','.join(desired_types),
+            cur=type(variable))
     return error_msg
