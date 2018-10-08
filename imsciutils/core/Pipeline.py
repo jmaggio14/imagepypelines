@@ -118,7 +118,7 @@ class BasePipeline(object):
             for out in b_out.output_shape:
                 is_broken = False
                 if out not in b_in.input_shape:
-                    error_msg = "{} out {} must be among {}'s inputs : {}"\
+                    error_msg = "{} output shape {} must be among {}'s inputs : {}"\
                         .format(b_out.name, out, b_in.name, b_in.input_shape)
                     self.printer.error(error_msg)
                     is_broken = True
