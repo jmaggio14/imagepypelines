@@ -10,7 +10,7 @@ import glob
 import sys
 from types import FunctionType
 
-SimpleNamespace = type('SimpleNamespace', tuple(), {})
+SimpleNamespace = type('SimpleNamespace', (object,), {})
 
 import cv2
 import numpy as np
