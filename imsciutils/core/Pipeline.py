@@ -221,6 +221,28 @@ class BasePipeline(object):
             pickle.dump(self, f)
 
 
+    def __str__(self):
+        out = "{}: '{}'  ".format(self.__class__.__name__,self.name) \
+                + '(' + "->".join(b.name for b in self.blocks) + ')'
+        return out
+
+    def __repr__(self):
+        return str(self)
+
+    def __getitem__(self,index):
+        return self.blocks[index]
+
+    def __setitem__(self,index,block):
+        if not isinstance(block, BaseBlock):
+            error_msg = "'block' must be a subclass of iu.BaseBlock"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        self.blocks[index] = block
+        self.printer.info("block{} replaced with {}".format(index,block.name))
+
+
+
 class SupervisedPipeline(BasePipeline):
     """Pipeline Subclass that requires the use of labels for training
 
