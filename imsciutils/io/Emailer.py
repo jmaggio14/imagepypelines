@@ -25,7 +25,7 @@ class Emailer(object):
         >>> import os
         >>> with Emailer(os.environ['GMAIL_USER'], [os.environ['GMAIL_USER']]) as emailer:
         ...     emailer.body('this is a test:\n\n\n\nblah -nate')
-        ...     emailer.send(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+        ...     emailer.send(os.environ['GMAIL_PASS'])
         >>>
     """
 
@@ -126,7 +126,7 @@ def main():
     import os
     with Emailer(os.environ['GMAIL_USER'], [os.environ['GMAIL_USER']]) as emailer:
         emailer.body('this is a test:\n\n\n\nblah -nate')
-        emailer.send(os.environ['GMAIL_USER'], os.environ['GMAIL_PASS'])
+        emailer.send(os.environ['GMAIL_PASS'])
 
 
 if __name__ == "__main__":
