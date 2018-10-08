@@ -192,7 +192,7 @@ class BasePipeline(object):
             # printing time for this block
             self.printer.info("{}: processed {}datums in {} seconds".format(
                                                                     b.name,
-                                                                    len(data)
+                                                                    len(data),
                                                                     b_time))
             # printing individual datum time
             self.printer.debug("(approx {}sec per datum)".format(
