@@ -10,8 +10,8 @@ import cv2
 
 class Resizer(SimpleBlock):
     def __init__(self,
-                    to_height=512,
-                    to_width=512,
+                    to_height,
+                    to_width,
                     interpolation=cv2.INTER_NEAREST):
         self.to_height = to_height
         self.to_width = to_width
