@@ -325,7 +325,7 @@ class Pipeline(BasePipeline):
         Returns:
             processed_data(list): list of processed training data
         """
-        processed,_ = super(SupervisedPipeline,self).train(data,None)
+        processed,_ = super(Pipeline,self).train(data,None)
         return processed
 
     def process(self,data):
@@ -338,5 +338,5 @@ class Pipeline(BasePipeline):
         Returns:
             processed_data(list): list of processed data
         """
-        processed,_ = super(SupervisedPipeline,self).process(data,None)
+        processed,_ = super(Pipeline,self).process(data,None)
         return processed
