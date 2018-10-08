@@ -8,6 +8,8 @@
 
 # BaseBlock.py
 from .BaseBlock import BaseBlock
+from .BaseBlock import SimpleBlock
+from .BaseBlock import BatchBlock
 
 # builtin_blocks/
 from .builtin_blocks import *
