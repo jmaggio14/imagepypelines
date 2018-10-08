@@ -142,7 +142,7 @@ class PretrainedNetwork(BatchBlock):
             raise ValueError(error_string)
 
         # checking that poolying type is valid
-        assert pooling_type in ['avg','max'],
+        assert pooling_type in ['avg','max'],\
             "'pooling_type' must be one of the following strings ['avg','max']"
 
         # importing the proper keras model_fn and preprocess_fn
