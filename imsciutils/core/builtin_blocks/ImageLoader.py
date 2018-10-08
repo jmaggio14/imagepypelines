@@ -9,6 +9,12 @@ import cv2
 
 
 class ImageLoader(SimpleBlock):
+    """Block to load in imagery from filenames
+    Reads in an image using an input filename
+
+    Args:
+        None
+    """
     def __init__(self):
         input_shape = str
         output_shape = [None,None], [None,None,3]
