@@ -100,7 +100,7 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
     image_loader = iu.ImageLoader()
     resizer = iu.Resizer(to_height=512,to_width=512)
     color2gray = iu.Color2Gray('rgb')
-    orb = iu.ORB(n_keypoints=ORB_KEYPOINTS)
+    orb = iu.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
     pipeline = iu.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
