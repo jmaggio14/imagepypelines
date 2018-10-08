@@ -91,12 +91,31 @@ def test_normalize_and_bin():
 
 
 @iu.unit_test
-def test_orb_pipeline():
+def test_imageloader_resizer_color2gray_orb_pipeline():
     import imsciutils as iu
     import numpy as np
-    testing_printer = iu.get_printer('test_orb_pipeline')
-    N_KEYPOINTS = 120
-    # adding orb to a pipeline
+    testing_printer = iu.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
+    ORB_KEYPOINTS = 10
+    # creating all the blocks for the pipeline
+    image_loader = iu.ImageLoader()
+    resizer = iu.Resizer(to_height=512,to_width=512)
+    color2gray = iu.Color2Gray('rgb')
+    orb = iu.ORB(n_keypoints=ORB_KEYPOINTS)
+
+    # creating pipeline with all blocks
+    pipeline = iu.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
+                            blocks=[image_loader,resizer,color2gray,orb])
+
+
+    # getting sample data for this system
+    standard_image_filenames = iu.standard_image_filenames()
+    processed = pipeline.process(standard_image_filenames)
+
+    if all(p.shape == (ORB_KEYPOINTS,32) for p in processed ):
+        return True
+    else:
+        testing_printer.info("incorrect shape of outputs")
+        return False
 
 
 
