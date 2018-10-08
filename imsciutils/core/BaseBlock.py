@@ -283,7 +283,7 @@ class SimpleBlock(BaseBlock):
         """
         raise NotImplementedError("'process' must be overloaded in all children")
 
-    def label(lbl):
+    def label(selfmlbl):
         """(optional overload)retrieves the label for this datum"""
         return lbl
 
@@ -343,7 +343,7 @@ class BatchBlock(BaseBlock):
         """
         raise NotImplementedError("'batch_process' must be overloaded in all children")
 
-    def labels(labels):
+    def labels(self,labels):
         """(optional overload) returns all labels for input datums"""
         return labels
 
