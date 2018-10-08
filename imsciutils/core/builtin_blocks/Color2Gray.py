@@ -3,9 +3,13 @@ from ..coordinates import dimensions
 import cv2
 
 class Color2Gray(SimpleBlock):
-    def __init__(self,
-                    order='rgb'):
+    """Block to convert color imagery to greyscale imagery
 
+    Args:
+        order(str): the channel order of the imagery, must be 'rgb' or 'bgr'
+            default is 'rgb'
+    """
+    def __init__(self, order='rgb'):
         if order == 'rgb':
             self.flag = cv2.COLOR_RGB2GRAY
         elif order == 'bgr':
@@ -20,6 +24,15 @@ class Color2Gray(SimpleBlock):
                                             output_shape=output_shape,
                                             requires_training=False)
     def process(self,datum):
+        """converts color image to grayscale
+        converts to grayscale, or does nothing if image is already grayscale
+
+        Args:
+            datum(np.ndarray): image to convert
+
+        Returns:
+            gray(np.ndarray): grayscale image
+        """
         if datum.ndim == 2:
             # Image is already grayscale
             return datum
