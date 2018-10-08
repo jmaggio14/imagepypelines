@@ -94,7 +94,7 @@ def test_normalize_and_bin():
 def test_imageloader_resizer_color2gray_orb_pipeline():
     import imsciutils as iu
     import numpy as np
-    testing_printer = iu.get_printer('imageloader->resizer->color2gray->orb')
+    testing_printer = iu.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
     image_loader = iu.ImageLoader()
@@ -103,7 +103,7 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
     orb = iu.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
-    pipeline = iu.Pipeline(name='imageloader->resizer->color2gray->orb',
+    pipeline = iu.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
                             blocks=[image_loader,resizer,color2gray,orb])
 
 
