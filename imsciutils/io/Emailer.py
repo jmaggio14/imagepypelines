@@ -104,7 +104,7 @@ class Emailer(object):
 
         server = smtplib.SMTP_SSL(self.server_name, self.server_port)
         server.ehlo()
-        server.login(user, password)
+        server.login(self.sender, password)
         server.send_message(msg)
 
         self.current_msg = None
