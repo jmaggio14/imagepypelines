@@ -41,9 +41,9 @@ FUNCTION_NAMES = {'xception': 'Xception',
                     }
 
 class PretrainedNetwork(BatchBlock):
-    """
-    Class to extract features from pretrained neural networks
-    trained on imagenet with pooling applied.
+    """Block to extract features from pretrained neural networks
+
+    pretrained networks are trained on imagenet with pooling applied.
 
     This class utilizes keras to automatically leverage
     hardware resources and retrieve pretrained networks.
@@ -126,11 +126,11 @@ class PretrainedNetwork(BatchBlock):
                 type of pooling you want to use ('avg' or 'max')
 
         Returns:
-            1) model_fn (callable):
-                function that extract features from the NN
-            2) preprocess_fn (callable):
+            model_fn (callable):
+                function that extracts features from the NN
+            preprocess_fn (callable):
                 function that preprocesses the image for the network
-            3) kerasimage (module):
+            kerasimage (module):
                 pointer to keras.image
         """
         # checking to make sure network_name is valid
