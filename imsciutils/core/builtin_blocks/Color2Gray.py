@@ -15,6 +15,19 @@ class Color2Gray(SimpleBlock):
     Args:
         order(str): the channel order of the imagery, must be 'rgb' or 'bgr'
             default is 'rgb'
+
+    Attributes:
+        order(str): the channel order for input images
+        flag(cv2 constant): opencv flag to determine channel order
+        input_shape(tuple): tuple of acceptable input shapes
+        output_shape(tuple): tuple of acceptable output shapes
+        name(str): unique name for this block
+        requires_training(bool): whether or not this block will require
+            training
+        trained(bool): whether or not this block has been trained, True
+            by default if requires_training = False
+        printer(iu.Printer): printer object for this block,
+            registered to 'name'
     """
     def __init__(self, order='rgb'):
         if order == 'rgb':
@@ -23,6 +36,8 @@ class Color2Gray(SimpleBlock):
             self.flag = cv2.COLOR_BGR2GRAY
         else:
             raise ValueError("unknown channel order, must be 'rgb' or 'bgr'")
+
+        self.order = order
 
         input_shape = [None,None,3],[None,None]
         output_shape = [None,None]
