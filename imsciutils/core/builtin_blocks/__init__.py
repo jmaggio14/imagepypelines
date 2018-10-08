@@ -7,6 +7,7 @@
 #
 # add the name of any imports to this variable
 __all__ = ['BlockViewer',
+            'CameraBlock',
             'Color2Gray',
             'ImageLoader',
             'LinearSVM',
@@ -16,6 +17,7 @@ __all__ = ['BlockViewer',
             ]
 
 from .BlockViewer import BlockViewer
+from .CameraBlock import CameraBlock
 from .Color2Gray import Color2Gray
 from .ImageLoader import ImageLoader
 from .LinearSVM import LinearSVM
