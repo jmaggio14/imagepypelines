@@ -340,37 +340,3 @@ class Pipeline(BasePipeline):
         """
         processed,_ = super(SupervisedPipeline,self).process(data,None)
         return processed
-
-
-
-
-    #
-    # def train(self, x_data):
-    #     """trains all processing blocks in the pipeline"""
-    #     timer = util.Timer()
-    #     # runs training for each block and then processes the data for
-    #     # the next block to train with
-    #     for block in self.blocks:
-    #         block.run_train(x_data)
-    #         x_data = block.run_process(x_data)
-    #         # printing for traceability
-    #         self.printer.info("{}: trained in {} seconds on {} datums".format(
-    #                                                             block.name,
-    #                                                             timer.lap(),
-    #                                                             len(x_data)))
-    #     self.printer.info("all blocks trained: {}seconds".format(timer.time()))
-    #     return x_data # trains all blocks if required
-    #
-    # def process(self, x_data):
-    #     """processed x_data by sequentially running data through all blocks"""
-    #     timer = util.Timer()
-    #     # process the data through each block
-    #     for block in self.blocks:
-    #         x_data = block.run_process(x_data)
-    #         # printing for traceability
-    #         self.printer.info("{}: trained in {} seconds on {} datums".format(
-    #                                                             block.name,
-    #                                                             timer.lap(),
-    #                                                             len(x_data)))
-    #
-    #     return x_data
