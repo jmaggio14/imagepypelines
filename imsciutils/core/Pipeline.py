@@ -190,8 +190,10 @@ class BasePipeline(object):
             data, labels = b._pipeline_process(data, labels)
             b_time = t.lap()  # time for this block
             # printing time for this block
-            self.printer.info("{}: processed in {} seconds".format(b.name,
-                                                                   b_time))
+            self.printer.info("{}: processed {}datums in {} seconds".format(
+                                                                    b.name,
+                                                                    len(data)
+                                                                    b_time))
             # printing individual datum time
             self.printer.debug("(approx {}sec per datum)".format(
                 round(b_time / num, 3)))
