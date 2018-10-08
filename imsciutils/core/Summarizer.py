@@ -33,9 +33,6 @@ class Summarizer(dict):
         >>> a = iu.Summarizer(a)
         >>> print(a)
         [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
-
-
-
     """
     def __init__(self, input_array):
         """Instantiations function
