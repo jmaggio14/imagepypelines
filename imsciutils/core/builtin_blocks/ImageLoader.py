@@ -38,10 +38,10 @@ class ImageLoader(SimpleBlock):
         Returns:
             image (np.ndarray): 2D or 3D array of image data
         """
-        image = cv2.imread(datum)
+        img = cv2.imread(datum)
 
-        # throws error if unable to read image
-        if image is None:
+        # throws error if unable to read img
+        if img is None:
             error_msg = "unable to load {}".format(datum)
             self.printer.error(error_msg)
             raise FileNotFoundError(error_msg)
