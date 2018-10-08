@@ -64,6 +64,10 @@ class BasePipeline(object):
 
         broken_pairs = []
         for b_out, b_in in zip(out_blocks, in_blocks):
+            # if input_block accepts any type, skip this block-pair check
+            if None in b_in.input_shape:
+                continue
+
             for out in out_block.output_shape:
                 is_broken = False
                 if out not in in_block.input_shape:
