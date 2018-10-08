@@ -283,7 +283,7 @@ class SimpleBlock(BaseBlock):
         """
         raise NotImplementedError("'process' must be overloaded in all children")
 
-    def label(selfmlbl):
+    def label(self,lbl):
         """(optional overload)retrieves the label for this datum"""
         return lbl
 
