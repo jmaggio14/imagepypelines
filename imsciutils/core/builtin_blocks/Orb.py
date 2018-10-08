@@ -9,8 +9,22 @@ from .. import SimpleBlock
 import cv2
 import numpy as np
 
-class Orb(SimpleBlock):\
+class Orb(SimpleBlock):
+    """Block to calculate ORB features upon input grayscale imagery
 
+    Args:
+        n_keypoints(int): maximum number of keypoints to detect
+
+    Example:
+        >>> import imsciutils as iu
+        >>> orb = iu.ORB(n_keypoints=120)
+        >>>
+        >>> pipeline = iu.Pipeline()
+        >>> pipeline.add( orb )
+        >>>
+        >>> lenna_gray = iu.lenna_gray()
+        >>> lenna_gray_descriptors = pipeline.process( [lenna_gray] )[0]
+    """
     def __init__(self,n_keypoints=100):
         if not isinstance(n_keypoints,(int,float)):
             error_msg = "'n_keypoints' must be int"
