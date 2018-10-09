@@ -9,6 +9,7 @@ This is a repo of code that we seem to find ourselves using in projects in many 
 
 ## Installation
 python compatibility:  3.5+ (python 2.7 backwards)
+
 via pip:
 ```
 *placeholder until we get it on pypi*
