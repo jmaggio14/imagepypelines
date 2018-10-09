@@ -49,6 +49,9 @@ from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
 from .Exceptions import CrackedPipeline
 from .Exceptions import InvalidBlockInput
+from .Exceptions import InvalidProcessStrategy
+from .Exceptions import InvalidLabelStrategy
+from .Exceptions import DataLabelMismatch
 
 # Pipeline.py
 from .Pipeline import BasePipeline
