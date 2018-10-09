@@ -57,8 +57,53 @@ algorithm to a sequence of data passed into it.
 
 ![pipeline](https://github.com/jmaggio14/imsciutils/blob/readme-update/docs/images/pipeline-example.png "pipeline example")
 
+Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
-#### builtin Pipelines Include:
+##### let's create an example pipeline
+let's say we want a system that reads in images, resizes them, and then displays them for us
+```python
+import imsciutils as iu
+
+# first let's create our blocks
+block1 = iu.ImageLoader()
+block2 = iu.Resizer(512,512)
+block3 = iu.BlockViewer(pause_time=1)
+
+# then build a pipeline
+pipeline = iu.Pipeline(blocks=[block1,block2,block3])
+
+# we'll use imsciutils example data
+image_filenames = iu.standard_image_filenames()
+
+# now we process it!
+pipeline.process(image_filenames)
+```
+Now we have a system the reads in and displays imagery!
+
+But what if we want to do something more complicated? Let's say we want to apply a lowpass filter to all of these images before we display them?
+```python
+import imsciutils as iu
+
+# first let's create our blocks
+load = iu.ImageLoader()
+resize = iu.Resizer(512,512)
+fft = iu.FFT()
+lowpass = iu.Lowpass(cut_off=32)
+ifft = iu.IFFT()
+display = iu.BlockViewer(pause_time=1)
+
+# then build a pipeline
+pipeline = iu.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
+
+# we'll use imsciutils example data
+image_filenames = iu.standard_image_filenames()
+
+# now we process it!
+pipeline.process(image_filenames)
+```
+
+
+
 
 #### builtin processing blocks include:
 - Webcam Capturing
@@ -72,8 +117,11 @@ algorithm to a sequence of data passed into it.
 - Image Resizing
 - Grayscale Conversion
 
-#### Designing your own processing blocks
-
+### Designing your own processing blocks
+Designing your blocks is a fairly straightforward process
+#### Quick Block Creations
+if you already have a function that does all the processing you need to a single input,
+then you can  
 
 ## chaining multiple pipelines together
 
