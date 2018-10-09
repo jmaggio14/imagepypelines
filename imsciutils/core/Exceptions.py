@@ -63,3 +63,13 @@ class CrackedPipeline(ValueError):
                 .format(pair[0].name,pair[1].name)
         iuerror(error_msg)
         super(CrackedPipeline,self).__init__(error_msg)
+
+
+class InvalidBlockInput(TypeError):
+    def __init__(self,block):
+        error_msg = "invalid input to block: {}, must be a list containing ({})".format(
+            block.name,
+            block.input_shape,
+        )
+        iuerror(error_msg)
+        super(InvalidBlockInput,self).__init__(error_msg)

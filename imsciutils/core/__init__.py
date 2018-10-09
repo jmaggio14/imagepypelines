@@ -47,6 +47,8 @@ from .filters import high_pass
 from .Exceptions import CameraReadError
 from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
+from .Exceptions import CrackedPipeline
+from .Exceptions import InvalidBlockInput
 
 # Pipeline.py
 from .Pipeline import BasePipeline
