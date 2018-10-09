@@ -1,5 +1,5 @@
 from .coordinates import dimensions
-
+import numpy as np
 
 def low_pass(img,cut_off,filter_type='ideal',butterworth_order=1):
     """calculates a lowpass filter for an input image
