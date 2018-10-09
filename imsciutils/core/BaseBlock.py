@@ -7,11 +7,11 @@
 #
 from .Printer import get_printer
 from .Exceptions import InvalidBlockInput
-from .Exceptions import InvalidProcessingStrategy
+from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
 
-def simple_block(process_fn,
+def quick_block(process_fn,
                     input_shape,
                     output_shape,
                     name=None):

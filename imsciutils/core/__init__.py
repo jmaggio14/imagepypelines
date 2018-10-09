@@ -7,6 +7,7 @@
 #
 
 # BaseBlock.py
+from .BaseBlock import quick_block
 from .BaseBlock import BaseBlock
 from .BaseBlock import SimpleBlock
 from .BaseBlock import BatchBlock
