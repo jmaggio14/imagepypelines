@@ -25,7 +25,13 @@ python setup.py install
 ## Documentation
 Full Documentation for imsciutils can be found on our website: https://jmaggio14.github.io/imsciutils
 
-##
+## Licensing / Credit
+`imsciutils` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imsciutils` dependencies.
+
+Please credit us if you use `imsciutils` in your research
+```
+*placeholder for latex*
+```
 
 
 # The Pipeline
@@ -55,11 +61,16 @@ algorithm to a sequence of data passed into it.
 #### builtin Pipelines Include:
 
 #### builtin processing blocks include:
-- Camera Capture
+- Webcam Capturing
 - Image Loading
-- ORB keypoint and descriptors
-- Support Vector machine
+- keypointd detection and description
+- Support Vector Machines
+- Image Display
+- Fast Fourier Transform
+- Frequency Filtering
 - Pretrained Neural Networks for image feature generations
+- Image Resizing
+- Grayscale Conversion
 
 #### Designing your own processing blocks
 
