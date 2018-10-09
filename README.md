@@ -24,26 +24,32 @@ python setup.py install
 ## Documentation
 Full Documentation for imsciutils can be found on our website: https://jmaggio14.github.io/imsciutils
 
+##
+
 
 # The Pipeline
 `imsciutils` most powerful feature is a high level interface to create image processing pipelines that will apply a sequence of algorithms to input data automatically
 
-In our experience as imaging scientists, processing pipelines in both corporate or academic settings are frequently build from a hodge-podge of scripts and not always easy to adapt for new purposes and are relegated to _proof-of-concept_ applications only. Another problem such a system is it's traceability and debugging ease in case of failure.
+In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
+
+
+![xkcd](https://imgs.xkcd.com/comics/data_pipeline.png "cracked pipelines")
+
+(source: [XKCD](https://www.xkcd.com/2054/))
 
 
 
-![travis-ci-tests](https://imgs.xkcd.com/comics/data_pipeline.png "master build success")
+`imsciutils` aims to make solve these problems through our `Pipeline` object, which provides a high-level interface to create processing pipelines, ensure their end-end compatibility, and assist in debugging.
 
-
-
-`imsciutils` aims to solve the problem (source [XKCD](https://www.xkcd.com/2054/)) described to aptly through our `Pipeline` tool, which provides a high-level interface to create processing pipelines, ensure their end-end compatibility, assisted debugging
+There are already powerful pipeline utilities such as the venerable [GStreamer](https://en.wikipedia.org/wiki/GStreamer). `imsciutils` distinquishes itself from these other tools through it's high level simple interface targeted at research and small corporate settings.
 
 
 ## building a pipeline
-Let's say we have a lot of images that we want to calculate ORB features on
+Pipelines in `imsciutils` are constructed of processing `blocks` which apply an
+algorithm to a sequence of data passed into it.
 
+![pipeline](docs\images\pipeline-example.png "pipeline example")
 
-This is all well and good, but maybe you want to view the images at an intermediate stage to make sure they are correct?
 
 #### builtin Pipelines Include:
 
