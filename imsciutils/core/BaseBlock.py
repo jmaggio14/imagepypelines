@@ -134,19 +134,6 @@ class BaseBlock(object):
 
         self.printer = get_printer(self.name)
 
-        # JM:
-        # update docstring with default values for input_shape, output_shape
-        # training_status
-        # self.__doc__ += \
-        # """
-        # Shapes:
-        #     input_shapes:{}
-        #     output_shapes:{}
-        #
-        # Training:
-        #     requires_training: {}
-        # """.format(self.input_shape,self.output_shape,self.requires_training)
-
     def train(self,data,labels=None):
         """(optional overload)trains the block if required
 
