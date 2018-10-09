@@ -11,7 +11,13 @@ import numpy as np
 class IFFT(SimpleBlock):
     """Block to calculate an inverse fast fourier transform on input imagery
 
+    Args:
+        discard_imaginary (bool): whether or not to discard the imaginary output
+            of the ifft. Default is True
+
     Attributes:
+        discard_imaginary (bool): whether or not to discard the imaginary output
+            of the ifft. Default is True
         input_shape(tuple): tuple of acceptable input shapes
         output_shape(tuple): tuple of acceptable output shapes
         name(str): unique name for this block
@@ -23,7 +29,8 @@ class IFFT(SimpleBlock):
             registered to 'name'
 
     """
-    def __init__(self):
+    def __init__(self, discard_imaginary=True):
+        self.discard_imaginary = discard_imaginary
         input_shape = [None,None],[None,None,None]
         output_shape = [None,None],[None,None,None]
         super(IFFT,self).__init__(input_shape=input_shape,
@@ -42,4 +49,7 @@ class IFFT(SimpleBlock):
         """
         fft = np.fft.fftshift(datum)
         fft = np.fft.ifft2(datum)
+
+        if self.discard_imaginary:
+            fft = fft.real
         return fft
