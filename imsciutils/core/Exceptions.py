@@ -73,3 +73,31 @@ class InvalidBlockInput(TypeError):
         )
         iuerror(error_msg)
         super(InvalidBlockInput,self).__init__(error_msg)
+
+
+class InvalidProcessStrategy(TypeError):
+    def __init__(self,block):
+        error_msg = "{}: function 'batch_process' must return a list!".format(
+            block.name)
+        iuerror(error_msg)
+        super(InvalidProcessStrategy,self).__init__(error_msg)
+
+class InvalidLabelStrategy(TypeError):
+    def __init__(self,block):
+        error_msg = "{}: function 'labels' must return a list!".format(
+            block.name)
+        iuerror(error_msg)
+        super(InvalidLabelStrategy,self).__init__(error_msg)
+
+class DataLabelMismatch(TypeError):
+    def __init__(self,processed,labels):
+        error_msg = "you must have an equal number of processed ({}) and labels ({}). "
+        error_msg += "Perhaps the size of your dataset is changing? "
+        error_msg += "If so, then you'll have to modify number of labels, "
+        error_msg += "look into overloading 'before_process', 'labels', "
+        errror_msg += "or 'label' depending on your system".format(
+            len(processed),
+            len(labels)
+            )
+        iuerror(error_msg)
+        super(DataLabelMismatch,self).__init__(error_msg)

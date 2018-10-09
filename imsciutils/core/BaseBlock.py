@@ -6,6 +6,10 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .Printer import get_printer
+from .Exceptions import InvalidBlockInput
+from .Exceptions import InvalidProcessingStrategy
+from .Exceptions import InvalidLabelStrategy
+from .Exceptions import DataLabelMismatch
 
 def simple_block(process_fn,
                     input_shape,
@@ -205,16 +209,44 @@ class BaseBlock(object):
             data(list): list of datums to process
             labels(list,None): corresponding label for each datum,
                 None by default (for unsupervised systems)
+
+        Returns:
+            processed(list): list of processed datums
+            labels(list): list of corresponding labels for processed
+
+        Raises:
+            InvalidBlockInput: if data is not a list or tuple
+            InvalidProcessingStrategy: if processed output is not a list
+            InvalidLabelStrategy: if labels output is not a list
+            DataLabelMismatch: if there is mismatch in the number of labels
+                and processed datums
+
         """
         if labels is None:
             labels = [None] * len(data)
 
+        if not isinstance(data,list):
+            error_msg = "input data into a block must be a list"
+            self.printer.error(error)
+            raise InvalidBlockInput(self)
+
         #running prep function
         self.before_process(data,labels)
 
-        # processing data
+        # processing data and labels
         processed = self.process_strategy(data)
         labels = self.label_strategy(labels)
+
+        # error checking for output types
+        if not isinstance(processed,list):
+            raise InvalidProcessStrategy(self)
+
+        if not isinstance(labels,list):
+            raise InvalidLabelStrategy(self)
+
+        # making sure that we always have the same number of labels and datums
+        if len(processed) != len(labels):
+            raise DataLabelMismatch(processed,labels)
 
         # running post-process / cleanup function
         self.after_process()
