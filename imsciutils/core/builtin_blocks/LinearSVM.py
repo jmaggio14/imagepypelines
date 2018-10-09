@@ -26,7 +26,10 @@ class LinearSVM(BatchBlock):
         self.svc.fit(train_data,train_labels)
 
     def batch_process(self,batch_data):
+        # stacking input list into a numpy array
         stacked = np.vstack(batch_data)
+        # predicting
         predictions = self.svc.predict(stacked)
+        # splitting the predicted labels into a list for output
         predictions = np.vsplit(predictions,prediction.shape[0])
         return predictions
