@@ -45,9 +45,6 @@ class Highpass(SimpleBlock):
                     self.filter_type,
                     self.butterworth_order)
 
-        if datum.ndim > 2:
-            filter = np.dstack( [filter]*datum.shape[2] )
-
         return filter * datum
 
 
@@ -93,8 +90,5 @@ class Lowpass(SimpleBlock):
                     self.cut_off,
                     self.filter_type,
                     self.butterworth_order)
-
-        if datum.ndim > 2:
-            filter = np.dstack( [filter]*datum.shape[2] )
 
         return filter * datum
