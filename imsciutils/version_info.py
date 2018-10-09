@@ -5,11 +5,39 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-__author__ = 'Jeff Maggio, Nathan Dileas, and Ryan Hartzell'
+__name__ = 'imsciutils'
 __version__ = '0.1.2'
-__copyright__ = "Copyright 2018"
-__credits__ = ["Jeff Maggio", "Nathan Dileas", "Ryan Hartzell"]
-__license__ = "MIT"
-__status__ = "Experimental"
+__description__ = 'data pipeline and convienence library targeted at accelerating the development of imaging projects and research'
+
+__author__ = 'Jeff Maggio, Nathan Dileas, Ryan Hartzell'
 __email__ = "jmaggio14@gmail.com"
-__url__ = 'https://github.com/jmaggio14/imsciutils'
+__license__ = "MIT"
+__url__ = "https://jmaggio14.github.io/imsciutils/"
+__download_url__ = 'https://github.com/jmaggio14/imsciutils'
+__maintainer__ = "Jeff Maggio"
+__maintainer_email__ = "jmaggio14@gmail.com"
+__keywords__ = 'imaging-science machine-learning computer-vision data-pipelines'
+__python_requires__ = '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*'
+__platforms__ = ["Windows", "Linux", "Mac OS-X", "Unix"]
+__classifiers__ = [
+    'Development Status :: 3 - Alpha',
+    'Intended Audience :: Developers',
+    'Topic :: Scientific/Engineering'
+    'Topic :: Software Development',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3.5',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Operating System :: MacOS :: MacOS X',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX',
+    'Natural Language :: English',
+    ],
+
+__credits__ = ["Jeff Maggio", "Nathan Dileas", "Ryan Hartzell"]
+__status__ = "Experimental"
+
+__copyright__ = "Copyright 2018 " + __author__
