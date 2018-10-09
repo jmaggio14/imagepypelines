@@ -48,7 +48,7 @@ There are already powerful pipeline utilities such as the venerable [GStreamer](
 Pipelines in `imsciutils` are constructed of processing `blocks` which apply an
 algorithm to a sequence of data passed into it.
 
-![pipeline](docs\images\pipeline-example.png "pipeline example")
+![pipeline](https://github.com/jmaggio14/imsciutils/blob/readme-update/docs/images/pipeline-example.png "pipeline example")
 
 
 #### builtin Pipelines Include:
