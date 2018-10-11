@@ -56,13 +56,7 @@ class InvalidNumpyType(TypeError):
 
 
 class CrackedPipeline(ValueError):
-    def __init__(self,block_pairs,pipeline_name):
-        error_msg = "{}: incompatible blocks".format(pipeline_name)
-        for pair in block_pairs:
-            error_msg += " {}-->{},"\
-                .format(pair[0].name,pair[1].name)
-        iuerror(error_msg)
-        super(CrackedPipeline,self).__init__(error_msg)
+    pass
 
 
 class InvalidBlockInput(TypeError):
