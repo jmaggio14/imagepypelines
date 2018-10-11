@@ -9,6 +9,7 @@ from .Printer import get_printer
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .Exceptions import CrackedPipeline
+import collections
 from .. import util
 import pickle
 import collections
@@ -128,23 +129,42 @@ class Pipeline(object):
 
         all_type_chains = []
         for data_type in data_types:
-            type_chain = {'pipeline_input':data_type}
+            type_chain = collections.OrderedDict(pipeline_input=data_type)
             input_type = data_type
 
             for block in self.blocks:
+                breakpoint()
                 try:
                     output_type = block.io_map.output_given_input(input_type)
                     broken_pair = False
+
                 except TypeError:
-                    msg = "Incompatible Types passed between blocks!\n"
-                    msg += "-->".join(["{}({})".format(k,v) for k,v in type_chain])
-                    msg += "-X->{} [acceptable types are {}]".format(block,block.io_map.keys())
+                    msg = []
+                    for b,t in zip(list(type_chain.keys())[:-1],list(type_chain.values())[:-1]):
+                        msg.append(b)
+                        buf = ' ' * (len(msg[-1]) // 2)
+                        msg.append("{}|".format(buf))
+                        msg.append("{}| {}".format(buf,t))
+                        msg.append("{}|".format(buf))
+
+                    msg.append(list(type_chain.keys())[-1])
+                    buf = ' ' * (len(msg[-1]) // 2)
+                    msg.append("{}|".format(buf))
+                    msg.append("{}X {}".format(buf,input_type))
+                    msg.append("{}|".format(buf))
+                    msg = '\n'.join(msg)
+                    print(msg)
                     broken_pair = True
 
-                if broken_pair:
-                    raise CrackedPipeline(msg)
-
                 type_chain[block.name] = output_type
+                input_type = output_type
+                
+                if broken_pair:
+                    error_msg = "{} - acceptable types are {}".format(block.name,
+                            list(block.io_map.keys()))
+                    self.printer.error(error_msg)
+                    raise CrackedPipeline("Incompatible types passed between blocks")
+
 
             all_type_chains.append(type_chain)
 

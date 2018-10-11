@@ -88,9 +88,9 @@ class IoMap(dict):
             raise TypeError("IoMap must be instantiated with a dictionary")
 
         for i,o in io_map.items():
-            if not ((i in BLOCK_VALID_TYPES) or (i is ArrayType)):
+            if not ((i in BLOCK_VALID_TYPES) or isinstance(i, ArrayType)):
                 raise TypeError("unacceptable io_map key, must be {}".format(BLOCK_VALID_TYPES))
-            if not ((o in BLOCK_VALID_TYPES) or (o is ArrayType)):
+            if not ((o in BLOCK_VALID_TYPES) or isinstance(o, ArrayType)):
                 raise TypeError("unacceptable io_map value, must be {}".format(BLOCK_VALID_TYPES))
 
 
