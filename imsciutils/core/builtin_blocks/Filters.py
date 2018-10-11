@@ -37,9 +37,7 @@ class Highpass(SimpleBlock):
                     ArrayType([None,None]):ArrayType([None,None]),
                     ArrayType([None,None,None]):ArrayType([None,None,None])
                     }
-        super(Highpass,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=False)
+        super(Highpass,self).__init__(io_shape, requires_training=False)
 
     def process(self,datum):
         filter = high_pass(datum,
