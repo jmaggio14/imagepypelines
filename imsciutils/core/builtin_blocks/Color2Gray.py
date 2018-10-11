@@ -42,10 +42,10 @@ class Color2Gray(SimpleBlock):
         input_shape = [None,None,3],[None,None]
         output_shape = [None,None]
 
-        io_shape = {ArrayType([None,None,3],[None,None]):ArrayType([None,None])
+        io_map = {ArrayType([None,None,3],[None,None]):ArrayType([None,None])
                 }
 
-        super(Color2Gray,self).__init__(io_shape,requires_training=False)
+        super(Color2Gray,self).__init__(io_map,requires_training=False)
         
     def process(self,datum):
         """converts color image to grayscale

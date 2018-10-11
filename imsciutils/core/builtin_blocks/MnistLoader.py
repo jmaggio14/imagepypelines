@@ -16,8 +16,8 @@ class MnistLoader(BatchBlock):
         self.should_shuffle = should_shuffle
         self.images = []
         self.image_labels = []
-        io_shape = {str:ArrayType([None,None])}
-        super(MnistLoader,self).__init__(io_shape,requires_training=False)
+        io_map = {str:ArrayType([None,None])}
+        super(MnistLoader,self).__init__(io_map,requires_training=False)
 
     def before_process(self,data,labels=None):
         assert data[0] in ['train','test']

@@ -36,8 +36,8 @@ class ImageLoader(SimpleBlock):
     def __init__(self):
         input_shape = str
         output_shape = [None,None], [None,None,3]
-        io_shape = {str:ArrayType([None,None],[None,None,3])}
-        super(ImageLoader,self).__init__(io_shape, requires_training=False)
+        io_map = {str:ArrayType([None,None],[None,None,3])}
+        super(ImageLoader,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
         """loads in an image from a filename

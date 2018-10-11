@@ -24,10 +24,10 @@ class FFT(SimpleBlock):
 
     """
     def __init__(self):
-        io_shape = {ArrayType([None,None]):ArrayType([None,None]),
+        io_map = {ArrayType([None,None]):ArrayType([None,None]),
                     ArrayType([None,None,None]):ArrayType([None,None,None]),
                     }
-        super(FFT,self).__init__(io_shape, requires_training=False)
+        super(FFT,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
         """calculates a fast-fourier transform on an input image

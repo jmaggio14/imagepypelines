@@ -73,14 +73,14 @@ class CameraBlock(BatchBlock):
         assert mode in ['count','time'], "mode must set to 'time' or 'count'"
         self.mode = mode
 
-        io_shape = {int:ArrayType([None,None],[None,None,3]),
+        io_map = {int:ArrayType([None,None],[None,None,3]),
                     float:ArrayType([None,None],[None,None,3]),
                     }
 
 
         from ... import io
         self.cap = io.CameraCapture(self.device,self.fourcc)
-        super(CameraBlock,self).__init__(io_shape, requires_training=False)
+        super(CameraBlock,self).__init__(io_map, requires_training=False)
 
     def before_process(self,data,labels=None):
         images = []

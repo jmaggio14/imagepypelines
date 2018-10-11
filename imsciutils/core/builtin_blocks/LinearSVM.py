@@ -15,8 +15,8 @@ class LinearSVM(BatchBlock):
 
         input_shape = [1,None]
         output_shape = int
-        io_shape = {ArrayType([1,None]):int}
-        super(Resizer,self).__init__(io_shape, requires_training=True)
+        io_map = {ArrayType([1,None]):int}
+        super(Resizer,self).__init__(io_map, requires_training=True)
 
     def train(self,train_data,train_labels):
         self.svc = svm.SVM(self.C)

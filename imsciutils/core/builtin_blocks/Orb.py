@@ -47,8 +47,8 @@ class Orb(SimpleBlock):
         self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
 
-        io_shape = {ArrayType([None,None]):ArrayType([None,32])}
-        super(Orb,self).__init__(io_shape, requires_training=False)
+        io_map = {ArrayType([None,None]):ArrayType([None,32])}
+        super(Orb,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
         """calculates descriptors on a 4D img_stack (n_img,height,width,bands)
