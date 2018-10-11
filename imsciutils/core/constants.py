@@ -7,11 +7,19 @@
 #
 import numpy as np
 import cv2
+from .BaseBlock import ArrayType
 
 # MODIFY THIS VARIABLE EVERY TIME A NEW IMPORTABLE CONSTANT IS ADDED
 __all__ = ['NUMPY_TYPES',
             'CV2_INTERPOLATION_TYPES',
-            'IMAGE_EXTENSIONS']
+            'IMAGE_EXTENSIONS',
+            'BLOCK_VALID_TYPES',
+            'BLOCK_NON_ARRAY_TYPES',
+            ]
+
+# acceptable types for datums passed between blocks
+BLOCK_VALID_TYPES = [str,int,float,None,ArrayType]
+BLOCK_NON_ARRAY_TYPES = list(BLOCK_VALID_TYPES).remove(ArrayType)
 
 
 # ------------------Standard Type Tables------------------
