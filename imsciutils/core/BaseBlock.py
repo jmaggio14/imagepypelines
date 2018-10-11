@@ -249,6 +249,11 @@ class BaseBlock(object):
         Returns:
             None
         """
+        if self.requires_labels and (labels is None):
+            msg = "{} requires labels for training but none were passed in"\
+                .format(self)
+            raise BlockRequiresLabels(msg)
+
         self.train(self,data,labels)
         self.trained = True
 
@@ -273,17 +278,13 @@ class BaseBlock(object):
                 and processed datums
 
         """
-        if not self.requires_labels:
-            if labels is None:
-                labels = [None] * len(data)
-        else:
-            raise BlockRequiresLabels
-
-
         if not isinstance(data,list):
             error_msg = "input data into a block must be a list"
             self.printer.error(error)
             raise InvalidBlockInput(self)
+
+        if labels is None:
+            labels = [None] * len(data)
 
         #running prep function
         self.before_process(data,labels)
