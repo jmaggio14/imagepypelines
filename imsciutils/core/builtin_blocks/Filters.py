@@ -1,4 +1,5 @@
 from .. import SimpleBlock
+from .. import ArrayType
 from ..coordinates import dimensions
 from ..filters import low_pass,high_pass
 import numpy as np

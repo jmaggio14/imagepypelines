@@ -9,6 +9,7 @@
 from importlib import import_module
 import numpy as np
 from .. import BatchBlock
+from .. import ArrayType
 from ..coordinates import dimensions
 
 SUBMODULES = {'xception': 'keras.applications.xception',

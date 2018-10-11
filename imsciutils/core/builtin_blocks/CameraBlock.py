@@ -7,6 +7,8 @@
 #
 from ... import util
 from .. import BatchBlock
+from .. import ArrayType
+
 
 
 

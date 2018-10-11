@@ -6,8 +6,10 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
+from .. import ArrayType
 from ..coordinates import dimensions
 import cv2
+
 
 class Color2Gray(SimpleBlock):
     """Block to convert color imagery to greyscale imagery
@@ -46,7 +48,7 @@ class Color2Gray(SimpleBlock):
                 }
 
         super(Color2Gray,self).__init__(io_map,requires_training=False)
-        
+
     def process(self,datum):
         """converts color image to grayscale
         converts to grayscale, or does nothing if image is already grayscale
