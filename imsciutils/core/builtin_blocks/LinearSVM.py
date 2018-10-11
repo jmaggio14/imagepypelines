@@ -15,10 +15,8 @@ class LinearSVM(BatchBlock):
 
         input_shape = [1,None]
         output_shape = int
-
-        super(Resizer,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=True)
+        io_shape = {ArrayType([1,None]):int}
+        super(Resizer,self).__init__(io_shape, requires_training=True)
 
     def train(self,train_data,train_labels):
         self.svc = svm.SVM(self.C)
@@ -29,7 +27,7 @@ class LinearSVM(BatchBlock):
         # stacking input list into a numpy array
         stacked = np.vstack(batch_data)
         # predicting
-        predictions = self.svc.predict(stacked)
+        predictions = self.svc.predict(stacked).astype(int)
         # splitting the predicted labels into a list for output
         predictions = np.vsplit(predictions,prediction.shape[0])
         return predictions

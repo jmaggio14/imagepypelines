@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .. import SimpleBlock
+from .. import SimpleBlock, ArrayType
 from ..Viewer import Viewer
 import time
 
@@ -34,11 +34,10 @@ class BlockViewer(SimpleBlock):
     """
     def __init__(self,pause_time=0.1):
         self.pause_time = pause_time
-        input_shape = [None,None],[None,None,3]
-        output_shape = [None,None],[None,None,3]
-
-        super(BlockViewer,self).__init__(input_shape,
-                                        output_shape,
+        io_shape = {ArrayType([None,None]):ArrayType([None,None]),
+                    ArrayType([None,None,3]):ArrayType([None,None,3])
+                    }
+        super(BlockViewer,self).__init__(io_shape,
                                         requires_training=False)
         self.viewer = Viewer(self.name)
 

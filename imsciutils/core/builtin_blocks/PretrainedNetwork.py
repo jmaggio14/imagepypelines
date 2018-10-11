@@ -108,9 +108,8 @@ class PretrainedNetwork(BatchBlock):
         self.model_fn, self.preprocess_fn \
             = self._keras_importer(network,pooling_type)
 
-        super(PretrainedNetwork,self).__init__(input_shape,
-                                                output_shape,
-                                                requires_training=False)
+        io_shape = {ArrayType([None,None],[None,None,None]):ArrayType([1,None])}
+        super(PretrainedNetwork,self).__init__(io_shape,requires_training=False)
 
     def batch_process(self,batch_data,batch_labels=None):
         # verify that all images are the same size

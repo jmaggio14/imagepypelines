@@ -33,8 +33,10 @@ class Highpass(SimpleBlock):
         self.cut_off = cut_off
         self.filter_type = filter_type
         self.butterworth_order = butterworth_order
-        input_shape = [None,None],[None,None,None]
-        output_shape = [None,None],[None,None,None]
+        io_shape = {
+                    ArrayType([None,None]):ArrayType([None,None]),
+                    ArrayType([None,None,None]):ArrayType([None,None,None])
+                    }
         super(Highpass,self).__init__(input_shape=input_shape,
                                             output_shape=output_shape,
                                             requires_training=False)
@@ -79,11 +81,11 @@ class Lowpass(SimpleBlock):
         self.cut_off = cut_off
         self.filter_type = filter_type
         self.butterworth_order = butterworth_order
-        input_shape = [None,None],[None,None,None]
-        output_shape = [None,None],[None,None,None]
-        super(Lowpass,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=False)
+        io_shape = {
+                    ArrayType([None,None]):ArrayType([None,None]),
+                    ArrayType([None,None,None]):ArrayType([None,None,None])
+                    }
+        super(Lowpass,self).__init__(io_shape, requires_training=False)
 
     def process(self,datum):
         filter = low_pass(datum,
