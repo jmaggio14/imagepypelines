@@ -7,18 +7,29 @@
 #
 from .Printer import get_printer
 from .BaseBlock import BaseBlock
+from .BaseBlock import ArrayType
 from .Exceptions import CrackedPipeline
 from .. import util
 import pickle
 import collections
+import numpy as np
 
+def get_type(datum):
+    if isinstance(datum,(str,)):
+        return str
 
-class BasePipeline(object):
+    elif isinstance(datum,(float,int)):
+        return float
+
+    elif isinstance(datum,(np.ndarray,)):
+        return ArrayType(datum.shape)
+
+    else:
+        msg = "only acceptable input datatypes are numpy arrays, floats, ints and strings"
+        raise ValueError(msg)
+
+class Pipeline(object):
     """Pipeline object to apply a sequence of algorithms to input data
-
-    This base pipeline is fully functional and compatible with both supervised
-    and unsupervised setups, however it's highly reccomended that you use it's
-    children 'Pipeline' and 'SupervisedPipeline'
 
     Pipelines pass data between block objects and validate the integrity
     of a data processing pipeline. it is intended to be a quick, flexible, and
@@ -95,54 +106,63 @@ class BasePipeline(object):
         # appends to instance block list
         self.blocks.append(block)
 
-    def validate(self):
+    def validate(self,data):
         """validates the integrity of the pipeline
 
         verifies all input-output shapes are compatible with each other
+
+        type comparison for blocks is complicated
 
         Raises:
             CrackedPipeline: if there is a input-output shape
                 incompatability
         """
-        # JM: get output_shapes, last block's output is irrelevant
-        out_blocks = [b for b in self.blocks[:-1]]
-        # JM: get input blocks, first block's input is irrelevant
-        in_blocks = [b for b in self.blocks[1:]]
 
-        broken_pairs = []
-        for b_out, b_in in zip(out_blocks, in_blocks):
-            # if input_block accepts any type, skip this block-pair check
-            if None in b_in.input_shape:
-                continue
+        # make sure data is a list
+        if not isinstance(data,list):
+            raise TypeError("'data' must be list or tuple")
 
-            for out in b_out.output_shape:
-                is_broken = False
-                if out not in b_in.input_shape:
-                    error_msg = "{} output shape {} must be among {}'s inputs : {}"\
-                        .format(b_out.name, out, b_in.name, b_in.input_shape)
-                    self.printer.error(error_msg)
-                    is_broken = True
+        # JM: get shape of every datum
+        # get unique shapes so we don't have to test every single shape
+        data_types = set([get_type(datum) for datum in data])
 
-                if is_broken:
-                    broken_pairs.append( [b_out,b_in] )
+        all_type_chains = []
+        for data_type in data_types:
+            last_block =
+            type_chain = {'pipeline_input':data_type}
+            input_type = data_type
 
-        # raise cracked pipeline error if the pipeline will break
-        if len(broken_pairs) > 0:
-            raise CrackedPipeline(broken_pairs,self.name)
+            for block in self.blocks:
+                try:
+                    output_type = block.io_map.output_given_input(input_type)
+                    broken_pair = False
+                except TypeError:
+                    msg = "Incompatible Types passed between blocks!\n"
+                    msg += "-->".join(["{}({})".format(k,v) for k,v in type_chain])
+                    msg += "-X->{} [acceptable types are {}]".format(block,block.io_map.keys())
+                    broken_pair = True
 
-    def train(self, data, labels):
+                if broken_pair:
+                    raise CrackedPipeline(msg)
+
+                type_chain[block.name] = output_type
+
+            all_type_chains.append(type_chain)
+
+
+    def train(self, data, labels=None):
         """trains every block in the pipeline
 
         Args:
             data(list): list of individual datums for the first block
                 in the pipeline
-            labels(list): list of labels for each datum
+            labels(list): list of labels for each datum, or None
 
         Returns:
             processed_data(list): list of processed training data
             labels(list): list of corresponding labels
         """
-        self.validate()
+        self.validate(data)
         t = util.Timer()
 
         for b in self.blocks:
@@ -160,7 +180,7 @@ class BasePipeline(object):
 
         return data, labels
 
-    def process(self, data, labels):
+    def process(self, data):
         """processes data using every block in the pipeline
 
         Args:
@@ -172,7 +192,7 @@ class BasePipeline(object):
             processed_data(list): list of processed data
             labels(list): list of corresponding labels
         """
-        self.validate()
+        self.validate(data)
         # JM: TODO: add auto batching and intermediate data retrieval
         # JM: verifying that all blocks have been trained
         if not all(b.trained for b in self.blocks):
@@ -187,7 +207,7 @@ class BasePipeline(object):
         t = util.Timer()
         for b in self.blocks:
             num = len(data)
-            data, labels = b._pipeline_process(data, labels)
+            data, labels = b._pipeline_process(data, None)
             b_time = t.lap()  # time for this block
             # printing time for this block
             self.printer.info("{}: processed {}datums in {} seconds".format(
@@ -238,127 +258,5 @@ class BasePipeline(object):
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 
+        self.printer.info("{} replaced with {}".format(self.blocks[index],block.name))
         self.blocks[index] = block
-        self.printer.info("block{} replaced with {}".format(index,block.name))
-
-
-
-class SupervisedPipeline(BasePipeline):
-    """Pipeline Subclass that requires the use of labels for training
-
-    Pipelines pass data between block objects and validate the integrity
-    of a data processing pipeline. it is intended to be a quick, flexible, and
-    module approach to creating a processing graph. It also contains helper
-    functions for documentation and saving these pipelines for use by other
-    researchers/users.
-
-    Args:
-        name(str): name for this pipeline that will be enumerated to be unique,
-            defaults to the name of the subclass<index>
-        blocks(list): list of blocks to instantiate this pipeline with, shortcut
-            to the 'add' function. defaults to []
-        verbose(bool): whether or not to enable printouts for this pipeline,
-            defaults to True
-
-    Attributes:
-        name(str): unique name for this pipeline
-        blocks(list): list of block objects being used by this pipeline,
-            in order of their processing sequence
-        verbose(bool): verbose(bool): whether or not this pipeline with print
-            out its status
-        printer(iu.Printer): printer object for this pipeline,
-            registered with 'name'
-    """
-    def train(self,data,labels):
-        """trains every block in the pipeline
-
-        Args:
-            data(list): list of individual datums for the first block
-                in the pipeline
-            labels(list): list of labels for each datum
-
-        Returns:
-            processed_data(list): list of processed training data
-            labels(list): list of corresponding labels
-        """
-        if len(data) != len(labels):
-            error_msg = "there must be an equal number of datapoints ({}) and"\
-                        + "labels ({})".format(len(data),len(labels))
-            self.printer.error(error_msg)
-            raise RuntimeError(error_msg)
-
-        processed,labels = super(SupervisedPipeline,self).train(data,labels)
-        return processed, labels
-
-    def process(self,data):
-        """processes data using every block in the pipeline
-
-        Args:
-            data(list): list of individual datums for the first block
-                in the pipeline
-
-        Returns:
-            processed_data(list): list of processed data
-        """
-        if len(data) != len(labels):
-            error_msg = "there must be an equal number of datapoints ({}) and"\
-                        + "labels ({})".format(len(data),len(labels))
-            self.printer.error(error_msg)
-            raise RuntimeError(error_msg)
-
-        processed,_ = super(SupervisedPipeline,self).process(data,None)
-        return processed
-
-
-
-class Pipeline(BasePipeline):
-    """Pipeline subclass that does not require using labels whatsoever
-
-    Pipelines pass data between block objects and validate the integrity
-    of a data processing pipeline. it is intended to be a quick, flexible, and
-    module approach to creating a processing graph. It also contains helper
-    functions for documentation and saving these pipelines for use by other
-    researchers/users.
-
-    Args:
-        name(str): name for this pipeline that will be enumerated to be unique,
-            defaults to the name of the subclass<index>
-        blocks(list): list of blocks to instantiate this pipeline with, shortcut
-            to the 'add' function. defaults to []
-        verbose(bool): whether or not to enable printouts for this pipeline,
-            defaults to True
-
-    Attributes:
-        name(str): unique name for this pipeline
-        blocks(list): list of block objects being used by this pipeline,
-            in order of their processing sequence
-        verbose(bool): verbose(bool): whether or not this pipeline with print
-            out its status
-        printer(iu.Printer): printer object for this pipeline,
-            registered with 'name'
-    """
-    def train(self,data):
-        """trains every block in the pipeline
-
-        Args:
-            data(list): list of individual datums for the first block
-                in the pipeline
-
-        Returns:
-            processed_data(list): list of processed training data
-        """
-        processed,_ = super(Pipeline,self).train(data,None)
-        return processed
-
-    def process(self,data):
-        """processes data using every block in the pipeline
-
-        Args:
-            data(list): list of individual datums for the first block
-                in the pipeline
-
-        Returns:
-            processed_data(list): list of processed data
-        """
-        processed,_ = super(Pipeline,self).process(data,None)
-        return processed
