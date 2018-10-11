@@ -128,7 +128,6 @@ class Pipeline(object):
 
         all_type_chains = []
         for data_type in data_types:
-            last_block =
             type_chain = {'pipeline_input':data_type}
             input_type = data_type
 

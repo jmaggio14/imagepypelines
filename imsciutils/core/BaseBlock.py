@@ -12,13 +12,10 @@ from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
 from .Exceptions import BlockRequiresLabels
 from .constants import NUMPY_TYPES
-from .constants import BLOCK_NON_ARRAY_TYPES
-from .constants import BLOCK_VALID_TYPES
-
 
 
 def quick_block(process_fn,
-                    io_map
+                    io_map,
                     name=None):
     """convienence function to make simple blocks
 
@@ -81,6 +78,9 @@ class ArrayType(object):
     def __repr__(self):
         return str(self)
 
+# acceptable types for datums passed between blocks
+BLOCK_VALID_TYPES = [str,int,float,None,ArrayType]
+BLOCK_NON_ARRAY_TYPES = list(BLOCK_VALID_TYPES).remove(ArrayType)
 
 class IoMap(dict):
     def __init__(self,io_map):
@@ -88,9 +88,9 @@ class IoMap(dict):
             raise TypeError("IoMap must be instantiated with a dictionary")
 
         for i,o in io_map.items():
-            assert (i in BLOCK_VALID_TYPES) or (i is ArrayType):
+            if not ((i in BLOCK_VALID_TYPES) or (i is ArrayType)):
                 raise TypeError("unacceptable io_map key, must be {}".format(BLOCK_VALID_TYPES))
-            assert (o in BLOCK_VALID_TYPES) or (o is ArrayType):
+            if not ((o in BLOCK_VALID_TYPES) or (o is ArrayType)):
                 raise TypeError("unacceptable io_map value, must be {}".format(BLOCK_VALID_TYPES))
 
 
@@ -132,7 +132,7 @@ class IoMap(dict):
                 if all(input_compatability.values()):
                     return self[acceptable_type]
 
-        msg =  "invalid input type, must be ({}) not {}".format(self.keys()
+        msg =  "invalid input type, must be ({}) not {}".format(self.keys(),
                                                                 input_type)
         raise TypeError(msg)
 
