@@ -61,6 +61,9 @@ class CrackedPipeline(ValueError):
 class BlockRequiresLabels(ValueError):
     pass
 
+class IncompatibleTypes(Exception):
+    pass
+
 class InvalidBlockInput(TypeError):
     def __init__(self,block):
         error_msg = "invalid input to block: {}, must be a list containing ({})".format(

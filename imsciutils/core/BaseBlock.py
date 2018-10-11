@@ -11,6 +11,7 @@ from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
 from .Exceptions import BlockRequiresLabels
+from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES
 
 
@@ -55,6 +56,8 @@ class ArrayType(object):
         if not all( isinstance(shape,(tuple,list)) for shape in array_shapes ):
             raise TypeError("all array shapes must be tuples or lists")
 
+        array_shapes = tuple( tuple(shp) for shp in array_shapes )
+
         # if dtype is None, then any dtype is acceptable
         if dtypes is None:
             dtypes = tuple(NUMPY_TYPES)
@@ -82,6 +85,24 @@ class ArrayType(object):
 BLOCK_VALID_TYPES = [str,int,float,None,ArrayType]
 BLOCK_NON_ARRAY_TYPES = list(BLOCK_VALID_TYPES).remove(ArrayType)
 
+def shape_comparison(input_shape,acceptable_shape):
+    # if they have a different number of axis, they aren't compatible
+    if len(input_shape) != len(acceptable_type):
+        return False
+
+    # compare every element
+    compatible_by_axis = []
+    for input_i,acceptable_i in zip(input_shape,acceptable_type):
+        # if block element is None, then arbitrary length for this axis is accepted
+        # so no more comparisons are needed for this element
+        if (acceptable_i == None) or (input_i == acceptable_i):
+            compatible_by_axis.append(True)
+        else:
+            compatible_by_axis.append(False)
+
+    return all(compatible_by_axis)
+
+
 class IoMap(dict):
     def __init__(self,io_map):
         if not isinstance(io_map,dict):
@@ -106,35 +127,19 @@ class IoMap(dict):
         # if we are dealing with an array type, we have to do more checking
         elif isinstance(input_type,ArrayType):
             acceptable_types = [at for at in self if at is ArrayType]
-
+            input_compatability = dict( zip(input_type.shapes,[False]*len(input_type.shapes)) )
             for acceptable_type in acceptable_types:
-                input_compatability = {}
                 for input_shape in input_type.shapes:
-                    for acceptable_shape in acceptable_type.shapes:
-                        # if they have a different number of axis, they aren't compatible
-                        # time to check the next one
-                        if len(input_shape) != len(acceptable_type):
-                            continue
-
-                        # compare every element
-                        compatible_by_axis = []
-                        for input_i,acceptable_i in zip(input_shape,acceptable_type):
-                            # if block element is None, then arbitrary length for this axis is accepted
-                            # so no more comparisons are needed for this element
-                            if (acceptable_i == None) or (input_i == acceptable_i):
-                                compatible_by_axis.append(True)
-                            else:
-                                compatible_by_axis.append(False)
-
-                        # if all axis are compatible, then this connection is compatible
-                        input_compatability[input_shape] = all(compatible_by_axis)
+                    compatible = any(shape_comparison(input_shape,shp) for shp in acceptable_type.shapes)
+                    if not input_compatability[input_shape]:
+                        input_compatability[input_shape] = compatible
 
                 if all(input_compatability.values()):
                     return self[acceptable_type]
 
-        msg =  "invalid input type, must be ({}) not {}".format(self.keys(),
+        msg =  "invalid input type, must be ({}) not {}".format(list(self.keys()),
                                                                 input_type)
-        raise TypeError(msg)
+        raise IncompatibleTypes(msg)
 
 
 

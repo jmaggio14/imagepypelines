@@ -9,6 +9,7 @@ from .Printer import get_printer
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .Exceptions import CrackedPipeline
+from .Exceptions import IncompatibleTypes
 import collections
 from .. import util
 import pickle
@@ -137,7 +138,7 @@ class Pipeline(object):
                     output_type = block.io_map.output_given_input(input_type)
                     broken_pair = False
 
-                except TypeError:
+                except IncompatibleTypes as e:
                     msg = []
                     for b,t in zip(list(type_chain.keys())[:-1],list(type_chain.values())[:-1]):
                         msg.append(b)

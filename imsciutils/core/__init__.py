@@ -51,6 +51,7 @@ from .Exceptions import CameraReadError
 from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
 from .Exceptions import CrackedPipeline
+from .Exceptions import IncompatibleTypes
 from .Exceptions import BlockRequiresLabels
 from .Exceptions import InvalidBlockInput
 from .Exceptions import InvalidProcessStrategy
