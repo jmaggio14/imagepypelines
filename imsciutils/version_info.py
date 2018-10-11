@@ -21,7 +21,7 @@ __python_requires__ = '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*'
 __platforms__ = ["Windows", "Linux", "Mac OS-X", "Unix"]
 __classifiers__ = [
     'Development Status :: 3 - Alpha',
-    'Intended Audience :: Developers',
+    'Intended Audience :: Scientists',
     'Topic :: Scientific/Engineering'
     'Topic :: Software Development',
     'License :: OSI Approved :: MIT License',
