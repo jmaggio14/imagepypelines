@@ -133,7 +133,6 @@ class Pipeline(object):
             input_type = data_type
 
             for block in self.blocks:
-                breakpoint()
                 try:
                     output_type = block.io_map.output_given_input(input_type)
                     broken_pair = False
@@ -152,13 +151,14 @@ class Pipeline(object):
                     msg.append("{}|".format(buf))
                     msg.append("{}X {}".format(buf,input_type))
                     msg.append("{}|".format(buf))
+                    msg.append(str(block))
                     msg = '\n'.join(msg)
                     print(msg)
                     broken_pair = True
 
-                type_chain[block.name] = output_type
+                type_chain[str(block)] = output_type
                 input_type = output_type
-                
+
                 if broken_pair:
                     error_msg = "{} - acceptable types are {}".format(block.name,
                             list(block.io_map.keys()))
