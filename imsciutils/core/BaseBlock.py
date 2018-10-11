@@ -10,10 +10,15 @@ from .Exceptions import InvalidBlockInput
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
+from .Exceptions import BlockRequiresLabels
+from .constants import NUMPY_TYPES
+from .constants import BLOCK_NON_ARRAY_TYPES
+from .constants import BLOCK_VALID_TYPES
+
+
 
 def quick_block(process_fn,
-                    input_shape,
-                    output_shape,
+                    io_map
                     name=None):
     """convienence function to make simple blocks
 
@@ -39,16 +44,97 @@ def quick_block(process_fn,
         ...                         output_shape=[None,32])
         >>>
     """
-
     if name is None:
         name = process_fn.__name__
+
     process_fn = staticmethod(process_fn)
     block_cls = type(name,(SimpleBlock,),{'process':process_fn})
-    block =  block_cls(input_shape=input_shape,
-                        output_shape=output_shape,
+    block =  block_cls(io_map=io_map,
                         name=name)
     return block
 
+class ArrayType(object):
+    def __init__(self,*array_shapes,dtypes=None):
+        if not all( isinstance(shape,(tuple,list)) for shape in array_shapes ):
+            raise TypeError("all array shapes must be tuples or lists")
+
+        # if dtype is None, then any dtype is acceptable
+        if dtypes is None:
+            dtypes = tuple(NUMPY_TYPES)
+        # otherwise it can be a single value in the NUMPY_TYPES list
+        elif dtypes in NUMPY_TYPES:
+            pass
+        # otherwise it must be a tuple or list of values in NUMPY_TYPES
+        elif isinstance(dtypes,(list,tuple)):
+            if not all( (dt in NUMPY_TYPES) for dt in dtypes ):
+                raise ValueError("dtypes must be None or a tuple/list of valid numpy dtypes")
+        # otherwise we've recieved an input that doesn't make sense
+        else:
+            raise TypeError("dtypes must be None or a tuple/list of valid numpy dtypes")
+
+        self.shapes = array_shapes
+        self.dtypes = dtypes
+
+    def __str__(self):
+        return "ArrayType({})".format(self.shapes)
+
+    def __repr__(self):
+        return str(self)
+
+
+class IoMap(dict):
+    def __init__(self,io_map):
+        if not isinstance(io_map,dict):
+            raise TypeError("IoMap must be instantiated with a dictionary")
+
+        for i,o in io_map.items():
+            assert (i in BLOCK_VALID_TYPES) or (i is ArrayType):
+                raise TypeError("unacceptable io_map key, must be {}".format(BLOCK_VALID_TYPES))
+            assert (o in BLOCK_VALID_TYPES) or (o is ArrayType):
+                raise TypeError("unacceptable io_map value, must be {}".format(BLOCK_VALID_TYPES))
+
+
+        self.update(io_map)
+
+    def output_given_input(self,input_type):
+        # if the shape isn't an array type, the check is easy
+        if input_type in self:
+            # assign the output of the next block to input_type, so the next
+            # block in the chain can be tested
+            return self[input_type]
+
+        # if we are dealing with an array type, we have to do more checking
+        elif isinstance(input_type,ArrayType):
+            acceptable_types = [at for at in self if at is ArrayType]
+
+            for acceptable_type in acceptable_types:
+                input_compatability = {}
+                for input_shape in input_type.shapes:
+                    for acceptable_shape in acceptable_type.shapes:
+                        # if they have a different number of axis, they aren't compatible
+                        # time to check the next one
+                        if len(input_shape) != len(acceptable_type):
+                            continue
+
+                        # compare every element
+                        compatible_by_axis = []
+                        for input_i,acceptable_i in zip(input_shape,acceptable_type):
+                            # if block element is None, then arbitrary length for this axis is accepted
+                            # so no more comparisons are needed for this element
+                            if (acceptable_i == None) or (input_i == acceptable_i):
+                                compatible_by_axis.append(True)
+                            else:
+                                compatible_by_axis.append(False)
+
+                        # if all axis are compatible, then this connection is compatible
+                        input_compatability[input_shape] = all(compatible_by_axis)
+
+                if all(input_compatability.values()):
+                    return self[acceptable_type]
+
+        msg =  "invalid input type, must be ({}) not {}".format(self.keys()
+                                                                input_type)
+        raise TypeError(msg)
 
 
 
@@ -83,10 +169,10 @@ class BaseBlock(object):
     """
     EXTANT = {}
     def __init__(self,
-                    input_shape,
-                    output_shape,
+                    io_map,
                     name=None,
                     requires_training=False,
+                    requires_labels=False,
                     ):
         # ----------- building a unique name for this block ------------
         if name is None:
@@ -99,34 +185,12 @@ class BaseBlock(object):
             self.EXTANT[name] = 1
         name = name + str(self.EXTANT[name])
 
-        # ------ making input/output types lists of shapes --------
-        if isinstance(input_shape,(list,tuple)):
-            # JM:
-            # check if there is more than one shape
-            # if not, then put it in another list
-            # (this makes comparison easier later)
-            if not isinstance(input_shape[0],(list,tuple)):
-                input_shape = [input_shape]
-        else:
-            # if it's not already a list or tuple, then put it in one
-            input_shape = [input_shape]
 
-        if isinstance(output_shape,(list,tuple)):
-            # JM:
-            # check if there is more than one shape
-            # if not, then put it in another list
-            # (this makes comparison easier later)
-            if not isinstance(output_shape[0],(list,tuple)):
-                output_shape = [output_shape]
-        else:
-            # if it's not already a list or tuple, then put it in one
-            output_shape = [output_shape]
+        self.io_map = IoMap(io_map)
 
-
-        self.input_shape = tuple(input_shape)
-        self.output_shape = tuple(output_shape)
         self.name = name
         self.requires_training = requires_training
+        self.requires_labels = requires_labels
 
         self.trained = False
         if not self.requires_training:
@@ -209,8 +273,12 @@ class BaseBlock(object):
                 and processed datums
 
         """
-        if labels is None:
-            labels = [None] * len(data)
+        if not self.requires_labels:
+            if labels is None:
+                labels = [None] * len(data)
+        else:
+            raise BlockRequiresLabels
+
 
         if not isinstance(data,list):
             error_msg = "input data into a block must be a list"
