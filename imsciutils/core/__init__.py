@@ -8,6 +8,8 @@
 
 # BaseBlock.py
 from .BaseBlock import quick_block
+from .BaseBlock import ArrayType
+from .BaseBlock import IoMap
 from .BaseBlock import BaseBlock
 from .BaseBlock import SimpleBlock
 from .BaseBlock import BatchBlock
