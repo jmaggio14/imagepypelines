@@ -58,6 +58,8 @@ class InvalidNumpyType(TypeError):
 class CrackedPipeline(ValueError):
     pass
 
+class BlockRequiresLabels(ValueError):
+    pass
 
 class InvalidBlockInput(TypeError):
     def __init__(self,block):
