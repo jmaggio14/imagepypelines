@@ -1,52 +1,134 @@
 # imsciutils
-![travis-ci-tests](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
+![logo](https://github.com/jmaggio14/imsciutils/blob/readme-update/docs/images/logo.png "logo")
+
+![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
 
 
 This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role for programmatic manipulation and processing of imagery, computer vision, and machine learning tasks.
 
 
-## Compatibility
-python 3.5+ (python 2.7 backwards)
 
-Module Dependencies
--------------------
-- numpy
-- matplotlib
-- scipy
-- keras
-- scikit-learn
-- termcolor
-- opencv3
-- Pillow
-- colorama (on windows)
-- Sphinx (for autodocumentation)
 
-Install Dependencies
+## Installation
+python compatibility:  3.5+ (python 2.7 backwards)
+
+via pip:
 ```
-pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama Sphinx --user
+*placeholder until we get it on pypi*
 ```
+from source:
+```console
+git clone https://github.com/jmaggio14/imsciutils.git
+cd imsciutils
+python setup.py install
+```
+
 
 ## Documentation
-There is autodoc sphinx documentation with this project, following the google docstrings format. To build / view these docs on windows::
+Full Documentation for imsciutils can be found on our website: https://jmaggio14.github.io/imsciutils
 
-	docs\make.bat html
+## Licensing / Credit
+`imsciutils` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imsciutils` dependencies.
 
-And on every other platform::
-
-	cd docs && make html
-
-Then the html documentation will be available at docs/build/html/index.html
-
-If you modify the import structure, you may need to regenerate the autodoc statements. From the root:
-
+Please credit us if you use `imsciutils` in your research
 ```
-sphinx-apidoc -o docs/source imsciutils
+*placeholder for latex*
 ```
 
-Then rebuild and check that your module was properly included. Don't forget to add the modified (or new) files to the commit.
-_____________________________
 
-# BASIC HOW TOs
+# The Pipeline
+`imsciutils` most powerful feature is a high level interface to create image processing pipelines that will apply a sequence of algorithms to input data automatically
+
+In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
+
+
+![xkcd](https://imgs.xkcd.com/comics/data_pipeline.png "cracked pipelines")
+
+(source: [XKCD](https://www.xkcd.com/2054/))
+
+
+
+`imsciutils` aims to make solve these problems through our `Pipeline` object, which provides a high-level interface to create processing pipelines, ensure their end-end compatibility, and assist in debugging.
+
+There are already powerful pipeline utilities such as the venerable [GStreamer](https://en.wikipedia.org/wiki/GStreamer). `imsciutils` distinquishes itself from these other tools through it's high level simple interface targeted at research and small corporate settings.
+
+
+## building a pipeline
+Pipelines in `imsciutils` are constructed of processing `blocks` which apply an
+algorithm to a sequence of data passed into it.
+
+![pipeline](https://github.com/jmaggio14/imsciutils/blob/readme-update/docs/images/pipeline-example.png "pipeline example")
+
+Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
+
+##### let's create an example pipeline
+let's say we want a system that reads in images, resizes them, and then displays them for us
+```python
+import imsciutils as iu
+
+# first let's create our blocks
+block1 = iu.ImageLoader()
+block2 = iu.Resizer(512,512)
+block3 = iu.BlockViewer(pause_time=1)
+
+# then build a pipeline
+pipeline = iu.Pipeline(blocks=[block1,block2,block3])
+
+# we'll use imsciutils example data
+image_filenames = iu.standard_image_filenames()
+
+# now we process it!
+pipeline.process(image_filenames)
+```
+Now we have a system the reads in and displays imagery!
+
+But what if we want to do something more complicated? Let's say we want to apply a lowpass filter to all of these images before we display them?
+```python
+import imsciutils as iu
+
+# first let's create our blocks
+load = iu.ImageLoader()
+resize = iu.Resizer(512,512)
+fft = iu.FFT()
+lowpass = iu.Lowpass(cut_off=32)
+ifft = iu.IFFT()
+display = iu.BlockViewer(pause_time=1)
+
+# then build a pipeline
+pipeline = iu.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
+
+# we'll use imsciutils example data
+image_filenames = iu.standard_image_filenames()
+
+# now we process it!
+pipeline.process(image_filenames)
+```
+
+
+
+
+#### builtin processing blocks include:
+- Webcam Capturing
+- Image Loading
+- keypointd detection and description
+- Support Vector Machines
+- Image Display
+- Fast Fourier Transform
+- Frequency Filtering
+- Pretrained Neural Networks for image feature generations
+- Image Resizing
+- Grayscale Conversion
+
+### Designing your own processing blocks
+Designing your blocks is a fairly straightforward process
+#### Quick Block Creations
+if you already have a function that does all the processing you need to a single input,
+then you can  
+
+## chaining multiple pipelines together
+
+
+# Imaging Science Convenience functions
 ## Getting Standard Test Imagery
 `imsciutils` contains helper functions to quickly retrieve imagery that
 are frequently used as benchmarks in the Imaging Science community
@@ -208,77 +290,6 @@ produces the following
 1 ) t.lap() resets every time it's called: 1.002
 1 ) t.time() counts up always:  2.003
 ```
-
-# Constructing Image Pipelines
-
-
-# Higher Level Functionality
-`imsciutils` also contains objects for more specific, higher level tasks
-such as talking to a webcam, writing videos and images, extact image features
-using pretrained neural networks, etc.
-
-**_The following examples may be longer and contain psuedocode_**
-
-**_It may be necessary to look at docstrings to fully realize the capabilities of the objects presented_**
-
-## Machine learning
-
-
-### Pretrained Network Feature Extraction
-There is a convenience wrapper around keras built into `imsciutils`
-to extract image features using pretrained networks
-```python
-import imsciutils as iu
-network = iu.ml.FeatureExtractor('resnet50', pooling_type='avg')
-
-# it works with single images
-lenna = iu.lenna()
-lenna_features = network.extract_features(lenna)
-
-# it also works with a list of images
-img_batch = [iu.lenna(), iu.pig(), iu.crowd()]
-batch_features = network.extract_features(img_batch)
-
-# it even works with filenames
-filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
-img_features = network.extract_features(filenames)
-```
-
-### Configuration Factory
-In many machine learning applications, parameters have to
-be tweaked frequently to optimize a model. This can be a tedious task
-and frequently involves a human tweaking configurations files. This
-object is meant to simplify that process by **generating config permutations
-from a sample of arguments and keyword arguments**
-
-#### simple example
-```python
-import imsciutils as iu
-from imsciutils.util import ConfigFactory
-
-# Warning, the next two lines are psuedocode
-def run_important_test(arg1,arg2,arg3,first,second,third):
-	do_something_important()
-
-
-arg_trials = [0, # the first positional will always be 0 in all permutations
-			['a','b','c'], # trials for second positional arguments
-			['u','w','x','y','z'], # trials for third positional argument
-			]
-
-kwarg_trials = {'first':None, # this keyword will always be None in all permutations
-			'second':['I','J','K'], # trials for 'first' keyword argument
-			'third':['i','j','k'], # trials for 'first' keyword argument
-			}
-
-config_factory = ConfigFactory(*arg_trials,**kwarg_trials)
-for args,kwargs in config_factory:
-	run_important_test(*args,**kwargs)
-```
-#### real world example
-let's say we are training a DNN classifier and we want to test
-
-
 
 # Development Tools in `imsciutils`
 **_This section is for developers of `imsciutils` or people who want `imsciutils` closely integrated with their projects_**
