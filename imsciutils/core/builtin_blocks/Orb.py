@@ -6,6 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
+from .. import ArrayType
 import cv2
 import numpy as np
 
@@ -18,8 +19,8 @@ class Orb(SimpleBlock):
     Attributes:
         n_keypoints(int): maximum number of keypoints to detect
         orb(cv2.ORB): orb computation object from opencv
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+        
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
@@ -47,11 +48,8 @@ class Orb(SimpleBlock):
         self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
 
-        input_shape = [None,None] #[Width,Height]
-        output_shape = [None,32] #[n_keypoints_detected,32]
-        super(Orb,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=False)
+        io_map = {ArrayType([None,None]):ArrayType([None,32])}
+        super(Orb,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
         """calculates descriptors on a 4D img_stack (n_img,height,width,bands)

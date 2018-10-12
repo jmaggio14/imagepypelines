@@ -7,6 +7,8 @@
 #
 from ... import util
 from .. import BatchBlock
+from .. import ArrayType
+
 
 
 
@@ -55,8 +57,8 @@ class CameraBlock(BatchBlock):
         mode(str):
             the mode for this block to operate in, either 'count' mode or 'time'
             mode. default is 'count'
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+        
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
@@ -73,15 +75,14 @@ class CameraBlock(BatchBlock):
         assert mode in ['count','time'], "mode must set to 'time' or 'count'"
         self.mode = mode
 
-        input_shape = int,float # number of frames to capture or duration
-        output_shape = [None,None],[None,None,3] # color or grayscale imagery
+        io_map = {int:ArrayType([None,None],[None,None,3]),
+                    float:ArrayType([None,None],[None,None,3]),
+                    }
 
 
         from ... import io
         self.cap = io.CameraCapture(self.device,self.fourcc)
-        super(CameraBlock,self).__init__(input_shape,
-                                            output_shape,
-                                            requires_training=False)
+        super(CameraBlock,self).__init__(io_map, requires_training=False)
 
     def before_process(self,data,labels=None):
         images = []

@@ -12,6 +12,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
+from .. import ArrayType
 import cv2
 
 
@@ -23,8 +24,8 @@ class ImageLoader(SimpleBlock):
         None
 
     Attributes:
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
@@ -35,10 +36,8 @@ class ImageLoader(SimpleBlock):
     """
     def __init__(self):
         input_shape = str
-        output_shape = [None,None], [None,None,3]
-        super(ImageLoader,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=False)
+        io_map = {str:ArrayType([None,None],[None,None,3])}
+        super(ImageLoader,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
         """loads in an image from a filename

@@ -6,6 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
+from .. import ArrayType
 import cv2
 
 class Resizer(SimpleBlock):
@@ -19,10 +20,10 @@ class Resizer(SimpleBlock):
 
         input_shape = [None,None], [None,None,3]
         output_shape = [None,None], [None,None,3]
+        io_map = {ArrayType([None,None]):ArrayType([None,None]),
+                    ArrayType([None,None,3]):ArrayType([None,None,3])}
 
-        super(Resizer,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=False)
+        super(Resizer,self).__init__(io_map,requires_training=False)
     def process(self,datum):
         resized = cv2.resize(datum,
                        dsize=(self.to_width,self.to_height),

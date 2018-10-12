@@ -6,6 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import BatchBlock
+from .. import ArrayType
 from sklearn import svm
 
 
@@ -15,10 +16,8 @@ class LinearSVM(BatchBlock):
 
         input_shape = [1,None]
         output_shape = int
-
-        super(Resizer,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=True)
+        io_map = {ArrayType([1,None]):int}
+        super(Resizer,self).__init__(io_map, requires_training=True)
 
     def train(self,train_data,train_labels):
         self.svc = svm.SVM(self.C)
@@ -26,7 +25,10 @@ class LinearSVM(BatchBlock):
         self.svc.fit(train_data,train_labels)
 
     def batch_process(self,batch_data):
+        # stacking input list into a numpy array
         stacked = np.vstack(batch_data)
-        predictions = self.svc.predict(stacked)
+        # predicting
+        predictions = self.svc.predict(stacked).astype(int)
+        # splitting the predicted labels into a list for output
         predictions = np.vsplit(predictions,prediction.shape[0])
         return predictions
