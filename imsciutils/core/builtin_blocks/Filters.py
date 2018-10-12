@@ -27,7 +27,7 @@ class Highpass(SimpleBlock):
             'butterworth'
         butterworth_order(float): butterworth order if butterworth filter is
             being used
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -53,6 +53,9 @@ class Highpass(SimpleBlock):
                     self.filter_type,
                     self.butterworth_order)
 
+        if datum.ndim == 3:
+            filter = np.vstack( (filter,) * filter.shape[2] )
+
         return filter * datum
 
 
@@ -73,7 +76,7 @@ class Lowpass(SimpleBlock):
             'butterworth'
         butterworth_order(float): butterworth order if butterworth filter is
             being used
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -98,5 +101,8 @@ class Lowpass(SimpleBlock):
                     self.cut_off,
                     self.filter_type,
                     self.butterworth_order)
+
+        if datum.ndim == 3:
+            filter = np.dstack( (filter,) * datum.shape[2] )
 
         return filter * datum
