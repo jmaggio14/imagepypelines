@@ -162,7 +162,7 @@ class Pipeline(object):
 
                 if broken_pair:
                     error_msg = "{} - acceptable types are {}".format(block.name,
-                            list(block.io_map.keys()))
+                            list(block.io_map.inputs))
                     self.printer.error(error_msg)
                     raise CrackedPipeline("Incompatible types passed between blocks")
 
@@ -240,7 +240,7 @@ class Pipeline(object):
 
         self.printer.info("all data processed in {} seconds".format(t.time()))
 
-        return data, labels
+        return data
 
     def graph(self):
         """TODO: Placeholder function for @Ryan to create"""

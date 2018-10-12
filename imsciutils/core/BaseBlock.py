@@ -83,28 +83,11 @@ class ArrayType(object):
 
 # acceptable types for datums passed between blocks
 BLOCK_VALID_TYPES = [str,int,float,None,ArrayType]
-BLOCK_NON_ARRAY_TYPES = list(BLOCK_VALID_TYPES).remove(ArrayType)
+BLOCK_NON_ARRAY_TYPES = [str,int,float,None,]
 
-def shape_comparison(input_shape,acceptable_shape):
-    # if they have a different number of axis, they aren't compatible
-    if len(input_shape) != len(acceptable_type):
-        return False
-
-    # compare every element
-    compatible_by_axis = []
-    for input_i,acceptable_i in zip(input_shape,acceptable_type):
-        # if block element is None, then arbitrary length for this axis is accepted
-        # so no more comparisons are needed for this element
-        if (acceptable_i == None) or (input_i == acceptable_i):
-            compatible_by_axis.append(True)
-        else:
-            compatible_by_axis.append(False)
-
-    return all(compatible_by_axis)
-
-
-class IoMap(dict):
-    def __init__(self,io_map):
+class IoMap(tuple):
+    def __new__(cls,io_map):
+        # -------------- ERROR CHECKING -----------------------
         if not isinstance(io_map,dict):
             raise TypeError("IoMap must be instantiated with a dictionary")
 
@@ -114,30 +97,92 @@ class IoMap(dict):
             if not ((o in BLOCK_VALID_TYPES) or isinstance(o, ArrayType)):
                 raise TypeError("unacceptable io_map value, must be {}".format(BLOCK_VALID_TYPES))
 
+        # ---------------- Breaking dictionary up into a mapping --------------
+        # {key1:val1,key2:val2} --> ( (key1,val1),(key2,val2) )
+        io_map = io_map.items()
+        # splitting apart all Array Types with multiple shapes
+        # ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
+        # going through inputs first
+        reduced_io_map = []
+        for i,o in io_map:
+            reduced_io_map.extend( cls.reduce(i,o) )
 
-        self.update(io_map)
+        # return the new reduced mapping
+        return super(IoMap, cls).__new__(cls, tuple( set(reduced_io_map) ))
 
-    def output_given_input(self,input_type):
-        # if the shape isn't an array type, the check is easy
-        if input_type in self:
-            # assign the output of the next block to input_type, so the next
-            # block in the chain can be tested
-            return self[input_type]
 
-        # if we are dealing with an array type, we have to do more checking
-        elif isinstance(input_type,ArrayType):
-            acceptable_types = [at for at in self if at is ArrayType]
-            input_compatability = dict( zip(input_type.shapes,[False]*len(input_type.shapes)) )
-            for acceptable_type in acceptable_types:
-                for input_shape in input_type.shapes:
-                    compatible = any(shape_comparison(input_shape,shp) for shp in acceptable_type.shapes)
-                    if not input_compatability[input_shape]:
-                        input_compatability[input_shape] = compatible
+    def __init__(self,io_map):
+        self.non_arrays = tuple( (i,o) for i,o in self if (i in BLOCK_NON_ARRAY_TYPES) )
+        self.arrays = tuple( (i,o) for i,o in self if isinstance(i,ArrayType) )
 
-                if all(input_compatability.values()):
-                    return self[acceptable_type]
+        self.inputs = tuple( i for i,o in self )
+        self.outputs = tuple( o for i,o in self )
 
-        msg =  "invalid input type, must be ({}) not {}".format(list(self.keys()),
+
+
+    @staticmethod
+    def reduce(i,o):
+        if i in BLOCK_NON_ARRAY_TYPES:
+            reduced_i = ( (i,o), )
+        else:
+            split = tuple( ArrayType(shp) for shp in i.shapes )
+            reduced_i = zip( split, (o,)*len(split) )
+
+        reduced = []
+        for i,o in reduced_i:
+            if o in BLOCK_NON_ARRAY_TYPES:
+                reduced.append( (i,o) )
+            else:
+                split = tuple( ArrayType(shp) for shp in o.shapes )
+                reduced.extend( zip( (i,)*len(split), split ) )
+
+        return tuple(reduced)
+
+
+    @staticmethod
+    def shape_comparison(input_shape,acceptable_shape):
+        # if they have a different number of axis, they aren't compatible
+        if len(input_shape) != len(acceptable_shape):
+            return False
+
+        # compare every element
+        compatible_by_axis = []
+        for input_i,acceptable_i in zip(input_shape,acceptable_shape):
+            # if block element is None, then arbitrary length for this axis is accepted
+            # so no more comparisons are needed for this element
+            if (acceptable_i == None) or (input_i == acceptable_i):
+                compatible_by_axis.append(True)
+            else:
+                compatible_by_axis.append(False)
+
+        return all(compatible_by_axis)
+
+
+    def output_given_input(self,input_types):
+        outputs = []
+
+        if not isinstance(input_types, tuple):
+            input_types = (input_types,)
+
+        for input_type in input_types:
+            # if we have a non array type, then we can use a boolean comparison
+            # to determine what outputs there should be
+            if input_type in BLOCK_NON_ARRAY_TYPES:
+                for i,o in self.non_arrays:
+                    if input_type == i:
+                        outputs.append(o)
+
+            # if we have an array type, then we have to do a shape comparison
+            elif isinstance(input_type,ArrayType):
+                for i,o in self.arrays:
+                    for input_shape in input_type.shapes:
+                        if self.shape_comparison(input_shape,i.shapes[0]):
+                            outputs.append(o)
+
+        if len(outputs) > 0:
+            return tuple( set(outputs) )
+
+        msg =  "invalid input type, must be ({}) not {}".format(self.inputs,
                                                                 input_type)
         raise IncompatibleTypes(msg)
 
@@ -291,7 +336,7 @@ class BaseBlock(object):
         if labels is None:
             labels = [None] * len(data)
 
-        #running prep function
+        # running prep function
         self.before_process(data,labels)
 
         # processing data and labels
