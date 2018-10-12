@@ -81,7 +81,7 @@ class CameraCapture(object):
             status, frame = self.cap.read()
 
         elif not status or not self.cap.isOpened():
-            debug_message = "unable to read frame {0}"\
+            debug_message = "unable to read frame {0}, is camera connected?"\
                 .format(self.current_frame_id)
             raise core.CameraReadError(debug_message)
 
