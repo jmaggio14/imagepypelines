@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .. import SimpleBlock
+from .. import SimpleBlock, ArrayType
 from ..Viewer import Viewer
 import time
 
@@ -22,8 +22,8 @@ class BlockViewer(SimpleBlock):
     Attributes:
         pause_time (int,float): time in seconds to pause after displaying
             the imagery. default is 0.1seconds
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
@@ -34,11 +34,10 @@ class BlockViewer(SimpleBlock):
     """
     def __init__(self,pause_time=0.1):
         self.pause_time = pause_time
-        input_shape = [None,None],[None,None,3]
-        output_shape = [None,None],[None,None,3]
-
-        super(BlockViewer,self).__init__(input_shape,
-                                        output_shape,
+        io_map = {ArrayType([None,None]):ArrayType([None,None]),
+                    ArrayType([None,None,3]):ArrayType([None,None,3])
+                    }
+        super(BlockViewer,self).__init__(io_map,
                                         requires_training=False)
         self.viewer = Viewer(self.name)
 

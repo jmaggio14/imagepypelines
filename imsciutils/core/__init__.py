@@ -7,6 +7,9 @@
 #
 
 # BaseBlock.py
+from .BaseBlock import quick_block
+from .BaseBlock import ArrayType
+from .BaseBlock import IoMap
 from .BaseBlock import BaseBlock
 from .BaseBlock import SimpleBlock
 from .BaseBlock import BatchBlock
@@ -39,14 +42,23 @@ from .error_checking import is_numpy_array
 from .error_checking import is_iterable
 from .error_checking import type_error_message
 
+# filters.py
+from .filters import low_pass
+from .filters import high_pass
+
 # Exceptions.py
 from .Exceptions import CameraReadError
 from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
+from .Exceptions import CrackedPipeline
+from .Exceptions import IncompatibleTypes
+from .Exceptions import BlockRequiresLabels
+from .Exceptions import InvalidBlockInput
+from .Exceptions import InvalidProcessStrategy
+from .Exceptions import InvalidLabelStrategy
+from .Exceptions import DataLabelMismatch
 
 # Pipeline.py
-from .Pipeline import BasePipeline
-from .Pipeline import SupervisedPipeline
 from .Pipeline import Pipeline
 
 # Printer.py

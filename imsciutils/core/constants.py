@@ -11,7 +11,10 @@ import cv2
 # MODIFY THIS VARIABLE EVERY TIME A NEW IMPORTABLE CONSTANT IS ADDED
 __all__ = ['NUMPY_TYPES',
             'CV2_INTERPOLATION_TYPES',
-            'IMAGE_EXTENSIONS']
+            'IMAGE_EXTENSIONS',
+            ]
+
+
 
 
 # ------------------Standard Type Tables------------------

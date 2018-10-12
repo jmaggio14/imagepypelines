@@ -6,8 +6,10 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
+from .. import ArrayType
 from ..coordinates import dimensions
 import cv2
+
 
 class Color2Gray(SimpleBlock):
     """Block to convert color imagery to greyscale imagery
@@ -19,8 +21,8 @@ class Color2Gray(SimpleBlock):
     Attributes:
         order(str): the channel order for input images
         flag(cv2 constant): opencv flag to determine channel order
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+        
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
@@ -42,9 +44,11 @@ class Color2Gray(SimpleBlock):
         input_shape = [None,None,3],[None,None]
         output_shape = [None,None]
 
-        super(Color2Gray,self).__init__(input_shape=input_shape,
-                                            output_shape=output_shape,
-                                            requires_training=False)
+        io_map = {ArrayType([None,None,3],[None,None]):ArrayType([None,None])
+                }
+
+        super(Color2Gray,self).__init__(io_map,requires_training=False)
+
     def process(self,datum):
         """converts color image to grayscale
         converts to grayscale, or does nothing if image is already grayscale
