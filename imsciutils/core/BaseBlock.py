@@ -68,17 +68,19 @@ class ArrayType(object):
             numpy dtype or dtypes for this input/output. default is NUMPY_TYPES
     """
 
-    def __init__(self, *array_shapes, dtypes=None):
+    def __init__(self, *array_shapes, **dtype_kwarg):
         if not all(isinstance(shape, (tuple, list)) for shape in array_shapes):
             raise TypeError("all array shapes must be tuples or lists")
 
         array_shapes = tuple(tuple(shp) for shp in array_shapes)
 
-        # if dtypes is None, then use all numpy values
-        if dtypes is None:
+        if 'dtypes' in dtype_kwarg:
+            dtypes = dtype_kwarg['dtypes']
+        else:
             dtypes = NUMPY_TYPES
-        # otherwise check if a single dtype was passed in
-        elif dtypes in NUMPY_TYPES:
+
+        # check to see if dtypes is a single valid numpy dtype
+        if dtypes in NUMPY_TYPES:
             dtypes = (dtypes,)
         # otherwise it must be a tuple or list of values in NUMPY_TYPES
         elif isinstance(dtypes, (list, tuple)):
