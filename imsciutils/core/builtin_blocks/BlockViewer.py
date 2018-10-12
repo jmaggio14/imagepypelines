@@ -22,8 +22,8 @@ class BlockViewer(SimpleBlock):
     Attributes:
         pause_time (int,float): time in seconds to pause after displaying
             the imagery. default is 0.1seconds
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
