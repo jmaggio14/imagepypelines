@@ -285,7 +285,9 @@ class Pipeline(object):
                 print(buf,'|',output)
                 print(buf,'|')
 
-
+    @property
+    def trained(self):
+        return all(b.trained for b in self.blocks)
 
     def __str__(self):
         out = "{}: '{}'  ".format(self.__class__.__name__,self.name) \
