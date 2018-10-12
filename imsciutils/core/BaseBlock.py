@@ -17,8 +17,8 @@ import copy
 
 
 def quick_block(process_fn,
-                    io_map,
-                    name=None):
+                io_map,
+                name=None):
     """convienence function to make simple blocks
 
     Args:
@@ -48,10 +48,11 @@ def quick_block(process_fn,
         name = process_fn.__name__
 
     process_fn = staticmethod(process_fn)
-    block_cls = type(name,(SimpleBlock,),{'process':process_fn})
-    block =  block_cls(io_map=io_map,
-                        name=name)
+    block_cls = type(name, (SimpleBlock,), {'process': process_fn})
+    block = block_cls(io_map=io_map,
+                      name=name)
     return block
+
 
 class ArrayType(object):
     """Object to describe the shapes of Arrays for Block inputs or outputs
@@ -66,17 +67,22 @@ class ArrayType(object):
         dtypes(np.dtype,tuple): keyword only argument.
             numpy dtype or dtypes for this input/output. default is NUMPY_TYPES
     """
-    def __init__(self,*array_shapes,dtypes=NUMPY_TYPES):
-        if not all( isinstance(shape,(tuple,list)) for shape in array_shapes ):
+
+    def __init__(self, *array_shapes, dtypes=None):
+        if not all(isinstance(shape, (tuple, list)) for shape in array_shapes):
             raise TypeError("all array shapes must be tuples or lists")
 
-        array_shapes = tuple( tuple(shp) for shp in array_shapes )
+        array_shapes = tuple(tuple(shp) for shp in array_shapes)
 
-        if dtypes in NUMPY_TYPES:
+        # if dtypes is None, then use all numpy values
+        if dtypes is None:
+            dtypes = NUMPY_TYPES
+        # otherwise check if a single dtype was passed in
+        elif dtypes in NUMPY_TYPES:
             dtypes = (dtypes,)
         # otherwise it must be a tuple or list of values in NUMPY_TYPES
-        elif isinstance(dtypes,(list,tuple)):
-            if not all( (dt in NUMPY_TYPES) for dt in dtypes ):
+        elif isinstance(dtypes, (list, tuple)):
+            if not all((dt in NUMPY_TYPES) for dt in dtypes):
                 raise ValueError("dtypes must be None or a tuple/list of valid numpy dtypes")
         # otherwise we've recieved an input that doesn't make sense
         else:
@@ -89,26 +95,28 @@ class ArrayType(object):
         if self.dtypes == NUMPY_TYPES:
             return "ArrayType({}, dtype=any)".format(self.shapes)
         else:
-            return "ArrayType({}, dtype='{}')".format(self.shapes,self.dtypes)
+            return "ArrayType({}, dtype='{}')".format(self.shapes, self.dtypes)
 
     def __repr__(self):
         return str(self)
 
+
 # acceptable types for datums passed between blocks
-BLOCK_VALID_TYPES = [str,int,float,None,ArrayType]
-BLOCK_NON_ARRAY_TYPES = [str,int,float,None,]
+BLOCK_VALID_TYPES = [str, int, float, None, ArrayType]
+BLOCK_NON_ARRAY_TYPES = [str, int, float, None, ]
+
 
 class IoMap(tuple):
     """mapping object to determine the output of block
     """
-    def __new__(cls,io_map):
+    def __new__(cls, io_map):
         # -------------- ERROR CHECKING -----------------------
-        if isinstance(io_map,IoMap):
+        if isinstance(io_map, IoMap):
             return copy.copy(io_map)
-        elif not isinstance(io_map,dict):
+        elif not isinstance(io_map, dict):
             raise TypeError("IoMap must be instantiated with a dictionary")
 
-        for i,o in io_map.items():
+        for i, o in io_map.items():
             if not ((i in BLOCK_VALID_TYPES) or isinstance(i, ArrayType)):
                 raise TypeError("unacceptable io_map key, must be {}".format(BLOCK_VALID_TYPES))
             if not ((o in BLOCK_VALID_TYPES) or isinstance(o, ArrayType)):
@@ -121,49 +129,46 @@ class IoMap(tuple):
         # ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
         # going through inputs first
         reduced_io_map = []
-        for i,o in io_map:
-            reduced_io_map.extend( cls.reduce(i,o) )
+        for i, o in io_map:
+            reduced_io_map.extend(cls.reduce(i, o))
 
         # return the new reduced mapping
-        return super(IoMap, cls).__new__(cls, tuple( set(reduced_io_map) ))
+        return super(IoMap, cls).__new__(cls, tuple(set(reduced_io_map)))
 
+    def __init__(self, io_map):
+        self.non_arrays = tuple((i, o) for i, o in self if (i in BLOCK_NON_ARRAY_TYPES))
+        self.arrays = tuple((i, o) for i, o in self if isinstance(i, ArrayType))
 
-    def __init__(self,io_map):
-        self.non_arrays = tuple( (i,o) for i,o in self if (i in BLOCK_NON_ARRAY_TYPES) )
-        self.arrays = tuple( (i,o) for i,o in self if isinstance(i,ArrayType) )
-
-        self.inputs = tuple( i for i,o in self )
-        self.outputs = tuple( o for i,o in self )
-
-
+        self.inputs = tuple(i for i, o in self)
+        self.outputs = tuple(o for i, o in self)
 
     @staticmethod
-    def reduce(i,o):
+    def reduce(i, o):
         if i in BLOCK_NON_ARRAY_TYPES:
-            reduced_i = ( (i,o), )
+            reduced_i = ((i, o), )
         else:
-            split = tuple( ArrayType(shp) for shp in i.shapes )
-            reduced_i = zip( split, (o,)*len(split) )
+            split = tuple(ArrayType(shp) for shp in i.shapes)
+            reduced_i = zip(split, (o,)*len(split))
 
         reduced = []
-        for i,o in reduced_i:
+        for i, o in reduced_i:
             if o in BLOCK_NON_ARRAY_TYPES:
-                reduced.append( (i,o) )
+                reduced.append((i, o))
             else:
-                split = tuple( ArrayType(shp) for shp in o.shapes )
-                reduced.extend( zip( (i,)*len(split), split ) )
+                split = tuple(ArrayType(shp) for shp in o.shapes)
+                reduced.extend(zip((i,)*len(split), split))
 
         return tuple(reduced)
 
     @staticmethod
-    def shape_comparison(input_shape,acceptable_shape):
+    def shape_comparison(input_shape, acceptable_shape):
         # if they have a different number of axis, they aren't compatible
         if len(input_shape) != len(acceptable_shape):
             return False
 
         # compare every element
         compatible_by_axis = []
-        for input_i,acceptable_i in zip(input_shape,acceptable_shape):
+        for input_i, acceptable_i in zip(input_shape, acceptable_shape):
             # if block element is None, then arbitrary length for this axis is accepted
             # so no more comparisons are needed for this element
             if (acceptable_i == None) or (input_i == acceptable_i):
@@ -174,7 +179,7 @@ class IoMap(tuple):
         return all(compatible_by_axis)
 
     @staticmethod
-    def dtype_check(input_dtypes,acceptable_dtypes):
+    def dtype_check(input_dtypes, acceptable_dtypes):
         compatability_by_dtype = []
 
         # if they are the exact same, save time by returning early
@@ -184,11 +189,11 @@ class IoMap(tuple):
         # if they aren't the exact same, check that all input types
         # are in the acceptable types
         for idtype in input_dtypes:
-            compatability_by_dtype.append( idtype in acceptable_dtypes )
+            compatability_by_dtype.append(idtype in acceptable_dtypes)
 
         return all(compatability_by_dtype)
 
-    def output_given_input(self,input_types):
+    def output_given_input(self, input_types):
         outputs = []
 
         if not isinstance(input_types, tuple):
@@ -198,26 +203,25 @@ class IoMap(tuple):
             # if we have a non array type, then we can use a boolean comparison
             # to determine what outputs there should be
             if input_type in BLOCK_NON_ARRAY_TYPES:
-                for i,o in self.non_arrays:
+                for i, o in self.non_arrays:
                     if input_type == i:
                         outputs.append(o)
 
             # if we have an array type, then we have to do a shape comparison
-            elif isinstance(input_type,ArrayType):
-                for i,o in self.arrays:
-                    dtype_okay = self.dtype_check(input_type.dtypes,i.dtypes)
+            elif isinstance(input_type, ArrayType):
+                for i, o in self.arrays:
+                    dtype_okay = self.dtype_check(input_type.dtypes, i.dtypes)
                     for input_shape in input_type.shapes:
-                        shp_okay = self.shape_comparison(input_shape,i.shapes[0])
+                        shp_okay = self.shape_comparison(input_shape, i.shapes[0])
                         if shp_okay and dtype_okay:
                             outputs.append(o)
 
         if len(outputs) > 0:
-            return tuple( set(outputs) )
+            return tuple(set(outputs))
 
-        msg =  "invalid input type, must be ({}) not {}".format(self.inputs,
-                                                                input_type)
+        msg = "invalid input type, must be ({}) not {}".format(self.inputs,
+                                                               input_type)
         raise IncompatibleTypes(msg)
-
 
 
 class BaseBlock(object):
@@ -251,12 +255,13 @@ class BaseBlock(object):
 
     """
     EXTANT = {}
+
     def __init__(self,
-                    io_map,
-                    name=None,
-                    requires_training=False,
-                    requires_labels=False,
-                    ):
+                 io_map,
+                 name=None,
+                 requires_training=False,
+                 requires_labels=False,
+                 ):
         # ----------- building a unique name for this block ------------
         if name is None:
             name = self.__class__.__name__
@@ -267,7 +272,6 @@ class BaseBlock(object):
         else:
             self.EXTANT[name] = 1
         name = name + str(self.EXTANT[name])
-
 
         self.io_map = IoMap(io_map)
 
@@ -281,7 +285,7 @@ class BaseBlock(object):
 
         self.printer = get_printer(self.name)
 
-    def train(self,data,labels=None):
+    def train(self, data, labels=None):
         """(optional overload)trains the block if required
 
         users are expected to save pertinent variables as instance
@@ -297,7 +301,7 @@ class BaseBlock(object):
         """
         pass
 
-    def before_process(self,data,labels=None):
+    def before_process(self, data, labels=None):
         """(optional overload)function that runs before processing for
         optional functionality. this function takes in the full data list and
         label list. does nothing unless overloaded
@@ -320,7 +324,7 @@ class BaseBlock(object):
         """
         pass
 
-    def _pipeline_train(self,data,labels=None):
+    def _pipeline_train(self, data, labels=None):
         """function pipeline calls to train this block, modifies
         self.trained status
 
@@ -337,10 +341,10 @@ class BaseBlock(object):
                 .format(self)
             raise BlockRequiresLabels(msg)
 
-        self.train(self,data,labels)
+        self.train(self, data, labels)
         self.trained = True
 
-    def _pipeline_process(self,data,labels=None):
+    def _pipeline_process(self, data, labels=None):
         """function pipeline calls to process data using this block
         works with BatchBlocks and SimpleBlocks
 
@@ -361,7 +365,7 @@ class BaseBlock(object):
                 and processed datums
 
         """
-        if not isinstance(data,list):
+        if not isinstance(data, list):
             error_msg = "input data into a block must be a list"
             self.printer.error(error)
             raise InvalidBlockInput(self)
@@ -370,29 +374,29 @@ class BaseBlock(object):
             labels = [None] * len(data)
 
         # running prep function
-        self.before_process(data,labels)
+        self.before_process(data, labels)
 
         # processing data and labels
         processed = self.process_strategy(data)
         labels = self.label_strategy(labels)
 
         # error checking for output types
-        if not isinstance(processed,list):
+        if not isinstance(processed, list):
             raise InvalidProcessStrategy(self)
 
-        if not isinstance(labels,list):
+        if not isinstance(labels, list):
             raise InvalidLabelStrategy(self)
 
         # making sure that we always have the same number of labels and datums
         if len(processed) != len(labels):
-            raise DataLabelMismatch(processed,labels)
+            raise DataLabelMismatch(processed, labels)
 
         # running post-process / cleanup function
         self.after_process()
 
         return processed, labels
 
-    def process_strategy(self,data):
+    def process_strategy(self, data):
         """overarching processing management function for this block
 
         Args:
@@ -403,7 +407,7 @@ class BaseBlock(object):
         """
         raise NotImplementedError("'process_strategy' must be overloaded in all children")
 
-    def label_strategy(self,labels):
+    def label_strategy(self, labels):
         """overarching label management function for this block
 
         Args:
@@ -414,7 +418,6 @@ class BaseBlock(object):
             labels (list): labels for datums (Nones for unsupervised systems)
         """
         raise NotImplementedError("'label_strategy' must be overloaded in all children")
-
 
 
 class SimpleBlock(BaseBlock):
@@ -444,7 +447,8 @@ class SimpleBlock(BaseBlock):
             registered to 'name'
 
     """
-    def process(self,datum):
+
+    def process(self, datum):
         """(required overload)processes a single datum
 
         Args:
@@ -455,15 +459,15 @@ class SimpleBlock(BaseBlock):
         """
         raise NotImplementedError("'process' must be overloaded in all children")
 
-    def label(self,lbl):
+    def label(self, lbl):
         """(optional overload)retrieves the label for this datum"""
         return lbl
 
-    def process_strategy(self,data):
+    def process_strategy(self, data):
         """processes each datum using self.process and return list"""
         return [self.process(datum) for datum in data]
 
-    def label_strategy(self,labels):
+    def label_strategy(self, labels):
         """calls self.label for each datum and returns a list"""
         return [self.label(lbl) for lbl in labels]
 
@@ -472,8 +476,6 @@ class SimpleBlock(BaseBlock):
 
     def __repr__(self):
         return str(self)
-
-
 
 
 class BatchBlock(BaseBlock):
@@ -504,7 +506,8 @@ class BatchBlock(BaseBlock):
             registered to 'name'
 
     """
-    def batch_process(self,data):
+
+    def batch_process(self, data):
         """(required overload)processes a list of data using this block's
         algorithm
 
@@ -516,15 +519,15 @@ class BatchBlock(BaseBlock):
         """
         raise NotImplementedError("'batch_process' must be overloaded in all children")
 
-    def labels(self,labels):
+    def labels(self, labels):
         """(optional overload) returns all labels for input datums"""
         return labels
 
-    def process_strategy(self,data):
+    def process_strategy(self, data):
         """runs self.batch_process"""
         return self.batch_process(data)
 
-    def label_strategy(self,labels):
+    def label_strategy(self, labels):
         """runs self.labels"""
         return self.labels(labels)
 
