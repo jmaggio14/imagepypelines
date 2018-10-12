@@ -13,6 +13,7 @@ from .Exceptions import DataLabelMismatch
 from .Exceptions import BlockRequiresLabels
 from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES
+import copy
 
 
 def quick_block(process_fn,
@@ -23,8 +24,9 @@ def quick_block(process_fn,
     Args:
         process_fn(func): function that takes in and processes
             exactly one datum
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap,dict): dictionary of input-output mappings for this
+            Block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
 
@@ -52,6 +54,9 @@ def quick_block(process_fn,
     return block
 
 class ArrayType(object):
+    """Object to describe the shapes of Arrays for Block inputs or outputs
+    
+    """
     def __init__(self,*array_shapes,dtypes=None):
         if not all( isinstance(shape,(tuple,list)) for shape in array_shapes ):
             raise TypeError("all array shapes must be tuples or lists")
@@ -76,7 +81,10 @@ class ArrayType(object):
         self.dtypes = dtypes
 
     def __str__(self):
-        return "ArrayType({})".format(self.shapes)
+        if self.dtypes == NUMPY_TYPES:
+            return "ArrayType({}, dtype=any)".format(self.shapes)
+        else:
+            return "ArrayType({}, dtype='{}')".format(self.shapes,self.dtypes)
 
     def __repr__(self):
         return str(self)
@@ -88,7 +96,9 @@ BLOCK_NON_ARRAY_TYPES = [str,int,float,None,]
 class IoMap(tuple):
     def __new__(cls,io_map):
         # -------------- ERROR CHECKING -----------------------
-        if not isinstance(io_map,dict):
+        if isinstance(io_map,IoMap):
+            return copy.copy(io_map)
+        elif not isinstance(io_map,dict):
             raise TypeError("IoMap must be instantiated with a dictionary")
 
         for i,o in io_map.items():
@@ -214,16 +224,17 @@ class BaseBlock(object):
     for pipeline objects to call
 
     Args:
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap,dict): dictionary of input-output mappings for this
+            Block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
         requires_training(bool): whether or not this block will require
             training
 
     Attributes:
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
@@ -407,16 +418,17 @@ class SimpleBlock(BaseBlock):
     computer vision that don't require an image sequence to process data
 
     Args:
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap,dict): dictionary of input-output mappings for this
+            Block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
         requires_training(bool): whether or not this block will require
             training
 
     Attributes:
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
@@ -466,16 +478,17 @@ class BatchBlock(BaseBlock):
     require working with a full image sequence.
 
     Args:
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap,dict): dictionary of input-output mappings for this
+            Block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
         requires_training(bool): whether or not this block will require
             training
 
     Attributes:
-        input_shape(tuple): tuple of acceptable input shapes
-        output_shape(tuple): tuple of acceptable output shapes
+
+        io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
             training
