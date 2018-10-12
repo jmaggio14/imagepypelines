@@ -63,7 +63,7 @@ class ArrayType(object):
             dtypes = tuple(NUMPY_TYPES)
         # otherwise it can be a single value in the NUMPY_TYPES list
         elif dtypes in NUMPY_TYPES:
-            pass
+            dtypes = (dtypes,)
         # otherwise it must be a tuple or list of values in NUMPY_TYPES
         elif isinstance(dtypes,(list,tuple)):
             if not all( (dt in NUMPY_TYPES) for dt in dtypes ):
@@ -157,6 +157,20 @@ class IoMap(tuple):
 
         return all(compatible_by_axis)
 
+    @staticmethod
+    def dtype_check(input_dtypes,acceptable_dtypes):
+        compatability_by_dtype = []
+
+        # if they are the exact same, save time by returning early
+        if input_dtypes == acceptable_dtypes:
+            return True
+
+        # if they aren't the exact same, check that all input types
+        # are in the acceptable types
+        for idtype in input_dtypes:
+            compatability_by_dtype.append( idtype in acceptable_dtypes )
+
+        return all(compatability_by_dtype)
 
     def output_given_input(self,input_types):
         outputs = []
@@ -175,8 +189,10 @@ class IoMap(tuple):
             # if we have an array type, then we have to do a shape comparison
             elif isinstance(input_type,ArrayType):
                 for i,o in self.arrays:
+                    dtype_okay = self.dtype_check(input_type.dtypes,i.dtypes)
                     for input_shape in input_type.shapes:
-                        if self.shape_comparison(input_shape,i.shapes[0]):
+                        shp_okay = self.shape_comparison(input_shape,i.shapes[0])
+                        if shp_okay and dtype_okay:
                             outputs.append(o)
 
         if len(outputs) > 0:

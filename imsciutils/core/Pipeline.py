@@ -206,15 +206,14 @@ class Pipeline(object):
         Args:
             data(list): list of individual datums for the first block
                 in the pipeline
-            labels(list): list of labels for each datum
 
         Returns:
             processed_data(list): list of processed data
-            labels(list): list of corresponding labels
         """
         self.validate(data)
         # JM: TODO: add auto batching and intermediate data retrieval
         # JM: verifying that all blocks have been trained
+        num_initial_inputs = len(data)
         if not all(b.trained for b in self.blocks):
             for b in self.blocks:
                 if b.trained:
@@ -230,15 +229,16 @@ class Pipeline(object):
             data, labels = b._pipeline_process(data, None)
             b_time = t.lap()  # time for this block
             # printing time for this block
-            self.printer.info("{}: processed {}datums in {} seconds".format(
-                                                                    b.name,
-                                                                    len(data),
-                                                                    b_time))
-            # printing individual datum time
-            self.printer.debug("(approx {}sec per datum)".format(
-                round(b_time / num, 3)))
+            self.printer.debug("{}: processed {}datums in {} seconds".format(
+                                    b.name,
+                                    len(data),
+                                    b_time),
+                                " (approx {}ms per datum)".format(
+                                    round(1000 * b_time / num, 3)))
 
-        self.printer.info("all data processed in {} seconds".format(t.time()))
+        self.printer.info("{} datums processed in {}ms".format(
+                                                            num_initial_inputs,
+                                                            round(t.time()*1000,3)))
 
         return data
 
