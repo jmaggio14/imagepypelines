@@ -32,7 +32,7 @@ class BlockViewer(SimpleBlock):
         printer(iu.Printer): printer object for this block,
             registered to 'name'
     """
-    def __init__(self,pause_time=0.1):
+    def __init__(self,pause_time=0.1,enable_frame_counter=True):
         self.pause_time = pause_time
         io_map = {ArrayType([None,None]):ArrayType([None,None]),
                     ArrayType([None,None,3]):ArrayType([None,None,3])
@@ -40,6 +40,7 @@ class BlockViewer(SimpleBlock):
         super(BlockViewer,self).__init__(io_map,
                                         requires_training=False)
         self.viewer = Viewer(self.name)
+        self.viewer.enable_frame_counter = bool(enable_frame_counter)
 
     def process(self,datum):
         """displays the imagery in the image viewer
