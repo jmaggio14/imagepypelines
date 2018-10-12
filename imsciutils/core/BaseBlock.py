@@ -74,6 +74,13 @@ class ArrayType(object):
 
         array_shapes = tuple(tuple(shp) for shp in array_shapes)
 
+        # JM: this is stupid hack to get keyword only arguments in python2
+        if len(dtype_kwarg) > 1:
+            raise TypeError("only one keyword argument 'dtypes' can be specified")
+        if len(dtype_kwarg) >= 1 and ('dtypes' not in dtype_kwarg):
+            raise TypeError("only one keyword argument 'dtypes' can be specified")
+
+
         if 'dtypes' in dtype_kwarg:
             dtypes = dtype_kwarg['dtypes']
         else:
