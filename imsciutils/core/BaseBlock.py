@@ -55,19 +55,24 @@ def quick_block(process_fn,
 
 class ArrayType(object):
     """Object to describe the shapes of Arrays for Block inputs or outputs
-    
+
+    Object that contains the shapes and datatypes of an input or output
+    for a Block
+
+    Args:
+        *array_shapes(vargs of array shapes): acceptable shapes. Arbitrary
+            length axes can be represented by None.
+            example: [None,None,3] (for rgb image)
+        dtypes(np.dtype,tuple): keyword only argument.
+            numpy dtype or dtypes for this input/output. default is NUMPY_TYPES
     """
-    def __init__(self,*array_shapes,dtypes=None):
+    def __init__(self,*array_shapes,dtypes=NUMPY_TYPES):
         if not all( isinstance(shape,(tuple,list)) for shape in array_shapes ):
             raise TypeError("all array shapes must be tuples or lists")
 
         array_shapes = tuple( tuple(shp) for shp in array_shapes )
 
-        # if dtype is None, then any dtype is acceptable
-        if dtypes is None:
-            dtypes = tuple(NUMPY_TYPES)
-        # otherwise it can be a single value in the NUMPY_TYPES list
-        elif dtypes in NUMPY_TYPES:
+        if dtypes in NUMPY_TYPES:
             dtypes = (dtypes,)
         # otherwise it must be a tuple or list of values in NUMPY_TYPES
         elif isinstance(dtypes,(list,tuple)):
@@ -94,6 +99,8 @@ BLOCK_VALID_TYPES = [str,int,float,None,ArrayType]
 BLOCK_NON_ARRAY_TYPES = [str,int,float,None,]
 
 class IoMap(tuple):
+    """mapping object to determine the output of block
+    """
     def __new__(cls,io_map):
         # -------------- ERROR CHECKING -----------------------
         if isinstance(io_map,IoMap):
@@ -147,7 +154,6 @@ class IoMap(tuple):
                 reduced.extend( zip( (i,)*len(split), split ) )
 
         return tuple(reduced)
-
 
     @staticmethod
     def shape_comparison(input_shape,acceptable_shape):

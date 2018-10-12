@@ -104,7 +104,8 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
 
     # creating pipeline with all blocks
     pipeline = iu.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
-                            blocks=[image_loader,resizer,color2gray,orb])
+                            blocks=[image_loader,resizer,color2gray,orb],
+                            enable_text_graph=True)
     pipeline.printer.set_log_level('debug')
     iu.set_global_printout_level(0)
 

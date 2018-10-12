@@ -46,6 +46,8 @@ class Pipeline(object):
             to the 'add' function. defaults to []
         verbose(bool): whether or not to enable printouts for this pipeline,
             defaults to True
+        enable_text_graph(bool): whether or not to print out a graph of
+            pipeline blocks and outputs
 
     Attributes:
         name(str): unique name for this pipeline
@@ -53,12 +55,18 @@ class Pipeline(object):
             in order of their processing sequence
         verbose(bool): verbose(bool): whether or not this pipeline with print
             out its status
+        enable_text_graph(bool): whether or not to print out a graph of
+            pipeline blocks and outputs
         printer(iu.Printer): printer object for this pipeline,
             registered with 'name'
 
     """
     EXTANT = {}
-    def __init__(self, name=None, blocks=[], verbose=True):
+    def __init__(self,
+                    name=None,
+                    blocks=[],
+                    verbose=True,
+                    enable_text_graph=False):
         if name is None:
             name = self.__class__.__name__
 
@@ -71,6 +79,7 @@ class Pipeline(object):
 
         self.name = name
         self.verbose = verbose
+        self.enable_text_graph = enable_text_graph
         self.printer = get_printer(self.name)
 
         # set log level to infinity if non-verbose is desired
@@ -86,6 +95,7 @@ class Pipeline(object):
         self.blocks = []
         for b in blocks:
             self.add(b)
+
 
     def add(self, block):
         """adds processing block to the pipeline processing chain
@@ -166,8 +176,11 @@ class Pipeline(object):
                     self.printer.error(error_msg)
                     raise CrackedPipeline("Incompatible types passed between blocks")
 
-
+            type_chain['pipeline_output'] = ''
             all_type_chains.append(type_chain)
+
+        if self.enable_text_graph:
+            self._text_graph(all_type_chains)
 
 
     def train(self, data, labels=None):
@@ -259,6 +272,19 @@ class Pipeline(object):
             filename = self.name + '.pck'
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
+
+
+    def _text_graph(self,type_chains):
+        for chain in type_chains:
+            buf = ' ' * 6
+            for b,output in chain.items():
+                print( b )
+                if b == 'pipeline_output':
+                    break
+                print(buf,'|')
+                print(buf,'|',output)
+                print(buf,'|')
+
 
 
     def __str__(self):
