@@ -6,6 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .Printer import get_printer
+from .Printer import set_global_printout_level
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .Exceptions import CrackedPipeline
@@ -20,10 +21,10 @@ def get_type(datum):
     if isinstance(datum,(str,)):
         return str
 
-    elif isinstance(datum,float)):
+    elif isinstance(datum,float):
         return float
 
-    elif isinstance(datum,int)):
+    elif isinstance(datum,int):
         return int
 
     elif isinstance(datum,(np.ndarray,)):
@@ -288,6 +289,18 @@ class Pipeline(object):
                 print(buf,'|')
                 print(buf,'|',output)
                 print(buf,'|')
+
+    def debug(self):
+        """enables debug mode which turns on all printouts for this pipeline
+        to aide in debugging
+        """
+        set_global_printout_level('debug')
+        self.printer.set_log_level('debug')
+        self.verbose = True
+        self.enable_text_graph = True
+        return self
+
+
 
     @property
     def trained(self):
