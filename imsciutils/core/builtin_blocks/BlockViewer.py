@@ -40,7 +40,7 @@ class BlockViewer(SimpleBlock):
         super(BlockViewer,self).__init__(io_map,
                                         requires_training=False)
         self.viewer = Viewer(self.name)
-        self.viewer.enable_frame_counter = bool(enable_frame_counter)
+        # self.viewer._enable_frame_counter = bool(enable_frame_counter)
 
     def process(self,datum):
         """displays the imagery in the image viewer
