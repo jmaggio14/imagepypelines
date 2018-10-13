@@ -9,6 +9,7 @@ from ... import util
 from .. import BatchBlock
 from .. import ArrayType
 from random import shuffle
+import numpy as np
 
 
 
@@ -20,18 +21,29 @@ class MnistLoader(BatchBlock):
         io_map = {str:ArrayType([None,None])}
         super(MnistLoader,self).__init__(io_map,requires_training=False)
 
-    def before_process(self,data,labels=None):
-        assert data[0] in ['train','test']
 
+    def train(self,data,labels=None):
         from keras.datasets import mnist
+        # loading train data from mnist
+        x_train, y_train = mnist.load_data()[0]
 
-        if data[0] == 'train':
-            x_data, y_data = mnist.load_data()[0]
-        elif data[0] == 'test':
-            x_data, y_data = mnist.load_data()[1]
+        images = [np.squeeze(x_train[i,:,:]) for i in range(x_train.shape[0])]
+        image_labels = [int(lbl) for lbl in y_train]
 
-        images = [np.squeeze(x_data[i,:,:]) for i in range(x_data.shape[0])]
-        image_labels = [int(lbl) for lbl in y_data]
+        if self.should_shuffle:
+            combined = list(zip(images, image_labels))
+            shuffle(combined)
+            images[:], image_labels[:] = zip(*combined)
+
+        return images, image_labels
+
+    def before_process(self,data,labels=None):
+        from keras.datasets import mnist
+        # loading test data from mnist
+        x_test, y_test = mnist.load_data()[1]
+
+        images = [np.squeeze(x_test[i,:,:]) for i in range(x_test.shape[0])]
+        image_labels = [int(lbl) for lbl in y_test]
 
         if self.should_shuffle:
             combined = list(zip(images, image_labels))
