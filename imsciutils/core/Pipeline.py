@@ -152,8 +152,6 @@ class Pipeline(object):
             for block in self.blocks:
                 try:
                     output_type = block.io_map.output_given_input(input_type)
-                    print(block)
-                    breakpoint()
                     broken_pair = False
 
                 except IncompatibleTypes as e:
