@@ -68,21 +68,20 @@ class ArrayType(object):
             numpy dtype or dtypes for this input/output. default is NUMPY_TYPES
     """
 
-    def __init__(self, *array_shapes, **dtype_kwarg):
+    def __init__(self, *array_shapes, **dtypes_kwarg):
         if not all(isinstance(shape, (tuple, list)) for shape in array_shapes):
             raise TypeError("all array shapes must be tuples or lists")
 
         array_shapes = tuple(tuple(shp) for shp in array_shapes)
-
         # JM: this is stupid hack to get keyword only arguments in python2
-        if len(dtype_kwarg) > 1:
+        if len(dtypes_kwarg) > 1:
             raise TypeError("only one keyword argument 'dtypes' can be specified")
-        if len(dtype_kwarg) >= 1 and ('dtypes' not in dtype_kwarg):
+        if len(dtypes_kwarg) >= 1 and ('dtypes' not in dtypes_kwarg):
             raise TypeError("only one keyword argument 'dtypes' can be specified")
 
 
-        if 'dtypes' in dtype_kwarg:
-            dtypes = dtype_kwarg['dtypes']
+        if 'dtypes' in dtypes_kwarg:
+            dtypes = dtypes_kwarg['dtypes']
         else:
             dtypes = NUMPY_TYPES
 
@@ -102,9 +101,9 @@ class ArrayType(object):
 
     def __str__(self):
         if self.dtypes == NUMPY_TYPES:
-            return "ArrayType({}, dtype=any)".format(self.shapes)
+            return "ArrayType({}, dtypes=any)".format(self.shapes)
         else:
-            return "ArrayType({}, dtype='{}')".format(self.shapes, self.dtypes)
+            return "ArrayType({}, dtypes='{}')".format(self.shapes, self.dtypes)
 
     def __repr__(self):
         return str(self)
@@ -182,7 +181,7 @@ class IoMap(tuple):
         if i in BLOCK_NON_ARRAY_TYPES:
             reduced_i = ((i, o), )
         else:
-            split = tuple(ArrayType(shp,dtype=i.dtypes) for shp in i.shapes)
+            split = tuple(ArrayType(shp,dtypes=i.dtypes) for shp in i.shapes)
             reduced_i = zip(split, (o,)*len(split))
 
         reduced = []
@@ -190,10 +189,10 @@ class IoMap(tuple):
             if o in BLOCK_NON_ARRAY_TYPES:
                 reduced.append((i, o))
             else:
-                split = tuple(ArrayType(shp,dtype=i.dtypes) for shp in o.shapes)
+                split = tuple(ArrayType(shp,dtypes=o.dtypes) for shp in o.shapes)
                 reduced.extend(zip((i,)*len(split), split))
 
-        return tuple( set(reduced) )
+        return tuple( reduced )
 
     @staticmethod
     def shape_comparison(input_shape, acceptable_shape):

@@ -5,6 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
+from __future__ import print_function
 from .Printer import get_printer
 from .Printer import set_global_printout_level
 from .BaseBlock import BaseBlock
@@ -151,6 +152,8 @@ class Pipeline(object):
             for block in self.blocks:
                 try:
                     output_type = block.io_map.output_given_input(input_type)
+                    print(block)
+                    breakpoint()
                     broken_pair = False
 
                 except IncompatibleTypes as e:
@@ -281,14 +284,15 @@ class Pipeline(object):
 
     def _text_graph(self,type_chains):
         for chain in type_chains:
+            print("type-chain1:")
             buf = ' ' * 6
             for b,output in chain.items():
-                print( b )
+                print('  ', b )
                 if b == 'pipeline_output':
                     break
-                print(buf,'|')
-                print(buf,'|',output)
-                print(buf,'|')
+                print('  ',buf,'|')
+                print('  ',buf,'|',output)
+                print('  ',buf,'|')
 
     def debug(self):
         """enables debug mode which turns on all printouts for this pipeline
@@ -298,7 +302,9 @@ class Pipeline(object):
         self.printer.set_log_level('debug')
         self.verbose = True
         self.enable_text_graph = True
+        self.printer.warning("debug mode enabled!")
         return self
+
 
 
 
