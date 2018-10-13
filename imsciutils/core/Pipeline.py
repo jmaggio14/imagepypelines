@@ -20,11 +20,14 @@ def get_type(datum):
     if isinstance(datum,(str,)):
         return str
 
-    elif isinstance(datum,(float,int)):
+    elif isinstance(datum,float)):
         return float
 
+    elif isinstance(datum,int)):
+        return int
+
     elif isinstance(datum,(np.ndarray,)):
-        return ArrayType(datum.shape)
+        return ArrayType(datum.shape,dtype=datum.dtype)
 
     else:
         msg = "only acceptable input datatypes are numpy arrays, floats, ints and strings"
@@ -35,7 +38,7 @@ class Pipeline(object):
 
     Pipelines pass data between block objects and validate the integrity
     of a data processing pipeline. it is intended to be a quick, flexible, and
-    module approach to creating a processing graph. It also contains helper
+    modular approach to creating a processing graph. It also contains helper
     functions for documentation and saving these pipelines for use by other
     researchers/users.
 
@@ -128,6 +131,7 @@ class Pipeline(object):
         Raises:
             CrackedPipeline: if there is a input-output shape
                 incompatability
+            TypeError: if 'data' isn't a list or tuple
         """
 
         # make sure data is a list
@@ -227,7 +231,7 @@ class Pipeline(object):
         # JM: TODO: add auto batching and intermediate data retrieval
         # JM: verifying that all blocks have been trained
         num_initial_inputs = len(data)
-        if not all(b.trained for b in self.blocks):
+        if not self.trained:
             for b in self.blocks:
                 if b.trained:
                     continue
@@ -287,6 +291,7 @@ class Pipeline(object):
 
     @property
     def trained(self):
+        """returns whether or not this pipeline has been trained"""
         return all(b.trained for b in self.blocks)
 
     def __str__(self):

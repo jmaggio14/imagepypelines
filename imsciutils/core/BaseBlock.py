@@ -117,6 +117,20 @@ BLOCK_NON_ARRAY_TYPES = [str, int, float, None, ]
 
 class IoMap(tuple):
     """mapping object to determine the output of block
+
+    IoMaps are used to predict the output of a block given a certain type of
+    input. Every block contains an IoMap located under block.io_map
+
+    Args:
+        io_map(dict,IoMap): dictionary that describes the input outputs of the
+            block. Of the form: io_map[input_type] = output_type
+
+    Attributes:
+        non_arrays(tuple): mapping of non-array input-outputs for this io_map
+        arrays(tuple): mapping of array input-outputs for this io_map
+        inputs(tuple): tuple of inputs for this io map
+        outputs(tuple): tuple of outputs for this io map
+
     """
     def __new__(cls, io_map):
         # -------------- ERROR CHECKING -----------------------
@@ -153,10 +167,22 @@ class IoMap(tuple):
 
     @staticmethod
     def reduce(i, o):
+        """reduces ArrayTypes with multiple shapes to multiple single
+        shape ArrayTypes
+
+        ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
+
+        Args:
+            i (ArrayType): input ArrayType
+            o (ArrayType): output ArrayType
+
+        Returns:
+            reduced(tuple): tuple mapping of reduced types ((i1,o1),(i2,o2)...)
+        """
         if i in BLOCK_NON_ARRAY_TYPES:
             reduced_i = ((i, o), )
         else:
-            split = tuple(ArrayType(shp) for shp in i.shapes)
+            split = tuple(ArrayType(shp,dtype=i.dtypes) for shp in i.shapes)
             reduced_i = zip(split, (o,)*len(split))
 
         reduced = []
@@ -164,13 +190,25 @@ class IoMap(tuple):
             if o in BLOCK_NON_ARRAY_TYPES:
                 reduced.append((i, o))
             else:
-                split = tuple(ArrayType(shp) for shp in o.shapes)
+                split = tuple(ArrayType(shp,dtype=i.dtypes) for shp in o.shapes)
                 reduced.extend(zip((i,)*len(split), split))
 
-        return tuple(reduced)
+        return tuple( set(reduced) )
 
     @staticmethod
     def shape_comparison(input_shape, acceptable_shape):
+        """compares ArrayType shapes and returns a boolean to indicate
+        compatability
+
+        Args:
+            input_shape(tuple): ArrayType shape of the input data
+            acceptable_shape(tuple): one of the acceptable input type array
+                shapes
+
+        Returns:
+            compatible(bool): whether or the input shape is compatible with
+                this block
+        """
         # if they have a different number of axis, they aren't compatible
         if len(input_shape) != len(acceptable_shape):
             return False
@@ -189,6 +227,18 @@ class IoMap(tuple):
 
     @staticmethod
     def dtype_check(input_dtypes, acceptable_dtypes):
+        """compares ArrayType dtypes and returns a boolean to indicate
+        compatability
+
+        Args:
+            input_dtype(tuple): ArrayType dtypes of the input data
+            acceptable_dtypes(tuple): one of the acceptable input type array
+                shapes
+
+        Returns:
+            compatible(bool): whether or the input dtype is compatible with
+                this block
+        """
         compatability_by_dtype = []
 
         # if they are the exact same, save time by returning early
@@ -203,9 +253,25 @@ class IoMap(tuple):
         return all(compatability_by_dtype)
 
     def output_given_input(self, input_types):
-        outputs = []
+        """gets the given output(s) of this IoMap given a input type or types
+
+
+        Args:
+            input_types(input_type,tuple): input type or tuple of input types
+
+        Returns:
+            outputs(tuple): tuple of output types this block produces given the
+                input_types
+
+        Raises:
+            IncompatibleTypes: if there is no compatible output associated
+                with the input_types
+
+        """
+        outputs = set()
 
         if not isinstance(input_types, tuple):
+            # make it a tuple if a single type is passed in
             input_types = (input_types,)
 
         for input_type in input_types:
@@ -214,7 +280,7 @@ class IoMap(tuple):
             if input_type in BLOCK_NON_ARRAY_TYPES:
                 for i, o in self.non_arrays:
                     if input_type == i:
-                        outputs.append(o)
+                        outputs.add(o)
 
             # if we have an array type, then we have to do a shape comparison
             elif isinstance(input_type, ArrayType):
@@ -222,11 +288,11 @@ class IoMap(tuple):
                     dtype_okay = self.dtype_check(input_type.dtypes, i.dtypes)
                     for input_shape in input_type.shapes:
                         shp_okay = self.shape_comparison(input_shape, i.shapes[0])
-                        if shp_okay and dtype_okay:
-                            outputs.append(o)
+                        if (shp_okay and dtype_okay):
+                            outputs.add(o)
 
         if len(outputs) > 0:
-            return tuple(set(outputs))
+            return tuple(outputs)
 
         msg = "invalid input type, must be ({}) not {}".format(self.inputs,
                                                                input_type)
@@ -250,6 +316,8 @@ class BaseBlock(object):
             to make sure it is unique
         requires_training(bool): whether or not this block will require
             training
+        requires_labels(bool): whether or not this block will require
+            labels during training
 
     Attributes:
 
@@ -344,11 +412,21 @@ class BaseBlock(object):
 
         Returns:
             None
+
+        Raises:
+            BlockRequiresLabels: if this block requires labels and None
+                was passed in
         """
         if self.requires_labels and (labels is None):
             msg = "{} requires labels for training but none were passed in"\
                 .format(self)
             raise BlockRequiresLabels(msg)
+
+        if isinstance(labels,list):
+            # if labels are passed in, we must have an equal number
+            # of datums and labels
+            if len(data) != len(labels):
+                raise DataLabelMismatch(data, labels)
 
         self.train(self, data, labels)
         self.trained = True
@@ -526,7 +604,8 @@ class BatchBlock(BaseBlock):
         Returns:
             process(list): list of processed datums
         """
-        raise NotImplementedError("'batch_process' must be overloaded in all children")
+        error_msg = "'batch_process' must be overloaded in all children"
+        raise NotImplementedError(error_msg)
 
     def labels(self, labels):
         """(optional overload) returns all labels for input datums"""
