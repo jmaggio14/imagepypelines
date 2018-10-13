@@ -10,6 +10,7 @@ import glob
 import sys
 from types import FunctionType
 
+# JM: replaced SimpleNamespace import with this for python2 compatability
 SimpleNamespace = type('SimpleNamespace', (object,), {})
 
 import cv2
