@@ -69,10 +69,10 @@ class ArrayType(object):
     """
 
     def __init__(self, *array_shapes, **dtypes_kwarg):
+        # -------------------- error-checking ---------------------
         if not all(isinstance(shape, (tuple, list)) for shape in array_shapes):
             raise TypeError("all array shapes must be tuples or lists")
 
-        array_shapes = tuple(tuple(shp) for shp in array_shapes)
         # JM: this is stupid hack to get keyword only arguments in python2
         if len(dtypes_kwarg) > 1:
             raise TypeError("only one keyword argument 'dtypes' can be specified")
@@ -96,6 +96,8 @@ class ArrayType(object):
         else:
             raise TypeError("dtypes must be None or a tuple/list of valid numpy dtypes")
 
+        # -------------------- real code begins ---------------------
+        array_shapes = tuple(tuple(shp) for shp in array_shapes)
         self.shapes = array_shapes
         self.dtypes = dtypes
 
