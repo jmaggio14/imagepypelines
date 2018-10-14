@@ -29,7 +29,7 @@ def get_type(datum):
         return int
 
     elif isinstance(datum,(np.ndarray,)):
-        return ArrayType(datum.shape,dtype=datum.dtype)
+        return ArrayType(datum.shape,dtypes=datum.dtype)
 
     else:
         msg = "only acceptable input datatypes are numpy arrays, floats, ints and strings"

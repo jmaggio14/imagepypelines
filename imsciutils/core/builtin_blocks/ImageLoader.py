@@ -36,7 +36,10 @@ class ImageLoader(SimpleBlock):
     """
     def __init__(self):
         io_map = {str:ArrayType([None,None],[None,None,3])}
-        super(ImageLoader,self).__init__(io_map, requires_training=False)
+        notes = "loads images from disk given an input filename"
+        super(ImageLoader,self).__init__(io_map,
+                                        notes=notes,
+                                        requires_training=False)
 
     def process(self,datum):
         """loads in an image from a filename

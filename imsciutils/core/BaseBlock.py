@@ -315,6 +315,7 @@ class BaseBlock(object):
             Block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
+        notes(str): a short description of this block
         requires_training(bool): whether or not this block will require
             training
         requires_labels(bool): whether or not this block will require
@@ -323,7 +324,10 @@ class BaseBlock(object):
     Attributes:
 
         io_map(IoMap): object that maps inputs to this block to outputs
+            subclass of tuple where I/O is stored as:
+            ( (input1,output1),(input2,output2)... )
         name(str): unique name for this block
+        notes(str): a short description of this block
         requires_training(bool): whether or not this block will require
             training
         trained(bool): whether or not this block has been trained, True
@@ -337,6 +341,7 @@ class BaseBlock(object):
     def __init__(self,
                  io_map,
                  name=None,
+                 notes=None,
                  requires_training=False,
                  requires_labels=False,
                  ):
@@ -349,11 +354,19 @@ class BaseBlock(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + str(self.EXTANT[name])
+            name = name + str(self.EXTANT[name])
+
+
+        # checking if notes were provided for this block
+        if notes is None:
+            notes = "No Description provided by the author"
+        if not isinstance(notes,str):
+            raise TypeError("notes must be a string description or None")
 
         self.io_map = IoMap(io_map)
 
         self.name = name
+        self.notes = notes
         self.requires_training = requires_training
         self.requires_labels = requires_labels
 
@@ -507,6 +520,12 @@ class BaseBlock(object):
         """
         raise NotImplementedError("'label_strategy' must be overloaded in all children")
 
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return str(self) + '\n' + self.notes
+
 
 class SimpleBlock(BaseBlock):
     """Block subclass that processes individual datums separately
@@ -520,13 +539,19 @@ class SimpleBlock(BaseBlock):
             Block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
+        notes(str): a short description of this block
         requires_training(bool): whether or not this block will require
             training
+        requires_labels(bool): whether or not this block will require
+            labels during training
 
     Attributes:
 
         io_map(IoMap): object that maps inputs to this block to outputs
+            subclass of tuple where I/O is stored as:
+            ( (input1,output1),(input2,output2)... )
         name(str): unique name for this block
+        notes(str): a short description of this block
         requires_training(bool): whether or not this block will require
             training
         trained(bool): whether or not this block has been trained, True
@@ -560,10 +585,12 @@ class SimpleBlock(BaseBlock):
         return [self.label(lbl) for lbl in labels]
 
     def __str__(self):
-        return "{}-(SimpleBlock)".format(self.name)
+        return super(SimpleBlock,self).__str__() + '-(SimpleBlock)'
 
     def __repr__(self):
-        return str(self)
+        return str(self) + '\n' + self.notes
+
+
 
 
 class BatchBlock(BaseBlock):
@@ -579,13 +606,19 @@ class BatchBlock(BaseBlock):
             Block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
+        notes(str): a short description of this block
         requires_training(bool): whether or not this block will require
             training
+        requires_labels(bool): whether or not this block will require
+            labels during training
 
     Attributes:
 
         io_map(IoMap): object that maps inputs to this block to outputs
+            subclass of tuple where I/O is stored as:
+            ( (input1,output1),(input2,output2)... )
         name(str): unique name for this block
+        notes(str): a short description of this block
         requires_training(bool): whether or not this block will require
             training
         trained(bool): whether or not this block has been trained, True
@@ -621,9 +654,9 @@ class BatchBlock(BaseBlock):
         return self.labels(labels)
 
     def __str__(self):
-        return "{}-(BatchBlock)".format(self.name)
+        return super(BatchBlock,self).__str__() + '-(BatchBlock)'
 
     def __repr__(self):
-        return str(self)
+        return str(self) + '\n' + self.notes
 
 # END
