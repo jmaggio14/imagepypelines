@@ -21,7 +21,7 @@ class Color2Gray(SimpleBlock):
     Attributes:
         order(str): the channel order for input images
         flag(cv2 constant): opencv flag to determine channel order
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -40,9 +40,6 @@ class Color2Gray(SimpleBlock):
             raise ValueError("unknown channel order, must be 'rgb' or 'bgr'")
 
         self.order = order
-
-        input_shape = [None,None,3],[None,None]
-        output_shape = [None,None]
 
         io_map = {ArrayType([None,None,3],[None,None]):ArrayType([None,None])
                 }

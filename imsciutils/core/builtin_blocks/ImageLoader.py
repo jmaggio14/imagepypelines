@@ -35,7 +35,6 @@ class ImageLoader(SimpleBlock):
             registered to 'name'
     """
     def __init__(self):
-        input_shape = str
         io_map = {str:ArrayType([None,None],[None,None,3])}
         super(ImageLoader,self).__init__(io_map, requires_training=False)
 

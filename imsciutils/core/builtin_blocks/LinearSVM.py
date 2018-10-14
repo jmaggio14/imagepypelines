@@ -13,11 +13,10 @@ from sklearn import svm
 class LinearSVM(BatchBlock):
     def __init__(self,C=1):
         self.C = C
-
-        input_shape = [1,None]
-        output_shape = int
         io_map = {ArrayType([1,None]):int}
-        super(Resizer,self).__init__(io_map, requires_training=True)
+        super(Resizer,self).__init__(io_map,
+                                    requires_training=True,
+                                    requires_labels=True)
 
     def train(self,train_data,train_labels):
         self.svc = svm.SVM(self.C)

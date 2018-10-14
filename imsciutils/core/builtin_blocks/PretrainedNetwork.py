@@ -85,7 +85,7 @@ class PretrainedNetwork(BatchBlock):
             Default is 'avg'
         model_fn(callable): function to generate features on an image stack
         preprocess_fn(callable): function to preprocess an image stack
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -100,10 +100,6 @@ class PretrainedNetwork(BatchBlock):
     def __init__(self,network='densenet121',pooling_type='avg'):
         self.network = network
         self.pooling_type = pooling_type
-
-        # defining input_shape
-        input_shape = [None,None], [None,None,None]
-        output_shape = [1,None]
 
         # building the keras network
         self.model_fn, self.preprocess_fn \

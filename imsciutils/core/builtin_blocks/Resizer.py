@@ -18,8 +18,6 @@ class Resizer(SimpleBlock):
         self.to_width = to_width
         self.interpolation = interpolation
 
-        input_shape = [None,None], [None,None,3]
-        output_shape = [None,None], [None,None,3]
         io_map = {ArrayType([None,None]):ArrayType([None,None]),
                     ArrayType([None,None,3]):ArrayType([None,None,3])}
 
