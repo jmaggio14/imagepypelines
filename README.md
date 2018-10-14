@@ -1,5 +1,5 @@
 # imsciutils
-![logo](https://github.com/jmaggio14/imsciutils/blob/readme-update/docs/images/logo.png "logo")
+![logo](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/logo.png "logo")
 
 ![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
 
@@ -57,7 +57,7 @@ There are already powerful pipeline utilities such as the venerable [GStreamer](
 Pipelines in `imsciutils` are constructed of processing `blocks` which apply an
 algorithm to a sequence of data passed into it.
 
-![pipeline](https://github.com/jmaggio14/imsciutils/blob/readme-update/docs/images/pipeline-example.png "pipeline example")
+![pipeline](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/pipeline-example.png "pipeline example")
 
 Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
