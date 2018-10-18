@@ -11,7 +11,7 @@ from sklearn import svm
 
 
 class LinearSVM(BatchBlock):
-    """Linear support vector machine classifier 
+    """Linear support vector machine classifier
     """
     def __init__(self,C=1):
         self.C = C
@@ -29,5 +29,5 @@ class LinearSVM(BatchBlock):
         # stacking input list into a numpy array
         stacked = np.vstack(batch_data)
         # predicting and returning a list of integers
-        predictions = [int(lbl) for lbl self.svc.predict(stacked)]
+        predictions = [int(lbl) for lbl in self.svc.predict(stacked)]
         return predictions
