@@ -11,6 +11,8 @@ from sklearn import svm
 
 
 class LinearSVM(BatchBlock):
+    """Linear support vector machine classifier 
+    """
     def __init__(self,C=1):
         self.C = C
         io_map = {ArrayType([1,None]):int}
@@ -19,15 +21,13 @@ class LinearSVM(BatchBlock):
                                     requires_labels=True)
 
     def train(self,train_data,train_labels):
-        self.svc = svm.SVM(self.C)
+        self.svc = svm.SVM(C=self.C,kernel='linear')
         train_data = np.vstack(train_data)
         self.svc.fit(train_data,train_labels)
 
     def batch_process(self,batch_data):
         # stacking input list into a numpy array
         stacked = np.vstack(batch_data)
-        # predicting
-        predictions = self.svc.predict(stacked).astype(int)
-        # splitting the predicted labels into a list for output
-        predictions = np.vsplit(predictions,prediction.shape[0])
+        # predicting and returning a list of integers
+        predictions = [int(lbl) for lbl self.svc.predict(stacked)]
         return predictions
