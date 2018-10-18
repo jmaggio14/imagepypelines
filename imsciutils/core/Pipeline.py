@@ -18,18 +18,27 @@ import pickle
 import collections
 import numpy as np
 
+def restore_from_file(filename):
+    pipeline = pickle.loads(filename)
+    for b in pipeline.blocks:
+        b.restore_from_serialization()
+    return pipeline
+
+
+
+
 def get_type(datum):
     if isinstance(datum,(str,)):
-        return str
+        return (str,)
 
     elif isinstance(datum,float):
-        return float
+        return (float,)
 
     elif isinstance(datum,int):
-        return int
+        return (int,)
 
     elif isinstance(datum,(np.ndarray,)):
-        return ArrayType(datum.shape,dtypes=datum.dtype)
+        return (ArrayType(datum.shape,dtypes=datum.dtype),)
 
     else:
         msg = "only acceptable input datatypes are numpy arrays, floats, ints and strings"
@@ -274,6 +283,11 @@ class Pipeline(object):
             filename (string): filename to save pipeline to, defaults to
                 pipeline.name + '.pck'
         """
+
+        # prepping each block for serialization
+        for b in self.blocks:
+            b.prep_for_serialization()
+
         if filename is None:
             filename = self.name + '.pck'
         with open(filename, 'wb') as f:
@@ -289,7 +303,7 @@ class Pipeline(object):
                 if b == 'pipeline_output':
                     break
                 print('  ',buf,'|')
-                print('  ',buf,'|',output)
+                print('  ',buf,'|',',  '.join(str(o) for o in output))
                 print('  ',buf,'|')
 
     def debug(self):
