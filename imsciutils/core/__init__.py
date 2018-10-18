@@ -53,7 +53,7 @@ from .Exceptions import InvalidNumpyType
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
 from .Exceptions import BlockRequiresLabels
-from .Exceptions import InvalidBlockInput
+from .Exceptions import InvalidBlockInputData
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch

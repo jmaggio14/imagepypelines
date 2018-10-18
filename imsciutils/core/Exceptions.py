@@ -64,15 +64,22 @@ class BlockRequiresLabels(ValueError):
 class IncompatibleTypes(Exception):
     pass
 
-class InvalidBlockInput(TypeError):
+class InvalidBlockInputData(TypeError):
     def __init__(self,block):
         error_msg = "invalid input to block: {}, must be a list containing ({})".format(
             block.name,
             block.input_shape,
         )
         iuerror(error_msg)
-        super(InvalidBlockInput,self).__init__(error_msg)
+        super(InvalidBlockInputData,self).__init__(error_msg)
 
+class InvalidBlockInputLabels(TypeError):
+    def __init__(self,block):
+        error_msg = "{}: input labels must a list or NoneType".format(
+            block.name,
+        )
+        iuerror(error_msg)
+        super(InvalidBlockInputData,self).__init__(error_msg)
 
 class InvalidProcessStrategy(TypeError):
     def __init__(self,block):
@@ -83,7 +90,7 @@ class InvalidProcessStrategy(TypeError):
 
 class InvalidLabelStrategy(TypeError):
     def __init__(self,block):
-        error_msg = "{}: function 'labels' must return a list!".format(
+        error_msg = "{}: function 'labels' must return a list or NoneType!".format(
             block.name)
         iuerror(error_msg)
         super(InvalidLabelStrategy,self).__init__(error_msg)
