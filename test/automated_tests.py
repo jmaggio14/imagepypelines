@@ -150,6 +150,33 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         return False
 
 
+@iu.unit_test
+def test_multilayer_perceptron():
+    import imsciutils as iu
+
+    features = iu.PretrainedNetwork() # generate features
+    classifier = iu.MultilayerPerceptron(neurons=512) # NN classifier
+    # there are a lot more parameters you can tweak!
+
+    pipeline = iu.Pipeline([features,classifier])
+
+    # for this example, we'll need to load the standard Mnist handwriting dataset
+    # built into `imsciutils`
+    mnist = iu.Mnist()
+    train_data, train_labels = mnist.get_train()
+    test_data, ground_truth = mnist.get_test()
+
+    # train the classifier
+    pipeline.train(train_data,train_labels)
+
+    # test the classifier
+    predictions = pipeline.process(test_data)
+
+    # print the accuracy
+    accuracy = iu.accuracy(predictions,ground_truth)
+    print(accuracy)
+
+
 
 def main(verbose=False):
     """
