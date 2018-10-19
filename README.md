@@ -104,20 +104,59 @@ image_filenames = iu.standard_image_filenames()
 pipeline.process(image_filenames)
 ```
 
+### Machine Learning Applications
+One of the more powerful applications of `imsciutils` is it's ease of use in
+_machine learning_ and _feature engineering_ applications. We can easily build
+a simple image classifier that is tailored to your purposes
+
+```python
+import imsciutils as iu
+
+features = iu.PretrainedNetwork() # generate features
+classifier = iu.MultilayerPerceptron(neurons=512) # NN classifier
+# there are a lot more parameters you can tweak!
+
+pipeline = iu.Pipeline([features,classifier])
+
+# for this example, we'll need to load the standard Mnist handwriting dataset
+# built into `imsciutils`
+mnist = iu.Mnist()
+train_data, train_labels = mnist.get_train()
+test_data, ground_truth = mnist.get_test()
+
+# train the classifier
+pipeline.train(train_data,train_labels)
+
+# test the classifier
+predictions = pipeline.process(test_data)
+
+# print the accuracy
+accuracy = iu.accuracy(predictions,ground_truth)
+print(accuracy)
+```
 
 
 
-#### builtin processing blocks include:
+#### builtin classifiers
+- Multilayer Perceptron
+- Linear Support Vector Machine
+
+
+
+#### builtin I/O blocks
 - Webcam Capturing
 - Image Loading
-- keypointd detection and description
-- Support Vector Machines
 - Image Display
-- Fast Fourier Transform
-- Frequency Filtering
-- Pretrained Neural Networks for image feature generations
+
+#### builtin utility blocks
 - Image Resizing
 - Grayscale Conversion
+
+#### builtin feature engineering blocks include:
+- keypoint detection and description
+- Fourier Transform
+- Frequency Filtering
+- Pretrained Neural Networks for image feature generations
 
 ### Designing your own processing blocks
 Designing your blocks is a fairly straightforward process
