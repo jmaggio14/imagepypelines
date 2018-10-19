@@ -25,6 +25,12 @@ from .coordinates import centroid
 from .coordinates import frame_size
 from .coordinates import dimensions
 
+# datasets.py
+from .datasets import Mnist
+from .datasets import MnistFashion
+from .datasets import Cifar10
+from .datasets import Cifar100
+
 # debug.py
 from .debug import debug
 
@@ -58,8 +64,14 @@ from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
 
+# ml_tools.py
+from .ml_tools import accuracy
+from .ml_tools import batch
+from .ml_tools import batches_to_list
+
 # Pipeline.py
 from .Pipeline import Pipeline
+from .Pipeline import restore_from_file
 
 # Printer.py
 from .Printer import get_printer

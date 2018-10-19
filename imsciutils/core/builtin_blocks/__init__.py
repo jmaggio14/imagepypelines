@@ -15,6 +15,7 @@ __all__ = ['BlockViewer',
             'IFFT',
             'ImageLoader',
             'LinearSVM',
+            'MultilayerPerceptron',
             'Orb',
             'PretrainedNetwork',
             'Resizer',
@@ -29,6 +30,7 @@ from .Filters import Highpass
 from .IFFT import IFFT
 from .ImageLoader import ImageLoader
 from .LinearSVM import LinearSVM
+from .MultilayerPerceptron import MultilayerPerceptron
 from .Orb import Orb
 from .PretrainedNetwork import PretrainedNetwork
 from .Resizer import Resizer
