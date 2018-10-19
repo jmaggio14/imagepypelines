@@ -113,20 +113,30 @@ class Timer(object):
         self.__init__()
 
     def time(self):
-        """returns the time since the timer started or since it was
+        """returns the time in seconds since the timer started or since it was
          last reset"""
         return round(self.raw_time(),3)
 
     def raw_time(self):
-        """returns the unrounded time since the timer started"""
+        """returns the unrounded time in seconds since the timer started"""
         return time.time() - self._start
 
     def lap(self):
-        """returns time since last time the lap was called"""
+        """returns time in seconds since last time the lap was called"""
         now = time.time()
         lap = now - self._last
         self._last = now
         return round(lap,3)
+
+    def time_ms(self):
+        """returns the time in milliseonds since the timer started or since it
+        was last reset"""
+        return round(self.raw_time()*1000,3)
+
+    def lap_ms(self):
+        """returns time in milliseconds since last time the lap was called"""
+        return round(self.lap()*1000,3)
+
 
     @property
     def countdown(self):
