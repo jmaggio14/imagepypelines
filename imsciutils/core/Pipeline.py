@@ -19,9 +19,18 @@ import collections
 import numpy as np
 
 def restore_from_file(filename):
+    """restores a pipeline from a pickled state
+
+    Args:
+        filename(str): the pipeline filename
+
+    Returns:
+        pipeline(iu.Pipeline): the loaded pipeline
+    """
     pipeline = pickle.loads(filename)
     for b in pipeline.blocks:
         b.restore_from_serialization()
+
     return pipeline
 
 
@@ -77,8 +86,8 @@ class Pipeline(object):
     """
     EXTANT = {}
     def __init__(self,
-                    name=None,
                     blocks=[],
+                    name=None,
                     verbose=True,
                     enable_text_graph=False):
         if name is None:
@@ -95,6 +104,8 @@ class Pipeline(object):
         self.verbose = verbose
         self.enable_text_graph = enable_text_graph
         self.printer = get_printer(self.name)
+        self.names_to_extract = []
+        self.intermediate_data = {}
 
         # set log level to infinity if non-verbose is desired
         if not self.verbose:
@@ -130,6 +141,7 @@ class Pipeline(object):
             raise TypeError(error_msg)
 
         # appends to instance block list
+        self.printer.info("adding block {} to the pipeline".format(block.name))
         self.blocks.append(block)
 
     def validate(self,data):
@@ -147,7 +159,7 @@ class Pipeline(object):
 
         # make sure data is a list
         if not isinstance(data,list):
-            raise TypeError("'data' must be list or tuple")
+            raise TypeError("'data' must be list")
 
         # JM: get shape of every datum
         # get unique shapes so we don't have to test every single shape
@@ -239,6 +251,8 @@ class Pipeline(object):
             processed_data(list): list of processed data
         """
         self.validate(data)
+        self.intermediate_data = {}
+
         # JM: TODO: add auto batching and intermediate data retrieval
         # JM: verifying that all blocks have been trained
         num_initial_inputs = len(data)
@@ -254,8 +268,8 @@ class Pipeline(object):
         t = util.Timer()
         for b in self.blocks:
             num = len(data)
-            data, labels = b._pipeline_process(data, None)
-            b_time = t.lap()  # time for this block
+            data, _ = b._pipeline_process(data, None)
+            b_time = t.lap() # processing time for this block
             # printing time for this block
             self.printer.debug("{}: processed {}datums in {} seconds".format(
                                     b.name,
@@ -264,9 +278,15 @@ class Pipeline(object):
                                 " (approx {}ms per datum)".format(
                                     round(1000 * b_time / num, 3)))
 
+            # JM: saving intermediate data to a dictionary so they can be
+            # retrieved in self.get_intermediate_data()
+            if b.name in self.intermediate_names:
+                self.intermediate_data[b.name] = data
+
+
         self.printer.info("{} datums processed in {}ms".format(
                                                             num_initial_inputs,
-                                                            round(t.time()*1000,3)))
+                                                            t.time_ms()))
 
         return data
 
@@ -317,13 +337,34 @@ class Pipeline(object):
         self.printer.warning("debug mode enabled!")
         return self
 
+    def join(self,pipeline):
+        """adds the blocks from the pipeline passed in to this pipeline
+        """
+        for b in pipeline.blocks:
+            self.add(b)
+
+    def set_intermediate_data(self,names_to_extract):
+        self.intermediate_names = names_to_extract
+        self.intermediate_data = {}
+
+    def get_intermediate_data(self):
+        return self.intermediate_data
 
 
+    @property
+    def names(self):
+        """returns the names of all blocks"""
+        return [b.names for b in self.blocks]
 
     @property
     def trained(self):
         """returns whether or not this pipeline has been trained"""
         return all(b.trained for b in self.blocks)
+
+    @property
+    def requires_labels(self):
+        """returns whether or not this pipeline requires labels"""
+        return any(b.requires_labels for b in self.blocks)
 
     def __str__(self):
         out = "{}: '{}'  ".format(self.__class__.__name__,self.name) \
@@ -344,3 +385,8 @@ class Pipeline(object):
 
         self.printer.info("{} replaced with {}".format(self.blocks[index],block.name))
         self.blocks[index] = block
+
+    def __iter__(self):
+        """generator to return all blocks in the pipeline"""
+        for b in self.blocks:
+            yield b
