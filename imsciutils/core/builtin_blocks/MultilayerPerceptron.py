@@ -16,11 +16,11 @@ class MultilayerPerceptron(BatchBlock):
     labeling during training,
 
     Args:
-        num_neurons(int): the number of neurons in each of the
+        neurons(int): the number of neurons in each of the
             first and hidden layers
         dropout(float): the fraction of neurons dropped out after each
             layer to mitigate network overfitting
-        num_hidden(int): number of layers containing 'num_neurons'
+        num_hidden(int): number of layers containing 'neurons'
             fully-connected neurons between the first and last layers.
             This is the parameter to tweak to make the network _deeper_
         learning_rate(float): initial learning rate for the SGD optimizer
@@ -37,11 +37,11 @@ class MultilayerPerceptron(BatchBlock):
             for validating the model. default is 0.0
 
     Attributes:
-        num_neurons(int): the number of neurons in each of the
+        neurons(int): the number of neurons in each of the
             first and hidden layers
         dropout(float): the fraction of neurons dropped out after each
             layer to mitigate network overfitting
-        num_hidden(int): number of layers containing 'num_neurons'
+        num_hidden(int): number of layers containing 'neurons'
             fully-connected neurons between the first and last layers
         learning_rate(float): initial learning rate for the SGD optimizer
         decay(float): learning rate decay for the SGD optimizer
@@ -69,7 +69,7 @@ class MultilayerPerceptron(BatchBlock):
 
 
     """
-    def __init__(self, num_neurons=512,
+    def __init__(self, neurons=512,
                         dropout=0.5,
                         num_hidden=1,
                         learning_rate=0.01,
@@ -80,26 +80,26 @@ class MultilayerPerceptron(BatchBlock):
                         validation=0.0,
                         ):
 
-        assert isinstance(num_neurons, (float, int)),
-                        "num_neurons must be a float or int"
-        assert isinstance(num_hidden, (float, int)),
+        assert isinstance(neurons, (float, int)),\
+                        "neurons must be a float or int"
+        assert isinstance(num_hidden, (float, int)),\
                         "num_hidden must be a float or int"
-        assert isinstance(dropout, (float, int)),
+        assert isinstance(dropout, (float, int)),\
                         "dropout must be a float or int"
-        assert isinstance(learning_rate, (float, int)),
+        assert isinstance(learning_rate, (float, int)),\
                         "learning_rate must be a float or int"
-        assert isinstance(decay, (float, int)),
+        assert isinstance(decay, (float, int)),\
                         "decay must be a float or int"
-        assert isinstance(momentum, (float, int)),
+        assert isinstance(momentum, (float, int)),\
                         "momentum must be a float or int"
-        assert isinstance(batch_size, (float, int)),
+        assert isinstance(batch_size, (float, int)),\
                         "batch_size must be a float or int"
-        assert label_type in ['integer', 'categorical'],
+        assert label_type in ['integer', 'categorical'],\
                         "acceptable label_types are ['integer','categorical']"
-        assert isinstance(validation, (float, int)),
+        assert isinstance(validation, (float, int)),\
                         "validation must be a float or int"
 
-        self.num_neurons = int(num_neurons)
+        self.neurons = int(neurons)
         self.dropout = float(dropout)
         self.num_hidden = int(num_hidden)
         self.learning_rate = float(learning_rate)
@@ -121,14 +121,14 @@ class MultilayerPerceptron(BatchBlock):
 
     def train(self, data, labels):
         # checking that labels are in the correct format for the type
-         if self.label_type == 'integer' and isinstance(labels[0],np.ndarray):
-             msg = "'integer' label_type specified, but numpy arrays passed in"\
+        if self.label_type == 'integer' and isinstance(labels[0],np.ndarray):
+            msg = "'integer' label_type specified, but numpy arrays passed in"\
                     + "-- reseting label_type as 'categorical'!"
-             self.printer.warning(msg)
-             self.label_type = 'categorical'
+            self.printer.warning(msg)
+            self.label_type = 'categorical'
 
         elif self.label_type == 'categorical' and isinstance(labels[0],int):
-             msg = "'categorical' label_type specified, but integers passed in"\
+            msg = "'categorical' label_type specified, but integers passed in"\
                     + "-- reseting label_type as 'integer'!"
             self.printer.warning(msg)
             self.label_type = 'integer'
@@ -153,14 +153,14 @@ class MultilayerPerceptron(BatchBlock):
         # JM: building the model
         self.model = Sequential()
         # building first layer
-        self.model.add(Dense(self.num_neurons,
+        self.model.add(Dense(self.neurons,
                                     activation='relu',
                                     input_dim=stacked.shape[1]))
         self.model.add(Dropout(self.dropout))
 
         # building hidden layers
         for i in range(self.num_hidden):
-            self.model.add(Dense(self.num_neurons, activation='relu'))
+            self.model.add(Dense(self.neurons, activation='relu'))
             self.model.add(Dropout(self.dropout))
 
         # adding final layer that scores from 0-1
@@ -173,7 +173,7 @@ class MultilayerPerceptron(BatchBlock):
         # -------------------- training --------------------
         # JM converting to one-hot labels if integers were passed in
         # this is required for loss='categorical_crossentropy'
-        if self.label_type='integer':
+        if self.label_type=='integer':
             categorical_labels=keras.util.to_categorical(labels)
         else:
             categorical_labels=np.array(labels)
@@ -194,7 +194,7 @@ class MultilayerPerceptron(BatchBlock):
         # is simply the max value
         predicted_labels=np.argmax(scores, axis=1)
         # convert to one-hot encoding
-        if self.label_type='categorical':
+        if self.label_type=='categorical':
             predicted_labels=keras.utils.to_categorical(predicted_labels)
             predicted_labels=np.vsplit(predicted_labels.astype(np.int32),
                                                 predicted_labels.shape[0])
