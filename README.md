@@ -113,10 +113,10 @@ a simple image classifier that is tailored to your purposes
 import imsciutils as iu
 
 features = iu.PretrainedNetwork() # generate features
-classifier = iu.MultilayerPerceptron(neurons=512) # NN classifier
+neural_network = iu.MultilayerPerceptron(neurons=512) # NN classifier
 # there are a lot more parameters you can tweak!
 
-pipeline = iu.Pipeline([features,classifier])
+classifier = iu.Pipeline([features,neural_network])
 
 # for this example, we'll need to load the standard Mnist handwriting dataset
 # built into `imsciutils`
@@ -125,10 +125,10 @@ train_data, train_labels = mnist.get_train()
 test_data, ground_truth = mnist.get_test()
 
 # train the classifier
-pipeline.train(train_data,train_labels)
+classifier.train(train_data,train_labels)
 
 # test the classifier
-predictions = pipeline.process(test_data)
+predictions = classifier.process(test_data)
 
 # print the accuracy
 accuracy = iu.accuracy(predictions,ground_truth)

@@ -14,6 +14,7 @@ __all__ = ['BlockViewer',
             'Highpass',
             'IFFT',
             'ImageLoader',
+            'ImageWriter',
             'LinearSVM',
             'MultilayerPerceptron',
             'Orb',
@@ -30,6 +31,7 @@ from .Filters import Lowpass
 from .Filters import Highpass
 from .IFFT import IFFT
 from .ImageLoader import ImageLoader
+from .ImageWriter import ImageWriter
 from .LinearSVM import LinearSVM
 from .MultilayerPerceptron import MultilayerPerceptron
 from .Orb import Orb
