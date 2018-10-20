@@ -249,6 +249,9 @@ class Pipeline(object):
 
         Returns:
             processed_data(list): list of processed data
+
+        Raises:
+            RuntimeError: if pipeline requires training, but hasn't been
         """
         self.validate(data)
         self.intermediate_data = {}
