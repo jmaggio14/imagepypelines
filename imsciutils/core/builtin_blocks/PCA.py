@@ -22,7 +22,7 @@ class PCA(BatchBlock):
         data = np.vstack(data)
         # checking to make sure that enough components are specified
         if data.shape[1] < self.n_components:
-            self.printer.warning("more components specified than features")
+            self.printer.warning("more components specified than features!")
             self.printer.warning("truncating n_components({}) to num_features({})"\
                                     .format(self.n_components,data.shape[1]))
             # reinstantiating the class with fewer components
