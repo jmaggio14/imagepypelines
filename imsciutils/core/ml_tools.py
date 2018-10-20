@@ -6,7 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 import numpy as np
-from itertools import islice
+from itertools import islice, chain
 
 def accuracy(predicted,ground_truth):
     """calculates accuracy given ground truth and predicted labels"""
