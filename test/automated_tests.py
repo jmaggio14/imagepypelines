@@ -155,10 +155,11 @@ def test_multilayer_perceptron():
     import imsciutils as iu
 
     features = iu.PretrainedNetwork() # generate features
+    pca = iu.PCA(1024)
     classifier = iu.MultilayerPerceptron(neurons=512) # NN classifier
     # there are a lot more parameters you can tweak!
 
-    pipeline = iu.Pipeline([features,classifier])
+    pipeline = iu.Pipeline([features,pca,classifier])
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imsciutils`
