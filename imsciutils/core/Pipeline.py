@@ -354,7 +354,7 @@ class Pipeline(object):
     @property
     def names(self):
         """returns the names of all blocks"""
-        return [b.names for b in self.blocks]
+        return [b.name for b in self.blocks]
 
     @property
     def trained(self):
