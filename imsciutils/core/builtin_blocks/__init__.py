@@ -17,6 +17,7 @@ __all__ = ['BlockViewer',
             'LinearSVM',
             'MultilayerPerceptron',
             'Orb',
+            'PCA',
             'PretrainedNetwork',
             'Resizer',
             ]
@@ -32,5 +33,6 @@ from .ImageLoader import ImageLoader
 from .LinearSVM import LinearSVM
 from .MultilayerPerceptron import MultilayerPerceptron
 from .Orb import Orb
+from .PCA import PCA
 from .PretrainedNetwork import PretrainedNetwork
 from .Resizer import Resizer
