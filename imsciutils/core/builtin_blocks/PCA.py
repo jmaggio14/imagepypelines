@@ -34,5 +34,5 @@ class PCA(BatchBlock):
     def batch_process(self,data):
         # stacking input data
         data = np.vstack(data)
-        processed = self.pca.transform(data)
-        return np.vsplit(processed,processed.shape[0])
+        reduced = self.pca.transform(data)
+        return np.vsplit(reduced,reduced.shape[0])
