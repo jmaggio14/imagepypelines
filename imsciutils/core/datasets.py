@@ -18,7 +18,7 @@ class Mnist(object):
         y_test(list): corresponding integer labels for the data
     """
     def __init__(self):
-        from keras.dataset import mnist
+        from keras.datasets import mnist
         (x_train,y_train), (x_test,y_test) = mnist.load_data()
 
         self.x_train = [np.squeeze(x_train[i,:,:]) for i in range(x_train.shape[0])]
@@ -63,7 +63,7 @@ class MnistFashion(object):
         y_test(list): corresponding integer labels for the data
     """
     def __init__(self):
-        from keras.dataset import fashion_mnist
+        from keras.datasets import fashion_mnist
         (x_train,y_train), (x_test,y_test) = fashion_mnist.load_data()
 
         self.x_train = [np.squeeze(x_train[i,:,:]) for i in range(x_train.shape[0])]
@@ -109,7 +109,7 @@ class Cifar10(object):
 
     """
     def __init__(self):
-        from keras.dataset import cifar10
+        from keras.datasets import cifar10
         from keras import backend as K
         keras.backend.set_image_data_format('channels_last')
         (x_train,y_train), (x_test,y_test) = cifar10.load_data()
@@ -161,7 +161,7 @@ class Cifar100(object):
 
     """
     def __init__(self,label_mode='fine'):
-        from keras.dataset import cifar100
+        from keras.datasets import cifar100
         from keras import backend as K
         keras.backend.set_image_data_format('channels_last')
         (x_train,y_train), (x_test,y_test) = cifar100.load_data(label_mode)
