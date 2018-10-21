@@ -16,12 +16,12 @@ class LinearSVM(BatchBlock):
     def __init__(self,C=1):
         self.C = C
         io_map = {ArrayType([1,None]):int}
-        super(Resizer,self).__init__(io_map,
+        super(LinearSVM,self).__init__(io_map,
                                     requires_training=True,
                                     requires_labels=True)
 
     def train(self,train_data,train_labels):
-        self.svc = svm.SVM(C=self.C,kernel='linear')
+        self.svc = svm.SVC(C=self.C,kernel='linear')
         train_data = np.vstack(train_data)
         self.svc.fit(train_data,train_labels)
 
