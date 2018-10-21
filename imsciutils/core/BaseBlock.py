@@ -389,6 +389,7 @@ class BaseBlock(object):
         assert isinstance(name,str),"name must be a string"
         self.name = name
         self.printer = get_printer(self.name)
+        return self
 
     def train(self, data, labels=None):
         """(optional overload)trains the block if required
