@@ -111,7 +111,7 @@ class Cifar10(object):
     def __init__(self):
         from keras.datasets import cifar10
         from keras import backend as K
-        keras.backend.set_image_data_format('channels_last')
+        K.set_image_data_format('channels_last')
         (x_train,y_train), (x_test,y_test) = cifar10.load_data()
 
         self.x_train = [np.squeeze(x_train[i,:,:,:]) for i in range(x_train.shape[0])]
@@ -163,7 +163,7 @@ class Cifar100(object):
     def __init__(self,label_mode='fine'):
         from keras.datasets import cifar100
         from keras import backend as K
-        keras.backend.set_image_data_format('channels_last')
+        K.set_image_data_format('channels_last')
         (x_train,y_train), (x_test,y_test) = cifar100.load_data(label_mode)
 
         self.x_train = [np.squeeze(x_train[i,:,:,:]) for i in range(x_train.shape[0])]
