@@ -11,11 +11,12 @@ python:
 # JM:
 # enabling 3.7 workaround in accordance with this post:
 # https://github.com/travis-ci/travis-ci/issues/9815
-matrix:
-  include:
-    - python: 3.7
-      dist: xenial
-      sudo: true
+# JM 10/21/18 - comment out python 3.7 as keras/tensorflow don't support it yet
+# matrix:
+#   include:
+#     - python: 3.7
+#       dist: xenial
+#       sudo: true
 
 # ------------------------------------------
 
@@ -23,6 +24,7 @@ install:
   # ND
   - pip install -r requirements.txt
   - pip install .
+  - pip install opencv-python #this is no longer in our requirements.txt
 
 script:
   # JM: running license enforcer
