@@ -1,5 +1,5 @@
 
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA as sklearn_PCA
 from .. import BatchBlock
 from .. import ArrayType
 import numpy as np
@@ -10,9 +10,9 @@ class PCA(BatchBlock):
         assert isinstance(n_components,(int,float)),\
             "n_components must be an integer"
         self.n_components = int(n_components)
-        self.random_state
+        self.random_state = random_state
 
-        io_map = {ArrayType([1,None]:ArrayType([1,self.n_components]))}
+        io_map = {ArrayType([1,None]):ArrayType([1,self.n_components])}
         super(PCA,self).__init__(io_map,
                                     requires_training=True,
                                     requires_labels=False,)
@@ -29,7 +29,8 @@ class PCA(BatchBlock):
             # this is done to make sure that self.io_map is accurate
             self.__init__(data.shape[1],self.random_state)
 
-        self.pca = PCA(self.n_components).fit(data)
+        self.pca = sklearn_PCA(self.n_components)
+        self.pca.fit(data)
 
     def batch_process(self,data):
         # stacking input data
