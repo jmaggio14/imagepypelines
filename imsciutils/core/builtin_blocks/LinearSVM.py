@@ -8,6 +8,7 @@
 from .. import BatchBlock
 from .. import ArrayType
 from sklearn import svm
+import numpy as np
 
 
 class LinearSVM(BatchBlock):
