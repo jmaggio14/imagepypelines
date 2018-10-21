@@ -35,6 +35,11 @@ class MultilayerPerceptron(BatchBlock):
             default is integer
         validation(float): the fraction of training data that will be used
             for validating the model. default is 0.0
+        num_epochs(int): the number of epochs to train this model for (the number
+            of times the model is trained on the training data). higher usually
+            yields better results but linearly increases training time.
+            default is 1
+
 
     Attributes:
         neurons(int): the number of neurons in each of the
@@ -66,6 +71,10 @@ class MultilayerPerceptron(BatchBlock):
             by default if requires_training = False
         printer(iu.Printer): printer object for this block,
             registered to 'name'
+        num_epochs(int): the number of epochs to train this model for (the number
+            of times the model is trained on the training data). higher usually
+            yields better results but linearly increases training time.
+            default is 1
 
 
     """
@@ -78,6 +87,7 @@ class MultilayerPerceptron(BatchBlock):
                         batch_size=128,
                         label_type='integer',
                         validation=0.0,
+                        num_epochs=1,
                         ):
 
         assert isinstance(neurons, (float, int)),\
@@ -98,6 +108,8 @@ class MultilayerPerceptron(BatchBlock):
                         "acceptable label_types are ['integer','categorical']"
         assert isinstance(validation, (float, int)),\
                         "validation must be a float or int"
+        assert isinstance(num_epochs, (float, int)),\
+                        "num_epochs must be an int"
 
         self.neurons = int(neurons)
         self.dropout = float(dropout)
@@ -108,14 +120,14 @@ class MultilayerPerceptron(BatchBlock):
         self.batch_size = int(batch_size)
         self.label_type = label_type
         self.validation = float(validation)
+        self.num_epochs = int(num_epochs)
 
         if self.label_type == 'integer':
             io_map = {ArrayType([1, None]): int}
         else:
             io_map = {ArrayType([1, None]): ArrayType([None], dtypes=np.int32)}
 
-        super(MultilayerPerceptron, self).__init__(self,
-                                                    io_map,
+        super(MultilayerPerceptron, self).__init__(io_map,
                                                     requires_training=True,
                                                     requires_labels=True)
 
@@ -133,7 +145,8 @@ class MultilayerPerceptron(BatchBlock):
             self.printer.warning(msg)
             self.label_type = 'integer'
 
-        Sequential, Dense, Dropout, SGD = self.__kera_importer()
+        from keras.utils import to_categorical
+        Sequential, Dense, Dropout, SGD = self.__keras_importer()
         # making the gradient decent optimizer
         sgd = SGD(lr=self.learning_rate,
                     decay=self.decay,
@@ -174,28 +187,30 @@ class MultilayerPerceptron(BatchBlock):
         # JM converting to one-hot labels if integers were passed in
         # this is required for loss='categorical_crossentropy'
         if self.label_type=='integer':
-            categorical_labels=keras.util.to_categorical(labels)
+            categorical_labels=to_categorical(labels)
         else:
             categorical_labels=np.array(labels)
         # fitting the model using one-hot labels
         self.model.fit(stacked,
                             categorical_labels,
                             validation_split=self.validation,
-                            batch_size=self.batch_size)
+                            batch_size=self.batch_size,
+                            epochs=self.num_epochs)
 
 
     def batch_process(self, data):
         """generates the predicted label given input features"""
+        from keras.utils import to_categorical
         # stacking data
         data=np.vstack(data)
 
-        scores=self.model.predict(data)
+        scores=self.model.predict(data,batch_size=self.batch_size)
         # scores here is softmax mapped from 0-1 so the most likely class
         # is simply the max value
         predicted_labels=np.argmax(scores, axis=1)
         # convert to one-hot encoding
         if self.label_type=='categorical':
-            predicted_labels=keras.utils.to_categorical(predicted_labels)
+            predicted_labels=to_categorical(predicted_labels)
             predicted_labels=np.vsplit(predicted_labels.astype(np.int32),
                                                 predicted_labels.shape[0])
         else:
@@ -206,10 +221,11 @@ class MultilayerPerceptron(BatchBlock):
 
     def __keras_importer(self):
         """imports objects needed from keras, done in separate function
-        so keras references remain out of scope for serialization
+        so keras references remain out of scope for serialization purposes
+        (references to multi-threaded or GPU bound memory is unserializable)
         """
         from keras.models import Sequential
-        from keras.layers import Dense
+        from keras.layers import Dense, Dropout
         from keras.optimizers import SGD
         return Sequential, Dense, Dropout, SGD
 
