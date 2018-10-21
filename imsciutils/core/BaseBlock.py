@@ -385,8 +385,10 @@ class BaseBlock(object):
 
         self.printer = get_printer(self.name)
 
-    # def rename(self,name):
-    #     self.name
+    def rename(self,name):
+        assert isinstance(name,str),"name must be a string"
+        self.name = name
+        self.printer = get_printer(self.name)
 
     def train(self, data, labels=None):
         """(optional overload)trains the block if required
