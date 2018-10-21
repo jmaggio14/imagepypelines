@@ -106,6 +106,7 @@ class Pipeline(object):
         self.printer = get_printer(self.name)
         self.names_to_extract = []
         self.intermediate_data = {}
+        self.intermediate_names = []
 
         # set log level to infinity if non-verbose is desired
         if not self.verbose:
