@@ -9,122 +9,216 @@ import os
 import glob
 import random
 import itertools
-from collections import deque
-
+import collections
+import numpy as np
 import imsciutils as iu
 from .. import core
+import fnmatch
+from itertools import islice, chain
 
-@core.experimental()
+
+def chunk(it,size):
+    it = iter(it)
+    return list(iter(lambda: list(islice(it, size)), ()))
+
 class DatasetManager(object):
-    def __init__(self,input_dir,k_folds,extensions=None,recursive=False,random_seed=None):
-        # building printer and checking instantation args
-        self.printer = core.get_printer(self.__class__.__name__)
+    """
+    """
+    def __init__(self,
+                    k_folds=10,
+                    extensions=None,
+                    recursive=False,
+                    shuffle_seed=None,
+                    label_type='integer',
+                    ):
+
+        assert isinstance(k_folds,int),"k_folds must be an integer"
+        assert isinstance(extensions,(list,tuple,type(None))),\
+            "extensions must be a tuple,list or None"
+        assert isinstance(shuffle_seed,(int,float,type(None),np.RandomState)),\
+            "k_folds must be an integer"
+        assert label_type in ['integer', 'categorical'],\
+            "acceptable label_types are ['integer','categorical']"
 
         if extensions is None:
             extensions = ['']
-        self.__error_check(input_dir, k_folds, extensions, recursive, random_seed)
 
-        self.input_dir = input_dir
-        self.k_folds = int(k_folds)
-        self.extensions = extensions
+        self.k_folds = k_folds
+        self.extensions = tuple(extensions)
+        self.label_type = label_type
         self.recursive = recursive
+        self.shuffle_seed = shuffle_seed
 
-        self.data_filenames = self.make_data_lists()
+        random.seed(self.shuffle_seed)
+
         self.fold_index = 1
-
-    def __error_check(self, input_dir, k_folds, extensions, recursive, random_seed):
-        """
-        performs error checking on the instantation args for this class
-        """
-        # checking to make sure the input directory exists
-        if not os.path.exist(input_dir):
-            error_msg = "Unable to find input_dir '{}'".format(input_dir)
-            self.printer.error(error_msg)
-            raise FileNotFoundError(error_msg)
-
-        # making sure k_folds is an integer greater than one
-        if not isinstance(k_folds,(int,float)):
-            error_msg = "'k_folds' must be an int"
-            self.printer.error(error_msg)
-            raise TypeError(error_msg)
-        # checking that k_folds is 2 or greater
-        elif not k_folds > 1:
-            error_msg = "'k_folds' must be 2 or greater"
-            self.printer.error(error_msg)
-            raise ValueError(error_msg)
-        # checking to make sure 'extensions' is a tuple or list of acceptable image extensions
-        if not isinstance(extensions,(tuple,list)):
-            error_msg = "'extensions' must be a tuple or list of acceptable image extensions, or None for all"
-            self.printer.error(error_msg)
-            raise TypeError(error_msg)
-        # making sure every extension is a string
-        elif not all( isinstance(ext,str) for ext in extensions ):
-            error_msg = "all image extensions must be strings"
-            self.printer.error(error_msg)
-            raise TypeError(error_msg)
-
-        # checking that random seed is of the correct type
-        if not isinstance(random_seed,(int,float,type(None))):
-            error_msg = "random_seed must be a int, float or Nonetype"
-            self.printer.error(error_msg)
-            raise TypeError(error_msg)
-
-    def __str__(self):
-        return "DatasetManager ({}/{} folds)".format(self.fold_index,self.k_folds)
-
-    def __repr__(self):
-        return str(self) + " - input_dir: {}".format(self.input_dir)
-
-    def make_data_lists(self):
-        """
-        generates a list of data_filenames
-        """
-        if self.recursive:
-            join_args = (self.input_dir,'**')
-        else:
-            join_args = (self.input_dir,)
-
-        data_filenames = []
-        for ext in extensions:
-            glob_string = os.path.join(*join_args,'*' + ext)
-            data_filenames.extend( glob.glob(glob_string) )
-
-        # shuffling the data in place before chunking
-        random.seed(self.random_seed)
-        random.shuffle(data_filenames)
-
-        # chunking the data into k chunks for k_fold cross_validation
-        it = iter(data_filenames)
-        data_filenames = deque( iter(lambda: tuple(itertools.islice(it, self.k_folds)), ()) )
-
-        return data_filenames
-
-
-    def get_train_test(self):
-        """
-        returns train and test data filenames in the form of a list
-        """
-        # getting datafilename list because deques are not sliceable
-        data_list = list(self.data_filenames)
-
-        train_data = list( chain( *data_list[:self.k_folds-1] ) )
-        test_data = data_list[-1]
-
-        return train_data, test_data
+        self.class_names = {}
+        self.data_chunks = collections.deque()
+        self.label_chunks = collections.deque()
+        self.printer = core.get_printer(self.__class__.__name__)
 
     def rotate(self):
-        self.data_filenames.rotate()
+        """rotate the data chunks so the next dataset fold is available"""
         self.fold_index += 1
-
-        # printing fold warnings / updates to the terminal
+        self.data_chunks.rotate()
+        self.label_chunks.rotate()
         if self.fold_index > self.k_folds:
-            warning_msg = "WARNING! on fold {}, this dataset was only made for {} folds, which means you are seeing data for fold {}"
-            warning_msg = warning_msg.format(self.fold_index,self.k_folds, (self.k_folds % self.fold_index + 1))
+            warning_msg = "data has been rotated more than the number of folds"
             self.printer.warning(warning_msg)
-        else:
-            info_msg = "ready for fold {}/{}".format(self.fold_index,self.k_folds)
-            self.printer.info(info_msg)
 
-    @property
-    def fold(self):
-        return self.fold_index
+    def get_train(self):
+        """get the training set for this fold
+
+        Args:
+            None
+
+        Returns:
+            train_data(list): list of training filenames
+            train_labels(list): list of training labels
+        """
+        train_data = [self.data_chunks[i] for i in range(self.k_fold-1)]
+        train_labels = [self.labels_chunks[i] for i in range(self.k_fold-1)]
+
+        return list(chain(*train_data)), list(chain(*train_labels))
+
+
+    def get_test(self):
+        """get the testing set for this fold
+
+        Args:
+            None
+
+        Returns:
+            test_data(list): list of testing filenames
+            test_labels(list): list of testing labels
+        """
+        test_data = self.data_chunks[-1]
+        test_labels = self.label_chunks[-1]
+
+        return test_data, test_labels
+
+    def load_from_arrays(self,*arrays,**):
+        """load a list of class arrays and apply labels
+
+        Args:
+            *arrays: unpacked list of data, each array
+                must be for a different class so it can be labeled properly
+
+        Return:
+            None
+        """
+        self.class_names = {}
+        data = []
+        labels = []
+        # load each directory and adding it to the global labels
+        for lbl,data_arrays in enumerate(arrays):
+            data.extend( data_arrays )
+            labels.extend( [lbl] * len(data_arrays) )
+            self.class_names[lbl] = os.path.basename(directory)
+
+        # JM shuffling filenames and labels together
+        combined = list(zip(data, labels))
+        random.shuffle(combined)
+        data[:], labels[:] = zip(*combined)
+
+        # chunking all data
+        self.data_chunks = collections.deque( chunk(data,k_folds) )
+        self.label_chunks = collections.deque( chunk(labels,k_folds) )
+
+        # warning that the fold index has been reset
+        if self.fold_index:
+            warning_msg = "fold index has been reset because new data was added"
+            self.printer.warning(warning_msg)
+            self.fold_index = 1
+
+    def load_from_directories(self,*directories):
+        """load a list of class directories and apply labels
+
+        Args:
+            *directories: unpacked list of data directories, each directory
+                must be for a different class so it can be labeled properly
+
+        Return:
+            None
+        """
+        self.class_names = {}
+        filenames = []
+        labels = []
+        # load each directory and adding it to the global labels
+        for lbl,directory in enumerate(directories):
+            dir_filenames,dir_labels = self._load_directory(directory,lbl)
+            filenames.extend( dir_filenames )
+            labels.extend( dir_labels )
+            self.class_names[lbl] = os.path.basename(directory)
+
+        # JM shuffling filenames and labels together
+        combined = list(zip(filenames, labels))
+        random.shuffle(combined)
+        filenames[:], labels[:] = zip(*combined)
+
+        # chunking all data
+        self.data_chunks = collections.deque( chunk(filenames,k_folds) )
+        self.label_chunks = collections.deque( chunk(labels,k_folds) )
+
+        # warning that the fold index has been reset
+        if self.fold_index:
+            warning_msg = "fold index has been reset because new data was added"
+            self.printer.warning(warning_msg)
+            self.fold_index = 1
+
+
+
+    def _load_directory(self,directory,label):
+        """list all filenames in the directory that match the specified
+        extensions.
+
+        Args:
+            directory(str): the directory which contains the desired data
+            label(int): the label for all the files in this directory
+
+        Returns:
+            filenames(list): list of filenames in this directory with
+                filtered with the desired extensions
+            labels(list): list of labels the files in this directory
+
+        Raises:
+            AssertionError: if directory is invalid
+        """
+        assert os.path.isdir(directory),\
+            "'{}' must be a valid directory".format(directory)
+
+
+        filenames = []
+        if self.recursive:
+            # use os walk and fnmatch instead of glob for python2 compatability
+            for ext in self.extensions:
+                for root, dirnames, filenames in os.walk(directory):
+                    for filename in fnmatch.filter(filenames, '*' + ext):
+                        matches.append(os.path.join(root, filename))
+        else:
+            for ext in self.extensions:
+                glob_path = os.path.join(directory,'**/*' + ext)
+                filenames.extend( glob.glob(glob_path) )
+
+        if self.label_type == 'categorical':
+            from keras.utils import to_categorical
+            label = to_categorical([label])
+
+        return filenames,[label]*len(filenames)
+
+    def get_class_names(self,labels):
+        """retrieves names of the classes based on the labels"""
+        class_names = [self.class_names[lbl] for lbl in labels]
+
+    def __str__(self):
+        return "DatasetManager ({}/{} folds)".format(self.fold_index,
+                                                        self.k_folds)
+
+    def __repr__(self):
+        return str(self)
+
+    def __iter__(self):
+        for i in range(self.k_folds):
+            train_data,train_labels = self.get_train()
+            test_data,test_labels = self.get_test()
+            yield train_data,train_labels,test_data,test_labels
