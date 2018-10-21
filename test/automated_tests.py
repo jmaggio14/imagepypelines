@@ -152,18 +152,13 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
 
 
 @iu.unit_test
-def test_multilayer_perceptron():
+def test_linear_svm():
     import imsciutils as iu
 
     resizer = iu.Resizer(32,32) #28x28
     features = iu.PretrainedNetwork() # generate features
     pca = iu.PCA(256)
-    classifier = iu.MultilayerPerceptron(neurons=512,
-                                            validation=.1,
-                                            num_hidden=3,
-                                            dropout=.35,
-                                            learning_rate=.01) # NN classifier
-    # there are a lot more parameters you can tweak!
+    classifier = iu.LinearSVM()
 
     pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
 
@@ -186,42 +181,6 @@ def test_multilayer_perceptron():
     if len(predictions) == len(test_data):
         return True
     return False
-
-@iu.unit_test
-def test_all_pretrained_networks():
-    import imsciutils as iu
-    import cv2
-
-    filenames = iu.standard_image_filenames()
-    images = [cv2.imread(f,cv2.IMREAD_COLOR) for f in filenames]
-    printer = iu.get_printer('test_all_pretrained_networks')
-
-    success = []
-    for i,network_name in enumerate(iu.PRETRAINED_NETWORKS):
-        try:
-            printer.info("testing {}...".format(network_name))
-            resizer = iu.Resizer(80,80)
-            pretrained = iu.PretrainedNetwork(network_name)
-
-            pipeline = iu.Pipeline([resizer,pretrained])
-            pipeline.process(images)
-
-            del pretrained
-            del pipeline
-            success.append(True)
-            printer.info("{}/{} test successful!"\
-                            .format(i+1,len(iu.PRETRAINED_NETWORKS)))
-
-
-        except Exception as e:
-            printer.error("failure processing ",network_name)
-            success.append(False)
-
-    return all(success)
-
-
-
-
 
 
 
