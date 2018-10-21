@@ -11,6 +11,7 @@ import numpy as np
 from .. import BatchBlock
 from .. import ArrayType
 from ..coordinates import dimensions
+import cv2
 
 SUBMODULES = {'xception': 'keras.applications.xception',
                 'vgg16': 'keras.applications.vgg16',
@@ -22,9 +23,6 @@ SUBMODULES = {'xception': 'keras.applications.xception',
                 'densenet121': 'keras.applications.densenet',
                 'densenet169': 'keras.applications.densenet',
                 'densenet201': 'keras.applications.densenet',
-                'nasnetlarge': 'keras.applications.nasnet',
-                'nasnetmobile': 'keras.applications.nasnet',
-                'mobilenetv2': 'keras.applications.mobilenetv2',
                 }
 FUNCTION_NAMES = {'xception': 'Xception',
                     'vgg16': 'VGG16',
@@ -36,15 +34,27 @@ FUNCTION_NAMES = {'xception': 'Xception',
                     'densenet121': 'DenseNet121',
                     'densenet169': 'DenseNet169',
                     'densenet201': 'DenseNet201',
-                    'nasnetlarge': 'NASNetLarge',
-                    'nasnetmobile': 'NASNetMobile',
-                    'mobilenetv2': 'MobileNetV2',
+                    }
+
+MINIMUM_SIZES = {'xception': 71,
+                    'vgg16': 32,
+                    'vgg19': 32,
+                    'resnet50': 32,
+                    'inception_v3': 75,
+                    'inception_resnet_v2': 75,
+                    'mobilenet': 32,
+                    'densenet121': 32,
+                    'densenet169': 32,
+                    'densenet201': 32,
                     }
 
 class PretrainedNetwork(BatchBlock):
     """Block to extract features from pretrained neural networks
 
     pretrained networks are trained on imagenet with pooling applied.
+
+    if grayscale images are passed into this network, they will be converted
+    to RGB (this is required for features to be extracted from a network).
 
     This class utilizes keras to automatically leverage
     hardware resources and retrieve pretrained networks.
@@ -102,11 +112,15 @@ class PretrainedNetwork(BatchBlock):
         self.pooling_type = pooling_type
 
         # building the keras network
-        self.model_fn, self.preprocess_fn \
+        self.model_fn, self.preprocess_fn, self.min_input_size, output_shape\
             = self._keras_importer(network,pooling_type)
 
-        io_map = {ArrayType([None,None],[None,None,None]):ArrayType([1,None])}
-        super(PretrainedNetwork,self).__init__(io_map,requires_training=False)
+        io_map = {ArrayType([None,None],[None,None,3]):
+                                ArrayType([1,output_shape])}
+        name = "Pretrained" + self.network[0].upper() + self.network[1:]
+        super(PretrainedNetwork,self).__init__(io_map,
+                                                name=name,
+                                                requires_training=False)
 
     def batch_process(self,batch_data,batch_labels=None):
         # verify that all images are the same size
@@ -117,7 +131,16 @@ class PretrainedNetwork(BatchBlock):
 
         # reshape all images to a 4D array for keras standard
         r,c,b,_ = dimensions( batch_data[0] )
-        batch_data = [img.reshape(1,r,c,b) for img in batch_data]
+        if (r < self.min_input_size[0]) or (c < self.min_input_size[1]):
+            error_msg = "minimum acceptable image size is {}"\
+                .format(self.min_input_size)
+            self.printer.error(error_msg)
+            raise ValueError(error_msg)
+
+        if b == 1:
+            batch_data = [cv2.cvtColor(im,cv2.COLOR_GRAY2RGB) for im in batch_data]
+
+        batch_data = [img.reshape(1,r,c,3) for img in batch_data]
 
         # stack all the images so all data can be processed at once
         img_stack = np.vstack(batch_data)
@@ -163,9 +186,17 @@ class PretrainedNetwork(BatchBlock):
         submodule = import_module(SUBMODULES[network_name])
         model_constructor = getattr(submodule,
                                     FUNCTION_NAMES[network_name])
-        model_fn = model_constructor(include_top=False,
+        model = model_constructor(include_top=False,
                                      weights='imagenet',
-                                     pooling=pooling_type).predict
+                                     pooling=pooling_type)
+        model_fn = model.predict
+        output_shape = model.output_shape[1]
+        min_input_size = MINIMUM_SIZES[network_name],MINIMUM_SIZES[network_name]
 
         preprocess_fn = getattr(submodule, 'preprocess_input')
-        return model_fn, preprocess_fn
+
+        # set the keras backend to use channels_last
+        from keras import backend as K
+        K.set_image_data_format('channels_last')
+
+        return model_fn, preprocess_fn, min_input_size, output_shape
