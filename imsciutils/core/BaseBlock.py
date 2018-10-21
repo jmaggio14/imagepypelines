@@ -363,7 +363,7 @@ class BaseBlock(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-            name = name + str(self.EXTANT[name])
+        name = name + '({})'.format( self.EXTANT[name] )
 
 
         # checking if notes were provided for this block
@@ -384,6 +384,9 @@ class BaseBlock(object):
             self.trained = True
 
         self.printer = get_printer(self.name)
+
+    # def rename(self,name):
+    #     self.name
 
     def train(self, data, labels=None):
         """(optional overload)trains the block if required
@@ -451,7 +454,7 @@ class BaseBlock(object):
             if len(data) != len(labels):
                 raise DataLabelMismatch(data, labels)
 
-        self.train(self, data, labels)
+        self.train(data, labels)
         self.trained = True
 
     def _pipeline_process(self, data, labels=None):
@@ -608,11 +611,9 @@ class SimpleBlock(BaseBlock):
         """calls self.label for each datum and returns a list or Nonetype"""
         return [self.label(lbl) for lbl in labels]
 
-    def __str__(self):
-        return super(SimpleBlock,self).__str__() + '-(SimpleBlock)'
-
     def __repr__(self):
-        return (str(self) + '\n' + self.notes)
+        return (str(self) + '-(SimpleBlock)' + '\n' + self.notes)
+
 
 
 
@@ -677,10 +678,7 @@ class BatchBlock(BaseBlock):
         """runs self.labels"""
         return self.labels(labels)
 
-    def __str__(self):
-        return super(BatchBlock,self).__str__() + '-(BatchBlock)'
-
     def __repr__(self):
-        return (str(self) + '\n' + self.notes)
+        return (str(self) + '-(BatchBlock)' + '\n' + self.notes)
 
 # END
