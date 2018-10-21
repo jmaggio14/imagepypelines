@@ -354,6 +354,12 @@ class Pipeline(object):
     def get_intermediate_data(self):
         return self.intermediate_data
 
+    def rename(self,name):
+        assert isinstance(name,str),"name must be a string"
+        self.name = name
+        self.printer = get_printer(self.name)
+        return self
+
 
     @property
     def names(self):
