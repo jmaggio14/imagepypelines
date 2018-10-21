@@ -288,9 +288,9 @@ class Pipeline(object):
                 self.intermediate_data[b.name] = data
 
 
-        self.printer.info("{} datums processed in {}ms".format(
+        self.printer.info("{} datums processed in {}seconds".format(
                                                             num_initial_inputs,
-                                                            t.time_ms()))
+                                                            t.time()))
 
         return data
 
