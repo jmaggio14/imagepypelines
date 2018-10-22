@@ -1,4 +1,4 @@
-# imsciutils
+recommend# imsciutils
 ![logo](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/logo.png "logo")
 
 ![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
@@ -11,7 +11,6 @@ This is a repo of code that we seem to find ourselves using in projects in many 
 
 ## Installation
 python compatibility:  3.5+ (python 2.7 backwards)
-
 via pip:
 ```
 *placeholder until we get it on pypi*
@@ -22,10 +21,31 @@ git clone https://github.com/jmaggio14/imsciutils.git
 cd imsciutils
 python setup.py install
 ```
+### dependencies
+for full functionality, imsciutils requires _opencv_ and _tensorflow_ to be installed
+on your machine
+##### tensorflow
+if you have a gpu
+```console
+pip install tensorflow-gpu --user
+```
+otherwise
+```console
+pip install tensorflow --user
+```
+##### opencv
+we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html)
+
+**_however_** unofficial bindings for opencv can be installed with
+```console
+pip install opencv-python --user
+```
+(while we haven't encountered many problems with these unofficial bindings,
+we do not guarantee support)
 
 
 ## Documentation
-Full Documentation for imsciutils can be found on our website: https://jmaggio14.github.io/imsciutils
+Full Documentation for imsciutils can be found on our website: https://www.imagepypelines.org/
 
 ## Licensing / Credit
 `imsciutils` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imsciutils` dependencies.
@@ -281,6 +301,48 @@ rows, cols, bands, dtype = iu.dimensions(lenna)
 Many imaging tasks are time sensitive or computationally
 intensive. `imsciutils` includes simple tools to time your process or function
 
+#### Timer Objects
+`imsciutils` also includes a separate timer for timing things inside a function
+or code block
+
+##### absolute timing:
+```python
+from imsciutils.util import Timer
+import time
+
+t = Timer()
+time.sleep(5)
+print( t.time(),"seconds" ) # or t.time_ms() for milliseconds
+```
+
+##### lap timing:
+```python
+from imsciutils.util import Timer
+import time
+
+t = Timer()
+for i in range(10):
+	time.sleep(1)
+	print( t.lap(),"seconds" ) # or t.lap_ms() for milliseconds
+```
+
+##### perform operation for N seconds:
+```python
+from imsciutils.util import Timer
+import time
+
+def do_something():
+	pass
+
+# set the countdown
+N = 10 #seconds
+t = Timer()
+t.countdown = N
+while t.countdown:
+	do_something()
+```
+
+
 #### timing Decorator
 let's say we have a function that we think may be slowing down our pipeline.
 We can add `@function_timer` on the line above the function
@@ -307,27 +369,6 @@ prints the following when the above code is run
 ```
 (  function_timer  )[    INFO    ] ran function 'we_can_time_in_seconds' in 1.001sec
 (  function_timer  )[    INFO    ] ran function 'or_in_milliseconds' in 1000.118ms
-```
-
-#### Timer Objects
-`imsciutils` also includes a separate timer for timing things inside a function
-or code block
-```python
-from imsciutils.util import Timer
-import time
-
-t = Timer()
-for i in range(2):
-	time.sleep(1)
-	print(i,") t.lap() resets every time it's called:", t.lap() ) # we can call the 'lap' function to get lap timing
-	print(i,') t.time() counts up always: ', t.time() ) # or the 'time' to get the total time
-```
-produces the following
-```
-0 ) t.lap() resets every time it's called: 1.0
-0 ) t.time() counts up always:  1.001
-1 ) t.lap() resets every time it's called: 1.002
-1 ) t.time() counts up always:  2.003
 ```
 
 # Development Tools in `imsciutils`
