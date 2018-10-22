@@ -66,13 +66,14 @@ pipeline = iu.SimpleImageClassifier()
 
 # --------------- load the filenames of our dataset ---------------
 dataset_manager = iu.ml.DatasetManager(k_folds=10)
-dataset_manager.load('replace_with_your_own_image_class_directory1/',
-                        'replace_with_your_own_image_class_directory2/',
-                        'replace_with_your_own_image_class_directory3/')
+dataset_manager.load_from_directories(
+                                'replace_with_your_own_image_class_directory1/',
+                                'replace_with_your_own_image_class_directory2/',
+                                'replace_with_your_own_image_class_directory3/')
 
 all_accuracies = []
 # testing this classifier 10 times using 10 fold cross-validation
-for train_data,train_labels, test_data,ground_truth in dataset_manager:
+for train_data,train_labels,test_data,ground_truth in dataset_manager:
   pipeline.train(train_data,train_labels)
   predicted = pipeline.process(test_data)
   all_accuracies.append( iu.accuracy(predicted,ground_truth) )
