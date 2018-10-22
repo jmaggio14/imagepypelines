@@ -97,7 +97,7 @@ class DatasetManager(object):
 
         return test_data, test_labels
 
-    def load_from_arrays(self,*arrays,**):
+    def load_from_arrays(self,*arrays,**class_names):
         """load a list of class arrays and apply labels
 
         Args:
@@ -107,6 +107,21 @@ class DatasetManager(object):
         Return:
             None
         """
+        # JM: this is stupid hack to get keyword only arguments in python2
+        if len(class_names) > 1:
+            raise TypeError("only one keyword argument 'class_names' can be specified")
+        if len(class_names) >= 1 and ('class_names' not in class_names):
+            raise TypeError("only one keyword argument 'dtypes' can be specified")
+
+        if 'class_names' in class_names:
+            assert len(class_names['class_names']) == len(arrays),\
+                "you must provide a class name for each array"
+            class_names = [str(c) for c in class_names['class_names']]
+        else:
+            class_names = ['label{}'.format(i) for i range(len(arrays))]
+
+
+        # ----- code begins -----
         self.class_names = {}
         data = []
         labels = []
@@ -114,7 +129,7 @@ class DatasetManager(object):
         for lbl,data_arrays in enumerate(arrays):
             data.extend( data_arrays )
             labels.extend( [lbl] * len(data_arrays) )
-            self.class_names[lbl] = os.path.basename(directory)
+            self.class_names[lbl] = class_names[lbl]
 
         # JM shuffling filenames and labels together
         combined = list(zip(data, labels))
@@ -126,7 +141,7 @@ class DatasetManager(object):
         self.label_chunks = collections.deque( chunk(labels,k_folds) )
 
         # warning that the fold index has been reset
-        if self.fold_index:
+        if self.fold_index > 1:
             warning_msg = "fold index has been reset because new data was added"
             self.printer.warning(warning_msg)
             self.fold_index = 1
