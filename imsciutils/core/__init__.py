@@ -66,6 +66,10 @@ from .Exceptions import DataLabelMismatch
 
 # ml_tools.py
 from .ml_tools import accuracy
+from .ml_tools import confidence_90
+from .ml_tools import confidence_95
+from .ml_tools import confidence_99
+from .ml_tools import confidence
 from .ml_tools import batch
 from .ml_tools import batches_to_list
 
