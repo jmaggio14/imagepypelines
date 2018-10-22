@@ -3,13 +3,12 @@
 ## building your own pipeline
 Pipelines are constructed of `blocks` which are simply objects that take in data,
 process it, and output the processed data. Pipelines simply provide a high level
-interface to control and apply processing algorithms to input data.
+interface to control and apply processing algorithms for your workflows.
 
 ![pipeline](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/pipeline-example.png "pipeline example")
 
 #### let's create an example fourier transform pipeline
 ```python
-# let's make a pipeline that applies a fourier transform to input images
 import imsciutils as iu
 
 loader = iu.ImageLoader() # load in image filenames
@@ -53,10 +52,12 @@ predictions = classifier.process(test_data) # test the classifier
 
 # print the accuracy
 accuracy = iu.accuracy(predictions,ground_truth)
-print('accuracy:', accuracy)
+print('accuracy: {}%'.format(accuracy * 100) )
 ```
+_this classifier is available with fully tweakable hyperparameters as **iu.SimpleImageClassifier**_
 
-#### image classification using your own dataset and the imsciutils DatasetManager
+
+#### 10 fold cross-validation using your own dataset
 ```python
 import imsciutils as iu
 # for this example, we'll use the builtin SimpleImageClassifier pipeline,
@@ -73,17 +74,15 @@ dataset_manager.load_from_directories(
 
 all_accuracies = []
 # testing this classifier 10 times using 10 fold cross-validation
-for train_data,train_labels,test_data,ground_truth in dataset_manager:
-  pipeline.train(train_data,train_labels)
-  predicted = pipeline.process(test_data)
-  all_accuracies.append( iu.accuracy(predicted,ground_truth) )
+for train_x,train_y,test_x,ground_truth in dataset_manager:
+  pipeline.train(train_x,train_y)
+  predicted = pipeline.process(test_x)
+  all_accuracies.append( iu.accuracy(predicted,ground_truth) * 100 )
 
-# in a real test, you should calculate a 95% confidence interval
-accuracy = np.mean(all_accuracies) * 100
-std = np.std(all_accuracies)
-print('10 fold accuracy: {}% +/- {} '.format(accuracy,std))
+# calculating a 95% confidence interval
+accuracy, h = iu.confidence_95( all_accuracies )
+print("accuracy with 95 CI: {}% +/- {}%".format(accuracy,h))
 ```
 
-#### 10 fold cross validation
-```python
-```
+
+####
