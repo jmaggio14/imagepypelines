@@ -1,16 +1,22 @@
-# imsciutils
+# imagepypelines
 ![logo](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/logo.png "logo")
 
 ![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
 
 
-This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role for programmatic manipulation and processing of imagery, computer vision, and machine learning tasks.
+The `imagepypelines` package consists of high level tools which simplify the construction of complex image processing, computer vision, and machine learning frameworks. During our time in the undergrad Imaging Science program at the Rochester Institute of Technology, we found ourselves writing and rewriting code for things as simple as data type casting and displaying imagery when debugging, causing more trouble than mathematical or logical bugs themselves! Our hope is that the plug-and-play, easily-customizable nature of `imagepypelines` will allow all data-driven scientists to construct complex frameworks quickly for prototyping applications, and serve as a valuable educational tool for those interested in learning traditionally tough subject matter in a friendly environment!
 
+To achieve this goal, our development team always adheres to the following 5 core principles:
 
+1. Legos are fun 
+2. Coding should be fun 
+3. Therefore coding should be like playing with Legos
+4. Imagery is fun, so that will always be our focus
+5. We must suffer, lest our users suffer
 
 
 ## Installation
-python compatibility:  3.5+ (python 2.7 backwards)
+Python compatibility:  3.5+ (Python 2.7 backwards)
 
 via pip:
 ```
@@ -18,26 +24,29 @@ via pip:
 ```
 from source:
 ```console
-git clone https://github.com/jmaggio14/imsciutils.git
-cd imsciutils
+git clone https://github.com/jmaggio14/imagepypelines.git
+cd imagepypelines
 python setup.py install
 ```
 
 
 ## Documentation
-Full Documentation for imsciutils can be found on our website: https://jmaggio14.github.io/imsciutils
+Full documentation for `imagepypelines` can be found on our website: www.imagepypelines.org
+
 
 ## Licensing / Credit
-`imsciutils` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imsciutils` dependencies.
+`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
-Please credit us if you use `imsciutils` in your research
+Please credit us if you use `imagepypelines` in your research
 ```
 *placeholder for latex*
 ```
 
 
-# The Pipeline
-`imsciutils` most powerful feature is a high level interface to create image processing pipelines that will apply a sequence of algorithms to input data automatically
+# What Makes Us Unique?
+
+## The Pipeline
+`imagepypelines`'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
 
 In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
 
@@ -47,15 +56,15 @@ In our experience as imaging scientists, processing pipelines in both corporate 
 (source: [XKCD](https://www.xkcd.com/2054/))
 
 
-
-`imsciutils` aims to make solve these problems through our `Pipeline` object, which provides a high-level interface to create processing pipelines, ensure their end-end compatibility, and assist in debugging.
-
-There are already powerful pipeline utilities such as the venerable [GStreamer](https://en.wikipedia.org/wiki/GStreamer). `imsciutils` distinquishes itself from these other tools through it's high level simple interface targeted at research and small corporate settings.
+The `Pipeline` object of `imagepypelines` allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
 
 
-## building a pipeline
-Pipelines in `imsciutils` are constructed of processing `blocks` which apply an
-algorithm to a sequence of data passed into it.
+## The Block
+write some more stuff here about purpose of blocks as related to pipelines and then go into how to actually build a pipeline
+
+
+## Building a pipeline
+Pipelines in `imsciutils` are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
 ![pipeline](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/pipeline-example.png "pipeline example")
 
@@ -128,7 +137,7 @@ then you can
 ## chaining multiple pipelines together
 
 
-# Imaging Science Convenience functions
+# Imaging Science Convenience Functions
 ## Getting Standard Test Imagery
 `imsciutils` contains helper functions to quickly retrieve imagery that
 are frequently used as benchmarks in the Imaging Science community
