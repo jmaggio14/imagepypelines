@@ -66,6 +66,7 @@ class Viewer(object):
             None
         """
         cv2.namedWindow(self.window_name, cv2.WINDOW_AUTOSIZE)
+        return self
 
     def view(self, frame, force_waitkey=True):
         """
@@ -121,6 +122,7 @@ class Viewer(object):
             None
         """
         cv2.destroyWindow(self.window_name)
+        return self
 
 
 def main():
