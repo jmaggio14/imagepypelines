@@ -42,6 +42,8 @@ class Viewer(object):
     def __init__(self,
                  window_name=None,
                  size=None,
+                 FFT=False,
+                 normalize=False,
                  interpolation=cv2.INTER_NEAREST,
                  enable_frame_counter=False):
 
@@ -51,6 +53,8 @@ class Viewer(object):
 
         self.window_name = str(window_name)
         self.size = size
+        self._FFT = FFT
+        self._normalize = normalize
         self.interpolation = interpolation
         self._enable_frame_counter = enable_frame_counter
         self.open()
@@ -86,6 +90,24 @@ class Viewer(object):
         assert isinstance(force_waitkey, (int, float)),\
             "'force_waitkey' must be an integer"
 
+        # normalize image band by band (useful for FFT viewing)
+        if self._FFT:
+    
+            if frame.ndim == 2:
+
+                frame = 20*np.log(np.abs(frame))
+
+            if frame.ndim == 3:
+
+                for b in range(0, 3):
+
+                    frame[:,:,b] = 20*np.log(np.abs(frame[:,:,b]))
+
+        if self._normalize:
+
+            frame = util.normalize.norm_dtype(frame)
+
+        # cast frame dtype to uint8 for display
         frame = frame.astype(np.uint8)
 
         if isinstance(self.size, (tuple, list)):
@@ -96,8 +118,10 @@ class Viewer(object):
         # add a frame counter to an image thin
         if self._enable_frame_counter:
             frame = number_image(frame,self.frame_counter)
+        
         # displaying the image
         cv2.imshow(self.window_name, frame)
+        
         if force_waitkey:
             cv2.waitKey(force_waitkey)
 
