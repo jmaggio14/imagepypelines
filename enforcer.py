@@ -11,11 +11,11 @@ Example:
     default (no modification, directory is ./imsciutils):
         $ python enforcer.py
 
-    without modification:
+    explicit path:
         $ python enforcer.py --directory='path_to_directory'
 
-    with modification:
-        $ python enforcer.py --directory='path_to_directory' --modify
+    add licenses if they don't exist:
+        $ python enforcer.py --modify
 
 """
 #!/usr/bin/env python
