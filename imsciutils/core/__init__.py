@@ -17,6 +17,9 @@ from .BaseBlock import BatchBlock
 # builtin_blocks/
 from .builtin_blocks import *
 
+# builtin_pipelines/
+from .builtin_pipelines import *
+
 # constants.py
 from .constants import *
 

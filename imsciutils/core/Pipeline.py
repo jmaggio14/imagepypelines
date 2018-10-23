@@ -54,35 +54,35 @@ def get_type(datum):
         raise ValueError(msg)
 
 class Pipeline(object):
-    """Pipeline object to apply a sequence of algorithms to input data
+    """
+        Pipeline object to apply a sequence of algorithms to input data
 
-    Pipelines pass data between block objects and validate the integrity
-    of a data processing pipeline. it is intended to be a quick, flexible, and
-    modular approach to creating a processing graph. It also contains helper
-    functions for documentation and saving these pipelines for use by other
-    researchers/users.
+        Pipelines pass data between block objects and validate the integrity
+        of a data processing pipeline. it is intended to be a quick, flexible, and
+        modular approach to creating a processing graph. It also contains helper
+        functions for documentation and saving these pipelines for use by other
+        researchers/users.
 
-    Args:
-        name(str): name for this pipeline that will be enumerated to be unique,
-            defaults to the name of the subclass<index>
-        blocks(list): list of blocks to instantiate this pipeline with, shortcut
-            to the 'add' function. defaults to []
-        verbose(bool): whether or not to enable printouts for this pipeline,
-            defaults to True
-        enable_text_graph(bool): whether or not to print out a graph of
-            pipeline blocks and outputs
+        Args:
+            name(str): name for this pipeline that will be enumerated to be unique,
+                defaults to the name of the subclass<index>
+            blocks(list): list of blocks to instantiate this pipeline with, shortcut
+                to the 'add' function. defaults to []
+            verbose(bool): whether or not to enable printouts for this pipeline,
+                defaults to True
+            enable_text_graph(bool): whether or not to print out a graph of
+                pipeline blocks and outputs
 
-    Attributes:
-        name(str): unique name for this pipeline
-        blocks(list): list of block objects being used by this pipeline,
-            in order of their processing sequence
-        verbose(bool): verbose(bool): whether or not this pipeline with print
-            out its status
-        enable_text_graph(bool): whether or not to print out a graph of
-            pipeline blocks and outputs
-        printer(iu.Printer): printer object for this pipeline,
-            registered with 'name'
-
+        Attributes:
+            name(str): unique name for this pipeline
+            blocks(list): list of block objects being used by this pipeline,
+                in order of their processing sequence
+            verbose(bool): verbose(bool): whether or not this pipeline with print
+                out its status
+            enable_text_graph(bool): whether or not to print out a graph of
+                pipeline blocks and outputs
+            printer(iu.Printer): printer object for this pipeline,
+                registered with 'name'
     """
     EXTANT = {}
     def __init__(self,
@@ -106,7 +106,6 @@ class Pipeline(object):
         self.printer = get_printer(self.name)
         self.names_to_extract = []
         self.intermediate_data = {}
-        self.intermediate_names = []
 
         # set log level to infinity if non-verbose is desired
         if not self.verbose:
@@ -121,7 +120,6 @@ class Pipeline(object):
         self.blocks = []
         for b in blocks:
             self.add(b)
-
 
     def add(self, block):
         """adds processing block to the pipeline processing chain
@@ -210,56 +208,37 @@ class Pipeline(object):
         if self.enable_text_graph:
             self._text_graph(all_type_chains)
 
+    def _step(self):
+        block = self.blocks[self.step_index]
+        self.step_data,self.step_labels = self._run_block(block,
+                                                            self.step_data,
+                                                            self.step_labels)
 
-    def train(self, data, labels=None):
-        """trains every block in the pipeline
+        self.step_index += 1
 
-        Args:
-            data(list): list of individual datums for the first block
-                in the pipeline
-            labels(list): list of labels for each datum, or None
+        if block.name in self.names_to_extract:
+            self.intermediate_data[block.name] = self.step_data
 
-        Returns:
-            processed_data(list): list of processed training data
-            labels(list): list of corresponding labels
-        """
-        self.validate(data)
+        return self.step_data,self.step_labels
+
+    def _run_block(self,block,data,labels=None):
         t = util.Timer()
 
-        for b in self.blocks:
-            b._pipeline_train(data, labels)
-            data, labels = b._pipeline_process(data, labels)
+        # processing data using the block
+        processed,labels = block._pipeline_process(data,labels)
 
-            # print for traceability
-            train_time = t.lap()
-            self.printer.info("{}: trained in {} sec".format(
-                b.name,
-                train_time,
-            ))
+        # printing out process time to the terminal
+        b_time = t.lap() # processing time for this block
+        datum_time_ms = round(1000 * b_time / num, 3)
+        debug_msg = "{}: processed {}datums in {} seconds".format(block.name,
+                                                                    len(data),
+                                                                    b_time)
+        datum_msg = " (approx {}ms per datum)".format(datum_time_ms)
+        self.printer.debug(debug_msg, datum_msg)
+        return processed,labels
 
-        self.printer.info("training complete")
-
-        return data, labels
-
-    def process(self, data):
-        """processes data using every block in the pipeline
-
-        Args:
-            data(list): list of individual datums for the first block
-                in the pipeline
-
-        Returns:
-            processed_data(list): list of processed data
-
-        Raises:
-            RuntimeError: if pipeline requires training, but hasn't been
-        """
-        self.validate(data)
-        self.intermediate_data = {}
-
-        # JM: TODO: add auto batching and intermediate data retrieval
-        # JM: verifying that all blocks have been trained
-        num_initial_inputs = len(data)
+    def _before_process(self,data,labels):
+        # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
                 if b.trained:
@@ -268,31 +247,53 @@ class Pipeline(object):
                 self.printer.error("{}: ".format(b.name), err_msg)
             raise RuntimeError("you must run Pipeline.train before processing")
 
-        # JM: processing all data
+        # validate pipeline integrity
+        self.validate(data)
+
+        # set initial conditions for the _step function
+        self.step_index = 0
+        self.step_data = data
+        self.step_labels = labels
+
+    def _process(self,data):
+        # step through each block
+        for i in range( len(self.blocks) ):
+            self._step()
+
+    def _after_process(self):
+        # remove step data and labels memory footprint
+        self.step_data = None
+        self.step_labels = None
+
+    def process(self,data):
+        self._before_process(data,None)
+        self._process(data)
+        processed = self.step_data
+        self._after_process()
+        return processed
+
+    def train(self,data,labels=None):
+        self._before_process(data,labels)
+
         t = util.Timer()
         for b in self.blocks:
-            num = len(data)
-            data, _ = b._pipeline_process(data, None)
-            b_time = t.lap() # processing time for this block
-            # printing time for this block
-            self.printer.debug("{}: processed {}datums in {} seconds".format(
-                                    b.name,
-                                    len(data),
-                                    b_time),
-                                " (approx {}ms per datum)".format(
-                                    round(1000 * b_time / num, 3)))
+            b._pipeline_train(self.step_data,self.step_labels)
+            self._step() #step the block processing forward
 
-            # JM: saving intermediate data to a dictionary so they can be
-            # retrieved in self.get_intermediate_data()
-            if b.name in self.intermediate_names:
-                self.intermediate_data[b.name] = data
+            self.printer.info("{}: trained in {} sec".format(b.name,t.lap()))
+
+        self.printer.info("trained in {}seconds".format(t.time()))
+        processed,labels = self.step_data,self.step_labels
+        self._after_process()
+        return processed,labels
 
 
-        self.printer.info("{} datums processed in {}seconds".format(
-                                                            num_initial_inputs,
-                                                            t.time()))
+    def set_intermediate_data(self,names_to_extract):
+        self.names_to_extract = names_to_extract
+        self.intermediate_data = {}
 
-        return data
+    def get_intermediate_data(self):
+        return self.intermediate_data
 
     def graph(self):
         """TODO: Placeholder function for @Ryan to create"""
@@ -316,7 +317,6 @@ class Pipeline(object):
             filename = self.name + '.pck'
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
-
 
     def _text_graph(self,type_chains):
         for chain in type_chains:
@@ -347,19 +347,11 @@ class Pipeline(object):
         for b in pipeline.blocks:
             self.add(b)
 
-    def set_intermediate_data(self,names_to_extract):
-        self.intermediate_names = names_to_extract
-        self.intermediate_data = {}
-
-    def get_intermediate_data(self):
-        return self.intermediate_data
-
     def rename(self,name):
         assert isinstance(name,str),"name must be a string"
         self.name = name
         self.printer = get_printer(self.name)
         return self
-
 
     @property
     def names(self):
