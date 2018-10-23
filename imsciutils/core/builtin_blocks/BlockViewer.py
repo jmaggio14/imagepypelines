@@ -17,6 +17,8 @@ class BlockViewer(SimpleBlock):
     Args:
         pause_time (int,float): time in seconds to pause after displaying
             the imagery. default is 0.1seconds
+        enable_frame_counter(bool): whether or not to enable the viewer's
+            frame counter. default is False
 
     Attributes:
         pause_time (int,float): time in seconds to pause after displaying
@@ -31,15 +33,20 @@ class BlockViewer(SimpleBlock):
         printer(iu.Printer): printer object for this block,
             registered to 'name'
     """
-    def __init__(self,pause_time=0.1,enable_frame_counter=True):
+    def __init__(self,pause_time=0.1,enable_frame_counter=False):
         self.pause_time = pause_time
         io_map = {ArrayType([None,None]):ArrayType([None,None]),
                     ArrayType([None,None,3]):ArrayType([None,None,3])
                     }
         super(BlockViewer,self).__init__(io_map,
                                         requires_training=False)
-        self.viewer = Viewer(self.name)
-        # self.viewer._enable_frame_counter = bool(enable_frame_counter)
+        self.viewer = Viewer(self.name).close()
+        if enable_frame_counter:
+            self.viewer.enable_frame_counter()
+
+    def before_process(self,data,labels=False):
+        """opens the opencv window"""
+        self.viewer.open()
 
     def process(self,datum):
         """displays the imagery in the image viewer
@@ -53,3 +60,7 @@ class BlockViewer(SimpleBlock):
         self.viewer.view(datum)
         time.sleep(self.pause_time)
         return datum
+
+    def after_process(self):
+        """closes the opencv window"""
+        self.viewer.close()
