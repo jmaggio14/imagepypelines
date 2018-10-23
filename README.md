@@ -1,4 +1,4 @@
-recommend# imsciutils
+imsciutils
 ![logo](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/logo.png "logo")
 
 ![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
