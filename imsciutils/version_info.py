@@ -17,7 +17,7 @@ __download_url__ = 'https://github.com/jmaggio14/imsciutils'
 __maintainer__ = "Jeff Maggio"
 __maintainer_email__ = "jmaggio14@gmail.com"
 __keywords__ = 'imaging-science machine-learning computer-vision data-pipelines'
-__python_requires__ = '>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*'
+__python_requires__ = '>=2.7,>=3.4.*,!=3.7.*'
 __platforms__ = ["Windows", "Linux", "Mac OS-X", "Unix"]
 __classifiers__ = [
     'Development Status :: 3 - Alpha',
@@ -29,7 +29,7 @@ __classifiers__ = [
     'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
-    'Programming Language :: Python :: 3.7',
+    # 'Programming Language :: Python :: 3.7', # JM: 3.7 must wait for tensorflow
     'Programming Language :: Python :: Implementation :: CPython',
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: Microsoft :: Windows',
@@ -40,4 +40,4 @@ __classifiers__ = [
 __credits__ = ["Jeff Maggio", "Nathan Dileas", "Ryan Hartzell"]
 __status__ = "Experimental"
 
-__copyright__ = "Copyright 2018 " + __author__
+__copyright__ = "Copyright 2018 (c) " + __author__
