@@ -1,11 +1,9 @@
-# #
-# # @Email:  jmaggio14@gmail.com
-# #
-# # MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# #
-# # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-# #
-# import imsciutils as iu
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
+#
+# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import smtplib
 import getpass
 from .. import core
