@@ -120,7 +120,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-# numpy -- numpy licensed
+# numpy -- numpy license
 Copyright (c) 2005, NumPy Developers
 
 All rights reserved.
