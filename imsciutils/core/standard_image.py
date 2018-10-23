@@ -20,7 +20,7 @@ import pkg_resources
 
 def list_standard_images():
     """returns a list of all builtin standard images sorted alphabetically"""
-    return sorted(list(STANDARD_IMAGES.keys()))
+    return sorted(STANDARD_IMAGES.keys())
 
 def standard_image_filenames():
     """returns a list of standard image filenames on the local machine"""
@@ -35,6 +35,12 @@ def standard_image_gen():
     """
     for img_name in list_standard_images():
         yield get_standard_image(img_name)
+
+def standard_images():
+    """returns a list of all standard image arrays"""
+    return list( standard_image_gen() )
+
+
 
 
 def standard_image_input(func):
@@ -84,7 +90,7 @@ def get_standard_image(img_name):
         ValueError: if invalid img_name is provided
 
     Example:
-        lenna_data = get_standard_image('lenna')
+        >>> lenna = get_standard_image('lenna')
     """
     if img_name in STANDARD_IMAGES:
         img = cv2.imread(STANDARD_IMAGES[img_name], cv2.IMREAD_UNCHANGED)
