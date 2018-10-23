@@ -5,13 +5,12 @@ from .constants import CV2_INTERPOLATION_TYPES
 from .constants import NUMPY_TYPES
 from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 """
 Helper functions that contain canned tests or checks that we will run
 frequently
