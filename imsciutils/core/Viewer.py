@@ -124,6 +124,9 @@ class Viewer(object):
         cv2.destroyWindow(self.window_name)
         return self
 
+    def __del__(self):
+        self.close()
+
 
 def main():
     import imsciutils as iu
