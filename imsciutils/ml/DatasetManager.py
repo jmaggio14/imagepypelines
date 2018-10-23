@@ -22,30 +22,52 @@ def chunk(it,size):
     return list(iter(lambda: list(islice(it, size)), ()))
 
 class DatasetManager(object):
-    """
+    """object to manage and automatically organize your dataset into training
+    and testing chunks. This manager supports cross validation.
+
+    Args:
+        k_fold(int): the number of folds to rotate the dataset through,
+            default is 10
+        extensions(list,tuple,None): the file extensions to filter filenames
+            with if using the load_from_directories function. default is None
+        recursive(bool): whether or not to recursively sort through directories
+            if using the load_from_directories function. default is False
+        shuffle_seed(None): seed to shuffle datums with. default is None
+
+    Attributes:
+        k_fold(int): the number of folds to rotate the dataset through,
+        extensions(list,tuple,None): the file extensions to filter filenames
+            with if using the load_from_directories function.
+        recursive(bool): whether or not to recursively sort through directories
+            if using the load_from_directories function.
+        shuffle_seed(None): seed to shuffle datums with.
+        fold_index(int): the fold this manager is currently on
+        class_names(dict): dictionary to containing the name of the classes,
+            key is the integer label, value is the the class name
+        data_chunks(deque): deque containing all the chunks for the data
+        label_chunks(deque): deque containing all the chunks for the labels
+        printer(iu.Printer): printer for this class, registered to
+            'DatasetManager'
+        remaining_folds(int): number of remaining folds
     """
     def __init__(self,
                     k_folds=10,
                     extensions=None,
                     recursive=False,
                     shuffle_seed=None,
-                    label_type='integer',
                     ):
 
-        assert isinstance(k_folds,int),"k_folds must be an integer"
+        assert isinstance(k_folds,(int,float)),"k_folds must be an integer"
         assert isinstance(extensions,(list,tuple,type(None))),\
             "extensions must be a tuple,list or None"
         assert isinstance(shuffle_seed,(int,float,type(None),np.RandomState)),\
             "k_folds must be an integer"
-        assert label_type in ['integer', 'categorical'],\
-            "acceptable label_types are ['integer','categorical']"
 
         if extensions is None:
             extensions = ['']
 
-        self.k_folds = k_folds
+        self.k_folds = int(k_folds)
         self.extensions = tuple(extensions)
-        self.label_type = label_type
         self.recursive = recursive
         self.shuffle_seed = shuffle_seed
 
@@ -65,6 +87,8 @@ class DatasetManager(object):
         if self.fold_index > self.k_folds:
             warning_msg = "data has been rotated more than the number of folds"
             self.printer.warning(warning_msg)
+
+        return self
 
     def get_train(self):
         """get the training set for this fold
@@ -103,9 +127,11 @@ class DatasetManager(object):
         Args:
             *arrays: unpacked list of data, each array
                 must be for a different class so it can be labeled properly
+            class_names(list,tuple): keyword-only argument to specify the name
+                of each class
 
         Return:
-            None
+            self
         """
         # JM: this is stupid hack to get keyword only arguments in python2
         if len(class_names) > 1:
@@ -118,7 +144,7 @@ class DatasetManager(object):
                 "you must provide a class name for each array"
             class_names = [str(c) for c in class_names['class_names']]
         else:
-            class_names = ['label{}'.format(i) for i range(len(arrays))]
+            class_names = ['class{}'.format(i) for i range(len(arrays))]
 
 
         # ----- code begins -----
@@ -132,7 +158,7 @@ class DatasetManager(object):
             self.class_names[lbl] = class_names[lbl]
 
         # JM shuffling filenames and labels together
-        combined = list(zip(data, labels))
+        combined = sorted(zip(data, labels))
         random.shuffle(combined)
         data[:], labels[:] = zip(*combined)
 
@@ -146,6 +172,8 @@ class DatasetManager(object):
             self.printer.warning(warning_msg)
             self.fold_index = 1
 
+        return self
+
     def load_from_directories(self,*directories):
         """load a list of class directories and apply labels
 
@@ -154,7 +182,7 @@ class DatasetManager(object):
                 must be for a different class so it can be labeled properly
 
         Return:
-            None
+            self
         """
         self.class_names = {}
         filenames = []
@@ -181,6 +209,8 @@ class DatasetManager(object):
             self.printer.warning(warning_msg)
             self.fold_index = 1
 
+        return self
+
 
 
     def _load_directory(self,directory,label):
@@ -194,7 +224,8 @@ class DatasetManager(object):
         Returns:
             filenames(list): list of filenames in this directory with
                 filtered with the desired extensions
-            labels(list): list of labels the files in this directory
+            labels(list): list of labels associated with the files in this
+                directory
 
         Raises:
             AssertionError: if directory is invalid
@@ -212,12 +243,9 @@ class DatasetManager(object):
                         matches.append(os.path.join(root, filename))
         else:
             for ext in self.extensions:
-                glob_path = os.path.join(directory,'**/*' + ext)
+                ext = ext.replace('*','')
+                glob_path = os.path.join(directory,'*' + ext)
                 filenames.extend( glob.glob(glob_path) )
-
-        if self.label_type == 'categorical':
-            from keras.utils import to_categorical
-            label = to_categorical([label])
 
         return filenames,[label]*len(filenames)
 
@@ -233,7 +261,11 @@ class DatasetManager(object):
         return str(self)
 
     def __iter__(self):
-        for i in range(self.k_folds):
+        for i in range(self.remaining_folds):
             train_data,train_labels = self.get_train()
             test_data,test_labels = self.get_test()
             yield train_data,train_labels,test_data,test_labels
+
+    @property
+    def remaining_folds(self):
+        return (self.k_folds - self.fold_index)
