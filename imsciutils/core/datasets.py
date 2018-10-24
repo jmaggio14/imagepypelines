@@ -6,7 +6,19 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
 
-class Mnist(object):
+class DatasetRetrieval(object):
+    def get_sorted_train(self):
+        """retrieves data and labels for train set sorted by label"""
+        sorted_labels,sorted_data = zip(*sorted(zip(self.y_train, self.x_train)))
+        return sorted_data,sorted_labels
+
+    def get_sorted_test(self):
+        """retrieves data and labels for test set sorted by label"""
+        sorted_labels,sorted_data = zip(*sorted(zip(self.y_test, self.x_test)))
+        return sorted_data,sorted_labels
+
+
+class Mnist(DatasetRetrieval):
     """
     Object to load the MNIST numbers dataset in a pipeline compatible format
 
@@ -51,7 +63,7 @@ class Mnist(object):
         return self.x_test,self.y_test
 
 
-class MnistFashion(object):
+class MnistFashion(DatasetRetrieval):
     """
     Object to load the MNIST fashion dataset in a pipeline compatible format
 
@@ -96,7 +108,7 @@ class MnistFashion(object):
         return self.x_test,self.y_test
 
 
-class Cifar10(object):
+class Cifar10(DatasetRetrieval):
     """
     Object to load the cifar10 dataset in a pipeline compatible format
 
@@ -144,7 +156,7 @@ class Cifar10(object):
         return self.x_test,self.y_test
 
 
-class Cifar100(object):
+class Cifar100(DatasetRetrieval):
     """
     Object to load the cifar100 dataset in a pipeline compatible format
 
