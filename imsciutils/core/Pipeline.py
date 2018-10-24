@@ -32,10 +32,8 @@ def restore_from_file(filename):
 
     return pipeline
 
-
-
-
 def get_type(datum):
+    """retrieves the block data type of the input datum"""
     if isinstance(datum,(str,)):
         return (str,)
 
@@ -111,7 +109,7 @@ class Pipeline(object):
             self.printer.set_log_level(float('inf'))
 
         # checking to make sure blocks is a list
-        if not isinstance(blocks, list):
+        if not isinstance(blocks, (list,tuple)):
             error_msg = "'blocks' must be a list"
             self.printer.error(error_msg)
             raise TypeError(error_msg)
@@ -153,11 +151,19 @@ class Pipeline(object):
             CrackedPipeline: if there is a input-output shape
                 incompatability
             TypeError: if 'data' isn't a list or tuple
+            RuntimeError: if more than one block in the pipeline has the same
+                name
         """
 
         # make sure data is a list
         if not isinstance(data,list):
             raise TypeError("'data' must be list")
+
+        # make sure every block has a unique name
+        if len(set(self.names)) != len(self.names):
+            error_msg = "every block in the pipeline must have a different name"
+            self.printer.error(error_msg)
+            raise RuntimeError(error_msg)
 
         # JM: get shape of every datum
         # get unique shapes so we don't have to test every single shape
@@ -208,6 +214,9 @@ class Pipeline(object):
             self._text_graph(all_type_chains)
 
     def _step(self):
+        """
+
+        """
         block = self.blocks[self.step_index]
         self.step_data,self.step_labels = self._run_block(block,
                                                             self.step_data,
@@ -228,7 +237,7 @@ class Pipeline(object):
 
         # printing out process time to the terminal
         b_time = t.lap() # processing time for this block
-        datum_time_ms = round(1000 * b_time / num, 3)
+        datum_time_ms = round(1000 * b_time / len(data), 3)
         debug_msg = "{}: processed {}datums in {} seconds".format(block.name,
                                                                     len(data),
                                                                     b_time)
@@ -236,7 +245,7 @@ class Pipeline(object):
         self.printer.debug(debug_msg, datum_msg)
         return processed,labels
 
-    def _before_process(self,data,labels):
+    def _before_process(self,data,labels=None):
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
@@ -271,9 +280,18 @@ class Pipeline(object):
         self._after_process()
         return processed
 
-    def train(self,data,labels=None):
-        self._before_process(data,labels)
 
+
+    def _before_train(self,data,labels=None):
+        # validate pipeline integrity
+        self.validate(data)
+
+        # set initial conditions for the _step function
+        self.step_index = 0
+        self.step_data = data
+        self.step_labels = labels
+
+    def _train(self,data,labels=None):
         t = util.Timer()
         for b in self.blocks:
             b._pipeline_train(self.step_data,self.step_labels)
@@ -282,8 +300,18 @@ class Pipeline(object):
             self.printer.info("{}: trained in {} sec".format(b.name,t.lap()))
 
         self.printer.info("trained in {}seconds".format(t.time()))
+
+    def _after_train(self):
+        # remove step data and labels memory footprint
+        self.step_data = None
+        self.step_labels = None
+
+    def train(self,data,labels=None):
+        self._before_train(data,labels)
+        self._train(data,labels)
+
         processed,labels = self.step_data,self.step_labels
-        self._after_process()
+        self._after_train()
         return processed,labels
 
 
@@ -292,6 +320,16 @@ class Pipeline(object):
         self.intermediate_data = {}
 
     def get_intermediate_data(self):
+        """retrieves the intermediate block data specified in
+        set_intermediate_data
+
+        Args:
+            None
+
+        Returns:
+            intermediate_data(dict): dictionary of intermediate block data,
+                key is block name,
+        """
         return self.intermediate_data
 
     def graph(self):
