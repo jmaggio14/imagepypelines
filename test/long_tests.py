@@ -47,40 +47,6 @@ def test_multilayer_perceptron():
     return False
 
 @iu.unit_test
-def test_all_pretrained_networks():
-    import imsciutils as iu
-    import cv2
-
-    filenames = iu.standard_image_filenames()
-    images = [cv2.imread(f,cv2.IMREAD_COLOR) for f in filenames]
-    printer = iu.get_printer('test_all_pretrained_networks')
-
-    success = []
-    for i,network_name in enumerate(iu.PRETRAINED_NETWORKS):
-        try:
-            printer.info("testing {}...".format(network_name))
-            resizer = iu.Resizer(80,80)
-            pretrained = iu.PretrainedNetwork(network_name)
-
-            pipeline = iu.Pipeline([resizer,pretrained])
-            pipeline.process(images)
-
-            del pretrained
-            del pipeline
-            success.append(True)
-            printer.info("{}/{} test successful!"\
-                            .format(i+1,len(iu.PRETRAINED_NETWORKS)))
-
-
-        except Exception as e:
-            printer.error("failure processing ",network_name)
-            success.append(False)
-
-    return all(success)
-
-
-
-@iu.unit_test
 def test_linear_svm():
     import imsciutils as iu
 
@@ -238,6 +204,57 @@ def test_sigmoid_svm():
         return True
     return False
 
+@iu.unit_test
+def test_all_pretrained_networks():
+    import imsciutils as iu
+    import cv2
+
+    filenames = iu.standard_image_filenames()
+    images = [cv2.imread(f,cv2.IMREAD_COLOR) for f in filenames]
+    printer = iu.get_printer('test_all_pretrained_networks')
+
+    success = []
+    for i,network_name in enumerate(iu.PRETRAINED_NETWORKS):
+        try:
+            printer.info("testing {}...".format(network_name))
+            resizer = iu.Resizer(80,80)
+            pretrained = iu.PretrainedNetwork(network_name)
+
+            pipeline = iu.Pipeline([resizer,pretrained])
+            pipeline.process(images)
+
+            del pretrained
+            del pipeline
+            success.append(True)
+            printer.info("{}/{} test successful!"\
+                            .format(i+1,len(iu.PRETRAINED_NETWORKS)))
+
+
+        except Exception as e:
+            printer.error("failure processing ",network_name)
+            success.append(False)
+
+    return all(success)
+
+PREVENT_TIMEOUT = True
+def prevent_travis_timeout():
+    import time
+    global PREVENT_TIMEOUT
+    while PREVENT_TIMEOUT:
+        print("this message prints every 5 minutes to prevent travis-ci from auto-ending the tests")
+        time.sleep(5*60)
+
+import queue
+q = queue.Queue()
+
+def prevent_travis_timeout(q):
+    import time
+    val = True
+    while val:
+        if not q.empty():
+            val = q.get(block=False)
+        print("this message prints every 5 minutes to prevent travis-ci from auto-ending the tests")
+        time.sleep(5*60)
 
 def main(verbose=False):
     """
@@ -246,6 +263,16 @@ def main(verbose=False):
     """
     import imsciutils as iu
     import six
+    import threading
+    import queue
+
+
+    q = queue.Queue()
+    travis_idle_thread = threading.Thread(target=prevent_travis_timeout,
+                                                    args=(q,))
+    travis_idle_thread.start()
+
+
 
     if verbose:
         if six.PY2:
@@ -260,17 +287,19 @@ def main(verbose=False):
     unit_tests = [var for var in globals().values() if callable(var)]
     success = []
     for test_func in unit_tests:
-        if test_func.__name__ == 'main':
+        if test_func.__name__ in ['main','prevent_travis_timeout']:
             # skipping main function to avoid recursion loop
             continue
         else:
             success.append( test_func() )
 
+    print("putting False in queue")
+    q.put(False)
+
     # Exit with a 1 code if more than 1 unit test failed
     if not all(success):
         print('not all unit tests passed. add --verbose for more details')
         sys.exit( 1 )
-
 
 if __name__ == '__main__':
     import argparse
