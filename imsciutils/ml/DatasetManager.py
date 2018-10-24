@@ -157,7 +157,7 @@ class DatasetManager(object):
                 "you must provide a class name for each array"
             class_names = [str(c) for c in class_names['class_names']]
         else:
-            class_names = ['class{}'.format(i) for i range(len(arrays))]
+            class_names = ['class{}'.format(i) for i in range(len(arrays))]
 
 
         # ----- code begins -----
