@@ -59,9 +59,10 @@ from .Exceptions import CameraReadError
 from .Exceptions import InvalidInterpolationType
 from .Exceptions import InvalidNumpyType
 from .Exceptions import CrackedPipeline
-from .Exceptions import IncompatibleTypes
 from .Exceptions import BlockRequiresLabels
+from .Exceptions import IncompatibleTypes
 from .Exceptions import InvalidBlockInputData
+from .Exceptions import InvalidBlockInputLabels
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
