@@ -13,7 +13,7 @@ import os
 
 
 
-class ImageWriter(SimpleBlock):
+class WriterBlock(SimpleBlock):
     """
     Block that operates as a system that saves single frames to a
     specified output directory.
@@ -34,15 +34,22 @@ class ImageWriter(SimpleBlock):
             filename common among all images, these will be incremented
             numerically with each new image saved
     """
-    def __init__(self,output_dir, base_filename='image.png'):
+    def __init__(self,
+                    output_dir,
+                    base_filename='image.png',
+                    return_type='filename'):
 
         assert isinstance(output_dir, str), "'output_dir' must be str"
         assert isinstance(base_filename, str), "'base_filename' must be str"
+        assert return_type in ['filename','datum'],\
+            "'return_type' must be one of ['filename','datum']"
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
         self.output_dir = output_dir
         self.base_filename = base_filename
+        self.return_type = return_type
+
         self.image_number = 0
         self.batch_dirs = []
         self.batch_index = 0
@@ -88,7 +95,8 @@ class ImageWriter(SimpleBlock):
             datum (np.ndarray): frame to be saved to the output_dir
 
         Returns:
-            datum (np.ndarray): frame to be saved to the output_dir
+            ret (np.ndarray): datum passed in if return_type == 'datum',
+                or the written filename if return_type == 'filename'
         """
         self.image_number += 1
         image_number = util.make_numbered_prefix(self.image_number,6)
@@ -97,7 +105,10 @@ class ImageWriter(SimpleBlock):
 
         cv2.imwrite(filename, datum)
         self.batch_index += 1
-        return datum
+        if self.return_type == 'datum':
+            return datum
+        else:
+            return filename
 
     def after_process(self):
         self.batch_dirs = []
