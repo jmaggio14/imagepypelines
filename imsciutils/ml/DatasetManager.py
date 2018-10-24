@@ -89,6 +89,20 @@ class DatasetManager(object):
 
         return self
 
+    def get_all(self):
+        """get the all the data for this fold
+
+        Args:
+            None
+
+        Returns:
+            data(list): list of all data
+            labels(list): list of all labels
+        """
+        train_x,train_y = self.get_train()
+        test_x,test_y = self.get_test()
+        return (train_x+test_x), (train_y+test_y)
+
     def get_train(self):
         """get the training set for this fold
 
