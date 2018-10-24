@@ -16,7 +16,7 @@ __all__ = ['BlockViewer',
             'IFFT',
             'ImageLoader',
             'ImageWriter',
-            'SupportVectorMachine',
+            'SupportVectorMachines',
             'LinearSvm',
             'RbfSvm',
             'PolySvm',
@@ -46,12 +46,12 @@ from .IFFT import IFFT
 from .ImageLoader import ImageLoader
 # ImageWriter.py
 from .WriterBlock import WriterBlock
-# SupportVectorMachine.py
-from .SupportVectorMachine import SupportVectorMachine
-from .SupportVectorMachine import LinearSvm
-from .SupportVectorMachine import RbfSvm
-from .SupportVectorMachine import PolySvm
-from .SupportVectorMachine import SigmoidSvm
+# SupportVectorMachines.py
+from .SupportVectorMachines import SupportVectorMachine
+from .SupportVectorMachines import LinearSvm
+from .SupportVectorMachines import RbfSvm
+from .SupportVectorMachines import PolySvm
+from .SupportVectorMachines import SigmoidSvm
 # Thresholding.py
 from .Thresholding import Otsu
 # MultilayerPerceptron.py
