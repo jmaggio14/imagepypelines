@@ -87,7 +87,7 @@ def test_linear_svm():
     resizer = iu.Resizer(32,32) #28x28
     features = iu.PretrainedNetwork() # generate features
     pca = iu.PCA(256)
-    classifier = iu.LinearSVM()
+    classifier = iu.LinearSvm()
 
     pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
 
@@ -112,6 +112,131 @@ def test_linear_svm():
     return False
 
 
+@iu.unit_test
+def test_linear_svm():
+    import imsciutils as iu
+
+    resizer = iu.Resizer(32,32) #28x28
+    features = iu.PretrainedNetwork() # generate features
+    pca = iu.PCA(256)
+    classifier = iu.LinearSvm()
+
+    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+
+    # for this example, we'll need to load the standard Mnist handwriting dataset
+    # built into `imsciutils`
+    mnist = iu.Mnist()
+    train_data, train_labels = mnist.get_train()
+    test_data, ground_truth = mnist.get_test()
+
+    # train the classifier
+    pipeline.train(train_data,train_labels)
+
+    # test the classifier
+    predictions = pipeline.process(test_data)
+
+    # print the accuracy
+    accuracy = iu.accuracy(predictions,ground_truth)
+    print('accuracy is ', accuracy)
+
+    if len(predictions) == len(test_data):
+        return True
+    return False
+
+
+@iu.unit_test
+def test_rbf_svm():
+    import imsciutils as iu
+
+    resizer = iu.Resizer(32,32) #28x28
+    features = iu.PretrainedNetwork() # generate features
+    pca = iu.PCA(256)
+    classifier = iu.RbfSvm()
+
+    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+
+    # for this example, we'll need to load the standard Mnist handwriting dataset
+    # built into `imsciutils`
+    mnist = iu.Mnist()
+    train_data, train_labels = mnist.get_train()
+    test_data, ground_truth = mnist.get_test()
+
+    # train the classifier
+    pipeline.train(train_data,train_labels)
+
+    # test the classifier
+    predictions = pipeline.process(test_data)
+
+    # print the accuracy
+    accuracy = iu.accuracy(predictions,ground_truth)
+    print('accuracy is ', accuracy)
+
+    if len(predictions) == len(test_data):
+        return True
+    return False
+
+
+@iu.unit_test
+def test_poly_svm():
+    import imsciutils as iu
+
+    resizer = iu.Resizer(32,32) #28x28
+    features = iu.PretrainedNetwork() # generate features
+    pca = iu.PCA(256)
+    classifier = iu.PolySvm()
+
+    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+
+    # for this example, we'll need to load the standard Mnist handwriting dataset
+    # built into `imsciutils`
+    mnist = iu.Mnist()
+    train_data, train_labels = mnist.get_train()
+    test_data, ground_truth = mnist.get_test()
+
+    # train the classifier
+    pipeline.train(train_data,train_labels)
+
+    # test the classifier
+    predictions = pipeline.process(test_data)
+
+    # print the accuracy
+    accuracy = iu.accuracy(predictions,ground_truth)
+    print('accuracy is ', accuracy)
+
+    if len(predictions) == len(test_data):
+        return True
+    return False
+
+@iu.unit_test
+def test_sigmoid_svm():
+    import imsciutils as iu
+
+    resizer = iu.Resizer(32,32) #28x28
+    features = iu.PretrainedNetwork() # generate features
+    pca = iu.PCA(256)
+    classifier = iu.SigmoidSvm()
+
+    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+
+    # for this example, we'll need to load the standard Mnist handwriting dataset
+    # built into `imsciutils`
+    mnist = iu.Mnist()
+    train_data, train_labels = mnist.get_train()
+    test_data, ground_truth = mnist.get_test()
+
+    # train the classifier
+    pipeline.train(train_data,train_labels)
+
+    # test the classifier
+    predictions = pipeline.process(test_data)
+
+    # print the accuracy
+    accuracy = iu.accuracy(predictions,ground_truth)
+    print('accuracy is ', accuracy)
+
+    if len(predictions) == len(test_data):
+        return True
+    return False
 
 
 def main(verbose=False):
