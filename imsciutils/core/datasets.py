@@ -9,12 +9,22 @@ import numpy as np
 class DatasetRetrieval(object):
     def get_sorted_train(self):
         """retrieves data and labels for train set sorted by label"""
-        sorted_labels,sorted_data = zip(*sorted(zip(self.y_train, self.x_train)))
+
+        indexes = list(range( len(self.y_train) ))
+        indexes.sort(key=self.y_train.__getitem__)
+        sorted_data = list( map(self.x_train.__getitem__, indexes) )
+        sorted_labels = list( map(self.y_train.__getitem__, indexes) )
+
         return sorted_data,sorted_labels
 
     def get_sorted_test(self):
         """retrieves data and labels for test set sorted by label"""
-        sorted_labels,sorted_data = zip(*sorted(zip(self.y_test, self.x_test)))
+
+        indexes = list(range( len(self.y_test) ))
+        indexes.sort(key=self.y_test.__getitem__)
+        sorted_data = list( map(self.x_test.__getitem__, indexes) )
+        sorted_labels = list( map(self.y_test.__getitem__, indexes) )
+
         return sorted_data,sorted_labels
 
 
