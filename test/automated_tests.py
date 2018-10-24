@@ -20,6 +20,8 @@ def test_constants():
         return False
     if not 'IMAGE_EXTENSIONS' in dir(iu):
         return False
+    if not 'PRETRAINED_NETWORKS' in dir(iu):
+        return False
 
     return True
 
@@ -152,35 +154,183 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
 
 
 @iu.unit_test
-def test_linear_svm():
+def test_dataset_mnist():
     import imsciutils as iu
+    try:
+        TRAINING_LENGTH = 60000
+        TESTING_LENGTH = 10000
+        NUM_LABELS = 10
 
-    resizer = iu.Resizer(32,32) #28x28
-    features = iu.PretrainedNetwork() # generate features
-    pca = iu.PCA(256)
-    classifier = iu.LinearSVM()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+        dataset = iu.Mnist()
 
-    # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
-    mnist = iu.Mnist()
-    train_data, train_labels = mnist.get_train()
-    test_data, ground_truth = mnist.get_test()
+        train_data,train_labels = dataset.get_train()
+        test_data,test_labels = dataset.get_test()
 
-    # train the classifier
-    pipeline.train(train_data,train_labels)
+        assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+        assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+        assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+        assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
 
-    # test the classifier
-    predictions = pipeline.process(test_data)
+        sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+        sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
 
-    # print the accuracy
-    accuracy = iu.accuracy(predictions,ground_truth)
-    print('accuracy is ', accuracy)
+        assert sorted(sorted_train_labels) == sorted_train_labels
+        assert sorted(sorted_test_labels) == sorted_test_labels
 
-    if len(predictions) == len(test_data):
-        return True
-    return False
+        assert np.unique(train_labels) == NUM_LABELS
+
+
+    except Exception as e:
+        iu.debug(e)
+        return False
+
+    return True
+
+
+
+@iu.unit_test
+def test_dataset_mnist_fashion():
+    import imsciutils as iu
+    import numpy as np
+    try:
+        TRAINING_LENGTH = 60000
+        TESTING_LENGTH = 10000
+        NUM_LABELS = 10
+
+        dataset = iu.MnistFashion()
+
+        train_data,train_labels = dataset.get_train()
+        test_data,test_labels = dataset.get_test()
+
+        assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+        assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+        assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+        assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+        sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+        sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+        assert sorted(sorted_train_labels) == sorted_train_labels
+        assert sorted(sorted_test_labels) == sorted_test_labels
+
+        assert np.unique(train_labels) == NUM_LABELS
+
+
+    except Exception as e:
+        iu.debug(e)
+        return False
+
+    return True
+
+@iu.unit_test
+def test_dataset_cifar10():
+    import imsciutils as iu
+    import numpy as np
+    try:
+        TRAINING_LENGTH = 50000
+        TESTING_LENGTH = 10000
+        NUM_LABELS = 10
+
+        dataset = iu.Cifar10()
+
+        train_data,train_labels = dataset.get_train()
+        test_data,test_labels = dataset.get_test()
+
+        assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+        assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+        assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+        assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+        sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+        sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+        assert sorted(sorted_train_labels) == sorted_train_labels
+        assert sorted(sorted_test_labels) == sorted_test_labels
+
+        assert np.unique(train_labels) == NUM_LABELS
+
+
+    except Exception as e:
+        iu.debug(e)
+        return False
+
+    return True
+
+
+@iu.unit_test
+def test_dataset_cifar100_fine():
+    import imsciutils as iu
+    import numpy as np
+    try:
+        TRAINING_LENGTH = 50000
+        TESTING_LENGTH = 10000
+        NUM_LABELS = 100
+
+        dataset = iu.Cifar100('fine')
+
+        train_data,train_labels = dataset.get_train()
+        test_data,test_labels = dataset.get_test()
+
+        assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+        assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+        assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+        assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+        sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+        sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+        assert sorted(sorted_train_labels) == sorted_train_labels
+        assert sorted(sorted_test_labels) == sorted_test_labels
+
+
+        assert np.unique(train_labels) == NUM_LABELS
+
+    except Exception as e:
+        iu.debug(e)
+        return False
+
+    return True
+
+@iu.unit_test
+def test_dataset_cifar100_coarse():
+    import imsciutils as iu
+    import numpy as np
+    try:
+        TRAINING_LENGTH = 50000
+        TESTING_LENGTH = 10000
+        NUM_LABELS = 20
+
+        dataset = iu.Cifar100('coarse')
+
+        train_data,train_labels = dataset.get_train()
+        test_data,test_labels = dataset.get_test()
+
+        assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+        assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+        assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+        assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+        sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+        sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+        assert sorted(sorted_train_labels) == sorted_train_labels
+        assert sorted(sorted_test_labels) == sorted_test_labels
+
+
+        assert np.unique(train_labels) == NUM_LABELS
+
+    except Exception as e:
+        iu.debug(e)
+        return False
+
+    return True
+
+
+
+
+
+
 
 
 
