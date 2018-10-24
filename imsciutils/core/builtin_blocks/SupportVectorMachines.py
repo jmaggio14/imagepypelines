@@ -11,8 +11,7 @@ import numpy as np
 
 
 class SupportVectorMachine(BatchBlock):
-    """general support vector machine classifier
-    """
+    """general support vector machine classifier"""
     def __init__(self,kernel,C=1):
         assert kernel in ['linear', 'poly', 'rbf', 'sigmoid'],\
             "kernel must be one of ['linear', 'poly', 'rbf', 'sigmoid']"
@@ -39,16 +38,16 @@ class SupportVectorMachine(BatchBlock):
 
 class LinearSvm(SupportVectorMachine):
     def __init__(self,C=1):
-        super(LinearSvm,self).__init__(self,kernel='linear',C)
+        super(LinearSvm,self).__init__(kernel='linear',C=C)
 
 class RbfSvm(SupportVectorMachine):
     def __init__(self,C=1):
-        super(RbfSvm,self).__init__(self,kernel='rbf',C)
+        super(RbfSvm,self).__init__(kernel='rbf',C=C)
 
 class PolySvm(SupportVectorMachine):
     def __init__(self,C=1):
-        super(PolySvm,self).__init__(self,kernel='poly',C)
+        super(PolySvm,self).__init__(kernel='poly',C=C)
 
 class SigmoidSvm(SupportVectorMachine):
     def __init__(self,C=1):
-        super(SigmoidSvm,self).__init__(self,kernel='sigmoid',C)
+        super(SigmoidSvm,self).__init__(kernel='sigmoid',C=C)
