@@ -30,7 +30,7 @@ class BlockViewer(SimpleBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(iu.Printer): printer object for this block,
+        printer(ip.Printer): printer object for this block,
             registered to 'name'
     """
     def __init__(self,pause_time=0.1,FFT=False,normalize=False, enable_frame_counter=True):

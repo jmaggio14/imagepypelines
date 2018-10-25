@@ -40,12 +40,12 @@ def format_dict(dictionary):
 
 def main():
     import copy
-    import imagepypelines as iu
+    import imagepypelines as ip
     a = {'a':1,'b':2,'c':3,'d':4}
     b = copy.deepcopy(a)
     b['a'] = copy.deepcopy(a)
     b['a']['a'] = copy.deepcopy(a)
-    print( iu.util.format_dict(b) )
+    print( ip.util.format_dict(b) )
 
 if __name__ == "__main__":
     main()

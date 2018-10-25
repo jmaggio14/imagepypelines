@@ -14,8 +14,8 @@ def centroid(img):
         tuple: centroid of the input image (height,width)
 
     Example:
-        >>> import imagepypelines as iu
-        >>> lenna_centroid = centroid( iu.lenna() )
+        >>> import imagepypelines as ip
+        >>> lenna_centroid = centroid( ip.lenna() )
     """
     centroid = img.shape[0]//2, img.shape[1]//2
     return centroid
@@ -31,8 +31,8 @@ def frame_size(img):
         tuple: frame_size, height and width of the input img
 
     Example:
-        >>> import imagepypelines as iu
-        >>> lenna_framesize = frame_size( iu.lenna() )
+        >>> import imagepypelines as ip
+        >>> lenna_framesize = frame_size( ip.lenna() )
     """
     frame_size = img.shape[0], img.shape[1]
     return frame_size
@@ -51,8 +51,8 @@ def dimensions(img, return_as_dict=False):
         tuple: dimensions of the form (rows, cols, bands, dtype)
 
     Example:
-        >>> import imagepypelines as iu
-        >>> dims = dimensions( iu.lenna() )
+        >>> import imagepypelines as ip
+        >>> dims = dimensions( ip.lenna() )
     """
     rows = img.shape[0]
     cols = img.shape[1]

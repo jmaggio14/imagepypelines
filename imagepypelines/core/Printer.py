@@ -16,7 +16,7 @@ def get_printer(name, log_level='info'):
         log_level (str,int): local log level for the Printer
 
     Returns:
-        iu.Printer: printer with the given name
+        ip.Printer: printer with the given name
     """
     if name in Printer.ACTIVE_PRINTERS:
         return Printer.ACTIVE_PRINTERS[name]
@@ -101,7 +101,7 @@ def set_global_printout_level(log_level):
         log_level = Printer.LOG_LEVELS[log_level]
 
     if not isinstance(log_level,(int,float)):
-        iu.error("unable to set log_level to {}, must be an integer".format(
+        ip.error("unable to set log_level to {}, must be an integer".format(
                                                                     log_level))
         return
 

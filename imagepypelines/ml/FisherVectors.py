@@ -56,10 +56,10 @@ class FisherVectors(object):
         self.fit(data)
         return self.predict(data)
 
-# @iu.experimental()
+# @ip.experimental()
 # class FisherVectors(object):
 #     def __init__(self,n_clusters):
-#         self.printer = iu.get_printer('Fisher Vector Extractor')
+#         self.printer = ip.get_printer('Fisher Vector Extractor')
 #         if not isinstance(n_clusters,(float,int)):
 #             error_msg = util.type_error_message(n_clusters,'n_clusters',(float,int))
 #             self.printer.error(error_msg)

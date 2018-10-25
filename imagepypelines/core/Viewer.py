@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 from datetime import datetime
 
-import imagepypelines as iu
+import imagepypelines as ip
 from .. import util
 from .img_tools import number_image
 from .error_checking import interpolation_type_check
@@ -153,15 +153,15 @@ class Viewer(object):
 
 
 def main():
-    import imagepypelines as iu
+    import imagepypelines as ip
     import time
-    img_gen = iu.standard_image_gen()
+    img_gen = ip.standard_image_gen()
 
-    v = iu.ImageViewer('std image test',
+    v = ip.ImageViewer('std image test',
                         size=(512,512),
                         enable_frame_counter=True)
-    for img,name in zip(img_gen,iu.list_standard_images()):
-        iu.info("displaying ",name)
+    for img,name in zip(img_gen,ip.list_standard_images()):
+        ip.info("displaying ",name)
         v.view(img)
         time.sleep(1)
 

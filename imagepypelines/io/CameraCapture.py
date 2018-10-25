@@ -165,10 +165,10 @@ class CameraCapture(object):
 
 
 def main():
-    import imagepypelines as iu
-    cap = iu.io.CameraCapture()
-    viewer = iu.Viewer("Camera Capture Test")
-    timer = iu.util.Timer()
+    import imagepypelines as ip
+    cap = ip.io.CameraCapture()
+    viewer = ip.Viewer("Camera Capture Test")
+    timer = ip.util.Timer()
     timer.countdown = 30
     while timer.countdown:
         img = cap.retrieve()

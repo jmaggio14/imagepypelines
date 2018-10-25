@@ -10,7 +10,7 @@ import random
 import itertools
 import collections
 import numpy as np
-import imagepypelines as iu
+import imagepypelines as ip
 from .. import core
 import fnmatch
 from itertools import islice, chain
@@ -45,7 +45,7 @@ class DatasetManager(object):
             key is the integer label, value is the the class name
         data_chunks(deque): deque containing all the chunks for the data
         label_chunks(deque): deque containing all the chunks for the labels
-        printer(iu.Printer): printer for this class, registered to
+        printer(ip.Printer): printer for this class, registered to
             'DatasetManager'
         remaining_folds(int): number of remaining folds
     """

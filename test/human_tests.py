@@ -1,64 +1,64 @@
-import imagepypelines as iu
+import imagepypelines as ip
 
-@iu.human_test
+@ip.human_test
 def test_quick_image_view():
     """THIS TEST REQUIRES A HUMAN TO VIEW THE IMAGE"""
-    import imagepypelines as iu
-    testing_printer = iu.get_printer('test_quick_image_view')
+    import imagepypelines as ip
+    testing_printer = ip.get_printer('test_quick_image_view')
 
-    pig = iu.pig()
-    iu.quick_image_view(pig,title='quick_image_view test')
+    pig = ip.pig()
+    ip.quick_image_view(pig,title='quick_image_view test')
 
 
-@iu.human_test
+@ip.human_test
 def test_number_image():
-    import imagepypelines as iu
-    testing_printer = iu.get_printer('test_number_image')
+    import imagepypelines as ip
+    testing_printer = ip.get_printer('test_number_image')
 
-    pig = iu.pig()
-    linear = iu.linear()
+    pig = ip.pig()
+    linear = ip.linear()
 
-    num_pig = iu.number_image(pig,1)
+    num_pig = ip.number_image(pig,1)
     testing_printer.info("pig should be labeled '1'")
-    num_linear = iu.number_image(linear,2)
+    num_linear = ip.number_image(linear,2)
     testing_printer.info("linear should be labeled '2'")
 
-    iu.quick_image_view(pig,title='pig')
-    testing_printer.info('PIG', iu.Summarizer(pig) )
-    iu.quick_image_view(linear,title='linear')
-    testing_printer.info('Linear', iu.Summarizer(linear) )
+    ip.quick_image_view(pig,title='pig')
+    testing_printer.info('PIG', ip.Summarizer(pig) )
+    ip.quick_image_view(linear,title='linear')
+    testing_printer.info('Linear', ip.Summarizer(linear) )
 
-@iu.human_test
+@ip.human_test
 def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
-    import imagepypelines as iu
+    import imagepypelines as ip
     import numpy as np
-    testing_printer = iu.get_printer('imageloader->resizer->color2gray->viewer->orb')
+    testing_printer = ip.get_printer('imageloader->resizer->color2gray->viewer->orb')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = iu.ImageLoader()
-    resizer = iu.Resizer(to_height=512,to_width=512)
-    color2gray = iu.Color2Gray('rgb')
-    viewer = iu.BlockViewer()
-    orb = iu.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.ImageLoader()
+    resizer = ip.Resizer(to_height=512,to_width=512)
+    color2gray = ip.Color2Gray('rgb')
+    viewer = ip.BlockViewer()
+    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
-    pipeline = iu.Pipeline(name=None,
+    pipeline = ip.Pipeline(name=None,
                             blocks=[image_loader,resizer,viewer,color2gray,orb])
 
 
     # getting sample data for this system
-    standard_image_filenames = iu.standard_image_filenames()
+    standard_image_filenames = ip.standard_image_filenames()
     processed = pipeline.process(standard_image_filenames)
 
-@iu.human_test
+@ip.human_test
 def test_cameracapture_viewer_pipeline():
-    import imagepypelines as iu
-    testing_printer = iu.get_printer('cameracapture->viewer')
+    import imagepypelines as ip
+    testing_printer = ip.get_printer('cameracapture->viewer')
 
-    capture = iu.CameraBlock(mode='time')
-    viewer = iu.BlockViewer()
+    capture = ip.CameraBlock(mode='time')
+    viewer = ip.BlockViewer()
 
-    pipeline = iu.Pipeline()
+    pipeline = ip.Pipeline()
     pipeline.add(capture)
     pipeline.add(viewer)
 
@@ -76,7 +76,7 @@ def main(verbose=False):
     runs all other function in this file automatically and prints out success
     or failure
     """
-    import imagepypelines as iu
+    import imagepypelines as ip
     import six
 
     if verbose:
@@ -86,7 +86,7 @@ def main(verbose=False):
             global VERBOSE
             VERBOSE = True
     else:
-        iu.disable_all_printers()
+        ip.disable_all_printers()
 
     import sys
     unit_tests = [var for var in globals().values() if callable(var)]

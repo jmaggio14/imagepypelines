@@ -30,15 +30,15 @@ def quick_block(process_fn,
             to make sure it is unique
 
     Returns:
-        block(iu.SimpleBlock): simple block that applies the given function
+        block(ip.SimpleBlock): simple block that applies the given function
 
     Example:
-        >>> import imagepypelines as iu
+        >>> import imagepypelines as ip
         >>> def calculate_orb_features(datum):
         ...     _,des = cv2.ORB_create().detectAndCompute(datum,None)
         ...     return des
         >>>
-        >>> block = iu.simple_block(calculate_orb_features,
+        >>> block = ip.simple_block(calculate_orb_features,
         ...                         input_shape=[None,None],
         ...                         output_shape=[None,32])
         >>>
@@ -341,7 +341,7 @@ class BaseBlock(object):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(iu.Printer): printer object for this block,
+        printer(ip.Printer): printer object for this block,
             registered to 'name'
 
     """
@@ -586,7 +586,7 @@ class SimpleBlock(BaseBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(iu.Printer): printer object for this block,
+        printer(ip.Printer): printer object for this block,
             registered to 'name'
 
     """
@@ -651,7 +651,7 @@ class BatchBlock(BaseBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(iu.Printer): printer object for this block,
+        printer(ip.Printer): printer object for this block,
             registered to 'name'
 
     """

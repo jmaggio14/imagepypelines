@@ -62,15 +62,15 @@ def SimpleImageClassifier(neurons=512,
             Default is 'avg'
 
     Returns:
-        classifier(iu.Pipeline): a pipeline that will process and classify
+        classifier(ip.Pipeline): a pipeline that will process and classify
             input imagery after training
 
     """
     loader = blocks.ImageLoader()
-    features = iu.PretrainedNetwork(network=pretrained_network,
+    features = ip.PretrainedNetwork(network=pretrained_network,
                                     pooling_type=pooling_type)
-    pca = iu.PCA(pca_components)
-    perceptron = iu.MultilayerPerceptron(neurons=neurons,
+    pca = ip.PCA(pca_components)
+    perceptron = ip.MultilayerPerceptron(neurons=neurons,
                                             dropout=dropout,
                                             num_hidden=num_hidden,
                                             learning_rate=learning_rate,

@@ -11,7 +11,7 @@ To use this script, simply modify the 'CONFIGS' variable with all variations
 of a parameter you want to test. This
 """
 
-import imagepypelines as iu
+import imagepypelines as ip
 import yaml
 
 BASENAME = 'config'
@@ -32,7 +32,7 @@ CONFIGS = {'learning_rate':[.001, .01, .1],
             }
 
 # build a config permutator using imagepypelines
-permutation_generator = iu.util.Permuter(**CONFIGS)
+permutation_generator = ip.util.Permuter(**CONFIGS)
 
 # iterating through all config permutations
 index = 1
@@ -56,10 +56,10 @@ for _,configs in permutation_generator:
 
     # checking if the file already exists
     filename = filename + '.yaml'
-    filename = iu.io.prevent_overwrite(filename)
+    filename = ip.io.prevent_overwrite(filename)
 
-    iu.comment("building '{}' with the following kwargs".format(filename) + ''.join( '\n\t{} : {}'.format(k,v) for k,v in configs.items() ))
-    iu.info(permutation_generator)
+    ip.comment("building '{}' with the following kwargs".format(filename) + ''.join( '\n\t{} : {}'.format(k,v) for k,v in configs.items() ))
+    ip.info(permutation_generator)
     # saving the config file
     with open(filename,'w') as f:
         file_str = yaml.dump(configs, default_flow_style=False)

@@ -4,8 +4,8 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .printout import warning as iuwarning
-from .printout import info as iuinfo
+from .printout import warning as ipwarning
+from .printout import info as ipinfo
 from .. import util
 from .error_checking import is_numpy_array
 from .Printer import get_printer
@@ -24,8 +24,8 @@ def deprecated(depreciation_msg):
             function runs.
 
     Example:
-        >>> import imagepypelines as iu
-        >>> @iu.deprecated("custom depreciation message here")
+        >>> import imagepypelines as ip
+        >>> @ip.deprecated("custom depreciation message here")
         >>> def new_feature():
         ...    pass
 
@@ -49,8 +49,8 @@ def experimental(experimental_msg=None):
             function runs
 
     Example:
-        >>> import imagepypelines as iu
-        >>> @iu.experimental("optional message - you can leave blank")
+        >>> import imagepypelines as ip
+        >>> @ip.experimental("optional message - you can leave blank")
         >>> def new_feature():
         ...    do_something()
 
@@ -81,8 +81,8 @@ def human_test(func):
         func (callable): function or other callable to wrap in a unit test
 
     Example:
-        >>> import imagepypelines as iu
-        >>> @iu.human_test # no parantheses are needed!
+        >>> import imagepypelines as ip
+        >>> @ip.human_test # no parantheses are needed!
         >>> def function_that_displays_something():
         ...    do_something()
 
@@ -122,8 +122,8 @@ def print_args(func):
         func (callable): function or callable to print input arguments of
 
     Example:
-        >>> import imagepypelines as iu
-        >>> @iu.print_args
+        >>> import imagepypelines as ip
+        >>> @ip.print_args
         >>> def func_with_lots_of_args(a, b, c=3, d=4):
         ...    pass
         >>> func_with_lots_of_args(1, b=2, c='not 3')

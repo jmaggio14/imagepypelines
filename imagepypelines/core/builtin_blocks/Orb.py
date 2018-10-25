@@ -25,17 +25,17 @@ class Orb(SimpleBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(iu.Printer): printer object for this block,
+        printer(ip.Printer): printer object for this block,
             registered to 'name'
 
     Example:
-        >>> import imagepypelines as iu
-        >>> orb = iu.ORB(n_keypoints=120)
+        >>> import imagepypelines as ip
+        >>> orb = ip.ORB(n_keypoints=120)
         >>>
-        >>> pipeline = iu.Pipeline()
+        >>> pipeline = ip.Pipeline()
         >>> pipeline.add( orb )
         >>>
-        >>> lenna_gray = iu.lenna_gray()
+        >>> lenna_gray = ip.lenna_gray()
         >>> lenna_gray_descriptors = pipeline.process( [lenna_gray] )[0]
     """
     def __init__(self,n_keypoints=100):

@@ -174,18 +174,18 @@ class Timer(object):
 
 def main():
     import time
-    import imagepypelines as iu
+    import imagepypelines as ip
 
-    @iu.util.function_timer
-    @iu.util.function_timer_ms
+    @ip.util.function_timer
+    @ip.util.function_timer_ms
     def sleep_for_one_sec():
         time.sleep(1)
 
-    t = iu.util.Timer()
+    t = ip.util.Timer()
     sleep_for_one_sec()
     print( t.lap() )
 
-    @iu.util.function_timer
+    @ip.util.function_timer
     def _check_countdown(countdown_time):
         t.countdown = countdown_time
         while t.countdown:

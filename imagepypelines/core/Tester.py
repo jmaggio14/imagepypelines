@@ -13,8 +13,8 @@ from .. import util
 from .debug import debug
 from .Summarizer import Summarizer
 from .error_checking import is_numpy_array
-from .printout import warning as iuwarning
-from .printout import info as iuinfo
+from .printout import warning as ipwarning
+from .printout import info as ipinfo
 import six
 
 
@@ -263,8 +263,8 @@ def main():
 
     tester = Tester(test_target)
     desired_output = False
-    tester.exact_test(desired_output, True, iu.lenna(), None)
-    tester.type_test(bool, True, iu.lenna(), None, ryanisdumb="yes")
+    tester.exact_test(desired_output, True, ip.lenna(), None)
+    tester.type_test(bool, True, ip.lenna(), None, ryanisdumb="yes")
 
 
 if __name__ == "__main__":

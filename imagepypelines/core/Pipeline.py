@@ -24,7 +24,7 @@ def restore_from_file(filename):
         filename(str): the pipeline filename
 
     Returns:
-        pipeline(iu.Pipeline): the loaded pipeline
+        pipeline(ip.Pipeline): the loaded pipeline
     """
     pipeline = pickle.loads(filename)
     for b in pipeline.blocks:
@@ -78,7 +78,7 @@ class Pipeline(object):
                 out its status
             enable_text_graph(bool): whether or not to print out a graph of
                 pipeline blocks and outputs
-            printer(iu.Printer): printer object for this pipeline,
+            printer(ip.Printer): printer object for this pipeline,
                 registered with 'name'
     """
     EXTANT = {}
@@ -122,7 +122,7 @@ class Pipeline(object):
         """adds processing block to the pipeline processing chain
 
         Args:
-            block (iu.BaseBlock): block object to add to this pipeline
+            block (ip.BaseBlock): block object to add to this pipeline
 
         Returns:
             None
@@ -132,7 +132,7 @@ class Pipeline(object):
         """
         # checking to make sure block is a real block
         if not isinstance(block, BaseBlock):
-            error_msg = "'block' must be a subclass of iu.BaseBlock"
+            error_msg = "'block' must be a subclass of ip.BaseBlock"
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 
@@ -419,7 +419,7 @@ class Pipeline(object):
 
     def __setitem__(self,index,block):
         if not isinstance(block, BaseBlock):
-            error_msg = "'block' must be a subclass of iu.BaseBlock"
+            error_msg = "'block' must be a subclass of ip.BaseBlock"
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 

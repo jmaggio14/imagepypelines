@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .printout import error as iuerror
+from .printout import error as iperror
 import cv2
 
 class CameraReadError(ValueError):
@@ -47,7 +47,7 @@ class InvalidNumpyType(TypeError):
     def __init__(self,dtype):
         error_string = "'dtype' ({}) must be one of the following!"\
                                                             .format(dtype)
-        error_string += "\n\t".join(iu.NUMPY_TYPES)
+        error_string += "\n\t".join(ip.NUMPY_TYPES)
         iuerror(error_string)
         super(InvalidNumpyType,self).__init__(error_string)
 

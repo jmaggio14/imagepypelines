@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
-from .printout import error as iuerror
+from .printout import error as iperror
 
 class Summarizer(dict):
     """
@@ -27,9 +27,9 @@ class Summarizer(dict):
 
 
     Example:
-        >>> import imagepypelines as iu
+        >>> import imagepypelines as ip
         >>> a = np.random.rand(512,512)
-        >>> a = iu.Summarizer(a)
+        >>> a = ip.Summarizer(a)
         >>> print(a)
         [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
     """
