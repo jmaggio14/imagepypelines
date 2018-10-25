@@ -29,7 +29,7 @@ install:
   - pip install opencv-python #this is no longer in our requirements.txt
   - pip install tensorflow==1.10.0
   - pip install m2r
-  - pip install Sphinx
+  - pip install Sphinx sphinx_bootstrap_theme
 
 script:
   # JM: running license enforcer
