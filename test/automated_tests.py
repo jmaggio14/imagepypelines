@@ -331,6 +331,30 @@ def test_dataset_cifar100_coarse():
 #         if not os.path.exists(fname):
 #             testing_printer.info("{} was not properly saved".format(fname))
 
+import queue
+Q = queue.Queue()
+
+def prevent_travis_timeout():
+    import time
+    import sys
+    from datetime import datetime
+
+    exit_status = False
+    idx = 0
+    while True:
+        if not idx % 300 or idx == 0:
+            print("{} : this message is printed to prevent travis from timing out the test".format(datetime.now()))
+
+        #check queue
+        if not Q.empty():
+            exit_status = Q.get_nowait()
+
+        if exit_status:
+            sys.exit()
+
+        time.sleep(1) # sleep for 5minutes
+        idx += 1
+
 
 
 def main(verbose=False):
@@ -341,15 +365,9 @@ def main(verbose=False):
     import imsciutils as iu
     import six
     import threading
-    import queue
 
-
-    q = queue.Queue()
-    # travis_idle_thread = threading.Thread(target=prevent_travis_timeout,
-    #                                                 args=(q,))
-    # travis_idle_thread.start()
-
-
+    travis_timeout = threading.Thread(target=prevent_travis_timeout)
+    travis_timeout.start()
 
     if verbose:
         if six.PY2:
@@ -370,8 +388,9 @@ def main(verbose=False):
         else:
             success.append( test_func() )
 
-    print("putting False in queue")
-    q.put(False)
+    print("tests completed!")
+    print("closing travis timeout thread...")
+    Q.put_nowait(True) #tell the travis thread to exit
 
     # Exit with a 1 code if more than 1 unit test failed
     if not all(success):

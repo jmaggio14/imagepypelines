@@ -24,38 +24,9 @@ def test_multilayer_perceptron():
                                             learning_rate=.01) # NN classifier
     # there are a lot more parameters you can tweak!
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
-
-    # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
-    mnist = iu.Mnist()
-    train_data, train_labels = mnist.get_train()
-    test_data, ground_truth = mnist.get_test()
-
-    # train the classifier
-    pipeline.train(train_data,train_labels)
-
-    # test the classifier
-    predictions = pipeline.process(test_data)
-
-    # print the accuracy
-    accuracy = iu.accuracy(predictions,ground_truth)
-    print('accuracy is ', accuracy)
-
-    if len(predictions) == len(test_data):
-        return True
-    return False
-
-@iu.unit_test
-def test_linear_svm():
-    import imsciutils as iu
-
-    resizer = iu.Resizer(32,32) #28x28
-    features = iu.PretrainedNetwork() # generate features
-    pca = iu.PCA(256)
-    classifier = iu.LinearSvm()
-
-    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline.rename('test_multilayer_perceptron')
+    pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imsciutils`
@@ -87,7 +58,9 @@ def test_linear_svm():
     pca = iu.PCA(256)
     classifier = iu.LinearSvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline.rename('test_linear_svm')
+    pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imsciutils`
@@ -119,7 +92,9 @@ def test_rbf_svm():
     pca = iu.PCA(256)
     classifier = iu.RbfSvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline.rename('test_rbf_svm')
+    pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imsciutils`
@@ -151,7 +126,9 @@ def test_poly_svm():
     pca = iu.PCA(256)
     classifier = iu.PolySvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline.rename('test_poly_svm')
+    pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imsciutils`
@@ -182,7 +159,9 @@ def test_sigmoid_svm():
     pca = iu.PCA(256)
     classifier = iu.SigmoidSvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier]).debug()
+    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline.rename('test_sigmoid_svm')
+    pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imsciutils`
@@ -242,6 +221,32 @@ def test_all_pretrained_networks():
     return all(success)
 
 
+import queue
+Q = queue.Queue()
+
+def prevent_travis_timeout():
+    import time
+    import sys
+    from datetime import datetime
+
+    exit_status = False
+    idx = 0
+    while True:
+        if not idx % 300 or idx == 0:
+            print("{} : this message is printed to prevent travis from timing out the test".format(datetime.now()))
+
+        #check queue
+        if not Q.empty():
+            exit_status = Q.get_nowait()
+
+        if exit_status:
+            sys.exit()
+
+        time.sleep(1) # sleep for 5minutes
+        idx += 1
+
+
+
 def main(verbose=False):
     """
     runs all other function in this file automatically and prints out success
@@ -250,15 +255,9 @@ def main(verbose=False):
     import imsciutils as iu
     import six
     import threading
-    import queue
 
-
-    q = queue.Queue()
-    # travis_idle_thread = threading.Thread(target=prevent_travis_timeout,
-    #                                                 args=(q,))
-    # travis_idle_thread.start()
-
-
+    travis_timeout = threading.Thread(target=prevent_travis_timeout)
+    travis_timeout.start()
 
     if verbose:
         if six.PY2:
@@ -279,13 +278,15 @@ def main(verbose=False):
         else:
             success.append( test_func() )
 
-    print("putting False in queue")
-    q.put(False)
+    print("tests completed!")
+    print("closing travis timeout thread...")
+    Q.put_nowait(True) #tell the travis thread to exit
 
     # Exit with a 1 code if more than 1 unit test failed
     if not all(success):
         print('not all unit tests passed. add --verbose for more details')
         sys.exit( 1 )
+
 
 if __name__ == '__main__':
     import argparse
