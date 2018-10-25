@@ -221,7 +221,12 @@ def test_all_pretrained_networks():
     return all(success)
 
 
-import queue
+import six
+if six.PY3:
+    import queue
+else:
+    import Queue as queue
+
 Q = queue.Queue()
 
 def prevent_travis_timeout():

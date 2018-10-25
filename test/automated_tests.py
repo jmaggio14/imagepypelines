@@ -330,8 +330,12 @@ def test_dataset_cifar100_coarse():
 #     for fname in processed_filenames:
 #         if not os.path.exists(fname):
 #             testing_printer.info("{} was not properly saved".format(fname))
-
-import queue
+import six
+if six.PY3:
+    import queue
+else:
+    import Queue as queue
+    
 Q = queue.Queue()
 
 def prevent_travis_timeout():
