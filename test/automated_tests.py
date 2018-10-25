@@ -306,19 +306,35 @@ def test_dataset_cifar100_coarse():
     return True
 
 
+# @iu.unit_test
+# def test_thresholding_otsu():
+#     import imsciutils as iu
+#     import os
+#
+#     testing_printer = iu.get_printer('otsu_thresholding')
+#
+#     standard_image_filenames = iu.standard_image_filenames()
+#
+#     # build blocks for this pipeline
+#     loader = iu.ImageLoader()
+#     gray2color = iu.Gray2Color()
+#     otsu = iu.Otsu()
+#     writer = iu.WriterBlock('./output_dir',return_type='filename')
+#
+#     # pipeline construction
+#     pipeline = iu.Pipeline([loader,gray2color,otsu,writer])
+#
+#     # get filenames of saved thresholded data
+#     processed_filenames = pipeline.process(standard_image_filenames)
+#
+#     for fname in processed_filenames:
+#         if not os.path.exists(fname):
+#             testing_printer.info("{} was not properly saved".format(fname))
 
 
-
-
-
-def prevent_travis_timeout(q):
-    import time
-    val = True
-    while val:
-        if not q.empty():
-            val = q.get(block=False)
-        print("this message prints every 5 minutes to prevent travis-ci from auto-ending the tests")
-        time.sleep(5*60)
+@iu.unit_test
+def test_pipeline_saving_and_restoration():
+    
 
 def main(verbose=False):
     """
@@ -332,9 +348,9 @@ def main(verbose=False):
 
 
     q = queue.Queue()
-    travis_idle_thread = threading.Thread(target=prevent_travis_timeout,
-                                                    args=(q,))
-    travis_idle_thread.start()
+    # travis_idle_thread = threading.Thread(target=prevent_travis_timeout,
+    #                                                 args=(q,))
+    # travis_idle_thread.start()
 
 
 
