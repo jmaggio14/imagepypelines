@@ -7,6 +7,7 @@
 from .. import SimpleBlock
 from .. import ArrayType
 import numpy as np
+import cv2
 
 class FFT(SimpleBlock):
     """Block to calculate a fast fourier transform on input imagery
@@ -39,6 +40,22 @@ class FFT(SimpleBlock):
             fft(np.ndarray): zero-centered fourier transform
 
         """
-        fft = np.fft.fft2(datum)
-        fft = np.fft.fftshift(datum)
+        
+        if len(datum.shape) == 2:
+
+            fft = np.fft.fft2(datum)
+            fft = np.fft.fftshift(fft)
+
+        if len(datum.shape) == 3:
+            
+            fft = []
+   
+            for band in range(0,datum.shape[-1]):
+                
+                F = np.fft.fft2(datum[:,:,band])
+                F = np.fft.fftshift(F)
+                fft.append(F)
+
+            fft = np.dstack(fft)
+
         return fft

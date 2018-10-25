@@ -46,9 +46,22 @@ class IFFT(SimpleBlock):
             fft(np.ndarray): zero-centered fourier transform
 
         """
-        fft = np.fft.fftshift(datum)
-        fft = np.fft.ifft2(datum)
+        
+        if len(datum.shape) == 2:
+            
+            ifft = np.fft.ifftshift(datum)
+            ifft = np.abs(np.fft.ifft2(ifft))
 
-        if self.discard_imaginary:
-            fft = fft.real
-        return fft
+        if len(datum.shape) == 3:
+            
+            ifft = []
+
+            for band in range(0,datum.shape[-1]):
+                
+                ifft_single = np.fft.ifftshift(datum[:,:,band])
+                ifft_single = np.abs(np.fft.ifft2(ifft_single))
+                ifft.append(ifft_single)
+
+            ifft = np.dstack(ifft)
+
+        return ifft

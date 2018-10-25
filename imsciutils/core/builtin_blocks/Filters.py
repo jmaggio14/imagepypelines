@@ -14,14 +14,14 @@ class Highpass(SimpleBlock):
     """Block to apply a highpass filter to a Fourier transform
 
     Args:
-        cut_off (float): cutoff frequency for this filter. units in #TODO
+        cut_off (float): cutoff frequency for this filt. units in #TODO
         filter_type (str): the type of filter to apply, 'ideal','gaussian',
             'butterworth'. default is 'ideal'
         butterworth_order(float): butterworth order if butterworth filter is
             being used. default is 1
 
     Attributes:
-        cut_off (float): cutoff frequency for this filter. units in #TODO
+        cut_off (float): cutoff frequency for this filt. units in #TODO
         filter_type (str): the type of filter to apply, 'ideal','gaussian',
             'butterworth'
         butterworth_order(float): butterworth order if butterworth filter is
@@ -47,15 +47,15 @@ class Highpass(SimpleBlock):
         super(Highpass,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
-        filter = high_pass(datum,
+        filt = high_pass(datum,
                     self.cut_off,
                     self.filter_type,
                     self.butterworth_order)
 
         if datum.ndim == 3:
-            filter = np.vstack( (filter,) * filter.shape[2] )
+            filt = np.vstack( (filt,) * filt.shape[2] )
 
-        return filter * datum
+        return filt * datum
 
 
 
@@ -63,14 +63,14 @@ class Lowpass(SimpleBlock):
     """Block to apply a lowpass filter to a Fourier transform
 
     Args:
-        cut_off (float): cutoff frequency for this filter. units in #TODO
+        cut_off (float): cutoff frequency for this filt. units in #TODO
         filter_type (str): the type of filter to apply, 'ideal','gaussian',
             'butterworth'. default is 'ideal'
         butterworth_order(float): butterworth order if butterworth filter is
             being used. default is 1
 
     Attributes:
-        cut_off (float): cutoff frequency for this filter. units in #TODO
+        cut_off (float): cutoff frequency for this filt. units in #TODO
         filter_type (str): the type of filter to apply, 'ideal','gaussian',
             'butterworth'
         butterworth_order(float): butterworth order if butterworth filter is
@@ -96,12 +96,12 @@ class Lowpass(SimpleBlock):
         super(Lowpass,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
-        filter = low_pass(datum,
+        filt = low_pass(datum,
                     self.cut_off,
                     self.filter_type,
                     self.butterworth_order)
 
         if datum.ndim == 3:
-            filter = np.dstack( (filter,) * datum.shape[2] )
+            filt = np.dstack( (filt,) * datum.shape[2] )
 
-        return filter * datum
+        return filt * datum
