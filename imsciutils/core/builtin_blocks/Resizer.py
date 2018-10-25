@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 from .. import SimpleBlock
 from .. import ArrayType
 import cv2
@@ -18,10 +17,11 @@ class Resizer(SimpleBlock):
         self.to_width = to_width
         self.interpolation = interpolation
 
-        io_map = {ArrayType([None,None]):ArrayType([None,None]),
-                    ArrayType([None,None,3]):ArrayType([None,None,3])}
+        io_map = {ArrayType([None,None]):ArrayType([self.to_height,self.to_width]),
+                    ArrayType([None,None,3]):ArrayType([self.to_height,self.to_width,3])}
 
         super(Resizer,self).__init__(io_map,requires_training=False)
+        
     def process(self,datum):
         resized = cv2.resize(datum,
                        dsize=(self.to_width,self.to_height),

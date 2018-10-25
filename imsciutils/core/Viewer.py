@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import cv2
 import numpy as np
 from datetime import datetime
@@ -71,6 +70,7 @@ class Viewer(object):
             None
         """
         cv2.namedWindow(self.window_name, cv2.WINDOW_AUTOSIZE)
+        return self
 
     def view(self, frame, force_waitkey=True):
         """
@@ -146,6 +146,10 @@ class Viewer(object):
             None
         """
         cv2.destroyWindow(self.window_name)
+        return self
+
+    def __del__(self):
+        self.close()
 
 
 def main():

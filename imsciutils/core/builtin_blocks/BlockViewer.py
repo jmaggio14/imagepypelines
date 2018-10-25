@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 from .. import SimpleBlock, ArrayType
 from ..Viewer import Viewer
 import time
@@ -18,6 +17,8 @@ class BlockViewer(SimpleBlock):
     Args:
         pause_time (int,float): time in seconds to pause after displaying
             the imagery. default is 0.1seconds
+        enable_frame_counter(bool): whether or not to enable the viewer's
+            frame counter. default is False
 
     Attributes:
         pause_time (int,float): time in seconds to pause after displaying
@@ -40,7 +41,6 @@ class BlockViewer(SimpleBlock):
         super(BlockViewer,self).__init__(io_map,
                                         requires_training=False)
         self.viewer = Viewer(self.name,FFT=FFT,normalize=normalize)
-        # self.viewer._enable_frame_counter = bool(enable_frame_counter)
 
     def process(self,datum):
         """displays the imagery in the image viewer
@@ -54,3 +54,7 @@ class BlockViewer(SimpleBlock):
         self.viewer.view(datum)
         time.sleep(self.pause_time)
         return datum
+
+    def after_process(self):
+        """closes the opencv window"""
+        self.viewer.close()

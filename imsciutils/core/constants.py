@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import numpy as np
 import cv2
 
@@ -12,6 +11,7 @@ import cv2
 __all__ = ['NUMPY_TYPES',
             'CV2_INTERPOLATION_TYPES',
             'IMAGE_EXTENSIONS',
+            'PRETRAINED_NETWORKS',
             ]
 
 
@@ -47,6 +47,7 @@ IMAGE_EXTENSIONS = ['.png',
                     '.dib',
                     '.jp2',
                     '.jpe',
+                    '.jpeg',
                     '.webp',
                     '.pbm',
                     '.pgm',
@@ -54,3 +55,20 @@ IMAGE_EXTENSIONS = ['.png',
                     '.sr',
                     '.ras']
 """module variable which contains all image extensions openable by opencv's imread"""
+
+
+PRETRAINED_NETWORKS = [
+                    'xception',
+                    'vgg16',
+                    'vgg19',
+                    'resnet50',
+                    'inception_v3',
+                    'inception_resnet_v2',
+                    'mobilenet',
+                    'densenet121',
+                    'densenet169',
+                    'densenet201',
+                    ]
+"""module variable which contains all usable pretrained network names for the
+        PretrainedNetwork block
+"""

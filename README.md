@@ -1,5 +1,5 @@
-# imagepypelines
 ![logo](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/logo.png "logo")
+# imagepypelines
 
 ![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
 
@@ -17,7 +17,6 @@ To achieve this goal, our development team always adheres to the following 5 cor
 
 ## Installation
 Python compatibility:  3.5+ (Python 2.7 backwards)
-
 via pip:
 ```
 *placeholder until we get it on pypi*
@@ -28,6 +27,27 @@ git clone https://github.com/jmaggio14/imagepypelines.git
 cd imagepypelines
 python setup.py install
 ```
+### dependencies
+for full functionality, imsciutils requires _opencv_ and _tensorflow_ to be installed
+on your machine
+##### tensorflow
+if you have a gpu
+```console
+pip install tensorflow-gpu --user
+```
+otherwise
+```console
+pip install tensorflow --user
+```
+##### opencv
+we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html)
+
+**_however_** unofficial bindings for opencv can be installed with
+```console
+pip install opencv-python --user
+```
+(while we haven't encountered many problems with these unofficial bindings,
+we do not guarantee support)
 
 
 ## Documentation
@@ -113,20 +133,59 @@ image_filenames = iu.standard_image_filenames()
 pipeline.process(image_filenames)
 ```
 
+### Machine Learning Applications
+One of the more powerful applications of `imsciutils` is it's ease of use in
+_machine learning_ and _feature engineering_ applications. We can easily build
+a simple image classifier that is tailored to your purposes
+
+```python
+import imsciutils as iu
+
+features = iu.PretrainedNetwork() # generate features
+neural_network = iu.MultilayerPerceptron(neurons=512) # NN classifier
+# there are a lot more parameters you can tweak!
+
+classifier = iu.Pipeline([features,neural_network])
+
+# for this example, we'll need to load the standard Mnist handwriting dataset
+# built into `imsciutils`
+mnist = iu.Mnist()
+train_data, train_labels = mnist.get_train()
+test_data, ground_truth = mnist.get_test()
+
+# train the classifier
+classifier.train(train_data,train_labels)
+
+# test the classifier
+predictions = classifier.process(test_data)
+
+# print the accuracy
+accuracy = iu.accuracy(predictions,ground_truth)
+print(accuracy)
+```
 
 
 
-#### builtin processing blocks include:
+#### builtin classifiers
+- Multilayer Perceptron
+- Linear Support Vector Machine
+
+
+
+#### builtin I/O blocks
 - Webcam Capturing
 - Image Loading
-- keypointd detection and description
-- Support Vector Machines
 - Image Display
-- Fast Fourier Transform
-- Frequency Filtering
-- Pretrained Neural Networks for image feature generations
+
+#### builtin utility blocks
 - Image Resizing
 - Grayscale Conversion
+
+#### builtin feature engineering blocks include:
+- keypoint detection and description
+- Fourier Transform
+- Frequency Filtering
+- Pretrained Neural Networks for image feature generations
 
 ### Designing your own processing blocks
 Designing your blocks is a fairly straightforward process
@@ -251,6 +310,48 @@ rows, cols, bands, dtype = iu.dimensions(lenna)
 Many imaging tasks are time sensitive or computationally
 intensive. `imsciutils` includes simple tools to time your process or function
 
+#### Timer Objects
+`imsciutils` also includes a separate timer for timing things inside a function
+or code block
+
+##### absolute timing:
+```python
+from imsciutils.util import Timer
+import time
+
+t = Timer()
+time.sleep(5)
+print( t.time(),"seconds" ) # or t.time_ms() for milliseconds
+```
+
+##### lap timing:
+```python
+from imsciutils.util import Timer
+import time
+
+t = Timer()
+for i in range(10):
+	time.sleep(1)
+	print( t.lap(),"seconds" ) # or t.lap_ms() for milliseconds
+```
+
+##### perform operation for N seconds:
+```python
+from imsciutils.util import Timer
+import time
+
+def do_something():
+	pass
+
+# set the countdown
+N = 10 #seconds
+t = Timer()
+t.countdown = N
+while t.countdown:
+	do_something()
+```
+
+
 #### timing Decorator
 let's say we have a function that we think may be slowing down our pipeline.
 We can add `@function_timer` on the line above the function
@@ -277,27 +378,6 @@ prints the following when the above code is run
 ```
 (  function_timer  )[    INFO    ] ran function 'we_can_time_in_seconds' in 1.001sec
 (  function_timer  )[    INFO    ] ran function 'or_in_milliseconds' in 1000.118ms
-```
-
-#### Timer Objects
-`imsciutils` also includes a separate timer for timing things inside a function
-or code block
-```python
-from imsciutils.util import Timer
-import time
-
-t = Timer()
-for i in range(2):
-	time.sleep(1)
-	print(i,") t.lap() resets every time it's called:", t.lap() ) # we can call the 'lap' function to get lap timing
-	print(i,') t.time() counts up always: ', t.time() ) # or the 'time' to get the total time
-```
-produces the following
-```
-0 ) t.lap() resets every time it's called: 1.0
-0 ) t.time() counts up always:  1.001
-1 ) t.lap() resets every time it's called: 1.002
-1 ) t.time() counts up always:  2.003
 ```
 
 # Development Tools in `imsciutils`

@@ -1,12 +1,11 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 from .Printer import get_printer
-from .Exceptions import InvalidBlockInput
+from .Exceptions import InvalidBlockInputData
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
@@ -103,13 +102,22 @@ class ArrayType(object):
 
     def __str__(self):
         if self.dtypes == NUMPY_TYPES:
-            return "ArrayType({}, dtypes=any)".format(self.shapes)
+            return "ArrayType({}, dtypes=any)"\
+                .format(', '.join(str(s) for s in self.shapes))
         else:
-            return "ArrayType({}, dtypes='{}')".format(self.shapes, self.dtypes)
+            return "ArrayType({}, dtypes='{}')"\
+                .format(', '.join(str(s) for s in self.shapes), self.dtypes)
 
     def __repr__(self):
         return str(self)
 
+    def __eq__(self,other):
+        if isinstance(other,ArrayType):
+            return self.__dict__ == other.__dict__
+        return False
+
+    def __hash__(self):
+        return hash(self.shapes + self.dtypes)
 
 # acceptable types for datums passed between blocks
 BLOCK_VALID_TYPES = [str, int, float, None, ArrayType]
@@ -301,7 +309,8 @@ class IoMap(tuple):
 
 
 class BaseBlock(object):
-    """BaseBlock object which is the root class for all Block subclasses
+    """BaseBlock object which is the root class for SimpleBlock and BatchBlock
+    subclasses
 
     This is the _building block_ (pun intended) for the entire imsciutils
     pipelining system. All Blocks, both Simple and Batch blocks, will inherit
@@ -354,7 +363,7 @@ class BaseBlock(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-            name = name + str(self.EXTANT[name])
+        name = name + '({})'.format( self.EXTANT[name] )
 
 
         # checking if notes were provided for this block
@@ -375,6 +384,12 @@ class BaseBlock(object):
             self.trained = True
 
         self.printer = get_printer(self.name)
+
+    def rename(self,name):
+        assert isinstance(name,str),"name must be a string"
+        self.name = name
+        self.printer = get_printer(self.name)
+        return self
 
     def train(self, data, labels=None):
         """(optional overload)trains the block if required
@@ -442,7 +457,7 @@ class BaseBlock(object):
             if len(data) != len(labels):
                 raise DataLabelMismatch(data, labels)
 
-        self.train(self, data, labels)
+        self.train(data, labels)
         self.trained = True
 
     def _pipeline_process(self, data, labels=None):
@@ -459,21 +474,27 @@ class BaseBlock(object):
             labels(list): list of corresponding labels for processed
 
         Raises:
-            InvalidBlockInput: if data is not a list or tuple
+            InvalidBlockInputData: if data is not a list or tuple
             InvalidProcessingStrategy: if processed output is not a list
             InvalidLabelStrategy: if labels output is not a list
             DataLabelMismatch: if there is mismatch in the number of labels
                 and processed datums
 
         """
+        # ---------------- INPUT ERROR CHECKING ------------------------
         if not isinstance(data, list):
             error_msg = "input data into a block must be a list"
             self.printer.error(error)
-            raise InvalidBlockInput(self)
+            raise InvalidBlockInputData(self)
 
         if labels is None:
             labels = [None] * len(data)
 
+        if isinstance(labels,list):
+            if len(data) != len(labels):
+                raise DataLabelMismatch(processed, labels)
+
+        # ----------- running block functions -----------------------
         # running prep function
         self.before_process(data, labels)
 
@@ -481,6 +502,11 @@ class BaseBlock(object):
         processed = self.process_strategy(data)
         labels = self.label_strategy(labels)
 
+        # running post-process / cleanup function
+        self.after_process()
+
+
+        # --------------- OUTPUT ERROR CHECKING ------------------------
         # error checking for output types
         if not isinstance(processed, list):
             raise InvalidProcessStrategy(self)
@@ -489,11 +515,9 @@ class BaseBlock(object):
             raise InvalidLabelStrategy(self)
 
         # making sure that we always have the same number of labels and datums
-        if len(processed) != len(labels):
-            raise DataLabelMismatch(processed, labels)
-
-        # running post-process / cleanup function
-        self.after_process()
+        if isinstance(labels,list):
+            if len(processed) != len(labels):
+                raise DataLabelMismatch(processed, labels)
 
         return processed, labels
 
@@ -524,7 +548,13 @@ class BaseBlock(object):
         return self.name
 
     def __repr__(self):
-        return str(self) + '\n' + self.notes
+        return (str(self) + '\n' + self.notes)
+
+    def prep_for_serialization(self):
+        pass
+
+    def restore_from_serialization(self):
+        pass
 
 
 class SimpleBlock(BaseBlock):
@@ -581,14 +611,12 @@ class SimpleBlock(BaseBlock):
         return [self.process(datum) for datum in data]
 
     def label_strategy(self, labels):
-        """calls self.label for each datum and returns a list"""
+        """calls self.label for each datum and returns a list or Nonetype"""
         return [self.label(lbl) for lbl in labels]
 
-    def __str__(self):
-        return super(SimpleBlock,self).__str__() + '-(SimpleBlock)'
-
     def __repr__(self):
-        return str(self) + '\n' + self.notes
+        return (str(self) + '-(SimpleBlock)' + '\n' + self.notes)
+
 
 
 
@@ -642,7 +670,7 @@ class BatchBlock(BaseBlock):
         raise NotImplementedError(error_msg)
 
     def labels(self, labels):
-        """(optional overload) returns all labels for input datums"""
+        """(optional overload) returns all labels for input datums or None"""
         return labels
 
     def process_strategy(self, data):
@@ -653,10 +681,7 @@ class BatchBlock(BaseBlock):
         """runs self.labels"""
         return self.labels(labels)
 
-    def __str__(self):
-        return super(BatchBlock,self).__str__() + '-(BatchBlock)'
-
     def __repr__(self):
-        return str(self) + '\n' + self.notes
+        return (str(self) + '-(BatchBlock)' + '\n' + self.notes)
 
 # END

@@ -4,13 +4,11 @@
 # @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-# datasets.py
 
-# FisherVectors.py
-from .FisherVectors import FisherVectors
 
-# ConfigFactory.py
-from .ConfigFactory import ConfigFactory
+# add the name of any imports to this variable
+__all__ = [
+            'SimpleImageClassifier',
+            ]
 
-# permute.py
-from .Permuter import Permuter
+from .SimpleImageClassifier import SimpleImageClassifier

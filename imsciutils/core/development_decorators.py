@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 from .printout import warning as iuwarning
 from .printout import info as iuinfo
 from .. import util
@@ -115,13 +114,9 @@ def human_test(func):
 
 
 def print_args(func):
-    """
-    Decorator to print out the arguments a function is running with,
-    this includes:
-            arguments passed in
-            default values that are unspecified
-            varargs (*args)
-            varkwargs (**kwargs)
+    """decorator to print out the arguments that a function is running with,
+    this includes: arguments passed in, default values that are unspecified,
+    varargs (*args), and varkwargs (**kwargs)
 
     Args:
         func (callable): function or callable to print input arguments of
@@ -137,8 +132,6 @@ def print_args(func):
         (   keyword    ) b : 2
         (   keyword    ) c : not 3
         (  positional  ) d : 4
-
-
     """
 
     def _print_args(*args,**kwargs):

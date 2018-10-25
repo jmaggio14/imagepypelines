@@ -20,22 +20,6 @@ imsciutils.ml.DatasetManager module
     :undoc-members:
     :show-inheritance:
 
-imsciutils.ml.Descriptors module
---------------------------------
-
-.. automodule:: imsciutils.ml.Descriptors
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imsciutils.ml.FeatureExtractor module
--------------------------------------
-
-.. automodule:: imsciutils.ml.FeatureExtractor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 imsciutils.ml.FisherVectors module
 ----------------------------------
 
@@ -52,34 +36,10 @@ imsciutils.ml.Permuter module
     :undoc-members:
     :show-inheritance:
 
-imsciutils.ml.SGDClassifier module
-----------------------------------
-
-.. automodule:: imsciutils.ml.SGDClassifier
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imsciutils.ml.SimplePerceptron module
--------------------------------------
-
-.. automodule:: imsciutils.ml.SimplePerceptron
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 imsciutils.ml.batching module
 -----------------------------
 
 .. automodule:: imsciutils.ml.batching
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imsciutils.ml.datasets module
------------------------------
-
-.. automodule:: imsciutils.ml.datasets
     :members:
     :undoc-members:
     :show-inheritance:
