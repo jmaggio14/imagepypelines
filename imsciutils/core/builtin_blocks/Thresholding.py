@@ -1,5 +1,6 @@
 from .. import SimpleBlock, ArrayType
 import cv2
+import numpy as np
 
 
 
@@ -8,14 +9,18 @@ class Otsu(SimpleBlock):
         self.min = min
         self.max = max
 
-        io_map = {ArrayType([None,None]):ArrayType([None,None]),
-                    ArrayType([None,None,3]):ArrayType([None,None,3])}
+        io_map = {
+                    # ArrayType([None,None]):ArrayType([None,None]),
+                    # ArrayType([None,None,3]):ArrayType([None,None,3]),
+                    ArrayType([None,None]):ArrayType([None,None]),
+                    ArrayType([None,None,3]):ArrayType([None,None,3]),
+                    }
         super(Otsu,self).__init__(io_map,
                                     requires_training=False)
 
     def process(self,datum):
-        _,otsu = cv2.threshold(datum,
-                                self.min,
-                                self.max,
-                                cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+        _,otsu = cv2.threshold(datum.astype(np.uint8),
+                                    self.min,
+                                    self.max,
+                                    cv2.THRESH_BINARY+cv2.THRESH_OTSU)
         return otsu
