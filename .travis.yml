@@ -24,6 +24,7 @@ python:
 install:
   # ND
   - pip install -r requirements.txt
+  - pip install sphinx_bootstrap_theme
   - pip install .
   - pip install opencv-python #this is no longer in our requirements.txt
   - pip install tensorflow==1.10.0
