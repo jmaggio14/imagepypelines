@@ -7,12 +7,12 @@ be automatically run
 """
 from __future__ import print_function
 
-import imsciutils as iu
+import imagepypelines as iu
 VERBOSE = False
 # constants.py
 @iu.unit_test
 def test_constants():
-    import imsciutils as iu
+    import imagepypelines as iu
     testing_printer = iu.get_printer('test_constants')
     if not 'CV2_INTERPOLATION_TYPES' in dir(iu):
         return False
@@ -29,7 +29,7 @@ def test_constants():
 # coordinates.py
 @iu.unit_test
 def test_centroid():
-    import imsciutils as iu
+    import imagepypelines as iu
     testing_printer = iu.get_printer('test_centroid')
     tester = iu.Tester(iu.centroid,verbose=VERBOSE)
     lenna = iu.lenna()
@@ -42,7 +42,7 @@ def test_centroid():
 
 @iu.unit_test
 def test_frame_size():
-    import imsciutils as iu
+    import imagepypelines as iu
     testing_printer = iu.get_printer('test_frame_size')
     tester = iu.Tester(iu.frame_size,verbose=VERBOSE)
     lenna = iu.lenna()
@@ -55,7 +55,7 @@ def test_frame_size():
 
 @iu.unit_test
 def test_dimensions():
-    import imsciutils as iu
+    import imagepypelines as iu
     testing_printer = iu.get_printer('test_dimensions')
     tester = iu.Tester(iu.dimensions,verbose=VERBOSE)
     lenna = iu.lenna()
@@ -80,7 +80,7 @@ def test_dimensions():
 # img_tools.py
 @iu.unit_test
 def test_normalize_and_bin():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
     testing_printer = iu.get_printer('test_normalize_and_bin')
     tester = iu.Tester(iu.normalize_and_bin,verbose=VERBOSE)
@@ -95,7 +95,7 @@ def test_normalize_and_bin():
 
 @iu.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
     testing_printer = iu.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
@@ -125,7 +125,7 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
 
 @iu.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
     testing_printer = iu.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
@@ -155,7 +155,7 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
 
 @iu.unit_test
 def test_dataset_mnist():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
 
     TRAINING_LENGTH = 60000
@@ -188,7 +188,7 @@ def test_dataset_mnist():
 
 @iu.unit_test
 def test_dataset_mnist_fashion():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
 
     TRAINING_LENGTH = 60000
@@ -218,7 +218,7 @@ def test_dataset_mnist_fashion():
 
 @iu.unit_test
 def test_dataset_cifar10():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
 
     TRAINING_LENGTH = 50000
@@ -249,7 +249,7 @@ def test_dataset_cifar10():
 
 @iu.unit_test
 def test_dataset_cifar100_fine():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
 
     TRAINING_LENGTH = 50000
@@ -278,7 +278,7 @@ def test_dataset_cifar100_fine():
 
 @iu.unit_test
 def test_dataset_cifar100_coarse():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
 
     TRAINING_LENGTH = 50000
@@ -308,7 +308,7 @@ def test_dataset_cifar100_coarse():
 
 # @iu.unit_test
 # def test_thresholding_otsu():
-#     import imsciutils as iu
+#     import imagepypelines as iu
 #     import os
 #
 #     testing_printer = iu.get_printer('otsu_thresholding')
@@ -366,7 +366,7 @@ def main(verbose=False):
     runs all other function in this file automatically and prints out success
     or failure
     """
-    import imsciutils as iu
+    import imagepypelines as iu
     import six
     import threading
 

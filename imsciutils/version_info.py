@@ -1,10 +1,10 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-__name__ = 'imsciutils'
+__name__ = 'imagepypelines'
 __version__ = '0.1.0-alpha'
 __description__ = 'data pipeline and convienence library targeted at accelerating the development of imaging projects and research'
 
@@ -12,7 +12,7 @@ __author__ = 'Jeff Maggio, Nathan Dileas, Ryan Hartzell'
 __email__ = "jmaggio14@gmail.com"
 __license__ = "MIT"
 __url__ = "https://www.imagepypelines.org"
-__download_url__ = 'https://github.com/jmaggio14/imsciutils'
+__download_url__ = 'https://github.com/jmaggio14/imagepypelines'
 __maintainer__ = "Jeff Maggio"
 __maintainer_email__ = "jmaggio14@gmail.com"
 __keywords__ = 'imaging-science machine-learning computer-vision data-pipelines'

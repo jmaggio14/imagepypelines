@@ -1,9 +1,9 @@
-import imsciutils as iu
+import imagepypelines as iu
 
 @iu.human_test
 def test_quick_image_view():
     """THIS TEST REQUIRES A HUMAN TO VIEW THE IMAGE"""
-    import imsciutils as iu
+    import imagepypelines as iu
     testing_printer = iu.get_printer('test_quick_image_view')
 
     pig = iu.pig()
@@ -12,7 +12,7 @@ def test_quick_image_view():
 
 @iu.human_test
 def test_number_image():
-    import imsciutils as iu
+    import imagepypelines as iu
     testing_printer = iu.get_printer('test_number_image')
 
     pig = iu.pig()
@@ -30,7 +30,7 @@ def test_number_image():
 
 @iu.human_test
 def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
-    import imsciutils as iu
+    import imagepypelines as iu
     import numpy as np
     testing_printer = iu.get_printer('imageloader->resizer->color2gray->viewer->orb')
     ORB_KEYPOINTS = 10
@@ -52,7 +52,7 @@ def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
 
 @iu.human_test
 def test_cameracapture_viewer_pipeline():
-    import imsciutils as iu
+    import imagepypelines as iu
     testing_printer = iu.get_printer('cameracapture->viewer')
 
     capture = iu.CameraBlock(mode='time')
@@ -76,7 +76,7 @@ def main(verbose=False):
     runs all other function in this file automatically and prints out success
     or failure
     """
-    import imsciutils as iu
+    import imagepypelines as iu
     import six
 
     if verbose:

@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import cv2
@@ -17,7 +17,7 @@ class VideoWriter(object):
     """
 
     def __init__(self, filename="out_video.avi", fps=30.0, fourcc="XVID"):
-        self.filename = imsciutils.util.prevent_overwrite(filename)
+        self.filename = imagepypelines.util.prevent_overwrite(filename)
         self._fourcc = fourcc
         self._fourcc_val = cv2.VideoWriter_fourcc(*self._fourcc)
         self._fps = float(fps)
@@ -27,7 +27,7 @@ class VideoWriter(object):
         """
         opens and initializes the videowriter
         """
-        imsciutils.info("initializing the VideoWriter...")
+        imagepypelines.info("initializing the VideoWriter...")
         self._h, self._w = size
         self.video_writer_kwargs = {"filename": self.filename,
                                     "fourcc": self._fourcc_val,
@@ -49,7 +49,7 @@ class VideoWriter(object):
             None
         """
         if not self.__is_initialized:
-            size = imsciutils.frame_size(frame)
+            size = imagepypelines.frame_size(frame)
             self.__init(size)
 
         if not self.writer.isOpened():

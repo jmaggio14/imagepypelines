@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import cv2
@@ -43,7 +43,7 @@ class ImageWriter(object):
                          interpolation=cv2.INTER_NEAREST):
 
         assert isinstance(base_filename, str), "'base_filename' must be str"
-        imsciutils.util.interpolation_type_check(interpolation)
+        imagepypelines.util.interpolation_type_check(interpolation)
 
         self.base_filename = base_filename
         self.size = size
@@ -62,7 +62,7 @@ class ImageWriter(object):
             None
         """
         self.image_number += 1
-        image_number = imsciutils.util.make_numbered_prefix(self.image_number,6)
+        image_number = imagepypelines.util.make_numbered_prefix(self.image_number,6)
         out_filename = os.path.join(self.output_dir,
                                     image_number + self.base_filename)
 

@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import smtplib
@@ -30,7 +30,7 @@ class Emailer(object):
     def __init__(self,
                 sender,
                 recipients,
-                subject="noreply: imsciutils automated email",
+                subject="noreply: imagepypelines automated email",
                 server_name='smtp.gmail.com',
                 server_port=465):
         self.subject = subject

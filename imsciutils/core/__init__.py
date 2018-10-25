@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
@@ -120,7 +120,7 @@ curr_module = sys.modules[__name__]
 for img_name in STANDARD_IMAGES.keys():
 	setattr(curr_module, img_name, getattr(funcs, img_name))
 
-# ND 9/7/18 - delete these so that the imsciutils namespace is not polluted
+# ND 9/7/18 - delete these so that the imagepypelines namespace is not polluted
 del sys, curr_module, funcs, STANDARD_IMAGES
 
 # Viewer.py

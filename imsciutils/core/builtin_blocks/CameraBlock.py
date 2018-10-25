@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ... import util
@@ -16,7 +16,7 @@ class CameraBlock(BatchBlock):
     """block to retrieve imagery from a camera
 
     This block is meant to serve as a entry point for a pipeline by capturing
-    images from a UVC-compatible camera. Unlike most blocks in imsciutils,
+    images from a UVC-compatible camera. Unlike most blocks in imagepypelines,
     this block will have more outputs than inputs. The number of images that should
     be captured is specified be a single element list: [num]
 

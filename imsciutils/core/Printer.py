@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from __future__ import print_function
@@ -74,12 +74,12 @@ def reset_printer_lists():
     Printer.BLACKLIST = []
 
 def disable_printout_colors():
-    """disables colored printouts for imsciutils printout messages"""
+    """disables colored printouts for imagepypelines printout messages"""
     Printer.ENABLE_COLOR = False
 
 
 def enable_printout_colors():
-    """enables colored printouts for imsciutils printout messages"""
+    """enables colored printouts for imagepypelines printout messages"""
     Printer.ENABLE_COLOR = True
 
 
@@ -112,7 +112,7 @@ class Printer(object):
     """
     Object used to print out messages to the terminal for a given
     process or object. This is meant to increase traceability particularly
-    for people who are developing imsciutils
+    for people who are developing imagepypelines
 
     Each message printed out using this object is automatically colorized,
     filtered for the current log level, and prefixed

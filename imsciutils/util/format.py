@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 def format_dict(dictionary):
@@ -40,7 +40,7 @@ def format_dict(dictionary):
 
 def main():
     import copy
-    import imsciutils as iu
+    import imagepypelines as iu
     a = {'a':1,'b':2,'c':3,'d':4}
     b = copy.deepcopy(a)
     b['a'] = copy.deepcopy(a)

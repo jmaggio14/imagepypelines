@@ -1,14 +1,14 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import cv2
 import numpy as np
 from datetime import datetime
 
-import imsciutils as iu
+import imagepypelines as iu
 from .. import util
 from .img_tools import number_image
 from .error_checking import interpolation_type_check
@@ -153,7 +153,7 @@ class Viewer(object):
 
 
 def main():
-    import imsciutils as iu
+    import imagepypelines as iu
     import time
     img_gen = iu.standard_image_gen()
 

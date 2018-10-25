@@ -7,12 +7,12 @@ be automatically run
 """
 from __future__ import print_function
 
-import imsciutils as iu
+import imagepypelines as iu
 VERBOSE = False
 
 @iu.unit_test
 def test_multilayer_perceptron():
-    import imsciutils as iu
+    import imagepypelines as iu
 
     resizer = iu.Resizer(32,32) #28x28
     features = iu.PretrainedNetwork() # generate features
@@ -29,7 +29,7 @@ def test_multilayer_perceptron():
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
+    # built into `imagepypelines`
     mnist = iu.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
@@ -51,7 +51,7 @@ def test_multilayer_perceptron():
 
 @iu.unit_test
 def test_linear_svm():
-    import imsciutils as iu
+    import imagepypelines as iu
 
     resizer = iu.Resizer(32,32) #28x28
     features = iu.PretrainedNetwork() # generate features
@@ -63,7 +63,7 @@ def test_linear_svm():
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
+    # built into `imagepypelines`
     mnist = iu.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
@@ -85,7 +85,7 @@ def test_linear_svm():
 
 @iu.unit_test
 def test_rbf_svm():
-    import imsciutils as iu
+    import imagepypelines as iu
 
     resizer = iu.Resizer(32,32) #28x28
     features = iu.PretrainedNetwork() # generate features
@@ -97,7 +97,7 @@ def test_rbf_svm():
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
+    # built into `imagepypelines`
     mnist = iu.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
@@ -119,7 +119,7 @@ def test_rbf_svm():
 
 @iu.unit_test
 def test_poly_svm():
-    import imsciutils as iu
+    import imagepypelines as iu
 
     resizer = iu.Resizer(32,32) #28x28
     features = iu.PretrainedNetwork() # generate features
@@ -131,7 +131,7 @@ def test_poly_svm():
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
+    # built into `imagepypelines`
     mnist = iu.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
@@ -152,7 +152,7 @@ def test_poly_svm():
 
 @iu.unit_test
 def test_sigmoid_svm():
-    import imsciutils as iu
+    import imagepypelines as iu
 
     resizer = iu.Resizer(32,32) #28x28
     features = iu.PretrainedNetwork() # generate features
@@ -164,7 +164,7 @@ def test_sigmoid_svm():
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
+    # built into `imagepypelines`
     mnist = iu.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
@@ -190,7 +190,7 @@ def test_sigmoid_svm():
 
 @iu.unit_test
 def test_all_pretrained_networks():
-    import imsciutils as iu
+    import imagepypelines as iu
     import cv2
 
     filenames = iu.standard_image_filenames()
@@ -257,7 +257,7 @@ def main(verbose=False):
     runs all other function in this file automatically and prints out success
     or failure
     """
-    import imsciutils as iu
+    import imagepypelines as iu
     import six
     import threading
 

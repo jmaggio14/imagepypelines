@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .Printer import get_printer
@@ -33,7 +33,7 @@ def quick_block(process_fn,
         block(iu.SimpleBlock): simple block that applies the given function
 
     Example:
-        >>> import imsciutils as iu
+        >>> import imagepypelines as iu
         >>> def calculate_orb_features(datum):
         ...     _,des = cv2.ORB_create().detectAndCompute(datum,None)
         ...     return des
@@ -312,7 +312,7 @@ class BaseBlock(object):
     """BaseBlock object which is the root class for SimpleBlock and BatchBlock
     subclasses
 
-    This is the _building block_ (pun intended) for the entire imsciutils
+    This is the _building block_ (pun intended) for the entire imagepypelines
     pipelining system. All Blocks, both Simple and Batch blocks, will inherit
     from this object. Which contains base functionality to setup a block's
     printers, unique name, standard input/output_shapes and special functions

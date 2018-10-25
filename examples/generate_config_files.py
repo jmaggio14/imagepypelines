@@ -3,15 +3,15 @@ Every come up with a situation where you have have a lot of parameters
 
 
 
-This is a script  config files using the imsciutils package
+This is a script  config files using the imagepypelines package
 created by Jeff Maggio, Ryan Hartzell, Nathan Dileas
-https://github.com/jmaggio14/imsciutils
+https://github.com/jmaggio14/imagepypelines
 
 To use this script, simply modify the 'CONFIGS' variable with all variations
 of a parameter you want to test. This
 """
 
-import imsciutils as iu
+import imagepypelines as iu
 import yaml
 
 BASENAME = 'config'
@@ -31,7 +31,7 @@ CONFIGS = {'learning_rate':[.001, .01, .1],
             'momentum':[.8,.9],
             }
 
-# build a config permutator using imsciutils
+# build a config permutator using imagepypelines
 permutation_generator = iu.util.Permuter(**CONFIGS)
 
 # iterating through all config permutations

@@ -1,7 +1,7 @@
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
-# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
-# @github: https://github.com/jmaggio14/imsciutils
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
@@ -38,7 +38,7 @@ class Tester(object):
 
 
     def __str__(self):
-        return "[imsciutils Tester for '{}' function]".format(self.target.__name__)
+        return "[imagepypelines Tester for '{}' function]".format(self.target.__name__)
 
     def __repr__(self):
         return self.__str__()
