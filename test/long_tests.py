@@ -204,6 +204,11 @@ def test_sigmoid_svm():
         return True
     return False
 
+
+
+
+
+
 @iu.unit_test
 def test_all_pretrained_networks():
     import imsciutils as iu
@@ -236,25 +241,6 @@ def test_all_pretrained_networks():
 
     return all(success)
 
-PREVENT_TIMEOUT = True
-def prevent_travis_timeout():
-    import time
-    global PREVENT_TIMEOUT
-    while PREVENT_TIMEOUT:
-        print("this message prints every 5 minutes to prevent travis-ci from auto-ending the tests")
-        time.sleep(5*60)
-
-import queue
-q = queue.Queue()
-
-def prevent_travis_timeout(q):
-    import time
-    val = True
-    while val:
-        if not q.empty():
-            val = q.get(block=False)
-        print("this message prints every 5 minutes to prevent travis-ci from auto-ending the tests")
-        time.sleep(5*60)
 
 def main(verbose=False):
     """
@@ -268,9 +254,9 @@ def main(verbose=False):
 
 
     q = queue.Queue()
-    travis_idle_thread = threading.Thread(target=prevent_travis_timeout,
-                                                    args=(q,))
-    travis_idle_thread.start()
+    # travis_idle_thread = threading.Thread(target=prevent_travis_timeout,
+    #                                                 args=(q,))
+    # travis_idle_thread.start()
 
 
 
