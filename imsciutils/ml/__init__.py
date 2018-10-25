@@ -5,11 +5,6 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 # datasets.py
-from .datasets import get_mnist
-from .datasets import get_fashion_mnist
-from .datasets import get_cifar10
-from .datasets import get_cifar100
-from .datasets import dataset_to_list
 
 # FisherVectors.py
 from .FisherVectors import FisherVectors
