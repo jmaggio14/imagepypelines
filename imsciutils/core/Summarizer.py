@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import numpy as np
 from .printout import error as iuerror
 
@@ -28,15 +27,11 @@ class Summarizer(dict):
 
 
     Example:
-        import imsciutils as iu
-        a = np.random.rand(512,512)
-        a = iu.Summarizer(a)
-
-        print(a)
-        # [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
-
-
-
+        >>> import imsciutils as iu
+        >>> a = np.random.rand(512,512)
+        >>> a = iu.Summarizer(a)
+        >>> print(a)
+        [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
     """
     def __init__(self, input_array):
         """Instantiations function

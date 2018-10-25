@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import cv2
 import numpy as np
 from datetime import datetime
@@ -12,6 +11,7 @@ from datetime import datetime
 import imsciutils as iu
 from .. import util
 from .img_tools import number_image
+from .error_checking import interpolation_type_check
 
 class Viewer(object):
     """
@@ -41,17 +41,21 @@ class Viewer(object):
     def __init__(self,
                  window_name=None,
                  size=None,
+                 FFT=False,
+                 normalize=False,
                  interpolation=cv2.INTER_NEAREST,
                  enable_frame_counter=False):
 
-        util.interpolation_type_check(interpolation)
+        interpolation_type_check(interpolation)
         if window_name is None:
             window_name = datetime.now()
 
         self.window_name = str(window_name)
         self.size = size
+        self._FFT = FFT
+        self._normalize = normalize
         self.interpolation = interpolation
-        self.enable_frame_counter = enable_frame_counter
+        self._enable_frame_counter = enable_frame_counter
         self.open()
         self.frame_counter = 1
 
@@ -66,6 +70,7 @@ class Viewer(object):
             None
         """
         cv2.namedWindow(self.window_name, cv2.WINDOW_AUTOSIZE)
+        return self
 
     def view(self, frame, force_waitkey=True):
         """
@@ -85,6 +90,24 @@ class Viewer(object):
         assert isinstance(force_waitkey, (int, float)),\
             "'force_waitkey' must be an integer"
 
+        # normalize image band by band (useful for FFT viewing)
+        if self._FFT:
+    
+            if frame.ndim == 2:
+
+                frame = 20*np.log(np.abs(frame))
+
+            if frame.ndim == 3:
+
+                for b in range(0, 3):
+
+                    frame[:,:,b] = 20*np.log(np.abs(frame[:,:,b]))
+
+        if self._normalize:
+
+            frame = util.normalize.norm_dtype(frame)
+
+        # cast frame dtype to uint8 for display
         frame = frame.astype(np.uint8)
 
         if isinstance(self.size, (tuple, list)):
@@ -93,10 +116,12 @@ class Viewer(object):
                                interpolation=self.interpolation)
 
         # add a frame counter to an image thin
-        if self.enable_frame_counter:
+        if self._enable_frame_counter:
             frame = number_image(frame,self.frame_counter)
+        
         # displaying the image
         cv2.imshow(self.window_name, frame)
+        
         if force_waitkey:
             cv2.waitKey(force_waitkey)
 
@@ -104,11 +129,11 @@ class Viewer(object):
 
     def enable_frame_counter(self):
         """enable the frame counter"""
-        self.enable_frame_counter = True
+        self._enable_frame_counter = True
 
     def disable_frame_counter(self):
         """disable the frame counter"""
-        self.enable_frame_counter = False
+        self._enable_frame_counter = False
 
     def close(self):
         """
@@ -121,6 +146,10 @@ class Viewer(object):
             None
         """
         cv2.destroyWindow(self.window_name)
+        return self
+
+    def __del__(self):
+        self.close()
 
 
 def main():

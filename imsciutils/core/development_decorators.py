@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 from .printout import warning as iuwarning
 from .printout import info as iuinfo
 from .. import util
@@ -25,10 +24,10 @@ def deprecated(depreciation_msg):
             function runs.
 
     Example:
-        import imsciutils as iu
-        @iu.deprecated("custom depreciation message here")
-        def new_feature():
-            pass
+        >>> import imsciutils as iu
+        >>> @iu.deprecated("custom depreciation message here")
+        >>> def new_feature():
+        ...    pass
 
     """
     def _deprecated(func):
@@ -50,10 +49,10 @@ def experimental(experimental_msg=None):
             function runs
 
     Example:
-        import imsciutils as iu
-        @iu.experimental("optional message - you can leave blank")
-        def new_feature():
-            do_something()
+        >>> import imsciutils as iu
+        >>> @iu.experimental("optional message - you can leave blank")
+        >>> def new_feature():
+        ...    do_something()
 
     """
     create_message = False
@@ -82,10 +81,10 @@ def human_test(func):
         func (callable): function or other callable to wrap in a unit test
 
     Example:
-        import imsciutils as iu
-        @iu.human_test # no parantheses are needed!
-        def function_that_displays_something():
-            do_something()
+        >>> import imsciutils as iu
+        >>> @iu.human_test # no parantheses are needed!
+        >>> def function_that_displays_something():
+        ...    do_something()
 
     """
     query_string = "did the test for '{}' succeed? {Y}es? {N}o?\n".format(func.__name__,
@@ -115,34 +114,24 @@ def human_test(func):
 
 
 def print_args(func):
-    """
-    Decorator to print out the arguments a function is running with,
-    this includes:
-            arguments passed in
-            default values that are unspecified
-            varargs (*args)
-            varkwargs (**kwargs)
+    """decorator to print out the arguments that a function is running with,
+    this includes: arguments passed in, default values that are unspecified,
+    varargs (*args), and varkwargs (**kwargs)
 
     Args:
         func (callable): function or callable to print input arguments of
 
     Example:
-        import imsciutils as iu
-        @iu.print_args
-        def func_with_lots_of_args(a, b, c=3, d=4):
-            pass
-
-        func_with_lots_of_args(1, b=2, c='not 3')
-
-        # produces the following in the terminal
-        #         type    | arg_name |  value
-        # ==================================================
-        # (  positional  ) a : 1
-        # (   keyword    ) b : 2
-        # (   keyword    ) c : not 3
-        # (  positional  ) d : 4
-
-
+        >>> import imsciutils as iu
+        >>> @iu.print_args
+        >>> def func_with_lots_of_args(a, b, c=3, d=4):
+        ...    pass
+        >>> func_with_lots_of_args(1, b=2, c='not 3')
+        >>> # produces the following in the terminal
+        (  positional  ) a : 1
+        (   keyword    ) b : 2
+        (   keyword    ) c : not 3
+        (  positional  ) d : 4
     """
 
     def _print_args(*args,**kwargs):

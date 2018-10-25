@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import termcolor
 import os
 
@@ -84,14 +83,8 @@ def color_text(text, color="r", background=None, attrs=None):
     printout
     using print(color_text_output) with with windows powershell or
     cmd prompt will not yield a colored string
-    example::
-        >>> warning_msg = color_text('this is a warning',
-        ...                                color = 'red',
-        ...                                background = 'yellow',
-        ...                                attrs = ['bold','underline'])
-        >>> warning_msg
-        '\x1b[4m\x1b[1m\x1b[43m\x1b[31mthis is a warning\x1b[0m'
-    input::
+
+    Args:
         text (str):
             Input text to colorize
         color (str) = 'r':
@@ -124,9 +117,17 @@ def color_text(text, color="r", background=None, attrs=None):
                                 "underline",
                                 "reverse",
                                 "concealed"
-    return::
+    Returns:
         colored_text (str):
                 string with proper color codes added (colored string)
+                
+    Example:
+    >>> warning_msg = color_text('this is a warning',
+    ...                                color = 'red',
+    ...                                background = 'yellow',
+    ...                                attrs = ['bold','underline'])
+    >>> warning_msg
+    '\x1b[4m\x1b[1m\x1b[43m\x1b[31mthis is a warning\x1b[0m'
     """
     assert isinstance(text, str), "'text' must be a string"
     assert isinstance(color, str), "color' must be a string"

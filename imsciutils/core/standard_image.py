@@ -1,22 +1,16 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import os
 import glob
 import sys
-import six
+from types import FunctionType
 
-if six.PY3:
-    from types import SimpleNamespace
-else:
-    # JM:
-    # creates a new class called 'SimpleNamespace' if running python2
-    # as types modules does not contain 'SimpleNamespace' in 2.7
-    SimpleNamespace = type('SimpleNamespace',tuple(),{})
+# JM: replaced SimpleNamespace import with this for python2 compatability
+SimpleNamespace = type('SimpleNamespace', (object,), {})
 
 import cv2
 import numpy as np
@@ -26,8 +20,13 @@ import pkg_resources
 
 def list_standard_images():
     """returns a list of all builtin standard images sorted alphabetically"""
-    return sorted(list(STANDARD_IMAGES.keys()))
+    return sorted(STANDARD_IMAGES.keys())
 
+def standard_image_filenames():
+    """returns a list of standard image filenames on the local machine"""
+    sorted_keys = list_standard_images()
+    filenames = [STANDARD_IMAGES[k] for k in sorted_keys]
+    return filenames
 
 def standard_image_gen():
     """
@@ -36,6 +35,12 @@ def standard_image_gen():
     """
     for img_name in list_standard_images():
         yield get_standard_image(img_name)
+
+def standard_images():
+    """returns a list of all standard image arrays"""
+    return list( standard_image_gen() )
+
+
 
 
 def standard_image_input(func):
@@ -47,17 +52,16 @@ def standard_image_input(func):
     is meant to be a numpy array image.
 
     Example:
-        import numpy as np
-        import cv2
+        >>> import numpy as np
+        >>> import cv2
+        >>> @standard_image_input
+        >>> def add_one_to_image(img):
+        ...    assert isinstance(img,np.ndarray) #forcing a np.ndarray input type
+        ...    return img + 1
 
-        @standard_image_input
-        def add_one_to_image(img):
-            assert isinstance(img,np.ndarray) #forcing a np.ndarray input type
-            return img + 1
-
-        lenna_plus_one = add_one_to_image('lenna')
-        # these are now equivalent
-        lenna_plus_one = add_one_to_image( cv2.imread('lenna.jpg') )
+        >>> lenna_plus_one = add_one_to_image('lenna')
+        >>> # these are now equivalent
+        >>> lenna_plus_one = add_one_to_image( cv2.imread('lenna.jpg') )
 
     """
     def _standard_image_input(img, *args, **kwargs):
@@ -86,7 +90,7 @@ def get_standard_image(img_name):
         ValueError: if invalid img_name is provided
 
     Example:
-        lenna_data = get_standard_image('lenna')
+        >>> lenna = get_standard_image('lenna')
     """
     if img_name in STANDARD_IMAGES:
         img = cv2.imread(STANDARD_IMAGES[img_name], cv2.IMREAD_UNCHANGED)
@@ -104,12 +108,12 @@ def get_standard_image(img_name):
             std_imgs=list_standard_images()))
 
 
-
 # uses the pkg_resources provider to load in data in the .egg file
 from .. import STANDARD_IMAGE_DIRECTORY
 # ND 9/7/18 - dynamically populate paths to the standard test images
 # assumes the only thing in the STANDARD_IMAGE_DIRECTORY are images
-STANDARD_IMAGE_PATHS = list(glob.glob(os.path.join(STANDARD_IMAGE_DIRECTORY, '*')))
+STANDARD_IMAGE_PATHS = list(
+    glob.glob(os.path.join(STANDARD_IMAGE_DIRECTORY, '*')))
 STANDARD_IMAGES = {os.path.basename(impath).split(
     '.')[0]: impath for impath in STANDARD_IMAGE_PATHS}
 
@@ -117,8 +121,18 @@ STANDARD_IMAGES = {os.path.basename(impath).split(
 # images as attributes of func
 funcs = SimpleNamespace()
 for img_name in STANDARD_IMAGES.keys():
-    setattr(funcs, img_name, partial(get_standard_image, img_name))
+    # JM: modifies function creation to also include docstrings
+    partial_func = partial(get_standard_image, img_name)
+    # ND changed partial funcs to FunctionType
+    std_img_func = FunctionType(
+        partial_func.func.__code__, globals(), img_name, partial_func.args)
 
+    std_img_func.__doc__ = "standard image retrieval for {}".format(img_name)
+    globals()[img_name] = std_img_func
+    setattr(funcs, img_name, std_img_func)
+
+# JM: deletes last remaining partial function from scope to remove Sphinx warning
+del partial_func
 
 
 def main():

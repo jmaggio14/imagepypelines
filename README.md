@@ -1,52 +1,202 @@
-# imsciutils
+![logo](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/logo.png "logo")
+# imagepypelines
+
 ![build](https://www.travis-ci.com/jmaggio14/imsciutils.svg?branch=master "master build success")
 
 
-This is a repo of code that we seem to find ourselves using in projects in many academic, personal, and corporate settings. It is not made for any specific purpose, and is meant to act in an accessory role for programmatic manipulation and processing of imagery, computer vision, and machine learning tasks.
+The `imagepypelines` package consists of high level tools which simplify the construction of complex image processing, computer vision, and machine learning frameworks. During our time in the undergrad Imaging Science program at the Rochester Institute of Technology, we found ourselves writing and rewriting code for things as simple as data type casting and displaying imagery when debugging, causing more trouble than mathematical or logical bugs themselves! Our hope is that the plug-and-play, easily-customizable nature of `imagepypelines` will allow all data-driven scientists to construct complex frameworks quickly for prototyping applications, and serve as a valuable educational tool for those interested in learning traditionally tough subject matter in a friendly environment!
+
+To achieve this goal, our development team always adheres to the following 5 core principles:
+
+1. Legos are fun 
+2. Coding should be fun 
+3. Therefore coding should be like playing with Legos
+4. Imagery is fun, so that will always be our focus
+5. We must suffer, lest our users suffer
 
 
-## Compatibility
-python 3.5+ (python 2.7 backwards)
-
-Module Dependencies
--------------------
-- numpy
-- matplotlib
-- scipy
-- keras
-- scikit-learn
-- termcolor
-- opencv3
-- Pillow
-- colorama (on windows)
-- Sphinx (for autodocumentation)
-
-Install Dependencies
+## Installation
+Python compatibility:  3.5+ (Python 2.7 backwards)
+via pip:
 ```
-pip install numpy matplotlib opencv-python scipy kera scikit-learn termcolor Pillow colorama Sphinx --user
+*placeholder until we get it on pypi*
 ```
+from source:
+```console
+git clone https://github.com/jmaggio14/imagepypelines.git
+cd imagepypelines
+python setup.py install
+```
+### dependencies
+for full functionality, imsciutils requires _opencv_ and _tensorflow_ to be installed
+on your machine
+##### tensorflow
+if you have a gpu
+```console
+pip install tensorflow-gpu --user
+```
+otherwise
+```console
+pip install tensorflow --user
+```
+##### opencv
+we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html)
+
+**_however_** unofficial bindings for opencv can be installed with
+```console
+pip install opencv-python --user
+```
+(while we haven't encountered many problems with these unofficial bindings,
+we do not guarantee support)
+
 
 ## Documentation
-There is autodoc sphinx documentation with this project, following the google docstrings format. To build / view these docs on windows::
+Full documentation for `imagepypelines` can be found on our website: www.imagepypelines.org
 
-	docs\make.bat html
 
-And on every other platform::
+## Licensing / Credit
+`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
-	cd docs && make html
-
-Then the html documentation will be available at docs/build/html/index.html
-
-If you modify the import structure, you may need to regenerate the autodoc statements. From the root:
-
+Please credit us if you use `imagepypelines` in your research
 ```
-sphinx-apidoc -o docs/source imsciutils
+*placeholder for latex*
 ```
 
-Then rebuild and check that your module was properly included. Don't forget to add the modified (or new) files to the commit.
-_____________________________
 
-# BASIC HOW TOs
+# What Makes Us Unique?
+
+## The Pipeline
+`imagepypelines`'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
+
+In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
+
+
+![xkcd](https://imgs.xkcd.com/comics/data_pipeline.png "cracked pipelines")
+
+(source: [XKCD](https://www.xkcd.com/2054/))
+
+
+The `Pipeline` object of `imagepypelines` allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
+
+
+## The Block
+write some more stuff here about purpose of blocks as related to pipelines and then go into how to actually build a pipeline
+
+
+## Building a pipeline
+Pipelines in `imsciutils` are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
+
+![pipeline](https://github.com/jmaggio14/imsciutils/blob/develop/docs/images/pipeline-example.png "pipeline example")
+
+Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
+
+##### let's create an example pipeline
+let's say we want a system that reads in images, resizes them, and then displays them for us
+```python
+import imsciutils as iu
+
+# first let's create our blocks
+block1 = iu.ImageLoader()
+block2 = iu.Resizer(512,512)
+block3 = iu.BlockViewer(pause_time=1)
+
+# then build a pipeline
+pipeline = iu.Pipeline(blocks=[block1,block2,block3])
+
+# we'll use imsciutils example data
+image_filenames = iu.standard_image_filenames()
+
+# now we process it!
+pipeline.process(image_filenames)
+```
+Now we have a system the reads in and displays imagery!
+
+But what if we want to do something more complicated? Let's say we want to apply a lowpass filter to all of these images before we display them?
+```python
+import imsciutils as iu
+
+# first let's create our blocks
+load = iu.ImageLoader()
+resize = iu.Resizer(512,512)
+fft = iu.FFT()
+lowpass = iu.Lowpass(cut_off=32)
+ifft = iu.IFFT()
+display = iu.BlockViewer(pause_time=1)
+
+# then build a pipeline
+pipeline = iu.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
+
+# we'll use imsciutils example data
+image_filenames = iu.standard_image_filenames()
+
+# now we process it!
+pipeline.process(image_filenames)
+```
+
+### Machine Learning Applications
+One of the more powerful applications of `imsciutils` is it's ease of use in
+_machine learning_ and _feature engineering_ applications. We can easily build
+a simple image classifier that is tailored to your purposes
+
+```python
+import imsciutils as iu
+
+features = iu.PretrainedNetwork() # generate features
+neural_network = iu.MultilayerPerceptron(neurons=512) # NN classifier
+# there are a lot more parameters you can tweak!
+
+classifier = iu.Pipeline([features,neural_network])
+
+# for this example, we'll need to load the standard Mnist handwriting dataset
+# built into `imsciutils`
+mnist = iu.Mnist()
+train_data, train_labels = mnist.get_train()
+test_data, ground_truth = mnist.get_test()
+
+# train the classifier
+classifier.train(train_data,train_labels)
+
+# test the classifier
+predictions = classifier.process(test_data)
+
+# print the accuracy
+accuracy = iu.accuracy(predictions,ground_truth)
+print(accuracy)
+```
+
+
+
+#### builtin classifiers
+- Multilayer Perceptron
+- Linear Support Vector Machine
+
+
+
+#### builtin I/O blocks
+- Webcam Capturing
+- Image Loading
+- Image Display
+
+#### builtin utility blocks
+- Image Resizing
+- Grayscale Conversion
+
+#### builtin feature engineering blocks include:
+- keypoint detection and description
+- Fourier Transform
+- Frequency Filtering
+- Pretrained Neural Networks for image feature generations
+
+### Designing your own processing blocks
+Designing your blocks is a fairly straightforward process
+#### Quick Block Creations
+if you already have a function that does all the processing you need to a single input,
+then you can  
+
+## chaining multiple pipelines together
+
+
+# Imaging Science Convenience Functions
 ## Getting Standard Test Imagery
 `imsciutils` contains helper functions to quickly retrieve imagery that
 are frequently used as benchmarks in the Imaging Science community
@@ -97,6 +247,8 @@ import time
 
 # lets build our Viewer and have it auto-resize images to 512x512
 viewer = iu.Viewer('Window Title Here', size=(512,512))
+# let's enable the frame counter, so we know what image we are on
+viewer.enable_frame_counter()
 
 # get all standard images
 standard_images = iu.standard_image_gen()
@@ -104,7 +256,7 @@ standard_images = iu.standard_image_gen()
 # now let's display all images sequentially!
 for img in standard_images:
 	viewer.view( img )
-	time.sleep(1)
+	time.sleep(.1)
 ```
 
 ### Normalizing and binning an image
@@ -123,7 +275,7 @@ iu.Viewer().view(display_safe)
 when debugging an image pipeline, printing out an image
 can be counter productive. Imaging scientists frequently default
 to printing out the shape or size of the data. `imsciutils` contains
-a helper class to quickly summarize an image in formated string
+a helper class to quickly summarize an image in a formatted string
 ```python
 import imsciutils as iu
 lenna = iu.lenna()
@@ -158,6 +310,48 @@ rows, cols, bands, dtype = iu.dimensions(lenna)
 Many imaging tasks are time sensitive or computationally
 intensive. `imsciutils` includes simple tools to time your process or function
 
+#### Timer Objects
+`imsciutils` also includes a separate timer for timing things inside a function
+or code block
+
+##### absolute timing:
+```python
+from imsciutils.util import Timer
+import time
+
+t = Timer()
+time.sleep(5)
+print( t.time(),"seconds" ) # or t.time_ms() for milliseconds
+```
+
+##### lap timing:
+```python
+from imsciutils.util import Timer
+import time
+
+t = Timer()
+for i in range(10):
+	time.sleep(1)
+	print( t.lap(),"seconds" ) # or t.lap_ms() for milliseconds
+```
+
+##### perform operation for N seconds:
+```python
+from imsciutils.util import Timer
+import time
+
+def do_something():
+	pass
+
+# set the countdown
+N = 10 #seconds
+t = Timer()
+t.countdown = N
+while t.countdown:
+	do_something()
+```
+
+
 #### timing Decorator
 let's say we have a function that we think may be slowing down our pipeline.
 We can add `@function_timer` on the line above the function
@@ -185,96 +379,6 @@ prints the following when the above code is run
 (  function_timer  )[    INFO    ] ran function 'we_can_time_in_seconds' in 1.001sec
 (  function_timer  )[    INFO    ] ran function 'or_in_milliseconds' in 1000.118ms
 ```
-
-#### Timer Objects
-`imsciutils` also includes a separate timer for timing things inside a function
-or code block
-```python
-from imsciutils.util import Timer
-import time
-
-t = Timer()
-for i in range(2):
-	time.sleep(1)
-	print(i,") t.lap() resets every time it's called:", t.lap() ) # we can call the 'lap' function to get lap timing
-	print(i,') t.time() counts up always: ', t.time() ) # or the 'time' to get the total time
-```
-produces the following
-```
-0 ) t.lap() resets every time it's called: 1.0
-0 ) t.time() counts up always:  1.001
-1 ) t.lap() resets every time it's called: 1.002
-1 ) t.time() counts up always:  2.003
-```
-
-
-# HIGHER LEVEL FUNCTIONALITY
-`imsciutils` also contains objects for more specific, higher level tasks
-such as talking to a webcam, writing videos and images, extact image features
-using pretrained neural networks, etc.
-
-**_The following examples may be longer and contain psuedocode_**
-
-**_It may be necessary to look at docstrings to fully realize the capabilities of the objects presented_**
-
-## Machine learning
-
-
-### Pretrained Network Feature Extraction
-There is a convenience wrapper around keras built into `imsciutils`
-to extract image features using pretrained networks
-```python
-import imsciutils as iu
-network = iu.ml.FeatureExtractor('resnet50', pooling_type='avg')
-
-# it works with single images
-lenna = iu.lenna()
-lenna_features = network.extract_features(lenna)
-
-# it also works with a list of images
-img_batch = [iu.lenna(), iu.pig(), iu.crowd()]
-batch_features = network.extract_features(img_batch)
-
-# it even works with filenames
-filenames = ['path/to/lenna.tiff','path/to/pig.jpg','path/to/crowd.jpg']
-img_features = network.extract_features(filenames)
-```
-
-### Configuration Factory
-In many machine learning applications, parameters have to
-be tweaked frequently to optimize a model. This can be a tedious task
-and frequently involves a human tweaking configurations files. This
-object is meant to simplify that process by **generating config permutations
-from a sample of arguments and keyword arguments**
-
-#### simple example
-```python
-import imsciutils as iu
-from imsciutils.util import ConfigFactory
-
-# Warning, the next two lines are psuedocode
-def run_important_test(arg1,arg2,arg3,first,second,third):
-	do_something_important()
-
-
-arg_trials = [0, # the first positional will always be 0 in all permutations
-			['a','b','c'], # trials for second positional arguments
-			['u','w','x','y','z'], # trials for third positional argument
-			]
-
-kwarg_trials = {'first':None, # this keyword will always be None in all permutations
-			'second':['I','J','K'], # trials for 'first' keyword argument
-			'third':['i','j','k'], # trials for 'first' keyword argument
-			}
-
-config_factory = ConfigFactory(*arg_trials,**kwarg_trials)
-for args,kwargs in config_factory:
-	run_important_test(*args,**kwargs)
-```
-#### real world example
-let's say we are training a DNN classifier and we want to test
-
-
 
 # Development Tools in `imsciutils`
 **_This section is for developers of `imsciutils` or people who want `imsciutils` closely integrated with their projects_**
@@ -430,12 +534,7 @@ func_with_lots_of_args(1, b=2, c='not 3')
 ```
 produces the following in the terminal
 ```
-(    imsciutils    )[    INFO    ] running 'func_with_lots_of_args' with the following args:
-
-            type    | arg_name |  value
-        ==================================================
-        (  positional  ) a : 1
-        (   keyword    ) b : 2
-        (   keyword    ) c : not 3
-        (   default    ) d : 4
+(dimensions Tester)[    INFO    ] running 'dimensions' with the following args:
+	positional    | img            : [ARRAY SUMMARY | shape: (512, 512, 3) | size: 786432 | max: 255 | min: 3 | mean: 128.228 | dtype: uint8]
+	default       | return_as_dict : False
 ```

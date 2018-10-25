@@ -1,6 +1,7 @@
 # CUSTOM
 snippet_tester.py
-
+Pipfile
+pipfile.lock
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

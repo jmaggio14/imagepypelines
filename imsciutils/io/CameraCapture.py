@@ -1,14 +1,14 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import numpy as np
 import time
 import cv2
 
+from .. import core
 
 class CameraCapture(object):
     """
@@ -80,11 +80,9 @@ class CameraCapture(object):
             status, frame = self.cap.read()
 
         elif not status or not self.cap.isOpened():
-            debug_message = "unable to read frame {0}"\
+            debug_message = "unable to read frame {0}, is camera connected?"\
                 .format(self.current_frame_id)
-
-            imsciutils.warning(debug_message)
-            raise CameraReadError(debug_message)
+            raise core.CameraReadError(debug_message)
 
         return frame
 

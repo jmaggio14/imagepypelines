@@ -28,6 +28,45 @@ def test_number_image():
     iu.quick_image_view(linear,title='linear')
     testing_printer.info('Linear', iu.Summarizer(linear) )
 
+@iu.human_test
+def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
+    import imsciutils as iu
+    import numpy as np
+    testing_printer = iu.get_printer('imageloader->resizer->color2gray->viewer->orb')
+    ORB_KEYPOINTS = 10
+    # creating all the blocks for the pipeline
+    image_loader = iu.ImageLoader()
+    resizer = iu.Resizer(to_height=512,to_width=512)
+    color2gray = iu.Color2Gray('rgb')
+    viewer = iu.BlockViewer()
+    orb = iu.Orb(n_keypoints=ORB_KEYPOINTS)
+
+    # creating pipeline with all blocks
+    pipeline = iu.Pipeline(name=None,
+                            blocks=[image_loader,resizer,viewer,color2gray,orb])
+
+
+    # getting sample data for this system
+    standard_image_filenames = iu.standard_image_filenames()
+    processed = pipeline.process(standard_image_filenames)
+
+@iu.human_test
+def test_cameracapture_viewer_pipeline():
+    import imsciutils as iu
+    testing_printer = iu.get_printer('cameracapture->viewer')
+
+    capture = iu.CameraBlock(mode='time')
+    viewer = iu.BlockViewer()
+
+    pipeline = iu.Pipeline()
+    pipeline.add(capture)
+    pipeline.add(viewer)
+
+
+    #capture for 30 seconds
+    images = pipeline.process( [30] )
+
+
 
 
 
@@ -66,8 +105,8 @@ def main(verbose=False):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--verbose',
+    parser.add_argument('--quiet-mode',
                         help='whether or not to print out the arguments passed into functions that use Tester',
                         action='store_true')
     args = parser.parse_args()
-    main(args.verbose)
+    main(not args.quiet_mode)

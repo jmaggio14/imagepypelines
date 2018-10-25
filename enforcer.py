@@ -11,11 +11,11 @@ Example:
     default (no modification, directory is ./imsciutils):
         $ python enforcer.py
 
-    without modification:
+    explicit path:
         $ python enforcer.py --directory='path_to_directory'
 
-    with modification:
-        $ python enforcer.py --directory='path_to_directory' --modify
+    add licenses if they don't exist:
+        $ python enforcer.py --modify
 
 """
 #!/usr/bin/env python
@@ -58,10 +58,10 @@ SKIP = ['.git',
 
 ACCEPTABLE_EXTS = ['.py']
 
-LICENSE_HEADER = """
-@Email:  jmaggio14@gmail.com
-
-MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+LICENSE_HEADER = """@Email: jmaggio14@gmail.com
+@Website: https://www.imagepypelines.org/
+@License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+@github: https://github.com/jmaggio14/imsciutils
 
 Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 """
@@ -149,18 +149,14 @@ def enforce_header(unformatted_license, directory, modify=False):
     if os.path.isfile(os.path.abspath(directory)):
         header = generate_header(unformatted_license, directory)
         return evaluate_header(header, directory, modify)
-    filenames = []
-    if six.PY3:
-        for ext in ACCEPTABLE_EXTS:
-            filenames.extend(glob.glob(directory + '/**/*' + ext, recursive=True))
-    else:
-        matches = []
-        for ext in ACCEPTABLE_EXTS:
-            for root, dirnames, filenames in os.walk(directory):
-                for filename in fnmatch.filter(filenames, '*' + ext):
-                    matches.append(os.path.join(root, filename))
 
-        filenames = matches
+    matches = []
+    for ext in ACCEPTABLE_EXTS:
+        for root, dirnames, filenames in os.walk(directory):
+            for filename in fnmatch.filter(filenames, '*' + ext):
+                matches.append(os.path.join(root, filename))
+
+    filenames = matches
 
     for obj in filenames:
         if obj not in SKIP:

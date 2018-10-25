@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 from collections import Iterable
 import itertools
 import numpy as np
@@ -21,25 +20,25 @@ class ConfigFactory(object):
     from a sample of arguments and keyword arguments
 
     Example:
-        def run_important_test(arg1,arg2,arg3,first,second,third):
-            do_something_important()
+        >>> def run_important_test(arg1,arg2,arg3,first,second,third):
+        ...    do_something_important()
 
 
-        arg_trials = [
-                [1,2,3], # trials for first positional argument
-                ['a','b','c'], # trials for second positional arguments
-                ['y','z'], # trials for third positional argument
-                ]
+        >>> arg_trials = [
+        ...        [1,2,3], # trials for first positional argument
+        ...        ['a','b','c'], # trials for second positional arguments
+        ...        ['y','z'], # trials for third positional argument
+        ...        ]
 
-        kwarg_trials = {
-                    'first':None, # trials for 'first' keyword argument
-                    'second':['I','J','K'], # trials for 'second' keyword argument
-                    'third':['i','j','k'], # trials for 'third' keyword argument
-                    }
+        >>> kwarg_trials = {
+        ...            'first':None, # trials for 'first' keyword argument
+        ...            'second':['I','J','K'], # trials for 'second' keyword argument
+        ...            'third':['i','j','k'], # trials for 'third' keyword argument
+        ...            }
 
-        permuter = ConfigFactory(*arg_trials,**kwarg_trials)
-        for args,kwargs in permuter:
-            run_important_test(*args,**kwargs)
+        >>> permuter = ConfigFactory(*arg_trials,**kwarg_trials)
+        >>> for args,kwargs in permuter:
+        ...    run_important_test(*args,**kwargs)
 
     """
     def __init__(self,*arg_trials,**kwarg_trials):

@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 from __future__ import absolute_import
 import time
 
@@ -14,14 +13,14 @@ def function_timer(func):
     Decorator to time how long a func takes to run in seconds
 
     Example:
-        @function_timer
-        def sleep_for_one_sec():
-            time.sleep(1) # sleep for 1 second
+        >>> @function_timer
+        >>> def sleep_for_one_sec():
+        ...    time.sleep(1) # sleep for 1 second
 
-        sleep_for_one_sec()
-        # (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
+        >>> sleep_for_one_sec()
+        (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
-    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues 
+    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
     from .. import core
     printer = core.get_printer('function_timer')
@@ -50,7 +49,7 @@ def function_timer_ms(func):
         sleep_for_one_sec()
         # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
-    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues 
+    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
     from .. import core
     printer = core.get_printer('function_timer')
@@ -113,20 +112,30 @@ class Timer(object):
         self.__init__()
 
     def time(self):
-        """returns the time since the timer started or since it was
+        """returns the time in seconds since the timer started or since it was
          last reset"""
         return round(self.raw_time(),3)
 
     def raw_time(self):
-        """returns the unrounded time since the timer started"""
+        """returns the unrounded time in seconds since the timer started"""
         return time.time() - self._start
 
     def lap(self):
-        """returns time since last time the lap was called"""
+        """returns time in seconds since last time the lap was called"""
         now = time.time()
         lap = now - self._last
         self._last = now
         return round(lap,3)
+
+    def time_ms(self):
+        """returns the time in milliseonds since the timer started or since it
+        was last reset"""
+        return round(self.raw_time()*1000,3)
+
+    def lap_ms(self):
+        """returns time in milliseconds since last time the lap was called"""
+        return round(self.lap()*1000,3)
+
 
     @property
     def countdown(self):

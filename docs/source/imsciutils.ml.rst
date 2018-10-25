@@ -4,26 +4,18 @@ imsciutils.ml package
 Submodules
 ----------
 
+imsciutils.ml.ConfigFactory module
+----------------------------------
+
+.. automodule:: imsciutils.ml.ConfigFactory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 imsciutils.ml.DatasetManager module
 -----------------------------------
 
 .. automodule:: imsciutils.ml.DatasetManager
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imsciutils.ml.Descriptors module
---------------------------------
-
-.. automodule:: imsciutils.ml.Descriptors
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imsciutils.ml.FeatureExtractor module
--------------------------------------
-
-.. automodule:: imsciutils.ml.FeatureExtractor
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,18 +28,10 @@ imsciutils.ml.FisherVectors module
     :undoc-members:
     :show-inheritance:
 
-imsciutils.ml.SGDClassifier module
-----------------------------------
+imsciutils.ml.Permuter module
+-----------------------------
 
-.. automodule:: imsciutils.ml.SGDClassifier
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imsciutils.ml.SimplePerceptron module
--------------------------------------
-
-.. automodule:: imsciutils.ml.SimplePerceptron
+.. automodule:: imsciutils.ml.Permuter
     :members:
     :undoc-members:
     :show-inheritance:
@@ -56,14 +40,6 @@ imsciutils.ml.batching module
 -----------------------------
 
 .. automodule:: imsciutils.ml.batching
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imsciutils.ml.datasets module
------------------------------
-
-.. automodule:: imsciutils.ml.datasets
     :members:
     :undoc-members:
     :show-inheritance:

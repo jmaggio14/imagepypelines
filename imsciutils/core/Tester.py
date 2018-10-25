@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 import numpy as np
 import inspect
 from collections import Iterable, OrderedDict
@@ -106,14 +105,14 @@ class Tester(object):
             passed (boolean): whether or not the output was one of the desired_type
 
         Example:
-            def output_str_or_int(a):
-                if a:
-                    return "1"
-                else:
-                    return 1
+            >>> def output_str_or_int(a):
+            ...    if a:
+            ...        return "1"
+            ...    else:
+            ...        return 1
 
-            tester = Tester(output_str_or_int)
-            is_test_successful = tester.type_test(str, a=True)
+            >>> tester = Tester(output_str_or_int)
+            >>> is_test_successful = tester.type_test(str, a=True)
         """
         # Making desired_type a list if it isn't already
         if not isinstance(desired_type,Iterable):

@@ -1,10 +1,9 @@
-#
-# @Email:  jmaggio14@gmail.com
-#
-# MIT License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imsciutils/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imsciutils
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-#
 def centroid(img):
     """finds the centroid of the given image img
 
@@ -15,8 +14,8 @@ def centroid(img):
         tuple: centroid of the input image (height,width)
 
     Example:
-        import imsciutils as iu
-        lenna_centroid = centroid( iu.lenna() )
+        >>> import imsciutils as iu
+        >>> lenna_centroid = centroid( iu.lenna() )
     """
     centroid = img.shape[0]//2, img.shape[1]//2
     return centroid
@@ -32,8 +31,8 @@ def frame_size(img):
         tuple: frame_size, height and width of the input img
 
     Example:
-        import imsciutils as iu
-        lenna_framesize = frame_size( iu.lenna() )
+        >>> import imsciutils as iu
+        >>> lenna_framesize = frame_size( iu.lenna() )
     """
     frame_size = img.shape[0], img.shape[1]
     return frame_size
@@ -52,8 +51,8 @@ def dimensions(img, return_as_dict=False):
         tuple: dimensions of the form (rows, cols, bands, dtype)
 
     Example:
-        import imsciutils as iu
-        dims = dimensions( iu.lenna() )
+        >>> import imsciutils as iu
+        >>> dims = dimensions( iu.lenna() )
     """
     rows = img.shape[0]
     cols = img.shape[1]
