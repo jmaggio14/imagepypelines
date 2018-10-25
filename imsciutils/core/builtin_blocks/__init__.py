@@ -13,9 +13,10 @@ __all__ = ['BlockViewer',
             'FFT',
             'Lowpass',
             'Highpass',
+            'Gray2Color',
             'IFFT',
             'ImageLoader',
-            'ImageWriter',
+            'WriterBlock',
             'SupportVectorMachines',
             'LinearSvm',
             'RbfSvm',
@@ -38,8 +39,9 @@ from .Color2Gray import Color2Gray
 from .FFT import FFT
 # Filters.py
 from .Filters import Lowpass
-# Filters.py
 from .Filters import Highpass
+# Gray2Color.py
+from .Gray2Color import Gray2Color
 # IFFT.py
 from .IFFT import IFFT
 # ImageLoader.py

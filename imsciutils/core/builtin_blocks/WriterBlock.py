@@ -57,7 +57,7 @@ class WriterBlock(SimpleBlock):
         io_map = {ArrayType([None,None,3]):ArrayType([None,None,3]),
                     ArrayType([None,None]):ArrayType([None,None])}
 
-        super(ImageWriter,self).__init__(io_map,
+        super(WriterBlock,self).__init__(io_map,
                                             requires_training=False,
                                             requires_labels=False)
 
