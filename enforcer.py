@@ -149,18 +149,14 @@ def enforce_header(unformatted_license, directory, modify=False):
     if os.path.isfile(os.path.abspath(directory)):
         header = generate_header(unformatted_license, directory)
         return evaluate_header(header, directory, modify)
-    filenames = []
-    if six.PY3:
-        for ext in ACCEPTABLE_EXTS:
-            filenames.extend(glob.glob(directory + '/**/*' + ext, recursive=True))
-    else:
-        matches = []
-        for ext in ACCEPTABLE_EXTS:
-            for root, dirnames, filenames in os.walk(directory):
-                for filename in fnmatch.filter(filenames, '*' + ext):
-                    matches.append(os.path.join(root, filename))
 
-        filenames = matches
+    matches = []
+    for ext in ACCEPTABLE_EXTS:
+        for root, dirnames, filenames in os.walk(directory):
+            for filename in fnmatch.filter(filenames, '*' + ext):
+                matches.append(os.path.join(root, filename))
+
+    filenames = matches
 
     for obj in filenames:
         if obj not in SKIP:
