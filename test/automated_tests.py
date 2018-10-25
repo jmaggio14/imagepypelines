@@ -332,9 +332,6 @@ def test_dataset_cifar100_coarse():
 #             testing_printer.info("{} was not properly saved".format(fname))
 
 
-@iu.unit_test
-def test_pipeline_saving_and_restoration():
-    
 
 def main(verbose=False):
     """
