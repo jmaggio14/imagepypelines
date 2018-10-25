@@ -7,30 +7,30 @@ be automatically run
 """
 from __future__ import print_function
 
-import imsciutils as iu
+import imagepypelines as ip
 VERBOSE = False
 
-@iu.unit_test
+@ip.unit_test
 def test_multilayer_perceptron():
-    import imsciutils as iu
+    import imagepypelines as ip
 
-    resizer = iu.Resizer(32,32) #28x28
-    features = iu.PretrainedNetwork() # generate features
-    pca = iu.PCA(256)
-    classifier = iu.MultilayerPerceptron(neurons=512,
+    resizer = ip.Resizer(32,32) #28x28
+    features = ip.PretrainedNetwork() # generate features
+    pca = ip.PCA(256)
+    classifier = ip.MultilayerPerceptron(neurons=512,
                                             validation=.1,
                                             num_hidden=3,
                                             dropout=.35,
                                             learning_rate=.01) # NN classifier
     # there are a lot more parameters you can tweak!
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_multilayer_perceptron')
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
-    mnist = iu.Mnist()
+    # built into `imagepypelines`
+    mnist = ip.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -41,7 +41,7 @@ def test_multilayer_perceptron():
     predictions = pipeline.process(test_data)
 
     # print the accuracy
-    accuracy = iu.accuracy(predictions,ground_truth)
+    accuracy = ip.accuracy(predictions,ground_truth)
     print('accuracy is ', accuracy)
 
     if len(predictions) == len(test_data):
@@ -49,22 +49,22 @@ def test_multilayer_perceptron():
     return False
 
 
-@iu.unit_test
+@ip.unit_test
 def test_linear_svm():
-    import imsciutils as iu
+    import imagepypelines as ip
 
-    resizer = iu.Resizer(32,32) #28x28
-    features = iu.PretrainedNetwork() # generate features
-    pca = iu.PCA(256)
-    classifier = iu.LinearSvm()
+    resizer = ip.Resizer(32,32) #28x28
+    features = ip.PretrainedNetwork() # generate features
+    pca = ip.PCA(256)
+    classifier = ip.LinearSvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_linear_svm')
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
-    mnist = iu.Mnist()
+    # built into `imagepypelines`
+    mnist = ip.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -75,7 +75,7 @@ def test_linear_svm():
     predictions = pipeline.process(test_data)
 
     # print the accuracy
-    accuracy = iu.accuracy(predictions,ground_truth)
+    accuracy = ip.accuracy(predictions,ground_truth)
     print('accuracy is ', accuracy)
 
     if len(predictions) == len(test_data):
@@ -83,22 +83,22 @@ def test_linear_svm():
     return False
 
 
-@iu.unit_test
+@ip.unit_test
 def test_rbf_svm():
-    import imsciutils as iu
+    import imagepypelines as ip
 
-    resizer = iu.Resizer(32,32) #28x28
-    features = iu.PretrainedNetwork() # generate features
-    pca = iu.PCA(256)
-    classifier = iu.RbfSvm()
+    resizer = ip.Resizer(32,32) #28x28
+    features = ip.PretrainedNetwork() # generate features
+    pca = ip.PCA(256)
+    classifier = ip.RbfSvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_rbf_svm')
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
-    mnist = iu.Mnist()
+    # built into `imagepypelines`
+    mnist = ip.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -109,7 +109,7 @@ def test_rbf_svm():
     predictions = pipeline.process(test_data)
 
     # print the accuracy
-    accuracy = iu.accuracy(predictions,ground_truth)
+    accuracy = ip.accuracy(predictions,ground_truth)
     print('accuracy is ', accuracy)
 
     if len(predictions) == len(test_data):
@@ -117,22 +117,22 @@ def test_rbf_svm():
     return False
 
 
-@iu.unit_test
+@ip.unit_test
 def test_poly_svm():
-    import imsciutils as iu
+    import imagepypelines as ip
 
-    resizer = iu.Resizer(32,32) #28x28
-    features = iu.PretrainedNetwork() # generate features
-    pca = iu.PCA(256)
-    classifier = iu.PolySvm()
+    resizer = ip.Resizer(32,32) #28x28
+    features = ip.PretrainedNetwork() # generate features
+    pca = ip.PCA(256)
+    classifier = ip.PolySvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_poly_svm')
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
-    mnist = iu.Mnist()
+    # built into `imagepypelines`
+    mnist = ip.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -143,29 +143,29 @@ def test_poly_svm():
     predictions = pipeline.process(test_data)
 
     # print the accuracy
-    accuracy = iu.accuracy(predictions,ground_truth)
+    accuracy = ip.accuracy(predictions,ground_truth)
     print('accuracy is ', accuracy)
 
     if len(predictions) == len(test_data):
         return True
     return False
 
-@iu.unit_test
+@ip.unit_test
 def test_sigmoid_svm():
-    import imsciutils as iu
+    import imagepypelines as ip
 
-    resizer = iu.Resizer(32,32) #28x28
-    features = iu.PretrainedNetwork() # generate features
-    pca = iu.PCA(256)
-    classifier = iu.SigmoidSvm()
+    resizer = ip.Resizer(32,32) #28x28
+    features = ip.PretrainedNetwork() # generate features
+    pca = ip.PCA(256)
+    classifier = ip.SigmoidSvm()
 
-    pipeline = iu.Pipeline([resizer,features,pca,classifier])
+    pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_sigmoid_svm')
     pipeline.debug()
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
-    # built into `imsciutils`
-    mnist = iu.Mnist()
+    # built into `imagepypelines`
+    mnist = ip.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -176,7 +176,7 @@ def test_sigmoid_svm():
     predictions = pipeline.process(test_data)
 
     # print the accuracy
-    accuracy = iu.accuracy(predictions,ground_truth)
+    accuracy = ip.accuracy(predictions,ground_truth)
     print('accuracy is ', accuracy)
 
     if len(predictions) == len(test_data):
@@ -188,30 +188,30 @@ def test_sigmoid_svm():
 
 
 
-@iu.unit_test
+@ip.unit_test
 def test_all_pretrained_networks():
-    import imsciutils as iu
+    import imagepypelines as ip
     import cv2
 
-    filenames = iu.standard_image_filenames()
+    filenames = ip.standard_image_filenames()
     images = [cv2.imread(f,cv2.IMREAD_COLOR) for f in filenames]
-    printer = iu.get_printer('test_all_pretrained_networks')
+    printer = ip.get_printer('test_all_pretrained_networks')
 
     success = []
-    for i,network_name in enumerate(iu.PRETRAINED_NETWORKS):
+    for i,network_name in enumerate(ip.PRETRAINED_NETWORKS):
         try:
             printer.info("testing {}...".format(network_name))
-            resizer = iu.Resizer(80,80)
-            pretrained = iu.PretrainedNetwork(network_name)
+            resizer = ip.Resizer(80,80)
+            pretrained = ip.PretrainedNetwork(network_name)
 
-            pipeline = iu.Pipeline([resizer,pretrained])
+            pipeline = ip.Pipeline([resizer,pretrained])
             pipeline.process(images)
 
             del pretrained
             del pipeline
             success.append(True)
             printer.info("{}/{} test successful!"\
-                            .format(i+1,len(iu.PRETRAINED_NETWORKS)))
+                            .format(i+1,len(ip.PRETRAINED_NETWORKS)))
 
 
         except Exception as e:
@@ -257,7 +257,7 @@ def main(verbose=False):
     runs all other function in this file automatically and prints out success
     or failure
     """
-    import imsciutils as iu
+    import imagepypelines as ip
     import six
     import threading
 
@@ -271,7 +271,7 @@ def main(verbose=False):
             global VERBOSE
             VERBOSE = True
     else:
-        iu.disable_all_printers()
+        ip.disable_all_printers()
 
     import sys
     unit_tests = [var for var in globals().values() if callable(var)]

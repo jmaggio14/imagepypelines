@@ -7,32 +7,32 @@ be automatically run
 """
 from __future__ import print_function
 
-import imsciutils as iu
+import imagepypelines as ip
 VERBOSE = False
 # constants.py
-@iu.unit_test
+@ip.unit_test
 def test_constants():
-    import imsciutils as iu
-    testing_printer = iu.get_printer('test_constants')
-    if not 'CV2_INTERPOLATION_TYPES' in dir(iu):
+    import imagepypelines as ip
+    testing_printer = ip.get_printer('test_constants')
+    if not 'CV2_INTERPOLATION_TYPES' in dir(ip):
         return False
-    if not 'NUMPY_TYPES' in dir(iu):
+    if not 'NUMPY_TYPES' in dir(ip):
         return False
-    if not 'IMAGE_EXTENSIONS' in dir(iu):
+    if not 'IMAGE_EXTENSIONS' in dir(ip):
         return False
-    if not 'PRETRAINED_NETWORKS' in dir(iu):
+    if not 'PRETRAINED_NETWORKS' in dir(ip):
         return False
 
     return True
 
 
 # coordinates.py
-@iu.unit_test
+@ip.unit_test
 def test_centroid():
-    import imsciutils as iu
-    testing_printer = iu.get_printer('test_centroid')
-    tester = iu.Tester(iu.centroid,verbose=VERBOSE)
-    lenna = iu.lenna()
+    import imagepypelines as ip
+    testing_printer = ip.get_printer('test_centroid')
+    tester = ip.Tester(ip.centroid,verbose=VERBOSE)
+    lenna = ip.lenna()
     desired_output = (256,256)
     if not tester.exact_test(desired_output, lenna):
         return False
@@ -40,12 +40,12 @@ def test_centroid():
     return True
 
 
-@iu.unit_test
+@ip.unit_test
 def test_frame_size():
-    import imsciutils as iu
-    testing_printer = iu.get_printer('test_frame_size')
-    tester = iu.Tester(iu.frame_size,verbose=VERBOSE)
-    lenna = iu.lenna()
+    import imagepypelines as ip
+    testing_printer = ip.get_printer('test_frame_size')
+    tester = ip.Tester(ip.frame_size,verbose=VERBOSE)
+    lenna = ip.lenna()
     desired_output = tuple( lenna.shape[:2] )
     if not tester.exact_test(desired_output,lenna):
         return False
@@ -53,12 +53,12 @@ def test_frame_size():
     return True
 
 
-@iu.unit_test
+@ip.unit_test
 def test_dimensions():
-    import imsciutils as iu
-    testing_printer = iu.get_printer('test_dimensions')
-    tester = iu.Tester(iu.dimensions,verbose=VERBOSE)
-    lenna = iu.lenna()
+    import imagepypelines as ip
+    testing_printer = ip.get_printer('test_dimensions')
+    tester = ip.Tester(ip.dimensions,verbose=VERBOSE)
+    lenna = ip.lenna()
     # tuple test
     desired_output = (lenna.shape[0],lenna.shape[1],lenna.shape[2],lenna.dtype)
     if not tester.exact_test(desired_output,lenna):
@@ -78,13 +78,13 @@ def test_dimensions():
 
 
 # img_tools.py
-@iu.unit_test
+@ip.unit_test
 def test_normalize_and_bin():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
-    testing_printer = iu.get_printer('test_normalize_and_bin')
-    tester = iu.Tester(iu.normalize_and_bin,verbose=VERBOSE)
-    lenna = iu.lenna()
+    testing_printer = ip.get_printer('test_normalize_and_bin')
+    tester = ip.Tester(ip.normalize_and_bin,verbose=VERBOSE)
+    lenna = ip.lenna()
     desired_output = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
     if not tester.exact_test(desired_output,lenna):
         return False
@@ -93,27 +93,27 @@ def test_normalize_and_bin():
 
 
 
-@iu.unit_test
+@ip.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
-    testing_printer = iu.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
+    testing_printer = ip.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = iu.ImageLoader()
-    resizer = iu.Resizer(to_height=512,to_width=512)
-    color2gray = iu.Color2Gray('rgb')
-    orb = iu.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.ImageLoader()
+    resizer = ip.Resizer(to_height=512,to_width=512)
+    color2gray = ip.Color2Gray('rgb')
+    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
-    pipeline = iu.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
+    pipeline = ip.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
                             blocks=[image_loader,resizer,color2gray,orb],
                             enable_text_graph=True)
     pipeline.printer.set_log_level('debug')
-    iu.set_global_printout_level(0)
+    ip.set_global_printout_level(0)
 
     # getting sample data for this system
-    standard_image_filenames = iu.standard_image_filenames()
+    standard_image_filenames = ip.standard_image_filenames()
     processed = pipeline.process(standard_image_filenames)
 
     if all(p.shape == (ORB_KEYPOINTS,32) for p in processed):
@@ -123,27 +123,27 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         return False
 
 
-@iu.unit_test
+@ip.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
-    testing_printer = iu.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
+    testing_printer = ip.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = iu.ImageLoader()
-    resizer = iu.Resizer(to_height=512,to_width=512)
-    color2gray = iu.Color2Gray('rgb')
-    orb = iu.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.ImageLoader()
+    resizer = ip.Resizer(to_height=512,to_width=512)
+    color2gray = ip.Color2Gray('rgb')
+    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
-    pipeline = iu.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
+    pipeline = ip.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
                             blocks=[image_loader,resizer,color2gray,orb],
                             enable_text_graph=True).debug()
     pipeline.printer.set_log_level('debug')
-    iu.set_global_printout_level(0)
+    ip.set_global_printout_level(0)
 
     # getting sample data for this system
-    standard_image_filenames = iu.standard_image_filenames()
+    standard_image_filenames = ip.standard_image_filenames()
     processed = pipeline.process(standard_image_filenames)
 
     if all(p.shape == (ORB_KEYPOINTS,32) for p in processed):
@@ -153,9 +153,9 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         return False
 
 
-@iu.unit_test
+@ip.unit_test
 def test_dataset_mnist():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
 
     TRAINING_LENGTH = 60000
@@ -163,7 +163,7 @@ def test_dataset_mnist():
     NUM_LABELS = 10
 
 
-    dataset = iu.Mnist()
+    dataset = ip.Mnist()
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -186,16 +186,16 @@ def test_dataset_mnist():
 
 
 
-@iu.unit_test
+@ip.unit_test
 def test_dataset_mnist_fashion():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
 
     TRAINING_LENGTH = 60000
     TESTING_LENGTH = 10000
     NUM_LABELS = 10
 
-    dataset = iu.MnistFashion()
+    dataset = ip.MnistFashion()
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -216,16 +216,16 @@ def test_dataset_mnist_fashion():
 
     return True
 
-@iu.unit_test
+@ip.unit_test
 def test_dataset_cifar10():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
 
     TRAINING_LENGTH = 50000
     TESTING_LENGTH = 10000
     NUM_LABELS = 10
 
-    dataset = iu.Cifar10()
+    dataset = ip.Cifar10()
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -247,16 +247,16 @@ def test_dataset_cifar10():
     return True
 
 
-@iu.unit_test
+@ip.unit_test
 def test_dataset_cifar100_fine():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
 
     TRAINING_LENGTH = 50000
     TESTING_LENGTH = 10000
     NUM_LABELS = 100
 
-    dataset = iu.Cifar100('fine')
+    dataset = ip.Cifar100('fine')
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -276,16 +276,16 @@ def test_dataset_cifar100_fine():
 
     return True
 
-@iu.unit_test
+@ip.unit_test
 def test_dataset_cifar100_coarse():
-    import imsciutils as iu
+    import imagepypelines as ip
     import numpy as np
 
     TRAINING_LENGTH = 50000
     TESTING_LENGTH = 10000
     NUM_LABELS = 20
 
-    dataset = iu.Cifar100('coarse')
+    dataset = ip.Cifar100('coarse')
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -306,23 +306,23 @@ def test_dataset_cifar100_coarse():
     return True
 
 
-# @iu.unit_test
+# @ip.unit_test
 # def test_thresholding_otsu():
-#     import imsciutils as iu
+#     import imagepypelines as ip
 #     import os
 #
-#     testing_printer = iu.get_printer('otsu_thresholding')
+#     testing_printer = ip.get_printer('otsu_thresholding')
 #
-#     standard_image_filenames = iu.standard_image_filenames()
+#     standard_image_filenames = ip.standard_image_filenames()
 #
 #     # build blocks for this pipeline
-#     loader = iu.ImageLoader()
-#     gray2color = iu.Gray2Color()
-#     otsu = iu.Otsu()
-#     writer = iu.WriterBlock('./output_dir',return_type='filename')
+#     loader = ip.ImageLoader()
+#     gray2color = ip.Gray2Color()
+#     otsu = ip.Otsu()
+#     writer = ip.WriterBlock('./output_dir',return_type='filename')
 #
 #     # pipeline construction
-#     pipeline = iu.Pipeline([loader,gray2color,otsu,writer])
+#     pipeline = ip.Pipeline([loader,gray2color,otsu,writer])
 #
 #     # get filenames of saved thresholded data
 #     processed_filenames = pipeline.process(standard_image_filenames)
@@ -335,7 +335,7 @@ if six.PY3:
     import queue
 else:
     import Queue as queue
-    
+
 Q = queue.Queue()
 
 def prevent_travis_timeout():
@@ -366,7 +366,7 @@ def main(verbose=False):
     runs all other function in this file automatically and prints out success
     or failure
     """
-    import imsciutils as iu
+    import imagepypelines as ip
     import six
     import threading
 
@@ -380,7 +380,7 @@ def main(verbose=False):
             global VERBOSE
             VERBOSE = True
     else:
-        iu.disable_all_printers()
+        ip.disable_all_printers()
 
     import sys
     unit_tests = [var for var in globals().values() if callable(var)]

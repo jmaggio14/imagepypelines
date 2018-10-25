@@ -4,7 +4,7 @@ import os
 from setuptools import setup, find_packages
 
 # load __version__, __author__, __email__, etc variables
-exec(open('imsciutils/version_info.py').read())
+exec(open('imagepypelines/version_info.py').read())
 
 
 with open('requirements.txt','r') as f:
@@ -15,7 +15,7 @@ if os.path.exists('README.md'):
     with open('README.md', 'r') as f:
         long_description = f.read()
 
-setup(name='imsciutils',
+setup(name='imagepypelines',
       version=__version__,
       description=__description__,
       long_description=long_description,

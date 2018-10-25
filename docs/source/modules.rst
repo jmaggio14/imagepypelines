@@ -1,7 +1,7 @@
-imsciutils
-==========
+imagepypelines
+==============
 
 .. toctree::
    :maxdepth: 4
 
-   imsciutils
+   imagepypelines
