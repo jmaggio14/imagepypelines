@@ -38,7 +38,7 @@ standard_image_filenames = iu.standard_image_filenames()
 # build blocks for this pipeline
 loader = iu.ImageLoader()
 otsu = iu.Otsu()
-writer = iu.WriterBlock(return_type='filename')
+writer = iu.WriterBlock('./output_dir',return_type='filename')
 
 # pipeline construction
 pipeline = iu.Pipeline([loader,otsu,writer])
