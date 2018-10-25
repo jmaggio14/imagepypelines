@@ -82,6 +82,6 @@ def SimpleImageClassifier(neurons=512,
                                             num_epochs=num_epochs,
                                             )
     pipeline = Pipeline([loader,features,pca,perceptron],
-                            name='SimpleImageClassifier')
+                            name='SimpleImageClassifier').debug()
 
     return pipeline
