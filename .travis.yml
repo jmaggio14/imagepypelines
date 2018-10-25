@@ -50,10 +50,17 @@ script:
 # JM: for github pages setup.
 # target branch defaults to 'gh-pages'
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN  # JM: references environmental variable I setup from github
-  keep-history: true
-  local-dir: docs/build/html
-  on:
-    branch: master
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN  # JM: references environmental variable I setup from github
+    keep-history: true
+    local-dir: docs/build/html
+    on:
+      branch: master
+
+  - provider: pypi
+    username: jmaggio14
+    password:
+      secure: "e5FUOY6WkTXVLc2sLWZUK/3lleniZvBVHVT04i94sZKp6O+ERRK8SF06NEz0hv4b4XDtOxr4BTLvoNEHYEXNRq2QyYiCRrK9wilZp1dxYP9vb7FiALT4C/R2j4eaFNGu+XzVcrOiGPOCcVEzt/EBw2d01QFS9Pp13DnMk6NPVmmleeLwLauKARGddt27FCEIqJ4dIizS62J0brNrTXgL6jbjRij3TtA1G9dWGQ9isGaynOjLcmUtR0p5MGaug1efwSxMtVqr9Y6fE5DK12Z5LrtaP+KyuQZvemv3wUGWnU3Vi+bYWkUo5eHePFznSHQuEc3oRs1QGwXTKLNSJeE2CKuSiPD9rbbv4AvJ8sFICnqaFNlV2bvLGMPi5s/1+Gb+X8GnCfh8oRlkBwSWPiHOXeyhgCLjVXnyrhVdTf0pgq3Nfkkk2aItLb5SShavVORJUvGTCrvlaiZoZGOeB6IbU/lf+/SMsxGUoH0zruDLfZVOz92+9EUOs46AkhP7h3pcdACMg3lToHrnSOYC6vvout/g+KV1TABiOrDOGiLzp6dJUzC34uQZHEvsGVipw2IFev0zcpTuPWwv+D19rtNFr0BpPownRZNUTvb/G3lHm1rv2n+o4fERtcnFRh8it4CL14CP73SdpF1KhGk2TyTDcANSCtN4aKthCRN3bbHVnuo="
+    on:
+      branch: master
