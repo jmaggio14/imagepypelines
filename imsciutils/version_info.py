@@ -16,7 +16,7 @@ __download_url__ = 'https://github.com/jmaggio14/imsciutils'
 __maintainer__ = "Jeff Maggio"
 __maintainer_email__ = "jmaggio14@gmail.com"
 __keywords__ = 'imaging-science machine-learning computer-vision data-pipelines'
-__python_requires__ = '>=2.7,>=3.4.*,!=3.7.*'
+__python_requires__ = '>=2.7.*,>=3.4.*,!=3.7.*'
 __platforms__ = ["Windows", "Linux", "Mac OS-X", "Unix"]
 __classifiers__ = [
     'Development Status :: 3 - Alpha',
