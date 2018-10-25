@@ -43,7 +43,7 @@ class Summarizer(dict):
         # ERROR CHECKING
         if not isinstance(input_array, np.ndarray):
             error_msg = "'input_array' input must be a np.ndarray"
-            iuerror(error_msg)
+            iperror(error_msg)
             raise TypeError(error_msg)
         # END ERROR CHECKING
         self.input_array = input_array

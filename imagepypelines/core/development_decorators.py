@@ -32,7 +32,7 @@ def deprecated(depreciation_msg):
     """
     def _deprecated(func):
         def __deprecated(*args,**kwargs):
-            iuwarning("DEPRECIATION WARNING:", depreciation_msg)
+            ipwarning("DEPRECIATION WARNING:", depreciation_msg)
             return func(*args,**kwargs)
 
         return __deprecated
@@ -63,7 +63,7 @@ def experimental(experimental_msg=None):
         def __experimental(*args,**kwargs):
             if create_message:
                 experimental_msg = "'{}' is an experimental feature".format(func.__name__)
-            iuwarning("EXPERIMENTAL WARNING:", experimental_msg)
+            ipwarning("EXPERIMENTAL WARNING:", experimental_msg)
             return func(*args,**kwargs)
 
         return __experimental

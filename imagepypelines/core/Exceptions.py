@@ -33,7 +33,7 @@ class InvalidInterpolationType(TypeError):
         error_string = "'interpolation' ({}) must be one of the following!"\
                                                             .format(interp)
         error_string = error_string + '\n' + interp_string
-        iuerror(error_string)
+        iperror(error_string)
         super(InvalidInterpolationType,self).__init__(error_string)
 
 
@@ -48,7 +48,7 @@ class InvalidNumpyType(TypeError):
         error_string = "'dtype' ({}) must be one of the following!"\
                                                             .format(dtype)
         error_string += "\n\t".join(ip.NUMPY_TYPES)
-        iuerror(error_string)
+        iperror(error_string)
         super(InvalidNumpyType,self).__init__(error_string)
 
 
@@ -69,7 +69,7 @@ class InvalidBlockInputData(TypeError):
             block.name,
             block.input_shape,
         )
-        iuerror(error_msg)
+        iperror(error_msg)
         super(InvalidBlockInputData,self).__init__(error_msg)
 
 class InvalidBlockInputLabels(TypeError):
@@ -77,21 +77,21 @@ class InvalidBlockInputLabels(TypeError):
         error_msg = "{}: input labels must a list or NoneType".format(
             block.name,
         )
-        iuerror(error_msg)
+        iperror(error_msg)
         super(InvalidBlockInputData,self).__init__(error_msg)
 
 class InvalidProcessStrategy(TypeError):
     def __init__(self,block):
         error_msg = "{}: function 'batch_process' must return a list!".format(
             block.name)
-        iuerror(error_msg)
+        iperror(error_msg)
         super(InvalidProcessStrategy,self).__init__(error_msg)
 
 class InvalidLabelStrategy(TypeError):
     def __init__(self,block):
         error_msg = "{}: function 'labels' must return a list or NoneType!".format(
             block.name)
-        iuerror(error_msg)
+        iperror(error_msg)
         super(InvalidLabelStrategy,self).__init__(error_msg)
 
 class DataLabelMismatch(TypeError):
@@ -104,5 +104,5 @@ class DataLabelMismatch(TypeError):
             len(processed),
             len(labels)
             )
-        iuerror(error_msg)
+        iperror(error_msg)
         super(DataLabelMismatch,self).__init__(error_msg)

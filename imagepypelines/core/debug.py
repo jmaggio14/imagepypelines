@@ -38,4 +38,4 @@ def debug(exception):
 				exc_type=exc_type,
 				exception=exception)
 
-	iuerror(error_msg)
+	iperror(error_msg)

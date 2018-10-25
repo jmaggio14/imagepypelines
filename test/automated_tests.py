@@ -14,13 +14,13 @@ VERBOSE = False
 def test_constants():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_constants')
-    if not 'CV2_INTERPOLATION_TYPES' in dir(iu):
+    if not 'CV2_INTERPOLATION_TYPES' in dir(ip):
         return False
-    if not 'NUMPY_TYPES' in dir(iu):
+    if not 'NUMPY_TYPES' in dir(ip):
         return False
-    if not 'IMAGE_EXTENSIONS' in dir(iu):
+    if not 'IMAGE_EXTENSIONS' in dir(ip):
         return False
-    if not 'PRETRAINED_NETWORKS' in dir(iu):
+    if not 'PRETRAINED_NETWORKS' in dir(ip):
         return False
 
     return True
@@ -335,7 +335,7 @@ if six.PY3:
     import queue
 else:
     import Queue as queue
-    
+
 Q = queue.Queue()
 
 def prevent_travis_timeout():
