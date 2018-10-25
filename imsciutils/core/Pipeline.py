@@ -294,6 +294,7 @@ class Pipeline(object):
     def _train(self,data,labels=None):
         t = util.Timer()
         for b in self.blocks:
+            self.printer.debug("training {}...".format(b.name))
             b._pipeline_train(self.step_data,self.step_labels)
             self._step() #step the block processing forward
 
