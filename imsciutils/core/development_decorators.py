@@ -114,13 +114,9 @@ def human_test(func):
 
 
 def print_args(func):
-    """
-    Decorator to print out the arguments a function is running with,
-    this includes:
-            arguments passed in
-            default values that are unspecified
-            varargs (*args)
-            varkwargs (**kwargs)
+    """decorator to print out the arguments that a function is running with,
+    this includes: arguments passed in, default values that are unspecified,
+    varargs (*args), and varkwargs (**kwargs)
 
     Args:
         func (callable): function or callable to print input arguments of
@@ -136,8 +132,6 @@ def print_args(func):
         (   keyword    ) b : 2
         (   keyword    ) c : not 3
         (  positional  ) d : 4
-
-
     """
 
     def _print_args(*args,**kwargs):

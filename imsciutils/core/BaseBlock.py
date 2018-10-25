@@ -309,7 +309,8 @@ class IoMap(tuple):
 
 
 class BaseBlock(object):
-    """BaseBlock object which is the root class for all Block subclasses
+    """BaseBlock object which is the root class for SimpleBlock and BatchBlock
+    subclasses
 
     This is the _building block_ (pun intended) for the entire imsciutils
     pipelining system. All Blocks, both Simple and Batch blocks, will inherit

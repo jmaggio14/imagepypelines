@@ -20,14 +20,6 @@ imsciutils.io.Emailer module
     :undoc-members:
     :show-inheritance:
 
-imsciutils.io.Emailer2 module
------------------------------
-
-.. automodule:: imsciutils.io.Emailer2
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 imsciutils.io.ImageWriter module
 --------------------------------
 
