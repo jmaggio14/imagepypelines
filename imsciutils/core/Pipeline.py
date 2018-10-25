@@ -300,7 +300,7 @@ class Pipeline(object):
 
             self.printer.info("{}: trained in {} sec".format(b.name,t.lap()))
 
-        self.printer.info("trained in {}seconds".format(t.time()))
+        self.printer.info("Pipeline trained in {}seconds".format(t.time()))
 
     def _after_train(self):
         # remove step data and labels memory footprint
