@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 __name__ = 'imsciutils'
-__version__ = '0.1.2'
+__version__ = '0.1.0-alpha'
 __description__ = 'data pipeline and convienence library targeted at accelerating the development of imaging projects and research'
 
 __author__ = 'Jeff Maggio, Nathan Dileas, Ryan Hartzell'
