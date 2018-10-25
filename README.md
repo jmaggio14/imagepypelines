@@ -1,4 +1,4 @@
-![logo](https://github.com/jmaggio14/imagepypelines/blob/develop/docs/images/logo.png "logo")
+![logo](https://github.com/jmaggio14/imagepypelines/blob/master/docs/images/logo.png "logo")
 # imagepypelines
 
 ![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")
@@ -8,8 +8,8 @@ The `imagepypelines` package consists of high level tools which simplify the con
 
 To achieve this goal, our development team always adheres to the following 5 core principles:
 
-1. Legos are fun 
-2. Coding should be fun 
+1. Legos are fun
+2. Coding should be fun
 3. Therefore coding should be like playing with Legos
 4. Imagery is fun, so that will always be our focus
 5. We must suffer, lest our users suffer
@@ -86,7 +86,7 @@ write some more stuff here about purpose of blocks as related to pipelines and t
 ## Building a pipeline
 Pipelines in `imagepypelines` are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
-![pipeline](https://github.com/jmaggio14/imagepypelines/blob/develop/docs/images/pipeline-example.png "pipeline example")
+![pipeline](https://github.com/jmaggio14/imagepypelines/blob/master/docs/images/pipeline-example.png "pipeline example")
 
 Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
