@@ -8,9 +8,10 @@ from .. import SimpleBlock
 from .. import ArrayType
 from ..coordinates import dimensions
 import cv2
+import numpy as np
 
 
-class Color2Gray(SimpleBlock):
+class Gray2Color(SimpleBlock):
     """stacks copies of a 2D array into a 3D image to convert to a grayscale
         color image, this may be required for neural networks which are built
         for RGB data
@@ -26,10 +27,15 @@ class Color2Gray(SimpleBlock):
             registered to 'name'
     """
     def __init__(self):
-        self.order = order
-
-        io_map = {ArrayType([None,None],[None,None,3]):ArrayType([None,None])}
-        super(Color2Gray,self).__init__(io_map,requires_training=False)
+        io_map = {
+                    ArrayType([None,None],[None,None,3]):
+                                        ArrayType([None,None,3]),
+                    # ArrayType([None,None],[None,None,3]):
+                    #                     ArrayType([None,None,3]),
+                    # ArrayType([None,None],[None,None,3]):
+                    #                     ArrayType([None,None,3])
+                }
+        super(Gray2Color,self).__init__(io_map,requires_training=False)
 
     def process(self,datum):
         """converts grayscale to color image
@@ -45,5 +51,5 @@ class Color2Gray(SimpleBlock):
             # Image is already rgb
             return datum
 
-        rgb = cv2.cvtColor(datum, cv2.COLOR_GRAY2RGB)
+        rgb = cv2.cvtColor(datum.astype(np.uint8), cv2.COLOR_GRAY2RGB)
         return rgb

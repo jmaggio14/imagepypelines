@@ -8,6 +8,7 @@ from .. import SimpleBlock
 from .. import ArrayType
 from ..coordinates import dimensions
 import cv2
+import numpy as np
 
 
 class Color2Gray(SimpleBlock):
@@ -40,7 +41,13 @@ class Color2Gray(SimpleBlock):
 
         self.order = order
 
-        io_map = {ArrayType([None,None,3],[None,None]):ArrayType([None,None])
+        io_map = {
+                    ArrayType([None,None],[None,None,3]):
+                                        ArrayType([None,None]),
+                    # ArrayType([None,None],[None,None,3]):
+                    #                     ArrayType([None,None]),
+                    # ArrayType([None,None],[None,None,3]):
+                    #                     ArrayType([None,None])
                 }
 
         super(Color2Gray,self).__init__(io_map,requires_training=False)
@@ -59,5 +66,5 @@ class Color2Gray(SimpleBlock):
             # Image is already grayscale
             return datum
 
-        gray = cv2.cvtColor(datum, self.flag)
+        gray = cv2.cvtColor(datum.astype(np.uint8), self.flag)
         return gray
