@@ -21,9 +21,12 @@ __python_requires__ = '>=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.7.*'
 __platforms__ = ["Windows", "Linux", "Mac OS-X", "Unix"]
 __classifiers__ = [
     'Development Status :: 3 - Alpha',
-    'Intended Audience :: Scientists',
-    'Topic :: Scientific/Engineering'
-    'Topic :: Software Development',
+    'Intended Audience :: Science/Research',
+    # 'Topic :: Software Development',
+    # 'Topic :: Scientific/Engineering',
+    'Topic :: Scientific/Engineering :: Artificial Intelligence',
+    'Topic :: Scientific/Engineering :: Image Recognition',
+    'Topic :: Scientific/Engineering :: Information Analysis',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
     'Programming Language :: Python :: 2.7',
@@ -35,7 +38,7 @@ __classifiers__ = [
     'Operating System :: Microsoft :: Windows',
     'Operating System :: POSIX',
     'Natural Language :: English',
-    ],
+    ]
 
 __credits__ = ["Jeff Maggio", "Nathan Dileas", "Ryan Hartzell"]
 __status__ = "Experimental"
