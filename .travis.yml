@@ -53,7 +53,7 @@ deploy:
   - provider: pages
     skip-cleanup: true
     github-token: $GITHUB_TOKEN  # JM: references environmental variable I setup from github
-    keep-history: true
+    keep-history: false
     local-dir: docs/build/html
     on:
       branch: master
