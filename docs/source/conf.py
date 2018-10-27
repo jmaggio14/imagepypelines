@@ -27,9 +27,9 @@ copyright = '2018, Nathan Dileas, Ryan Hartzell, Jeff Maggio'
 author = 'Nathan Dileas, Ryan Hartzell, Jeff Maggio'
 
 # The short X.Y version
-version = ''
+version = '0.1'
 # The full version, including alpha/beta/rc tags
-release = ''
+release = '0.1.1a'
 
 
 # -- General configuration ---------------------------------------------------
@@ -93,7 +93,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 #
 # RH -I'm currently working on this and will add at a later date - 09/29/18
 #
-html_logo = "imagepypelines-Favicon.png"
+html_logo = "ip_logo.png"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.
@@ -112,7 +112,7 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [("Contributors", "http://example.com", True),
-                     ("Tutorials", '../../TUTORIALS.md', False)],
+                     ("Tutorials", '../../TUTORIALS.md', True)],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': True,
