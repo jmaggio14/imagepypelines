@@ -210,7 +210,7 @@ class NormalizeBlock(ip.SimpleBlock):
 		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
 					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
 
-		super(NormalizeBlock,self).__init__(self,io_map)
+		super(NormalizeBlock,self).__init__(io_map)
 
 	def process(self,img):
 		"""overload the processing function for this block"""
