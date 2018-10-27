@@ -101,6 +101,9 @@ from .printout import error
 from .printout import critical
 from .printout import comment
 
+# quick_types.py
+from .quick_types import GrayscaleImage
+from .quick_types import RgbImage
 
 # standard_image.py
 from .standard_image import list_standard_images
