@@ -93,7 +93,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 #
 # RH -I'm currently working on this and will add at a later date - 09/29/18
 #
-html_logo = "ip_logo.png"
+html_logo = "../images/ip_logo.png"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.
