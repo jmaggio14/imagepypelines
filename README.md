@@ -1,4 +1,4 @@
-![logo](./docs/images/logo.png "logo")
+![logo](./docs/images/ip_logo.png "logo")
 # imagepypelines
 
 ![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")
