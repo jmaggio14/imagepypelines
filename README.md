@@ -15,7 +15,6 @@ To achieve this goal, our development team always adheres to the following 5 cor
 4. Imagery is fun, so that will always be our focus
 5. We must suffer, lest our users suffer
 
-
 ## Installation
 _(make sure you see the **dependencies** section)_
 
