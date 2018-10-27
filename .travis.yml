@@ -46,9 +46,8 @@ script:
   - sphinx-apidoc -o docs/source imagepypelines
   # making the website
   - cd docs && make html # JM: puts html in docs/build/html
-  # generate CNAME file
-  - touch build/html/CNAME
-  - echo "https://www.imagepypelines.org" > build/html/CNAME
+  # copies cname over from source directory
+  - cp ../CNAME build/html/CNAME
 
 # JM: for github pages setup.
 # target branch defaults to 'gh-pages'
