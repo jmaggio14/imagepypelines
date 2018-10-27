@@ -111,7 +111,8 @@ html_theme_options = {
     #    (name, "http://example.com", True) # arbitrary absolute url
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
-    'navbar_links': [("Contributors", "http://example.com", True)],
+    'navbar_links': [("Contributors", "http://example.com", True),
+                     ("Tutorials", '../../TUTORIALS.md', False)],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': True,
