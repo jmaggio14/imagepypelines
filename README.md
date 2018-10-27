@@ -223,7 +223,7 @@ class NormalizeBlock(ip.SimpleBlock):
 
 
 # Imaging Science Convenience Functions
-In addition to the Pipeline, imagepypelines also contains a convenience
+In addition to the Pipeline, imagepypelines also contains convenience
 utilities to accelerate the development of imaging science and computer vision
 tasks
 
