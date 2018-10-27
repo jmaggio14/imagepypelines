@@ -1,4 +1,4 @@
-![logo](https://github.com/jmaggio14/imagepypelines/blob/develop/docs/images/logo.png "logo")
+![logo](./docs/images/logo.png "logo")
 # imagepypelines
 
 ![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")
@@ -8,20 +8,23 @@ The `imagepypelines` package consists of high level tools which simplify the con
 
 To achieve this goal, our development team always adheres to the following 5 core principles:
 
-1. Legos are fun 
-2. Coding should be fun 
+1. Legos are fun
+2. Coding should be fun
 3. Therefore coding should be like playing with Legos
 4. Imagery is fun, so that will always be our focus
 5. We must suffer, lest our users suffer
 
 
 ## Installation
-Python compatibility:  3.5+ (Python 2.7 backwards)
-via pip:
+_(make sure you see the **dependencies** section)_
+
+Python compatibility: 3.4-3.6 (Python 2.7 backwards)
+
+**via pip**:
 ```
-*placeholder until we get it on pypi*
+pip install imagepypelines --user
 ```
-from source:
+**from source**:
 ```console
 git clone https://github.com/jmaggio14/imagepypelines.git
 cd imagepypelines
@@ -58,10 +61,6 @@ Full documentation for `imagepypelines` can be found on our website: www.imagepy
 `imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
 Please credit us if you use `imagepypelines` in your research
-```
-*placeholder for latex*
-```
-
 
 # What Makes Us Unique?
 
@@ -80,42 +79,39 @@ The `Pipeline` object of `imagepypelines` allows for quick construction and prot
 
 
 ## The Block
-write some more stuff here about purpose of blocks as related to pipelines and then go into how to actually build a pipeline
-
-
-## Building a pipeline
 Pipelines in `imagepypelines` are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
-![pipeline](https://github.com/jmaggio14/imagepypelines/blob/develop/docs/images/pipeline-example.png "pipeline example")
+![pipeline](./docs/images/pipeline-example.png "pipeline example")
+
 
 Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
-##### let's create an example pipeline
-let's say we want a system that reads in images, resizes them, and then displays them for us
+Broadly speaking, each box can be thought of as a block box which simply applies an operation to input data
+![block](./docs/images/block.png "block example")
+
+a _datum_ can be anything: an image array, a filename, a label -- pretty much an pythonic type
+
+
+##### Hang on? are all blocks compatible with one another?
+not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed
+## Building a pipeline
+building a pipeline is super easy
+
+###### Image Display Pipeline
 ```python
 import imagepypelines as ip
 
-# first let's create our blocks
-block1 = ip.ImageLoader()
-block2 = ip.Resizer(512,512)
-block3 = ip.BlockViewer(pause_time=1)
-
-# then build a pipeline
-pipeline = ip.Pipeline(blocks=[block1,block2,block3])
-
-# we'll use imagepypelines example data
-image_filenames = ip.standard_image_filenames()
-
-# now we process it!
-pipeline.process(image_filenames)
+pipeline = ip.Pipeline(name='image display')
+pipeline.add( ip.ImageLoader() ) # each one of these elements are 'blocks'
+pipeline.add( ip.Resizer() )
+pipeline.add( ip.BlockViewer() )
 ```
-Now we have a system the reads in and displays imagery!
+We just made a processing pipeline that can read in images, resize them and display them! but we can do much more complicated operations.
 
-But what if we want to do something more complicated? Let's say we want to apply a lowpass filter to all of these images before we display them?
+###### Lowpass Filter Pipeline
 ```python
 import imagepypelines as ip
 
-# first let's create our blocks
 load = ip.ImageLoader()
 resize = ip.Resizer(512,512)
 fft = ip.FFT()
@@ -123,80 +119,116 @@ lowpass = ip.Lowpass(cut_off=32)
 ifft = ip.IFFT()
 display = ip.BlockViewer(pause_time=1)
 
-# then build a pipeline
 pipeline = ip.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
 
-# we'll use imagepypelines example data
-image_filenames = ip.standard_image_filenames()
 
-# now we process it!
-pipeline.process(image_filenames)
+# process a set of images (using imagepypelines' example data)
+filenames = ip.standard_image_filenames()
+pipeline.process(filenames)
 ```
 
 ### Machine Learning Applications
 One of the more powerful applications of `imagepypelines` is it's ease of use in
-_machine learning_ and _feature engineering_ applications. We can easily build
-a simple image classifier that is tailored to your purposes
+_machine learning_ and _feature engineering_ applications.
+we can easily tailor a pipeline to perform image classification
 
+_this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as **ip.SimpleImageClassifier**_
 ```python
 import imagepypelines as ip
 
-features = ip.PretrainedNetwork() # generate features
-neural_network = ip.MultilayerPerceptron(neurons=512) # NN classifier
-# there are a lot more parameters you can tweak!
+features = ip.PretrainedNetwork() # image feature block
+pca = ip.PCA(256) # principle component analysis block
+neural_network = ip.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
 
-classifier = ip.Pipeline([features,neural_network])
+classifier = ip.Pipeline([features,pca,neural_network])
 
-# for this example, we'll need to load the standard Mnist handwriting dataset
-# built into `imagepypelines`
-mnist = ip.Mnist()
-train_data, train_labels = mnist.get_train()
-test_data, ground_truth = mnist.get_test()
+# loading example data
+cifar10 = ip.Cifar10()
+train_data, train_labels = cifar10.get_train()
+test_data, ground_truth = cifar10.get_test()
 
-# train the classifier
-classifier.train(train_data,train_labels)
-
-# test the classifier
-predictions = classifier.process(test_data)
+classifier.train(train_data,train_labels) # train the classifier
+predictions = classifier.process(test_data) # test the classifier
 
 # print the accuracy
-accuracy = ip.accuracy(predictions,ground_truth)
-print(accuracy)
+accuracy = ip.accuracy(predictions,ground_truth) * 100
+print('pipeline classification accuracy is {}%!'.format(accuracy))
+```
+###### I/O operations
+- Image Display
+- Camera Capture
+- Image Loader
+- Image Writing
+
+###### Machine Learning
+- Linear Support Vector Machine
+- Rbf Support Vector Machine
+- Poly Support Vector Machine
+- Sigmoid Support Vector Machine
+- trainable neural networks
+- 8 Pretrained Neural Networks (for feature extraction)
+
+###### Image Processing
+- colorspace conversion
+- fast fourier transform
+- frequency filtering
+- Otsu Image Segmentation
+- ORB keypoint and description
+- Principle Component Analysis
+- Image resizing
+
+
+### Designing your own processing blocks
+There are two ways to create a block
+###### 1) quick block creation
+for operations that can be completed in a single function that
+accepts one datum, you can create a block with a single line.
+```python
+import imagepypelines as ip
+
+# create the function we use to process images
+def normalize_image(img):
+	return img / img.max()
+
+# set up the block to work with grayscale and color imagery
+io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+			ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+
+
+block = ip.quick_block(normalize_image, io_map)
+```
+
+###### 2) object inheritance
+_this is covered in more detail on our tutorial pages. this example will not cover training or label handling_
+```python
+import imagepypelines as ip
+
+class NormalizeBlock(ip.SimpleBlock):
+	"""normalize block between 0 and max_count, inclusive"""
+	def __init__(self,max_count=1):
+		self.max_count = max_count
+		# set up the block to work with grayscale and color imagery
+		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+
+		super(NormalizeBlock,self).__init__(self,io_map)
+
+	def process(self,img):
+		"""overload the processing function for this block"""
+		return img.astype(np.float32) / img.max() * self.max_count
 ```
 
 
 
-#### builtin classifiers
-- Multilayer Perceptron
-- Linear Support Vector Machine
 
-
-
-#### builtin I/O blocks
-- Webcam Capturing
-- Image Loading
-- Image Display
-
-#### builtin utility blocks
-- Image Resizing
-- Grayscale Conversion
-
-#### builtin feature engineering blocks include:
-- keypoint detection and description
-- Fourier Transform
-- Frequency Filtering
-- Pretrained Neural Networks for image feature generations
-
-### Designing your own processing blocks
-Designing your blocks is a fairly straightforward process
-#### Quick Block Creations
-if you already have a function that does all the processing you need to a single input,
-then you can  
-
-## chaining multiple pipelines together
 
 
 # Imaging Science Convenience Functions
+In addition to the Pipeline, imagepypelines also contains a convenience
+utilities to accelerate the development of imaging science and computer vision
+tasks
+
+
 ## Getting Standard Test Imagery
 `imagepypelines` contains helper functions to quickly retrieve imagery that
 are frequently used as benchmarks in the Imaging Science community
@@ -534,7 +566,9 @@ func_with_lots_of_args(1, b=2, c='not 3')
 ```
 produces the following in the terminal
 ```
-(dimensions Tester)[    INFO    ] running 'dimensions' with the following args:
-	positional    | img            : [ARRAY SUMMARY | shape: (512, 512, 3) | size: 786432 | max: 255 | min: 3 | mean: 128.228 | dtype: uint8]
-	default       | return_as_dict : False
+(func_with_lots_of_args)[    INFO    ] running 'func_with_lots_of_args' with the following args:
+        positional    | a : 1
+        keyword       | b : 2
+        keyword       | c : not 3
+        default       | d : 4
 ```
