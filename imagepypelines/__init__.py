@@ -16,8 +16,6 @@ reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'],stderr=FN
 installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
 FNULL.close()
 
-import pdb; pdb.set_trace()
-
 tf_names = ['tensorflow','tensorflow-gpu']
 has_tf = any(name in installed_packages for name in tf_names)
 
