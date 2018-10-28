@@ -25,7 +25,7 @@ has_cv2 = any(name in installed_packages for name in cv2_names)
 if not has_tf:
     print("ERROR: tensorflow must be installed for imagepypelines to operate!")
     print("'pip install tensorflow --user' for CPU only")
-    print("pip install tensorflow-gpu --user' for CPU+GPU")
+    print("'pip install tensorflow-gpu --user' for CPU+GPU")
     print("see README for details: https://github.com/jmaggio14/imagepypelines")
     sys.exit(1)
 # check for opencv
