@@ -82,10 +82,11 @@ Pipelines in `imagepypelines` are constructed of processing `blocks` which apply
 
 Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
-Broadly speaking, each box can be thought of as a block box which simply applies an operation to input data
+Broadly speaking, each box can be thought of as a black box which simply applies an operation to input data
 ![block](./docs/images/block.png "block example")
 
 a _datum_ can be anything: an image array, a filename, a label -- pretty much an pythonic type.
+
 
 Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
 
@@ -221,7 +222,7 @@ class NormalizeBlock(ip.SimpleBlock):
 		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
 					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
 
-		super(NormalizeBlock,self).__init__(self,io_map)
+		super(NormalizeBlock,self).__init__(io_map)
 
 	def process(self,img):
 		"""overload the processing function for this block"""
@@ -234,7 +235,7 @@ class NormalizeBlock(ip.SimpleBlock):
 
 
 # Imaging Science Convenience Functions
-In addition to the Pipeline, imagepypelines also contains a convenience
+In addition to the Pipeline, imagepypelines also contains convenience
 utilities to accelerate the development of imaging science and computer vision
 tasks
 
