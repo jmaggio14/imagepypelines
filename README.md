@@ -1,4 +1,5 @@
-![logo](./docs/images/logo.png "logo")
+<img src="./docs/images/ip_logo.png" width="64">
+
 # imagepypelines
 
 ![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")
@@ -14,11 +15,10 @@ To achieve this goal, our development team always adheres to the following 5 cor
 4. Imagery is fun, so that will always be our focus
 5. We must suffer, lest our users suffer
 
-
 ## Installation
 _(make sure you see the **dependencies** section)_
 
-Python compatibility: 3.4-3.6 (Python 2.7 backwards)
+Python compatibility: 3.4-3.6 (Python 2.7 backwards) 64bit
 
 **via pip**:
 ```
@@ -34,18 +34,15 @@ python setup.py install
 for full functionality, imagepypelines requires _opencv_ and _tensorflow_ to be installed
 on your machine
 ##### tensorflow
-if you have a gpu
 ```console
 pip install tensorflow-gpu --user
 ```
-otherwise
+(or for cpu only)
 ```console
 pip install tensorflow --user
 ```
 ##### opencv
-we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html)
-
-**_however_** unofficial bindings for opencv can be installed with
+we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html). **_However_** unofficial bindings for opencv can be installed with
 ```console
 pip install opencv-python --user
 ```
@@ -54,7 +51,7 @@ we do not guarantee support)
 
 
 ## Documentation
-Full documentation for `imagepypelines` can be found on our website: www.imagepypelines.org
+Full documentation for `imagepypelines`, including examples and tutorials, can be found on our website: www.imagepypelines.org
 
 
 ## Licensing / Credit
@@ -88,11 +85,15 @@ Each `block` _takes in_ a list of data and _returns_ a list of data, passing it 
 Broadly speaking, each box can be thought of as a black box which simply applies an operation to input data
 ![block](./docs/images/block.png "block example")
 
-a _datum_ can be anything: an image array, a filename, a label -- pretty much any pythonic type
+a _datum_ can be anything: an image array, a filename, a label -- pretty much an pythonic type.
 
+
+Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
 
 ##### Hang on? are all blocks compatible with one another?
 not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed
+
+
 ## Building a pipeline
 building a pipeline is super easy
 
@@ -104,6 +105,9 @@ pipeline = ip.Pipeline(name='image display')
 pipeline.add( ip.ImageLoader() ) # each one of these elements are 'blocks'
 pipeline.add( ip.Resizer() )
 pipeline.add( ip.BlockViewer() )
+
+# now let's display some example data!
+pipeline.process( ip.standard_image_filenames() )
 ```
 We just made a processing pipeline that can read in images, resize them and display them! but we can do much more complicated operations.
 
@@ -153,6 +157,14 @@ predictions = classifier.process(test_data) # test the classifier
 accuracy = ip.accuracy(predictions,ground_truth) * 100
 print('pipeline classification accuracy is {}%!'.format(accuracy))
 ```
+
+We just trained a full neural network classifier!
+
+
+### Processing Blocks built into imagepypelines
+_more are being added with every commit!_
+
+
 ###### I/O operations
 - Image Display
 - Camera Capture
@@ -166,6 +178,7 @@ print('pipeline classification accuracy is {}%!'.format(accuracy))
 - Sigmoid Support Vector Machine
 - trainable neural networks
 - 8 Pretrained Neural Networks (for feature extraction)
+- Principle Component Analysis
 
 ###### Image Processing
 - colorspace conversion
@@ -173,7 +186,6 @@ print('pipeline classification accuracy is {}%!'.format(accuracy))
 - frequency filtering
 - Otsu Image Segmentation
 - ORB keypoint and description
-- Principle Component Analysis
 - Image resizing
 
 
