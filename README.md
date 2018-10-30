@@ -89,9 +89,6 @@ a _datum_ can be anything: an image array, a filename, a label -- pretty much an
 
 Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
 
-##### How is this different than writing my own script?
-it's not really, just quicker, easier and better
-
 ##### Hang on? are all blocks compatible with one another?
 not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed
 
