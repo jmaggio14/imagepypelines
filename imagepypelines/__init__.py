@@ -23,16 +23,26 @@ cv2_names = ['cv2','opencv-python']
 has_cv2 = any(name in installed_packages for name in cv2_names)
 # check for tensorflow
 if not has_tf:
-    print("ERROR: tensorflow must be installed for imagepypelines to operate!")
-    print("'pip install tensorflow --user' for CPU only")
-    print("'pip install tensorflow-gpu --user' for CPU+GPU")
-    print("see README for details: https://github.com/jmaggio14/imagepypelines")
-    sys.exit(1)
+    # try an import just in case it was installed in a way pip doesn't recognize
+    try:
+        import tensorflow as tf
+    except ImportError as e:
+        print("ERROR: tensorflow must be installed for imagepypelines to operate!")
+        print("'pip install tensorflow --user' for CPU only")
+        print("'pip install tensorflow-gpu --user' for CPU+GPU")
+        print("see README for details: https://github.com/jmaggio14/imagepypelines")
+        sys.exit(1)
+
 # check for opencv
 if not has_cv2:
-    print("ERROR: opencv must be installed for imagepypelines to operate!")
-    print("see README for details: https://github.com/jmaggio14/imagepypelines")
-    sys.exit(1)
+    # try an import just in case it was installed in a way pip doesn't recognize
+    ## for opencv, this will be any source build
+    try:
+        import cv2
+    except ImportError as e:
+        print("ERROR: opencv must be installed for imagepypelines to operate!")
+        print("see README for details: https://github.com/jmaggio14/imagepypelines")
+        sys.exit(1)
 
 
 
