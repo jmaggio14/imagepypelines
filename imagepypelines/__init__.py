@@ -18,15 +18,20 @@ try:
     FNULL = open(os.devnull,'w')
     reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'],stderr=FNULL)
     installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
-    FNULL.close()
 
     has_tf = any(name in installed_packages for name in tf_names)
     has_cv2 = any(name in installed_packages for name in cv2_names)
+
+    del reqs
+    del installed_packages
     # if this raises a processError, then we can't access pip for some reason
     # so we'll simply attempt imports the slow way
 except subprocess.CalledProcessError:
     has_tf = False
     has_cv2 = False
+finally:
+    FNULL.close()
+
 
 # check for tensorflow
 if not has_tf:
@@ -71,4 +76,4 @@ from . import io
 
 # delete namespace pollutants
 del subprocess, sys, pkg_resources, os,
-del FNULL, reqs, installed_packages, tf_names, has_tf, cv2_names, has_cv2
+del FNULL, tf_names, has_tf, cv2_names, has_cv2
