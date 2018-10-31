@@ -10,22 +10,31 @@ import subprocess
 import sys
 import os
 
-# get list of installed packages, silence output
-FNULL = open(os.devnull,'w')
-reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'],stderr=FNULL)
-installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
-FNULL.close()
-
 tf_names = ['tensorflow','tensorflow-gpu']
-has_tf = any(name in installed_packages for name in tf_names)
-
 cv2_names = ['cv2','opencv-python']
-has_cv2 = any(name in installed_packages for name in cv2_names)
+
+# get list of installed packages, silence output
+try:
+    FNULL = open(os.devnull,'w')
+    reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'],stderr=FNULL)
+    installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
+    FNULL.close()
+
+    has_tf = any(name in installed_packages for name in tf_names)
+    has_cv2 = any(name in installed_packages for name in cv2_names)
+    # if this raises a processError, then we can't access pip for some reason
+    # so we'll simply attempt imports the slow way
+except subprocess.CalledProcessError:
+    has_tf = False
+    has_cv2 = False
+
 # check for tensorflow
 if not has_tf:
     # try an import just in case it was installed in a way pip doesn't recognize
+    ## this will be much slower, which is why it isn't done natively
     try:
         import tensorflow as tf
+        del tf
     except ImportError as e:
         print("ERROR: tensorflow must be installed for imagepypelines to operate!")
         print("'pip install tensorflow --user' for CPU only")
@@ -36,9 +45,11 @@ if not has_tf:
 # check for opencv
 if not has_cv2:
     # try an import just in case it was installed in a way pip doesn't recognize
+    ## this will be much slower, which is why it isn't done natively
     ## for opencv, this will be any source build
     try:
         import cv2
+        del cv2
     except ImportError as e:
         print("ERROR: opencv must be installed for imagepypelines to operate!")
         print("see README for details: https://github.com/jmaggio14/imagepypelines")
