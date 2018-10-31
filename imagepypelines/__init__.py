@@ -10,8 +10,8 @@ import subprocess
 import sys
 import os
 
-tf_names = ['tensorflow','tensorflow-gpu']
-cv2_names = ['cv2','opencv-python']
+tf_names = ['tensorflow','tensorflow-gpu','tf-nightly','tf-nightly-gpu']
+cv2_names = ['opencv-python','opencv-contrib-python']
 
 # get list of installed packages, silence output
 try:
