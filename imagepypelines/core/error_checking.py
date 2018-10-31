@@ -1,16 +1,16 @@
-from __future__ import absolute_import
-import numpy as np
-from collections import Iterable
-from .constants import CV2_INTERPOLATION_TYPES
-from .constants import NUMPY_TYPES
-from .Exceptions import InvalidInterpolationType
-from .Exceptions import InvalidNumpyType
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+from __future__ import absolute_import
+import numpy as np
+import collections
+from .constants import CV2_INTERPOLATION_TYPES
+from .constants import NUMPY_TYPES
+from .Exceptions import InvalidInterpolationType
+from .Exceptions import InvalidNumpyType
 """
 Helper functions that contain canned tests or checks that we will run
 frequently
@@ -46,7 +46,7 @@ def is_numpy_array(arr):
 
 def is_iterable(var):
     """returns True if input is an iterable type, false otherwise"""
-    return isinstance(var,Iterable)
+    return isinstance(var,collections.Iterable)
 
 
 def type_error_message(variable,variable_name,desired_types):
@@ -61,7 +61,7 @@ def type_error_message(variable,variable_name,desired_types):
     Returns:
         error_msg (str): formatted error message string
     """
-    if not isinstance(desired_types,Iterable):
+    if not isinstance(desired_types,collections.Iterable):
         desired_types = [desired_types]
     error_msg =  "'{name}' must be on of [{desired}], currently is {cur}"\
         .format(
