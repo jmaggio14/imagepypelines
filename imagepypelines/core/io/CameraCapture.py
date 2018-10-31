@@ -7,8 +7,7 @@
 import numpy as np
 import time
 import cv2
-
-from .. import core
+from ..Exceptions import CameraReadError
 
 class CameraCapture(object):
     """
@@ -82,7 +81,7 @@ class CameraCapture(object):
         elif not status or not self.cap.isOpened():
             debug_message = "unable to read frame {0}, is camera connected?"\
                 .format(self.current_frame_id)
-            raise core.CameraReadError(debug_message)
+            raise CameraReadError(debug_message)
 
         return frame
 

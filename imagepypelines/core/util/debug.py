@@ -7,7 +7,7 @@
 import os
 import sys
 import traceback
-from .printout import error as iperror
+from ..Printer import error as iperror
 
 def debug(exception):
 	"""

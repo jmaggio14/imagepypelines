@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
-from .printout import error as iperror
+from ..Printer import error as iperror
 
 class Summarizer(dict):
     """

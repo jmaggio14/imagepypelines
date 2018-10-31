@@ -8,8 +8,7 @@ import cv2
 import numpy as np
 from datetime import datetime
 
-from .. import util
-from .img_tools import number_image
+from .img_tools import number_image, norm_dtype
 from .error_checking import interpolation_type_check
 
 class Viewer(object):
@@ -104,7 +103,7 @@ class Viewer(object):
 
         if self._normalize:
 
-            frame = util.normalize.norm_dtype(frame)
+            frame = norm_dtype(frame)
 
         # cast frame dtype to uint8 for display
         frame = frame.astype(np.uint8)

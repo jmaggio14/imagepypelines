@@ -12,7 +12,7 @@ from .BaseBlock import ArrayType
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
 import collections
-from .. import util
+from .util.timing import Timer
 import pickle
 import collections
 import numpy as np
@@ -230,7 +230,7 @@ class Pipeline(object):
         return self.step_data,self.step_labels
 
     def _run_block(self,block,data,labels=None):
-        t = util.Timer()
+        t = Timer()
 
         # processing data using the block
         processed,labels = block._pipeline_process(data,labels)
@@ -292,7 +292,7 @@ class Pipeline(object):
         self.step_labels = labels
 
     def _train(self,data,labels=None):
-        t = util.Timer()
+        t = Timer()
         for b in self.blocks:
             self.printer.debug("training {}...".format(b.name))
             b._pipeline_train(self.step_data,self.step_labels)

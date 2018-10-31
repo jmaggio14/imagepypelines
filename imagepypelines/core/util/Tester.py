@@ -8,13 +8,13 @@ import numpy as np
 import inspect
 from collections import Iterable, OrderedDict
 import collections
-from .Printer import get_printer
-from .. import util
+from . import color
 from .debug import debug
 from .Summarizer import Summarizer
+from .Printer import get_printer
 from .error_checking import is_numpy_array
-from .printout import warning as ipwarning
-from .printout import info as ipinfo
+from .Printer import warning as ipwarning
+from .Printer import info as ipinfo
 import six
 
 
@@ -202,7 +202,7 @@ class Tester(object):
         # adding default positional args values to the dictionary
         for i,var_name in enumerate(specargs):
             if i < num_required:
-                var = util.red("No argument was passed in!",bold=True)
+                var = color.red("No argument was passed in!",bold=True)
             else:
                 var = specdefaults[i - num_required]
 
@@ -222,7 +222,7 @@ class Tester(object):
 
         # adding keyword only args to the dict
         for var_name in speckwonlyargs:
-            var = util.red("No argument was passed in!",bold=True)
+            var = color.red("No argument was passed in!",bold=True)
             vtype = KEYWORD
             __add_to_arg_dict(var_name,var,vtype)
         for var_name,var in speckwonlydefaults.items():

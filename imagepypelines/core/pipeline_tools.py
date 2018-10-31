@@ -1,3 +1,6 @@
+from .BaseBlock import SimpleBlock
+
+
 def quick_block(process_fn,
                 io_map,
                 name=None):

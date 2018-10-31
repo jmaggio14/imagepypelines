@@ -11,7 +11,7 @@ import itertools
 import collections
 import numpy as np
 import imagepypelines as ip
-from .. import core
+from ..Printer import get_printer
 import fnmatch
 from itertools import islice, chain
 

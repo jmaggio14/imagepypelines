@@ -4,13 +4,11 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .printout import warning as ipwarning
-from .printout import info as ipinfo
-from .. import util
+from ..Printer import warning as ipwarning
+from ..Printer import info as ipinfo
 from .error_checking import is_numpy_array
+from . import color
 from .Printer import get_printer
-
-
 import six
 from termcolor import colored
 import inspect
@@ -166,7 +164,7 @@ def print_args(func):
         # adding default positional args values to the dictionary
         for i,var_name in enumerate(specargs):
             if i < num_required:
-                var = util.red("No argument was passed in!",bold=True)
+                var = color.red("No argument was passed in!",bold=True)
             else:
                 var = specdefaults[i - num_required]
 
@@ -186,7 +184,7 @@ def print_args(func):
 
         # adding keyword only args to the dict
         for var_name in speckwonlyargs:
-            var = util.red("No argument was passed in!",bold=True)
+            var = color.red("No argument was passed in!",bold=True)
             vtype = KEYWORD
             __add_to_arg_dict(var_name,var,vtype)
         for var_name,var in speckwonlydefaults.items():
@@ -226,9 +224,9 @@ def unit_test(func):
         passed = func(*args,**kwargs)
 
         if passed:
-            msg = util.green("{} test passed!".format(func.__name__))
+            msg = color.green("{} test passed!".format(func.__name__))
         else:
-            msg = util.red("{} test failed!".format(func.__name__))
+            msg = color.red("{} test failed!".format(func.__name__))
 
         print(msg)
         return passed

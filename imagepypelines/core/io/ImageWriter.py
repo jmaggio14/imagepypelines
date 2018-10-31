@@ -5,10 +5,8 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import cv2
-from .. import core
 
 
-@core.experimental()
 class ImageWriter(object):
     """
     Class that operates as a system that saves single frames to a
