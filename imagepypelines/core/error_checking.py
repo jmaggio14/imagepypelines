@@ -16,7 +16,6 @@ Helper functions that contain canned tests or checks that we will run
 frequently
 """
 
-
 def interpolation_type_check(interp):
     """
     checks to see if the interpolation type is one of the acceptable
@@ -48,8 +47,6 @@ def is_numpy_array(arr):
 def is_iterable(var):
     """returns True if input is an iterable type, false otherwise"""
     return isinstance(var,Iterable)
-
-
 
 def type_error_message(variable,variable_name,desired_types):
     """
