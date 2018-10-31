@@ -12,9 +12,7 @@ STANDARD_IMAGE_DIRECTORY = pkg_resources.resource_filename(__name__,
 
 from .version_info import *
 from .core import *
-from . import util
-from . import ml
-from . import io
+
 
 # delete namespace pollutants
 del pkg_resources
