@@ -5,7 +5,6 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
-# check if the dependencies that aren't included in the setup.py are installed
 import pkg_resources
 STANDARD_IMAGE_DIRECTORY = pkg_resources.resource_filename(__name__,
                                                         'data/standard_images')
