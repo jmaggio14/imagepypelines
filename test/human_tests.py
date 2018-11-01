@@ -35,11 +35,11 @@ def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
     testing_printer = ip.get_printer('imageloader->resizer->color2gray->viewer->orb')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = ip.ImageLoader()
-    resizer = ip.Resizer(to_height=512,to_width=512)
-    color2gray = ip.Color2Gray('rgb')
-    viewer = ip.BlockViewer()
-    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.blocks.ImageLoader()
+    resizer = ip.blocks.Resizer(to_height=512,to_width=512)
+    color2gray = ip.blocks.Color2Gray('rgb')
+    viewer = ip.blocks.BlockViewer()
+    orb = ip.blocks.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
     pipeline = ip.Pipeline(name=None,
@@ -55,8 +55,8 @@ def test_cameracapture_viewer_pipeline():
     import imagepypelines as ip
     testing_printer = ip.get_printer('cameracapture->viewer')
 
-    capture = ip.CameraBlock(mode='time')
-    viewer = ip.BlockViewer()
+    capture = ip.blocks.CameraBlock(mode='time')
+    viewer = ip.blocks.BlockViewer()
 
     pipeline = ip.Pipeline()
     pipeline.add(capture)

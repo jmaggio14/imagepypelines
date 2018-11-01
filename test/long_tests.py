@@ -166,10 +166,10 @@ def test_dataset_cifar100_coarse():
 def test_multilayer_perceptron():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.MultilayerPerceptron(neurons=512,
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.MultilayerPerceptron(neurons=512,
                                             validation=.1,
                                             num_hidden=3,
                                             dropout=.35,
@@ -205,10 +205,10 @@ def test_multilayer_perceptron():
 def test_linear_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.LinearSvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.LinearSvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_linear_svm')
@@ -239,10 +239,10 @@ def test_linear_svm():
 def test_rbf_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.RbfSvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.RbfSvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_rbf_svm')
@@ -273,10 +273,10 @@ def test_rbf_svm():
 def test_poly_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.PolySvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.PolySvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_poly_svm')
@@ -306,10 +306,10 @@ def test_poly_svm():
 def test_sigmoid_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.SigmoidSvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.SigmoidSvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_sigmoid_svm')

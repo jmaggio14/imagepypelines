@@ -100,10 +100,10 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
     testing_printer = ip.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = ip.ImageLoader()
-    resizer = ip.Resizer(to_height=512,to_width=512)
-    color2gray = ip.Color2Gray('rgb')
-    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.blocks.ImageLoader()
+    resizer = ip.blocks.Resizer(to_height=512,to_width=512)
+    color2gray = ip.blocks.Color2Gray('rgb')
+    orb = ip.blocks.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
     pipeline = ip.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
@@ -130,10 +130,10 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
     testing_printer = ip.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = ip.ImageLoader()
-    resizer = ip.Resizer(to_height=512,to_width=512)
-    color2gray = ip.Color2Gray('rgb')
-    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.blocks.ImageLoader()
+    resizer = ip.blocks.Resizer(to_height=512,to_width=512)
+    color2gray = ip.blocks.Color2Gray('rgb')
+    orb = ip.blocks.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
     pipeline = ip.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
