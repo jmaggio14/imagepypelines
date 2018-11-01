@@ -8,11 +8,8 @@
 import pkg_resources
 STANDARD_IMAGE_DIRECTORY = pkg_resources.resource_filename(__name__,
                                                         'data/standard_images')
+del pkg_resources # delete namespace pollutants
 
 
 from .version_info import *
 from .core import *
-
-
-# delete namespace pollutants
-del pkg_resources

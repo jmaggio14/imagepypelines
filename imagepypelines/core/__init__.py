@@ -103,3 +103,8 @@ del sys, curr_module, funcs, STANDARD_IMAGES
 
 # Viewer.py
 from .Viewer import Viewer
+
+# import submodules
+from . import util
+from . import io
+from . import ml
