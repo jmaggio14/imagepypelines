@@ -10,7 +10,7 @@ from __future__ import print_function
 import imagepypelines as ip
 VERBOSE = False
 # constants.py
-@ip.unit_test
+ip.util.unit_test
 def test_constants():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_constants')
@@ -27,7 +27,7 @@ def test_constants():
 
 
 # coordinates.py
-@ip.unit_test
+ip.util.unit_test
 def test_centroid():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_centroid')
@@ -40,7 +40,7 @@ def test_centroid():
     return True
 
 
-@ip.unit_test
+ip.util.unit_test
 def test_frame_size():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_frame_size')
@@ -53,7 +53,7 @@ def test_frame_size():
     return True
 
 
-@ip.unit_test
+ip.util.unit_test
 def test_dimensions():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_dimensions')
@@ -78,7 +78,7 @@ def test_dimensions():
 
 
 # img_tools.py
-@ip.unit_test
+ip.util.unit_test
 def test_normalize_and_bin():
     import imagepypelines as ip
     import numpy as np
@@ -93,7 +93,7 @@ def test_normalize_and_bin():
 
 
 
-@ip.unit_test
+ip.util.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
     import imagepypelines as ip
     import numpy as np
@@ -123,7 +123,7 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         return False
 
 
-@ip.unit_test
+ip.util.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
     import imagepypelines as ip
     import numpy as np
@@ -156,7 +156,7 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
 
 
 
-# @ip.unit_test
+# ip.util.unit_test
 # def test_thresholding_otsu():
 #     import imagepypelines as ip
 #     import os

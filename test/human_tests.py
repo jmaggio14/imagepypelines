@@ -1,6 +1,6 @@
 import imagepypelines as ip
 
-@ip.human_test
+ip.util.human_test
 def test_quick_image_view():
     """THIS TEST REQUIRES A HUMAN TO VIEW THE IMAGE"""
     import imagepypelines as ip
@@ -10,7 +10,7 @@ def test_quick_image_view():
     ip.quick_image_view(pig,title='quick_image_view test')
 
 
-@ip.human_test
+ip.util.human_test
 def test_number_image():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_number_image')
@@ -28,7 +28,7 @@ def test_number_image():
     ip.quick_image_view(linear,title='linear')
     testing_printer.info('Linear', ip.Summarizer(linear) )
 
-@ip.human_test
+ip.util.human_test
 def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
     import imagepypelines as ip
     import numpy as np
@@ -50,7 +50,7 @@ def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
     standard_image_filenames = ip.standard_image_filenames()
     processed = pipeline.process(standard_image_filenames)
 
-@ip.human_test
+ip.util.human_test
 def test_cameracapture_viewer_pipeline():
     import imagepypelines as ip
     testing_printer = ip.get_printer('cameracapture->viewer')
