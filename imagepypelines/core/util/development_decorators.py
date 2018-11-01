@@ -6,9 +6,9 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Printer import warning as ipwarning
 from ..Printer import info as ipinfo
-from .error_checking import is_numpy_array
+from ..Printer import get_printer
+from ..error_checking import is_numpy_array
 from . import color
-from .Printer import get_printer
 import six
 from termcolor import colored
 import inspect

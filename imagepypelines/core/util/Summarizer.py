@@ -7,6 +7,10 @@
 import numpy as np
 from ..Printer import error as iperror
 
+def summary(arr):
+    """returns a Summarizer object for the given array"""
+    return Summarizer(arr)
+
 class Summarizer(dict):
     """
     Summarization object for numpy array. The primary job of this

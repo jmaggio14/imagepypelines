@@ -11,10 +11,10 @@ import collections
 from . import color
 from .debug import debug
 from .Summarizer import Summarizer
-from .Printer import get_printer
-from .error_checking import is_numpy_array
-from .Printer import warning as ipwarning
-from .Printer import info as ipinfo
+from ..Printer import get_printer
+from ..Printer import warning as ipwarning
+from ..Printer import info as ipinfo
+from ..error_checking import is_numpy_array
 import six
 
 
