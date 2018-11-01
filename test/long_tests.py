@@ -10,7 +10,7 @@ from __future__ import print_function
 import imagepypelines as ip
 VERBOSE = False
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_dataset_mnist():
     import imagepypelines as ip
     import numpy as np
@@ -43,7 +43,7 @@ def test_dataset_mnist():
 
 
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_dataset_mnist_fashion():
     import imagepypelines as ip
     import numpy as np
@@ -73,7 +73,7 @@ def test_dataset_mnist_fashion():
 
     return True
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_dataset_cifar10():
     import imagepypelines as ip
     import numpy as np
@@ -104,7 +104,7 @@ def test_dataset_cifar10():
     return True
 
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_dataset_cifar100_fine():
     import imagepypelines as ip
     import numpy as np
@@ -133,7 +133,7 @@ def test_dataset_cifar100_fine():
 
     return True
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_dataset_cifar100_coarse():
     import imagepypelines as ip
     import numpy as np
@@ -162,7 +162,7 @@ def test_dataset_cifar100_coarse():
 
     return True
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_multilayer_perceptron():
     import imagepypelines as ip
 
@@ -201,7 +201,7 @@ def test_multilayer_perceptron():
     return False
 
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_linear_svm():
     import imagepypelines as ip
 
@@ -235,7 +235,7 @@ def test_linear_svm():
     return False
 
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_rbf_svm():
     import imagepypelines as ip
 
@@ -269,7 +269,7 @@ def test_rbf_svm():
     return False
 
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_poly_svm():
     import imagepypelines as ip
 
@@ -302,7 +302,7 @@ def test_poly_svm():
         return True
     return False
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_sigmoid_svm():
     import imagepypelines as ip
 
@@ -340,7 +340,7 @@ def test_sigmoid_svm():
 
 
 
-ip.util.unit_test
+@ip.util.unit_test
 def test_all_pretrained_networks():
     import imagepypelines as ip
     import cv2
