@@ -6,7 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
 from .. import ArrayType
-from ... import util
+from .. import util
 import cv2
 import os
 

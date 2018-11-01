@@ -6,7 +6,6 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
 from PIL import Image
-from .img_tools import dimensions
 from .error_checking import dtype_type_check
 import cv2
 

@@ -6,7 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
 from .. import ArrayType
-from ..coordinates import dimensions
+from .. import dimensions
 import cv2
 import numpy as np
 

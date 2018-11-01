@@ -5,10 +5,10 @@ from .ConfigFactory import ConfigFactory
 from .DatasetManager import DatasetManager
 
 # datasets.py
-from .Mnist import Mnist
-from .MnistFashion import MnistFashion
-from .Cifar10 import Cifar10
-from .Cifar100 import Cifar100
+from .datasets import Mnist
+from .datasets import MnistFashion
+from .datasets import Cifar10
+from .datasets import Cifar100
 
 # VBOW.py
 from .VBOW import VBOW

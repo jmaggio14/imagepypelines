@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from ... import util
+from .. import util
 from .. import BatchBlock
 from .. import ArrayType
 from random import shuffle

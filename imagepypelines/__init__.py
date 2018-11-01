@@ -13,3 +13,5 @@ del pkg_resources # delete namespace pollutants
 
 from .version_info import *
 from .core import *
+from . import builtin_blocks as blocks
+from . import builtin_pipelines as pipelines

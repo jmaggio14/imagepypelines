@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock, ArrayType
-from ..Viewer import Viewer
+from .. import Viewer
 import time
 
 class BlockViewer(SimpleBlock):
