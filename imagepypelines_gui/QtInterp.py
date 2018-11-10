@@ -4,7 +4,7 @@ import sys
 import contextlib
 import io
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt4 import QtGui, QtCore
 
 
 @contextlib.contextmanager
@@ -22,7 +22,7 @@ def stderr_as(new):
     sys.stderr = sys.__stderr__
 
 
-class Interpreter(QtWidgets.QTextEdit):
+class Interpreter(QtGui.QTextEdit):
     ps1 = '>>> '
     ps2 = '... '
     linesep = '\n'
@@ -53,14 +53,28 @@ class Interpreter(QtWidgets.QTextEdit):
         with stdout_as(out), stderr_as(err):
             try:
                 ret = self.interp.runsource(command)
+                import time
+                import logging;logging.basicConfig(filename='interp.out',level=logging.INFO)
 
-                if out.getvalue() == '' and err.getvalue() == '':
+                #time.sleep(1)
+                
+                logging.info(out.getvalue())
+                logging.info(err.getvalue())
+
+                outval = out.getvalue()
+                errval = err.getvalue()
+
+                if not outval and not errval:
                     self.insertHtml('<br>')
+                    logging.info('1' + out.getvalue() + err.getvalue())
                 else:
                     self.insertHtml('<br>')
-                    self.output(out.getvalue())
-                    self.output(err.getvalue(), color='red')
+                    if outval:
+                        self.output(outval)
+                    if errval:
+                        self.output(errval, color='red')
                     self.insertHtml('<br>')
+                    logging.info('2' + out.getvalue() + err.getvalue())
 
                 if ret:
                     self.output(self.ps2)
@@ -76,15 +90,16 @@ class Interpreter(QtWidgets.QTextEdit):
             except Exception as e:
                 print(e)
 
-        # print('out:', repr(out.getvalue()))
-        # print('err:', repr(err.getvalue()))
-        print(self.history_idx, self.history)
+        print('out:', out.getvalue())
+        print('err:', err.getvalue())
+        print('history', self.history_idx, self.history)
 
     def output(self, text, color='black'):
         self.insertHtml('<p style="color:{color}">{text}</p>'.format(color=color, text=text))
 
     def rewrite_line(self, data):
         """ rewrite the line so that """
+        print(data)
 
     # disable clicking and selecting
     # def mouseReleaseEvent(self, e): pass
@@ -99,9 +114,9 @@ class Interpreter(QtWidgets.QTextEdit):
 
             if self.history:
                 self.history_idx -= 1
-                self.history_idx = min(-len(self.history), self.history_idx)
-                self.history_idx = max(-1, self.history_idx)
-                print(self.history_idx)
+                self.history_idx = max(-len(self.history), self.history_idx)
+                self.history_idx = min(-1, self.history_idx)
+                print('up', self.history_idx)
                 self.rewrite_line(self.history[self.history_idx])
 
         elif e.key() == QtCore.Qt.Key_Down:
@@ -109,7 +124,7 @@ class Interpreter(QtWidgets.QTextEdit):
                 self.history_idx += 1
                 self.history_idx = min(-len(self.history), self.history_idx)
                 self.history_idx = max(-1, self.history_idx)
-                print(self.history_idx)
+                print('down', self.history_idx)
 
                 self.rewrite_line(self.history[self.history_idx])
 
@@ -126,7 +141,7 @@ class Interpreter(QtWidgets.QTextEdit):
         else:
             super().keyPressEvent(e)
 
-
+"""
 class Variables(QtWidgets.QTreeWidget):
     def __init__(self, master):
         QtWidgets.QTreeWidget.__init__(self, master)
@@ -160,9 +175,10 @@ class Variables(QtWidgets.QTreeWidget):
         else:
             _str = str(val)
         return _str
+"""
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
+    app = QtGui.QApplication(sys.argv)
 
     # set up main display window
 

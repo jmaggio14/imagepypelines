@@ -67,10 +67,10 @@ def SimpleImageClassifier(neurons=512,
 
     """
     loader = blocks.ImageLoader()
-    features = ip.PretrainedNetwork(network=pretrained_network,
+    features = blocks.PretrainedNetwork(network=pretrained_network,
                                     pooling_type=pooling_type)
-    pca = ip.PCA(pca_components)
-    perceptron = ip.MultilayerPerceptron(neurons=neurons,
+    pca = blocks.PCA(pca_components)
+    perceptron = blocks.MultilayerPerceptron(neurons=neurons,
                                             dropout=dropout,
                                             num_hidden=num_hidden,
                                             learning_rate=learning_rate,
