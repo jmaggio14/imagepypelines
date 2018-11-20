@@ -8,9 +8,7 @@ import cv2
 import numpy as np
 from datetime import datetime
 
-import imagepypelines as ip
-from .. import util
-from .img_tools import number_image
+from .img_tools import number_image, norm_dtype
 from .error_checking import interpolation_type_check
 
 class Viewer(object):
@@ -92,7 +90,7 @@ class Viewer(object):
 
         # normalize image band by band (useful for FFT viewing)
         if self._FFT:
-    
+
             if frame.ndim == 2:
 
                 frame = 20*np.log(np.abs(frame))
@@ -105,7 +103,7 @@ class Viewer(object):
 
         if self._normalize:
 
-            frame = util.normalize.norm_dtype(frame)
+            frame = norm_dtype(frame)
 
         # cast frame dtype to uint8 for display
         frame = frame.astype(np.uint8)
@@ -118,10 +116,10 @@ class Viewer(object):
         # add a frame counter to an image thin
         if self._enable_frame_counter:
             frame = number_image(frame,self.frame_counter)
-        
+
         # displaying the image
         cv2.imshow(self.window_name, frame)
-        
+
         if force_waitkey:
             cv2.waitKey(force_waitkey)
 

@@ -4,10 +4,10 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from ... import util
+from .. import util
 from .. import BatchBlock
 from .. import ArrayType
-
+from .. import io
 
 
 
@@ -56,7 +56,7 @@ class CameraBlock(BatchBlock):
         mode(str):
             the mode for this block to operate in, either 'count' mode or 'time'
             mode. default is 'count'
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -79,7 +79,6 @@ class CameraBlock(BatchBlock):
                     }
 
 
-        from ... import io
         self.cap = io.CameraCapture(self.device,self.fourcc)
         super(CameraBlock,self).__init__(io_map, requires_training=False)
 

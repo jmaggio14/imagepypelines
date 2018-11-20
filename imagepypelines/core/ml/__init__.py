@@ -4,13 +4,18 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-# datasets.py
-
-# FisherVectors.py
-from .FisherVectors import FisherVectors
-
+#
 # ConfigFactory.py
 from .ConfigFactory import ConfigFactory
 
-# permute.py
-from .Permuter import Permuter
+# DatasetManager.py
+from .DatasetManager import DatasetManager
+
+# datasets.py
+from .datasets import Mnist
+from .datasets import MnistFashion
+from .datasets import Cifar10
+from .datasets import Cifar100
+
+# VBOW.py
+from .VBOW import VBOW

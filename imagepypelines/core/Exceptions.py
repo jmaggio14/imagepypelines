@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .printout import error as iperror
+from .Printer import error as iperror
 import cv2
 
 class CameraReadError(ValueError):

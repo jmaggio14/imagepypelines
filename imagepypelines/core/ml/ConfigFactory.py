@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from collections import Iterable
+import collections
 import itertools
 import numpy as np
 
@@ -47,13 +47,13 @@ class ConfigFactory(object):
 
         # making positional arguments iterable if they aren't already
         for arg in arg_trials:
-            if not isinstance(arg,Iterable):
+            if not isinstance(arg,collections.Iterable):
                 arg = [arg]
             arg_list.append(arg)
 
         # making keyword arguments iterable if they aren't already
         for key,val in kwarg_trials.items():
-            if not isinstance(val,Iterable):
+            if not isinstance(val,collections.Iterable):
                 kwarg_trials[key] = [val]
 
         self.kwarg_keys = sorted( kwarg_trials.keys() )

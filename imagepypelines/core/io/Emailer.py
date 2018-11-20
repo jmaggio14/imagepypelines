@@ -6,7 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import smtplib
 import getpass
-from .. import core
+from ..Printer import error as iperror
 
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
@@ -71,7 +71,7 @@ class Emailer(object):
         msg = self.get_msg()
 
         if not os.path.isfile(filename):
-            core.error("file '{}' does not exist or is inaccessible,\
+            iperror("file '{}' does not exist or is inaccessible,\
                             skipping attachment!".format(filename))
             return
 
@@ -83,7 +83,7 @@ class Emailer(object):
         sets the body of the current email message
         """
         if not isinstance(text, str):
-            ie.error("unable to set body because text must be a str,\
+            iperror("unable to set body because text must be a str,\
                     currently".format(type(text)))
             return
 

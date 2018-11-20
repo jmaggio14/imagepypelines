@@ -5,7 +5,11 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
-from .printout import error as iperror
+from ..Printer import error as iperror
+
+def summary(arr):
+    """returns a Summarizer object for the given array"""
+    return Summarizer(arr)
 
 class Summarizer(dict):
     """

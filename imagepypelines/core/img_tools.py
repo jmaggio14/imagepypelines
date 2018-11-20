@@ -4,10 +4,8 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-import imagepypelines
 import numpy as np
 from PIL import Image
-from .coordinates import dimensions
 from .error_checking import dtype_type_check
 import cv2
 
@@ -30,9 +28,7 @@ def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     assert isinstance(max_count, (int, float)), "'max_count' must be number"
     dtype_type_check(cast_type)
 
-    img = src.astype(np.float32)
-    img = (img / img.max()) * max_count
-    img = img.astype(cast_type)
+    img = norm_ab(src, src.min(), max_count).astype(cast_type)
     return img
 
 
@@ -95,6 +91,75 @@ def number_image(img, num):
 
     return img
 
+def centroid(img):
+    """finds the centroid of the given image img
+
+    Args:
+        img (np.ndarray):
+            input img to find the centroid of
+    Returns:
+        tuple: centroid of the input image (height,width)
+
+    Example:
+        >>> import imagepypelines as ip
+        >>> lenna_centroid = centroid( ip.lenna() )
+    """
+    assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
+
+    centroid = img.shape[0]//2, img.shape[1]//2
+    return centroid
+
+
+def frame_size(img):
+    """return the height and width of a given img
+
+    Args:
+        img (np.ndarray): input img to find frame_size of
+
+    Returns:
+        tuple: frame_size, height and width of the input img
+
+    Example:
+        >>> import imagepypelines as ip
+        >>> lenna_framesize = frame_size( ip.lenna() )
+    """
+    assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
+
+    frame_size = img.shape[0], img.shape[1]
+    return frame_size
+
+
+def dimensions(img, return_as_dict=False):
+    """
+    function which returns the dimensions and data_type of a given image
+
+    Args:
+        img (np.ndarray): input image
+        return_as_dict (bool): whether or not to return a dictionary.
+            Default is False
+
+    Returns:
+        tuple: dimensions of the form (rows, cols, bands, dtype)
+
+    Example:
+        >>> import imagepypelines as ip
+        >>> dims = dimensions( ip.lenna() )
+    """
+    assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
+
+    rows = img.shape[0]
+    cols = img.shape[1]
+    if img.ndim == 3:
+        bands = img.shape[2]
+    else:
+        bands = 1
+    dims = (rows, cols, bands, img.dtype)
+
+    if return_as_dict:
+        dims = dict(zip(('rows','cols','bands','dtype'), dims))
+
+    return dims
+
 def norm_01(img):
     """ Normalize img to the range [0, 1], inclusive.
 
@@ -104,6 +169,7 @@ def norm_01(img):
     Returns:
         np.ndarray: normalized image, dtype=np.float64
     """
+    assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
     img_out = img.astype(np.float64)
     img_out = (img_out - img_out.min()) / (img_out.max() - img_out.min())
@@ -125,6 +191,7 @@ def norm_ab(img, a, b):
     Returns:
         np.ndarray: normalized image, dtype=np.float64
     """
+    assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
     img_out = norm_01(img)
     # scale to the extent of the range, then shift to match
@@ -147,6 +214,8 @@ def norm_dtype(img, dtype=np.uint8):
     Returns:
         np.ndarray: normalized image, dtype=dtype
     """
+    assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
+
     dtype_info = np.iinfo(dtype)
 
     return norm_ab(img, dtype_info.min, dtype_info.max).astype(dtype)

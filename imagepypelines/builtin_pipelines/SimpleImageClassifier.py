@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from ..Pipeline import Pipeline
+from .. import Pipeline
 from .. import builtin_blocks as blocks
 
 

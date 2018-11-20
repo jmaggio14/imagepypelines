@@ -6,8 +6,8 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
 from .. import ArrayType
-from ..coordinates import dimensions
-from ..filters import low_pass,high_pass
+from .. import dimensions
+from .. import low_pass,high_pass
 import numpy as np
 
 class Highpass(SimpleBlock):

@@ -5,9 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import cv2
-from .. import core
 
-@core.experimental()
 class VideoWriter(object):
     """
     a wrapper class for the cv2 Video Writer:

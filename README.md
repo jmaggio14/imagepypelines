@@ -518,7 +518,7 @@ made to decorate functions or classes that are deprecated
 ```python
 import imagepypelines as ip
 
-@ip.deprecated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
+@ip.util.deprecated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
 def old_function():
 	pass # real code will do something
 
@@ -534,7 +534,7 @@ made to decorate functions or classes that are experimental and may not be fully
 ```python
 import imagepypelines as ip
 
-@ip.experimental() # you can include a custom message here if you want
+@ip.util.experimental() # you can include a custom message here if you want
 def new_feature():
 	pass
 
@@ -552,7 +552,7 @@ This is a decorator made for unit tests which require a human to verify function
 This is because it is meant for Unit Tests, NOT actual use in a pipeline**
 ```python
 import imagepypelines as ip
-@ip.human_test
+@ip.util.human_test
 def unit_test_for_quick_image_view():
 	ip.quick_image_view( ip.lenna() )
 
@@ -570,7 +570,7 @@ did the test for 'unit_test_for_quick_image_view' succeed? Yes? No?
 Decorator to print out the arguments a function is running with. Unlike other decorators described here, we encourage you to use this decorator frequently in your code during development to avoid silly mistakes
 ```python
 import imagepypelines as ip
-@ip.print_args
+@ip.util.print_args
 def func_with_lots_of_args(a, b, c=3, d=4):
 			pass
 func_with_lots_of_args(1, b=2, c='not 3')
