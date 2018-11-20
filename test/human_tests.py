@@ -24,9 +24,9 @@ def test_number_image():
     testing_printer.info("linear should be labeled '2'")
 
     ip.quick_image_view(pig,title='pig')
-    testing_printer.info('PIG', ip.Summarizer(pig) )
+    testing_printer.info('PIG', ip.util.Summarizer(pig) )
     ip.quick_image_view(linear,title='linear')
-    testing_printer.info('Linear', ip.Summarizer(linear) )
+    testing_printer.info('Linear', ip.util.Summarizer(linear) )
 
 @ip.util.human_test
 def test_imageloader_resizer_color2gray_viewer_orb_pipeline():
