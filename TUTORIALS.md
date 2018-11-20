@@ -187,6 +187,7 @@ Let's create a more complex example that utilizes the GPU using tensorflow
 ```python
 import imagepypelines as ip
 import tensorflow as tf
+import numpy as np
 
 class AddOneBlock(ip.BatchBlock):
     def __init__(self):
@@ -196,17 +197,23 @@ class AddOneBlock(ip.BatchBlock):
 
     def _setup_tf_graph(self):
       """we'll build our tensorflow graph in here"""
-      images = tf.placeholder
+      graph = tf.Graph()
+      with graph.as_default():
+        batch_data = tf.placeholder(tf.float32,name='batch_data') # this value will be fed in
+        one = tf.constant(1.0) # create a tensor = 1
+        tf.math.add(batch_data,one,name="processed")
+
+      self.sess = tf.Session(graph=graph)
 
 
     def batch_process(self,batch_data):
         """take in a list of datums and return a processed list of datums"""
-        # turn this list of data into a single array
-        img_stack = np.stack(batch_data, axis=0) # [(N,M,3),(N,M,3)] --> (2,N,M,3)
-        img_stack = img_stack + 1 # add one to images
-        # (2,N,M,3) --> [(N,M,3),(N,M,3)]
-        processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
-        return processed_batch
+        # feed data in and extract the final tensor we named 'processed'
+        processed = self.sess.run('processed:0',{'batch_data:0':batch_data})
+        processed = [processed[i] for i in range(processed.shape[0])]
+        return processed
+
+
 ```
 
 
