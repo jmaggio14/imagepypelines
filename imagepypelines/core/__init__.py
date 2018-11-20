@@ -12,8 +12,11 @@ from .constants import *
 from .BaseBlock import ArrayType
 from .BaseBlock import IoMap
 from .BaseBlock import BaseBlock
-from .BaseBlock import SimpleBlock
-from .BaseBlock import BatchBlock
+
+# block_subclasses.py
+from .block_subclasses import SimpleBlock
+from .block_subclasses import BatchBlock
+from .block_subclasses import TfBlock
 
 # error_checking.py
 from .error_checking import interpolation_type_check
