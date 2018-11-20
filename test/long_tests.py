@@ -337,9 +337,6 @@ def test_sigmoid_svm():
 
 
 
-
-
-
 @ip.util.unit_test
 def test_all_pretrained_networks():
     import imagepypelines as ip
@@ -353,8 +350,8 @@ def test_all_pretrained_networks():
     for i,network_name in enumerate(ip.PRETRAINED_NETWORKS):
         try:
             printer.info("testing {}...".format(network_name))
-            resizer = ip.Resizer(80,80)
-            pretrained = ip.PretrainedNetwork(network_name)
+            resizer = ip.blocks.Resizer(80,80)
+            pretrained = ip.blocks.PretrainedNetwork(network_name)
 
             pipeline = ip.Pipeline([resizer,pretrained])
             pipeline.process(images)
@@ -369,6 +366,7 @@ def test_all_pretrained_networks():
         except Exception as e:
             printer.error("failure processing ",network_name)
             success.append(False)
+            ip.util.debug(e)
 
     return all(success)
 
