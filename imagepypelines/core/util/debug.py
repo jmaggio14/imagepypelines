@@ -22,17 +22,17 @@ def debug(exception):
 	traceback.print_tb(tb)
 	print("\r\n")
 	error_msg = \
-	"""
-	===============================================================
-						| initital traceback |
-	file: {fname}
+"""
+===============================================================
+                     | initital traceback |
+file: {fname}
 
-	line: {line}
+line: {line}
 
-	type: {exc_type}
+type: {exc_type}
 
-	{exception}
-	===============================================================
+{exception}
+===============================================================
 	""".format(fname=fname,
 				line=line,
 				exc_type=exc_type,
