@@ -31,7 +31,7 @@ def test_constants():
 def test_centroid():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_centroid')
-    tester = ip.Tester(ip.centroid,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.centroid,verbose=VERBOSE)
     lenna = ip.lenna()
     desired_output = (256,256)
     if not tester.exact_test(desired_output, lenna):
@@ -44,7 +44,7 @@ def test_centroid():
 def test_frame_size():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_frame_size')
-    tester = ip.Tester(ip.frame_size,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.frame_size,verbose=VERBOSE)
     lenna = ip.lenna()
     desired_output = tuple( lenna.shape[:2] )
     if not tester.exact_test(desired_output,lenna):
@@ -57,7 +57,7 @@ def test_frame_size():
 def test_dimensions():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_dimensions')
-    tester = ip.Tester(ip.dimensions,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.dimensions,verbose=VERBOSE)
     lenna = ip.lenna()
     # tuple test
     desired_output = (lenna.shape[0],lenna.shape[1],lenna.shape[2],lenna.dtype)
@@ -83,7 +83,7 @@ def test_normalize_and_bin():
     import imagepypelines as ip
     import numpy as np
     testing_printer = ip.get_printer('test_normalize_and_bin')
-    tester = ip.Tester(ip.normalize_and_bin,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.normalize_and_bin,verbose=VERBOSE)
     lenna = ip.lenna()
     desired_output = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
     if not tester.exact_test(desired_output,lenna):

@@ -91,7 +91,14 @@ from .quick_types import RgbImage
 
 # standard_image.py
 from .standard_image import STANDARD_IMAGES
+from .standard_image import list_standard_images
+from .standard_image import standard_image_filenames
+from .standard_image import standard_image_gen
+from .standard_image import list_standard_images
+from .standard_image import standard_images
+from .standard_image import standard_image_input
 from .standard_image import funcs
+
 import sys
 
 curr_module = sys.modules[__name__]

@@ -178,6 +178,8 @@ class Pipeline(object):
                 try:
                     output_type = block.io_map.output_given_input(input_type)
                     broken_pair = False
+                    type_chain[str(block)] = output_type
+                    input_type = output_type
 
                 except IncompatibleTypes as e:
                     msg = []
@@ -198,8 +200,6 @@ class Pipeline(object):
                     print(msg)
                     broken_pair = True
 
-                type_chain[str(block)] = output_type
-                input_type = output_type
 
                 if broken_pair:
                     error_msg = "{} - acceptable types are {}".format(block.name,

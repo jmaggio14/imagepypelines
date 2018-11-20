@@ -20,7 +20,7 @@ def test_dataset_mnist():
     NUM_LABELS = 10
 
 
-    dataset = ip.Mnist()
+    dataset = ip.ml.Mnist()
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -52,7 +52,7 @@ def test_dataset_mnist_fashion():
     TESTING_LENGTH = 10000
     NUM_LABELS = 10
 
-    dataset = ip.MnistFashion()
+    dataset = ip.ml.MnistFashion()
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -82,7 +82,7 @@ def test_dataset_cifar10():
     TESTING_LENGTH = 10000
     NUM_LABELS = 10
 
-    dataset = ip.Cifar10()
+    dataset = ip.ml.Cifar10()
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -113,7 +113,7 @@ def test_dataset_cifar100_fine():
     TESTING_LENGTH = 10000
     NUM_LABELS = 100
 
-    dataset = ip.Cifar100('fine')
+    dataset = ip.ml.Cifar100('fine')
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -142,7 +142,7 @@ def test_dataset_cifar100_coarse():
     TESTING_LENGTH = 10000
     NUM_LABELS = 20
 
-    dataset = ip.Cifar100('coarse')
+    dataset = ip.ml.Cifar100('coarse')
 
     train_data,train_labels = dataset.get_train()
     test_data,test_labels = dataset.get_test()
@@ -182,7 +182,7 @@ def test_multilayer_perceptron():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -216,7 +216,7 @@ def test_linear_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -250,7 +250,7 @@ def test_rbf_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -284,7 +284,7 @@ def test_poly_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -317,7 +317,7 @@ def test_sigmoid_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
