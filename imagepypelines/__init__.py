@@ -6,8 +6,22 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
 import pkg_resources
+# retrieve the source directory for our standard images
 STANDARD_IMAGE_DIRECTORY = pkg_resources.resource_filename(__name__,
                                                         'data/standard_images')
+
+# setup a cache on the local machine
+import os
+home = os.path.expanduser('~')
+CACHE_PATH = os.path.join(home,'.imagepypelines')
+CACHE_TMP = os.path.join(CACHE_PATH,'tmp')
+CACHE_BLOCK_META = os.path.join(CACHE_PATH,'block_metadata')
+CACHE_DATASETS = os.path.join(CACHE_PATH,'datasets')
+
+if not os.path.exists(CACHE_PATH):
+
+
+
 del pkg_resources # delete namespace pollutants
 
 
