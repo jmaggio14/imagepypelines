@@ -160,7 +160,7 @@ class TfBlock(BatchBlock):
             ret = self.setup_graph()
         self.sess = tf.Session(graph=self.graph)
 
-        # --- error checking ret ---
+        # --------- error checking ret ---------
         if not isinstance(ret, tuple):
             self.printer.critical("'setup_graph' must return (fetches,feed_name)")
             exit(1)
@@ -190,6 +190,13 @@ class TfBlock(BatchBlock):
 
     def batch_process(self, batch_data):
         return self.processed
+
+    def prep_for_serialization(self):
+        # create saver object
+        self.saver = tf.train.Saver()
+        self.saver.save()
+
+
 
 
 # END
