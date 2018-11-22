@@ -18,6 +18,11 @@ from .block_subclasses import SimpleBlock
 from .block_subclasses import BatchBlock
 from .block_subclasses import TfBlock
 
+# caching.py
+from .caching import tmp
+from .caching import metadata
+from .caching import datasets
+
 # error_checking.py
 from .error_checking import interpolation_type_check
 from .error_checking import dtype_type_check
