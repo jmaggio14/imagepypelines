@@ -46,7 +46,7 @@ sip.setapi('QString', 2)
 import math
 
 from PyQt4 import QtCore, QtGui
-
+import jupyter_client
 try:
     import diagramscene_rc3
 except ImportError:
@@ -246,7 +246,6 @@ class DiagramScene(QtGui.QGraphicsScene):
         return arrow
 
 
-
 class MainWindow(QtGui.QMainWindow):
     InsertTextButton = 10
 
@@ -263,6 +262,7 @@ class MainWindow(QtGui.QMainWindow):
         self.scene.textInserted.connect(self.textInserted)
         self.scene.itemSelected.connect(self.itemSelected)
 
+        
         self.interpreter = Interpreter(variables={'ip':ip, 'qscene':self.scene})
         self.interpreter.setSizePolicy(QtGui.QSizePolicy(
             QtGui.QSizePolicy.MinimumExpanding, QtGui.QSizePolicy.MinimumExpanding))
@@ -281,9 +281,14 @@ class MainWindow(QtGui.QMainWindow):
         layout1.addWidget(self.interpreter)
         self.widget2 = QtGui.QWidget()
         self.widget2.setLayout(layout1)
-        
+
         self.setCentralWidget(self.widget2)
         self.setWindowTitle("imagepypelines!!!! demo")
+
+    def shutdown_kernel(self):
+        print('Shutting down kernel...')
+        self.jupyter_widget.kernel_client.stop_channels()
+        self.jupyter_widget.kernel_manager.shutdown_kernel()
 
     def backgroundButtonGroupClicked(self, button):
         buttons = self.backgroundButtonGroup.buttons()
@@ -704,20 +709,23 @@ class MainWindow(QtGui.QMainWindow):
         return QtGui.QIcon(pixmap)
 
 
-if __name__ == '__main__':
-
-    import sys
-
+def main():
     app = QtGui.QApplication(sys.argv)
 
     mainWindow = MainWindow()
     mainWindow.setGeometry(100, 100, 800, 500)
     mainWindow.show()
 
+    app.aboutToQuit.connect(mainWindow.shutdown_kernel)
+    print(app)
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+
+    import sys
+    import time
+    main()
 
 
     # test code
-    """
-    qscene.display_pipeline(ip.SimpleImageClassifier())
-    """
+    # qscene.display_pipeline(ip.SimpleImageClassifier())

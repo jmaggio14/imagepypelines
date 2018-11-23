@@ -6,7 +6,6 @@ import io
 
 from PyQt4 import QtGui, QtCore
 
-
 @contextlib.contextmanager
 def stdout_as(new):
     """ context manager to replace stdout with another file-like object. """
@@ -21,11 +20,16 @@ def stderr_as(new):
     yield sys.stderr
     sys.stderr = sys.__stderr__
 
+import time
+import logging;logging.basicConfig(filename='interp.out',level=logging.INFO)
 
-class Interpreter(QtGui.QTextEdit):
+class Interpreter(QtGui.QPlainTextEdit):
     ps1 = '>>> '
     ps2 = '... '
     linesep = '\n'
+    rich_text = False   # ND TODO: implement rich text option (i.e. html)
+    single_threaded = True   # ND TODO: implement non-blocking runsource call
+
     variable_update = QtCore.pyqtSignal(dict)
 
     def __init__(self, master=None, variables={}):
@@ -44,19 +48,23 @@ class Interpreter(QtGui.QTextEdit):
     def close(self, event):
         pass
         #self.output.close()
-        # TODO write out history
+        # TODO: write out history
+
+    def preprocess(self, command):
+        # hook for macros, shortcuts, etc
+        return command
 
     def run_command(self, command):
+        command = self.preprocess(command)
+
         out = io.StringIO()   # string buffers to capture output
         err = io.StringIO()
+
+        output = ''
 
         with stdout_as(out), stderr_as(err):
             try:
                 ret = self.interp.runsource(command)
-                import time
-                import logging;logging.basicConfig(filename='interp.out',level=logging.INFO)
-
-                #time.sleep(1)
                 
                 logging.info(out.getvalue())
                 logging.info(err.getvalue())
@@ -65,28 +73,34 @@ class Interpreter(QtGui.QTextEdit):
                 errval = err.getvalue()
 
                 if not outval and not errval:
-                    self.insertHtml('<br>')
+                    #self.insertHtml('<br>')
+                    output += self.linesep
                     logging.info('1' + out.getvalue() + err.getvalue())
                 else:
-                    self.insertHtml('<br>')
+                    #self.insertHtml('<br>')
+                    output += self.linesep
                     if outval:
-                        self.output(outval)
+                        output += outval
                     if errval:
-                        self.output(errval, color='red')
-                    self.insertHtml('<br>')
+                        output += errval
                     logging.info('2' + out.getvalue() + err.getvalue())
 
                 if ret:
-                    self.output(self.ps2)
+                    output += self.ps2
                 else:
-                    self.output(self.ps1)
+                    output += self.ps1
+
+                self.output(output)
 
                 # set scroll bar to the bottom
                 self.verticalScrollBar().setValue(self.verticalScrollBar().maximum())
 
-                self.variable_update.emit(self.locals)
-                self.history.append(command)
-                self.history_idx = -1
+                # update history
+                self.variable_update.emit(self.locals)   # for variable inspector
+                if command:
+                    self.history.insert(0, command)
+                self.history_idx = 0
+            
             except Exception as e:
                 print(e)
 
@@ -95,11 +109,17 @@ class Interpreter(QtGui.QTextEdit):
         print('history', self.history_idx, self.history)
 
     def output(self, text, color='black'):
-        self.insertHtml('<p style="color:{color}">{text}</p>'.format(color=color, text=text))
+        self.verticalScrollBar().setValue(self.verticalScrollBar().maximum())
+        self.insertPlainText(text)
+        # self.insertHtml('<p style="color:{color}">{text}</p>'.format(color=color, text=text))
 
-    def rewrite_line(self, data):
-        """ rewrite the line so that """
-        print(data)
+    def rewrite_line(self, new_line):
+        # rewrite the line for history update / corrected statements
+        text = self.toPlainText()
+        text_lines = text.split(self.linesep)[:-1]   # get all but last line
+        self.setPlainText('\n'.join(text_lines + [self.ps1 + new_line]))
+        self.verticalScrollBar().setValue(self.verticalScrollBar().maximum())
+        self.moveCursor(QtGui.QTextCursor.End)  # move to the end of the document
 
     # disable clicking and selecting
     # def mouseReleaseEvent(self, e): pass
@@ -113,17 +133,17 @@ class Interpreter(QtGui.QTextEdit):
         if e.key() == QtCore.Qt.Key_Up:
 
             if self.history:
-                self.history_idx -= 1
-                self.history_idx = max(-len(self.history), self.history_idx)
-                self.history_idx = min(-1, self.history_idx)
+                self.history_idx += 1
+                self.history_idx = min(len(self.history) - 1, self.history_idx)
+                self.history_idx = max(0, self.history_idx)
                 print('up', self.history_idx)
                 self.rewrite_line(self.history[self.history_idx])
 
         elif e.key() == QtCore.Qt.Key_Down:
             if self.history:
-                self.history_idx += 1
-                self.history_idx = min(-len(self.history), self.history_idx)
-                self.history_idx = max(-1, self.history_idx)
+                self.history_idx -= 1
+                self.history_idx = min(len(self.history) - 1, self.history_idx)
+                self.history_idx = max(0, self.history_idx)
                 print('down', self.history_idx)
 
                 self.rewrite_line(self.history[self.history_idx])
@@ -141,8 +161,8 @@ class Interpreter(QtGui.QTextEdit):
         else:
             super().keyPressEvent(e)
 
-"""
-class Variables(QtWidgets.QTreeWidget):
+
+class Variables(QtGui.QTreeWidget):
     def __init__(self, master):
         QtWidgets.QTreeWidget.__init__(self, master)
         self.setColumnCount(3)
@@ -175,14 +195,15 @@ class Variables(QtWidgets.QTreeWidget):
         else:
             _str = str(val)
         return _str
-"""
+
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
 
     # set up main display window
 
-    display = Interpreter()
+    display = Interpreter(variables={'app':app})
     display.show()
 
     sys.exit(app.exec_())
