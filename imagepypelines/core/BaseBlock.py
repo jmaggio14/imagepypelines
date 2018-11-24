@@ -105,7 +105,7 @@ class IoMap(tuple):
     def __new__(cls, io_map):
         # -------------- ERROR CHECKING -----------------------
         if isinstance(io_map, IoMap):
-            return copy.copy(io_map)
+            return io_map
         elif not isinstance(io_map, dict):
             raise TypeError("IoMap must be instantiated with a dictionary")
 

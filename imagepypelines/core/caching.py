@@ -10,12 +10,22 @@ from uuid import uuid4
 import glob
 import pickle
 import shutil
+import sys
 
-from .. import CACHE, CACHE_TMP, CACHE_META, CACHE_DATASETS
+from .. import CACHE
 from .Printer import get_printer
 from .Pipeline import Pipeline, restore_from_pickle
 from .BaseBlock import BaseBlock
 
+
+def make_cache(cache_name,description=""):
+    """make a new cache and add it to the imagepypelines namespace"""
+    new_doc = Cache.__doc__.format(doc=description,name=cache_name)
+    # create a new cache class using metaclassing
+    # we use metaclassing so we can update the docstring easily
+    NewCache = type(cache_name,(Cache,),{'__doc__':new_doc})
+    imagepypelines_module = sys.modules['imagepypelines']
+    setattr(imagepypelines_module, cache_name, NewCache(cache_name))
 
 
 class Cache(object):
@@ -47,8 +57,12 @@ class Cache(object):
         >>> fname = {name}.filename('optional-prefix')
         >>> cv2.imwrite(fname, random_img)
     """
-    def __new__(cls):
-            cls.subdir = CACHE
+    def __init__(self,cache_name):
+            self.subdir = os.path.join(CACHE,cache_name)
+            if not os.path.exists(self.subdir):
+                os.makedirs(self.subdir)
+            self.printer = get_printer("Cache Manager")
+            self.printer.info("creating Cache for: ",self.subdir)
 
     def filename(self,basename="no-key"):
         """creates or retrieves the filename for the specified on the local machine
@@ -70,10 +84,8 @@ class Cache(object):
         if basename in (os.path.basename(f) for f in self.listcache()):
             return os.path.join(self.subdir,basename)
         else:
-            base,ext = os.path.split(basename)
-            basename = "{}.{}.{}".format(base,
-                                            uuid4().hex[:8],
-                                            ext)
+            base,ext = os.path.splitext(basename)
+            basename = "{}-{}{}".format(base, uuid4().hex[:8], ext)
 
             return os.path.join(self.subdir,basename)
 
@@ -128,7 +140,7 @@ class Cache(object):
 
         return os.path.basename(fname)
 
-    def retrieve(self,fname):
+    def restore(self,fname):
         """restores the object saved to 'fname'
 
         Args:
@@ -138,40 +150,22 @@ class Cache(object):
             obj(object): the restored (unpickled) object
         """
         fname = self.filename(fname)
-        obj = pickle.loads(fname)
+        with open(fname,'rb') as f:
+            raw = f.read()
+        obj = pickle.loads(raw)
 
-        if isinstance(obj,'BaseBlock'):
+        if isinstance(obj,BaseBlock):
             obj.prep_for_serialization()
             return obj
 
         elif isinstance(obj,Pipeline):
-            return restore_from_pickle(fname)
+            return restore_from_pickle(obj)
 
         return obj
 
+    def __str__(self):
+        return "Cache at {} (contains {} items)".format(self.subdir,
+                                                        len(self.listcache()))
 
-
-class TMP(Cache):
-    "" + Cache.__doc__.format(doc='Temporary Cache intended for short-term '\
-                            + 'temporary use (memory management)',
-                            name='tmp')
-    def __init__(self):
-        self.subdir = CACHE_TMP
-
-class META(Cache):
-    "" + Cache.__doc__.format(doc='Persistent Cache intended for use for data '\
-                            + 'in use between imagepypelines sessions',
-                            name='metadata')
-    def __init__(self):
-        self.subdir = CACHE_META
-
-class DATASETS(Cache):
-    "" + Cache.__doc__.format(doc='Persistent Cache intended exclusively to '\
-                            + 'store datasets downloaded using a webcrawler',
-                            name='datasets')
-    def __init__(self):
-        self.subdir = CACHE_DATASETS
-
-tmp = TMP()
-metadata = META()
-datasets = DATASETS()
+    def __repr__(self):
+        return str(self)

@@ -18,7 +18,7 @@ class Orb(SimpleBlock):
     Attributes:
         n_keypoints(int): maximum number of keypoints to detect
         orb(cv2.ORB): orb computation object from opencv
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -90,3 +90,9 @@ class Orb(SimpleBlock):
             des = des[:self.n_keypoints,:]
         # END DEBUG, END TEMP
         return des
+
+    def prep_for_serialization(self):
+        del self.orb
+
+    def restore_from_serialization(self):
+        self.orb = cv2.ORB_create(self.n_keypoints)

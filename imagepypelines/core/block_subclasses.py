@@ -226,8 +226,8 @@ class TfBlock(BatchBlock):
 
         # retrieve filename for the metadata cache
         self.sess_filename = metadata.filename(self.name + '.ckpt')
-        msg = "this object will save pertinent data to {}. Keep this in mind "
-                + "if you are transferring this pipeline to a different machine"
+        msg = "this object will save pertinent data to {}. Keep this in mind "\
+            + "if you are transferring this pipeline to a different machine"\
                 .format(self.sess_filename)
 
         self.printer.warning(msg)

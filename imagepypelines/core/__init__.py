@@ -19,9 +19,18 @@ from .block_subclasses import BatchBlock
 from .block_subclasses import TfBlock
 
 # caching.py
-from .caching import tmp
-from .caching import metadata
-from .caching import datasets
+from .caching import make_cache
+from .caching import Cache
+# JM: create builtin caches
+make_cache('tmp',
+		'Temporary Cache intended for short-term temporary use'\
+		+ ' (memory management)')
+make_cache('metadata',
+		'Persistent Cache intended for use by data in use between'\
+		 + ' imagepypelines sessions')
+make_cache('datasets',
+		'Persistent Cache intended exclusively to store datasets downloaded'\
+		 + ' using a webcrawler')
 
 # error_checking.py
 from .error_checking import interpolation_type_check

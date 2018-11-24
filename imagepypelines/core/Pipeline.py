@@ -26,8 +26,9 @@ def restore_from_file(filename):
     Returns:
         pipeline(ip.Pipeline): the loaded pipeline
     """
-    pipeline = pickle.loads(filename)
-    return restore_from_pickle(pipeline)
+    with open(filename,'rb') as f:
+        raw = f.read()
+    return restore_from_pickle(raw)
 
 
 def restore_from_pickle(pickled_pipeline):
@@ -39,6 +40,7 @@ def restore_from_pickle(pickled_pipeline):
     Returns:
         pipeline(ip.Pipeline): the loaded pipeline
     """
+    pipeline = pickle.loads(pickled_pipeline)
     for b in pipeline.blocks:
         b.restore_from_serialization()
 
