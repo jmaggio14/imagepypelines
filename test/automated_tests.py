@@ -163,8 +163,6 @@ def test_caching():
     a = ip.blocks.Orb() # this is an example object
     fname = ip.tmp.save(a)
     restored_a = ip.tmp.restore(fname)
-
-
     assert a == restored_a, "failed to restore '{}'".format(a)
 
     #---- make an example cache -----
