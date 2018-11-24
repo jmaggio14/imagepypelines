@@ -153,6 +153,30 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         return False
 
 
+@ip.util.unit_test
+def test_caching():
+    import imagepypelines as ip
+    import numpy as np
+    import cv2
+
+    # save an object to the builtin 'tmp' cache
+    a = ip.blocks.Orb() # this is an example object
+    fname = ip.tmp.save(a)
+    restored_a = ip.tmp.restore(fname)
+
+
+    assert a == restored_a, "failed to restore '{}'".format(a)
+
+    #---- make an example cache -----
+    ip.make_cache('example_cache')
+    # we can now access the cache via ip.example_cache
+    assert hasattr(ip,'example_cache'),"failed to create example_cache"
+
+
+    # get a unique cache filename, so you can do your own saving process
+    fname = ip.example_cache.filename('example-image.png')
+    img = np.random.rand(512,512,3)
+    cv2.imwrite(fname,img)
 
 
 
