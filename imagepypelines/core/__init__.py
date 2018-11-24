@@ -18,6 +18,20 @@ from .block_subclasses import SimpleBlock
 from .block_subclasses import BatchBlock
 from .block_subclasses import TfBlock
 
+# caching.py
+from .caching import make_cache
+from .caching import Cache
+# JM: create builtin caches
+make_cache('tmp',
+		'Temporary Cache intended for short-term temporary use'\
+		+ ' (memory management)')
+make_cache('metadata',
+		'Persistent Cache intended for use by data in use between'\
+		 + ' imagepypelines sessions')
+make_cache('datasets',
+		'Persistent Cache intended exclusively to store datasets downloaded'\
+		 + ' using a webcrawler')
+
 # error_checking.py
 from .error_checking import interpolation_type_check
 from .error_checking import dtype_type_check
@@ -67,6 +81,7 @@ from .pipeline_tools import quick_block
 
 # Pipeline.py
 from .Pipeline import restore_from_file
+from .Pipeline import restore_from_pickle
 from .Pipeline import Pipeline
 
 # Printer.py

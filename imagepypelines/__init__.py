@@ -10,21 +10,15 @@ import pkg_resources
 STANDARD_IMAGE_DIRECTORY = pkg_resources.resource_filename(__name__,
                                                         'data/standard_images')
 
-# setup a cache on the local machine
+# -------- setup a cache directory on the local machine -------
 import os
-home = os.path.expanduser('~')
-CACHE_PATH = os.path.join(home,'.imagepypelines')
-CACHE_TMP = os.path.join(CACHE_PATH,'tmp')
-CACHE_BLOCK_META = os.path.join(CACHE_PATH,'block_metadata')
-CACHE_DATASETS = os.path.join(CACHE_PATH,'datasets')
+CACHE = os.path.join(os.path.expanduser('~'),'.imagepypelines')
 
-if not os.path.exists(CACHE_PATH):
+# ---------- delete namespace pollutants ----------
+del pkg_resources, os
 
 
-
-del pkg_resources # delete namespace pollutants
-
-
+# ---------- import imagepypelines ----------
 from .version_info import *
 from .core import *
 from . import builtin_blocks as blocks
