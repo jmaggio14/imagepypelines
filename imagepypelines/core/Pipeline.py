@@ -18,7 +18,7 @@ import collections
 import numpy as np
 
 def restore_from_file(filename):
-    """restores a pipeline from a pickled state
+    """restores a pipeline from a pickled file
 
     Args:
         filename(str): the pipeline filename
@@ -27,10 +27,23 @@ def restore_from_file(filename):
         pipeline(ip.Pipeline): the loaded pipeline
     """
     pipeline = pickle.loads(filename)
+    return restore_from_pickle(pipeline)
+
+
+def restore_from_pickle(pickled_pipeline):
+    """restores a pipeline from a pickled state
+
+    Args:
+        pickled_pipeline(pickled obj): a pickled pipeline
+
+    Returns:
+        pipeline(ip.Pipeline): the loaded pipeline
+    """
     for b in pipeline.blocks:
         b.restore_from_serialization()
 
     return pipeline
+
 
 def get_type(datum):
     """retrieves the block data type of the input datum"""

@@ -72,6 +72,7 @@ from .pipeline_tools import quick_block
 
 # Pipeline.py
 from .Pipeline import restore_from_file
+from .Pipeline import restore_from_pickle
 from .Pipeline import Pipeline
 
 # Printer.py
