@@ -161,9 +161,8 @@ class TfBlock(BatchBlock):
         sess = tf.Session(graph=graph)
 
         # --------- error checking ret ---------
-        error_msg = \
-            "'setup_graph' must return <processed_tensor_name> "
-                + "or (<processed_tensor_name>, <processed_label_name>)"
+        error_msg = "'setup_graph' must return <processed_tensor_name> "\
+                    + "or (<processed_tensor_name>, <processed_label_name>)"
         # JM: checking to see if ret is a two element tuple
         # containing (processed_tensor_name, processed_label_name)
         # for using as sess.run fetches
@@ -175,6 +174,10 @@ class TfBlock(BatchBlock):
         # ie only the processed data fetch. see setup_graph docs
         else:
             self.fetches.append(ret)
+            # if setup graph only returned the processed data name,
+            # then auto append the tensor name of the labels that were fed
+            if len(self.fetches) == 1:
+                self.fetches.append(self.label_fetch_name + ':0')
 
         return graph,sess
 
@@ -202,10 +205,6 @@ class TfBlock(BatchBlock):
                         self.data_fetch_name:batch_data,
                         self.label_fetch_name:batch_labels
                         }
-        # if setup graph only returned the processed data name,
-        # then auto append the tensor name of the labels that were fed
-        if len(self.fetches) == 1:
-            self.fetches.append(self.label_fetch_name + ':0')
 
         # process data through the graph and fetch the tensors which
         # contained processed and label data
@@ -235,8 +234,8 @@ class TfBlock(BatchBlock):
         saver.save(self.sess_filename)
 
         # delete GPU bound objects
-        delattr(self,'sess')
-        delattr(self,'graph')
+        del self.sess
+        del self.graph
 
     def restore_from_serialization(self):
         # retore session and graph
@@ -249,7 +248,7 @@ class TfBlock(BatchBlock):
         metadata.remove(self.sess_filename)
 
         # delete the uneeded instance variable
-        delattr(self,'sess_filename')
+        del self.sess_filename
 
 
 
