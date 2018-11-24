@@ -9,6 +9,7 @@ import os
 from uuid import uuid4
 import glob
 import pickle
+import shutil
 
 from .. import CACHE, CACHE_TMP, CACHE_META, CACHE_DATASETS
 from .Printer import get_printer
@@ -39,7 +40,11 @@ class Cache(object):
             self.remove(fname)
 
     def remove(self,fname):
-        os.remove(fname)
+        if os.isfile(fname):
+            os.remove(fname)
+
+        elif os.isdir(fname):
+            shutil.rmtree(fname,ignore_errors=True)
 
     def save(self,obj):
         # if it's a block, we can run it's prep_for_serialization
@@ -47,7 +52,7 @@ class Cache(object):
         if isinstance(obj,BaseBlock):
             obj.prep_for_serialization()
             fname = self.filename( str(obj) + '.pck' )
-            self.printer.info("saving {} to {}".format(obj,fname)
+            self.printer.info("saving {} to {}".format(obj,fname))
             with open(fname,'wb') as f:
                 pickle.dump(obj,f)
 
@@ -60,9 +65,10 @@ class Cache(object):
         # otherwise if it's a generic object, we can save it
         else:
             fname = self.filename(obj.__class__.__name__ + '.pck')
-            self.printer.info("saving {} to {}".format(obj,fname)
+            self.printer.info("saving {} to {}".format(obj,fname))
             with open(fname,'wb') as f:
                 pickle.dump(obj,f)
+                
 
     def retrieve(self,fname):
         obj = pickle.loads(fname)
