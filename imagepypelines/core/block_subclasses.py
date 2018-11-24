@@ -140,61 +140,116 @@ class TfBlock(BatchBlock):
         import tensorflow as tf
         return cls
 
-    def __init__(self,
-                     io_map,
-                     name=None,
-                     notes=None,
-                     requires_training=False,
-                     requires_labels=False,
-                     ):
-
+    def __init__(self,*args,**kwargs):
         # inherit from super
-        super(TfBlock,self).__init__(io_map,
-                                        name,
-                                        notes,
-                                        requires_training,
-                                        requires_labels)
+        super(TfBlock,self).__init__(*args,**kwargs)
+        self.fetches = []
+        self.data_fetch_name = "batch_data"
+        self.label_fetch_name = "labels"
+        self.graph, self.sess = self._setup_graph_wrapper()
+
+    # JM: called in __init__
+    def _setup_graph_wrapper(self):
         # ----------- setup tf graph -------------
-        self.graph = tf.Graph()
-        with self.graph.as_default():
-            ret = self.setup_graph()
-        self.sess = tf.Session(graph=self.graph)
+        graph = tf.Graph()
+        batch_data = tf.placeholder(tf.float32,name=self.data_fetch_name)
+        labels = tf.placeholder(tf.float32,name=self.label_fetch_name)
+
+        with graph.as_default():
+            ret = self.setup_graph(batch_data,labels)
+
+        sess = tf.Session(graph=graph)
 
         # --------- error checking ret ---------
-        if not isinstance(ret, tuple):
-            self.printer.critical("'setup_graph' must return (fetches,feed_name)")
-            exit(1)
-        elif len(ret) != 2:
-            self.printer.critical("'setup_graph' must return (fetches,feed_name)")
-            exit(1)
+        error_msg = \
+            "'setup_graph' must return <processed_tensor_name> "
+                + "or (<processed_tensor_name>, <processed_label_name>)"
+        # JM: checking to see if ret is a two element tuple
+        # containing (processed_tensor_name, processed_label_name)
+        # for using as sess.run fetches
+        if isinstance(ret,(tuple,list)):
+            self.printer.critical(error_msg)
+            assert len(ret) == 2, error_msg
+            self.fetches.extend(ret)
+        # JM: checking to see if ret is one element
+        # ie only the processed data fetch. see setup_graph docs
+        else:
+            self.fetches.append(ret)
 
-        self.fetches, self.feed_name = ret
+        return graph,sess
 
-    def setup_graph(self):
+    def setup_graph(self,data_placeholder,label_placeholder):
         """(required overload)sets up the tensorflow graph
 
         Args:
-            None
+            data_placeholder(tf.placeholder): placeholder tensor into
+                which data data will be fed during graph execution
+            label_placeholder(tf.placeholder): placeholder tensor into
+                which label data will be fed during graph execution
 
         Returns:
-            fetches(str,list): tensors to extract
-            feed_name(str): name of the tensor to feed batch_data into
+            fetches(str,tuple):
+                1) the tensor name of the processed data, a fetch
+                2) a two element tuple containing
+                    (processed tensor name, label tensor name)
         """
         error_msg = "'setup_graph' must be overloaded in all children"
         raise NotImplementedError(error_msg)
 
 
     def before_process(self, batch_data, batch_labels=None):
-        self.processed = self.sess.run(self.fetches,
-                                        feed_dict={self.feed_name: batch_data})
+        feed_dict = {
+                        self.data_fetch_name:batch_data,
+                        self.label_fetch_name:batch_labels
+                        }
+        # if setup graph only returned the processed data name,
+        # then auto append the tensor name of the labels that were fed
+        if len(self.fetches) == 1:
+            self.fetches.append(self.label_fetch_name + ':0')
 
-    def batch_process(self, batch_data):
+        # process data through the graph and fetch the tensors which
+        # contained processed and label data
+        processed,labels = self.sess.run(self.fetches,feed_dict=feed_dict)
+
+        # unstacking the data and returning a list
+        self.processed = [processed[i] for i in range(processed.shape[0])]
+        self.labels = [labels[i] for i in range(labels.shape[0])]
+
+    def batch_process(self,data):
         return self.processed
+
+    def labels(self,labels):
+        return self.labels
 
     def prep_for_serialization(self):
         # create saver object
-        self.saver = tf.train.Saver()
-        self.saver.save()
+        saver = tf.train.Saver()
+
+        # retrieve filename for the metadata cache
+        self.sess_filename = metadata.filename(self.name + '.ckpt')
+        msg = "this object will save pertinent data to {}. Keep this in mind "
+                + "if you are transferring this pipeline to a different machine"
+                .format(self.sess_filename)
+
+        self.printer.warning(msg)
+        saver.save(self.sess_filename)
+
+        # delete GPU bound objects
+        delattr(self,'sess')
+        delattr(self,'graph')
+
+    def restore_from_serialization(self):
+        # retore session and graph
+        saver = tf.train.Saver()
+        self.sess = saver.restore(self.sess_filename)
+        self.graph = self.sess.graph
+
+        # cleanup the metadata folder - delete the data associated with
+        # this model
+        metadata.remove(self.sess_filename)
+
+        # delete the uneeded instance variable
+        delattr(self,'sess_filename')
 
 
 

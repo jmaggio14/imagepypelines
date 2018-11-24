@@ -353,6 +353,8 @@ class Pipeline(object):
 
         if filename is None:
             filename = self.name + '.pck'
+
+        self.printer.info("saving {} to {}".format(self,filename))
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
 
