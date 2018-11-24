@@ -160,7 +160,7 @@ def test_caching():
     import cv2
 
     # save an object to the builtin 'tmp' cache
-    a = ip.blocks.Orb() # this is an example object
+    a = "this is an example object" # this is an example object
     fname = ip.tmp.save(a)
     restored_a = ip.tmp.restore(fname)
     assert a == restored_a, "failed to restore '{}'".format(a)
