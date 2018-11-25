@@ -126,6 +126,8 @@ class Interpreter(QtGui.QPlainTextEdit):
     # def mousePressEvent(self, e): pass
     # def mouseDoubleClickEvent(self, e): pass
 
+    # TODO disallow deleting / backspacing the prompt
+
     def keyPressEvent(self, e):
         # TODO make it non clickable
         # TODO fix history

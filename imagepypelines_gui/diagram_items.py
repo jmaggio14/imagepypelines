@@ -239,19 +239,3 @@ class DiagramItem(QtGui.QGraphicsPolygonItem):
                 arrow.updatePosition()
 
         return value
-
-
-class Block(DiagramItem):
-    def __init__(self, diagramType, contextMenu, parent=None, scene=None, text=''):
-        super(Block, self).__init__(diagramType, contextMenu, parent=None, scene=None)
-
-        self.textItem = DiagramTextItem()
-        self.textItem.setFont(scene.myFont)
-        self.textItem.setTextInteractionFlags(QtCore.Qt.TextEditorInteraction)
-        self.textItem.setZValue(1000.0)
-        self.textItem.selectedChange.connect(scene.itemSelected)
-        self.textItem.setDefaultTextColor(scene.myTextColor)
-        self.textItem.setPlainText(text)
-
-        # TODO center the text
-        self.textItem.setPos(*position)
