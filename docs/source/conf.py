@@ -114,8 +114,8 @@ html_theme_options = {
     # an arbitrary url.
     'navbar_links': [
                      # ("Contributors", "http://example.com", True),
-                     ("README", 'README.html', True),
-                     ("Tutorials", 'TUTORIALS.html', True)],
+                     ("README", 'readme.html', True),
+                     ("Tutorials", 'tutorials.html', True)],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': True,
