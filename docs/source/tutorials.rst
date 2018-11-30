@@ -1,4 +1,4 @@
 imagepypelines
 ==============
 
-.. mdinclude:: ../../Tutorials.md
+.. mdinclude:: ../../TUTORIALS.md
