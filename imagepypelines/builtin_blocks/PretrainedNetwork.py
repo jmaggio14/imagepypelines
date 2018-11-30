@@ -58,25 +58,24 @@ class PretrainedNetwork(BatchBlock):
     This class utilizes keras to automatically leverage
     hardware resources and retrieve pretrained networks.
     available networks are:
-        - xception
-        - vgg16
-        - vgg19
-        - resnet50
-        - inception_v3
-        - inception_resnet_v2
-        - mobilenet
-        - densenet121
-        - densenet169
-        - densenet201
-        - nasnetlarge
-        - nasnetmobile
-        - mobilenetv2
-
+    - xception
+    - vgg16
+    - vgg19
+    - resnet50
+    - inception_v3
+    - inception_resnet_v2
+    - mobilenet
+    - densenet121
+    - densenet169
+    - densenet201
+    - nasnetlarge
+    - nasnetmobile
+    - mobilenetv2
     see: https://keras.io/applications/ for more details
     kwargs for network instantiation are:
-                                        include_top=False,
-                                        weights='imagenet',
-                                        pooling=self.pooling_type
+    - include_top = False,
+    - weights = 'imagenet',
+    - pooling = self.pooling_type
 
 
     Args:

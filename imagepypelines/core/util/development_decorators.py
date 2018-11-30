@@ -70,8 +70,7 @@ def experimental(experimental_msg=None):
 
 
 def human_test(func):
-    """
-    Decorator for unit tests which require human interaction to verify their success,
+    """Decorator for unit tests which require human interaction to verify their success,
     such as tests that perform complicated segmentation, classification, graphing
     or interaction with displays
 
@@ -112,9 +111,9 @@ def human_test(func):
 
 
 def print_args(func):
-    """decorator to print out the arguments that a function is running with,
+    """Decorator to print out the arguments that a function is running with,
     this includes: arguments passed in, default values that are unspecified,
-    varargs (*args), and varkwargs (**kwargs)
+    varargs ``(*args)``, and varkwargs ``(**kwargs)``
 
     Args:
         func (callable): function or callable to print input arguments of

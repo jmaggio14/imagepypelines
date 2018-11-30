@@ -78,49 +78,47 @@ def cyan(text, bold=False):
 
 
 def color_text(text, color="r", background=None, attrs=None):
-    """
-    adds ansi escape codes to a string to change the color in a terminal
+    """adds ansi escape codes to a string to change the color in a terminal
     printout
     using print(color_text_output) with with windows powershell or
     cmd prompt will not yield a colored string
 
     Args:
-        text (str):
-            Input text to colorize
-        color (str) = 'r':
-                String which indicates the color to use for the text
-                acceptable values are:
-                                "r",    "red",
-                                "g",  "green",
-                                "y", "yellow",
-                                "b",   "blue",
-                                "m", magenta",
-                                "c",   "cyan",
-                                "w",  "white",
-        background (str) = None:
-                String which indicates what color to use for the text's
-                background colors.
-                acceptable values are:
-                                "r",    "red",
-                                "g",  "green",
-                                "y", "yellow",
-                                "b",   "blue",
-                                "m", magenta",
-                                "c",   "cyan",
-                                "w",  "white",
-        attrs (list) = None:
-                additional styles that can be applied to the text. This
+        text (str): Input text to colorize
+        color (str): String which indicates the color to use for the text
+            acceptable values are:
+            - "r",    "red",
+            - "g",  "green",
+            - "y", "yellow",
+            - "b",   "blue",
+            - "m", magenta",
+            - "c",   "cyan",
+            - "w",  "white",
+            default is 'r'
+        background (str): String which indicates what color to use for
+            the text's background colors. acceptable values are:
+            - "r",    "red",
+            - "g",  "green",
+            - "y", "yellow",
+            - "b",   "blue",
+            - "m", magenta",
+            - "c",   "cyan",
+            - "w",  "white",
+            default is None
+        attrs (list): additional styles that can be applied to the text. This
                 must be a list or tuple
                 acceptable values are:
-                                "bold",
-                                "dark",
-                                "underline",
-                                "reverse",
-                                "concealed"
+                - "bold",
+                - "dark",
+                - "underline",
+                - "reverse",
+                - "concealed"
+                default is None
+
     Returns:
         colored_text (str):
                 string with proper color codes added (colored string)
-                
+
     Example:
     >>> warning_msg = color_text('this is a warning',
     ...                                color = 'red',

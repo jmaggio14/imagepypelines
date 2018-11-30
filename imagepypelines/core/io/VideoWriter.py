@@ -58,9 +58,11 @@ class VideoWriter(object):
     def release(self):
         """
         closes the video writer
-        input::
+
+        Args:
             None
-        return::
+
+        Returns:
             None
         """
         self.writer.release()

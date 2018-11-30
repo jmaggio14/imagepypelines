@@ -18,7 +18,7 @@ class ArrayType(object):
     """Object to describe the shapes of Arrays for Block inputs or outputs
 
     Object that contains the shapes and datatypes of an input or output
-    for a Block
+    for a BaseBlock
 
     Args:
         *array_shapes(vargs of array shapes): acceptable shapes. Arbitrary
@@ -273,14 +273,13 @@ class BaseBlock(object):
     """BaseBlock object which is the root class for SimpleBlock and BatchBlock
     subclasses
 
-    This is the _building block_ (pun intended) for the entire imagepypelines
-    pipelining system. All Blocks, both Simple and Batch blocks, will inherit
-    from this object. Which contains base functionality to setup a block's
-    printers, unique name, standard input/output_shapes and special functions
-    for pipeline objects to call
+    This is the building block (pun intended) for the entire imagepypelines
+    pipelining system. All blocks, both SimpleBlocks and BatchBlocks, will
+    inherit from this object. Which contains base functionality to setup a
+    block's printers, unique name, standard input/output_shapes and special
+    functions for pipeline objects to call
 
     Args:
-
         io_map(IoMap,dict): dictionary of input-output mappings for this
             Block
         name(str): name for this block, it will be automatically created/modified
@@ -292,7 +291,6 @@ class BaseBlock(object):
             labels during training
 
     Attributes:
-
         io_map(IoMap): object that maps inputs to this block to outputs
             subclass of tuple where I/O is stored as:
             ( (input1,output1),(input2,output2)... )
