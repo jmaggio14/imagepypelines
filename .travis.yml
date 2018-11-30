@@ -55,7 +55,7 @@ deploy:
     keep-history: false
     local-dir: docs/build/html
     on:
-      branch: master
+      branch: feature/tf-blocks
 
   # - provider: pypi
   #   username: jmaggio14
