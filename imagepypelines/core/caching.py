@@ -13,7 +13,7 @@ import shutil
 import sys
 
 from .. import CACHE
-from .Printer import info as ipinfo
+from .Printer import get_default_printer
 from .Pipeline import Pipeline, restore_from_pickle
 from .BaseBlock import BaseBlock
 
@@ -59,11 +59,12 @@ class Cache(object):
     """
     def __init__(self,cache_name):
             self.subdir = os.path.join(CACHE,cache_name)
+            self.printer = get_default_printer()
             if not os.path.exists(self.subdir):
                 os.makedirs(self.subdir)
-                ipinfo("creating Cache for: ",self.subdir)
+                self.printer.info("creating Cache for: ",self.subdir)
             else:
-                ipinfo("found Cache for: ",self.subdir)
+                self.printer.info("found Cache for: ",self.subdir)
 
 
     def filename(self,basename="no-key"):
