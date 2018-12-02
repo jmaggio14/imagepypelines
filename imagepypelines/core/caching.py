@@ -13,7 +13,7 @@ import shutil
 import sys
 
 from .. import CACHE
-from .Printer import get_printer
+from .Printer import info as ipinfo
 from .Pipeline import Pipeline, restore_from_pickle
 from .BaseBlock import BaseBlock
 
@@ -61,8 +61,10 @@ class Cache(object):
             self.subdir = os.path.join(CACHE,cache_name)
             if not os.path.exists(self.subdir):
                 os.makedirs(self.subdir)
-            self.printer = get_printer("Cache Manager")
-            self.printer.info("creating Cache for: ",self.subdir)
+                ipinfo("creating Cache for: ",self.subdir)
+            else:
+                ipinfo("found Cache for: ",self.subdir)
+
 
     def filename(self,basename="no-key"):
         """creates or retrieves the filename for the specified on the local machine
