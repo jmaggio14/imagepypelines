@@ -13,6 +13,7 @@ from .Exceptions import BlockRequiresLabels
 from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES
 import copy
+from abc import ABC, abstractmethod
 
 class ArrayType(object):
     """Object to describe the shapes of Arrays for Block inputs or outputs
@@ -269,7 +270,7 @@ class IoMap(tuple):
         raise IncompatibleTypes(msg)
 
 
-class BaseBlock(object):
+class BaseBlock(ABC):
     """BaseBlock object which is the root class for SimpleBlock and BatchBlock
     subclasses
 
@@ -305,6 +306,29 @@ class BaseBlock(object):
 
     """
     EXTANT = {}
+    def __new__(cls,
+                 io_map,
+                 name=None,
+                 notes=None,
+                 requires_training=False,
+                 requires_labels=False,
+                 ):
+
+        if requires_training:
+            # JM: make cls.train an abstractmethod if this block requires
+            # training this is done through metaclassing, so we are technically
+            # returning a subclass 'TrainableBaseBlock'
+            train_func = abstractmethod(cls.train)
+            return type("TrainableBaseBlock",
+                        (cls,),
+                        {'__new__':ABC.__new__,'train':train_func})
+        else:
+            # otherwise, we return an unmodified subclass called
+            # 'NonTrainableBaseBlock'
+            return type("NonTrainableBaseBlock",
+                        (cls,),
+                        {'__new__':ABC.__new__,})
+
 
     def __init__(self,
                  io_map,
@@ -331,8 +355,8 @@ class BaseBlock(object):
         if not isinstance(notes,str):
             raise TypeError("notes must be a string description or None")
 
+        # ------ setting up instance variables
         self.io_map = IoMap(io_map)
-
         self.name = name
         self.notes = notes
         self.requires_training = requires_training
@@ -344,7 +368,23 @@ class BaseBlock(object):
 
         self.printer = get_printer(self.name)
 
+        ABC.__init__()
+
     def rename(self,name):
+        """Renames this block to the given name
+
+        Args:
+            name(str): the new name for your Block
+
+        Returns:
+            ip.Block : object reference to this block (self)
+
+        Note:
+            unlike naming your pipeline using the `name` parameter in
+            instantiation, imagepypelines will not guarantee that this name
+            will be unique. It is considered the user's responsibility to
+            determine that this will not cause problems in your pipeline.
+        """
         assert isinstance(name,str),"name must be a string"
         self.name = name
         self.printer = get_printer(self.name)
@@ -515,132 +555,5 @@ class BaseBlock(object):
     def restore_from_serialization(self):
         pass
 
-
-class SimpleBlock(BaseBlock):
-    """Block subclass that processes individual datums separately
-    (as opposed to processing all data at once in a batch). This makes it useful
-    for most CPU bound processing tasks as well as most functions in traditional
-    computer vision that don't require an image sequence to process data
-
-    Args:
-
-        io_map(IoMap,dict): dictionary of input-output mappings for this
-            Block
-        name(str): name for this block, it will be automatically created/modified
-            to make sure it is unique
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        requires_labels(bool): whether or not this block will require
-            labels during training
-
-    Attributes:
-
-        io_map(IoMap): object that maps inputs to this block to outputs
-            subclass of tuple where I/O is stored as:
-            ( (input1,output1),(input2,output2)... )
-        name(str): unique name for this block
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
-            registered to 'name'
-
-    """
-
-    def process(self, datum):
-        """(required overload)processes a single datum
-
-        Args:
-            datum: datum to process
-
-        Returns:
-            processed: datum processed by this block
-        """
-        raise NotImplementedError("'process' must be overloaded in all children")
-
-    def label(self, lbl):
-        """(optional overload)retrieves the label for this datum"""
-        return lbl
-
-    def process_strategy(self, data):
-        """processes each datum using self.process and return list"""
-        return [self.process(datum) for datum in data]
-
-    def label_strategy(self, labels):
-        """calls self.label for each datum and returns a list or Nonetype"""
-        return [self.label(lbl) for lbl in labels]
-
-    def __repr__(self):
-        return (str(self) + '-(SimpleBlock)' + '\n' + self.notes)
-
-
-
-
-
-class BatchBlock(BaseBlock):
-    """Block subclass that processes datums as a batch
-    (as opposed to processing each datum individually). This makes it useful
-    for GPU accelerated tasks where processing data in batches frequently
-    increases processing speed. It can also be used for algorithms that
-    require working with a full image sequence.
-
-    Args:
-
-        io_map(IoMap,dict): dictionary of input-output mappings for this
-            Block
-        name(str): name for this block, it will be automatically created/modified
-            to make sure it is unique
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        requires_labels(bool): whether or not this block will require
-            labels during training
-
-    Attributes:
-
-        io_map(IoMap): object that maps inputs to this block to outputs
-            subclass of tuple where I/O is stored as:
-            ( (input1,output1),(input2,output2)... )
-        name(str): unique name for this block
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
-            registered to 'name'
-
-    """
-
-    def batch_process(self, data):
-        """(required overload)processes a list of data using this block's
-        algorithm
-
-        Args:
-            data(list): list of datums to process
-
-        Returns:
-            process(list): list of processed datums
-        """
-        error_msg = "'batch_process' must be overloaded in all children"
-        raise NotImplementedError(error_msg)
-
-    def labels(self, labels):
-        """(optional overload) returns all labels for input datums or None"""
-        return labels
-
-    def process_strategy(self, data):
-        """runs self.batch_process"""
-        return self.batch_process(data)
-
-    def label_strategy(self, labels):
-        """runs self.labels"""
-        return self.labels(labels)
-
-    def __repr__(self):
-        return (str(self) + '-(BatchBlock)' + '\n' + self.notes)
 
 # END
