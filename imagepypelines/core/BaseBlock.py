@@ -306,29 +306,29 @@ class BaseBlock(ABC):
 
     """
     EXTANT = {}
-    def __new__(cls,
-                 io_map,
-                 name=None,
-                 notes=None,
-                 requires_training=False,
-                 requires_labels=False,
-                 ):
-
-        if requires_training:
-            # JM: make cls.train an abstractmethod if this block requires
-            # training this is done through metaclassing, so we are technically
-            # returning a subclass 'TrainableBaseBlock'
-            train_func = abstractmethod(cls.train)
-            return type("TrainableBaseBlock",
-                        (cls,),
-                        {'__new__':ABC.__new__,'train':train_func})
-        else:
-            # otherwise, we return an unmodified subclass called
-            # 'NonTrainableBaseBlock'
-            return type("NonTrainableBaseBlock",
-                        (cls,),
-                        {'__new__':ABC.__new__,})
-
+    # def __new__(cls,
+    #              io_map=None,
+    #              name=None,
+    #              notes=None,
+    #              requires_training=False,
+    #              requires_labels=False,
+    #              ):
+    #
+    #     if requires_training:
+    #         # JM: make cls.train an abstractmethod if this block requires
+    #         # training this is done through metaclassing, so we are technically
+    #         # returning a subclass 'TrainableBaseBlock'
+    #         train_func = abstractmethod(cls.train)
+    #         return type("TrainableBaseBlock",
+    #                     (cls,),
+    #                     {'__new__':ABC.__new__,'train':train_func})
+    #     else:
+    #         # otherwise, we return an unmodified subclass called
+    #         # 'NonTrainableBaseBlock'
+    #         return type("NonTrainableBaseBlock",
+    #                     (cls,),
+    #                     {'__new__':ABC.__new__,})
+    #
 
     def __init__(self,
                  io_map,
@@ -368,7 +368,7 @@ class BaseBlock(ABC):
 
         self.printer = get_printer(self.name)
 
-        ABC.__init__()
+        super(BaseBlock,self).__init__()
 
     def rename(self,name):
         """Renames this block to the given name
