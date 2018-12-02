@@ -13,7 +13,7 @@ from .Exceptions import BlockRequiresLabels
 from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES
 import copy
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
 class ArrayType(object):
     """Object to describe the shapes of Arrays for Block inputs or outputs
@@ -270,7 +270,7 @@ class IoMap(tuple):
         raise IncompatibleTypes(msg)
 
 
-class BaseBlock(ABC):
+class BaseBlock(object):
     """BaseBlock object which is the root class for SimpleBlock and BatchBlock
     subclasses
 
@@ -305,6 +305,7 @@ class BaseBlock(ABC):
             registered to 'name'
 
     """
+    __metaclass__ = ABCMeta
     EXTANT = {}
     # def __new__(cls,
     #              io_map=None,
