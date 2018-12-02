@@ -7,7 +7,7 @@ interface to control and apply processing algorithms for your workflows.
 
 ![pipeline](./docs/images/pipeline-example.png "pipeline example")
 
-#### let's create an example fourier transform pipeline
+### let's create an example fourier transform pipeline
 ```python
 import imagepypelines as ip
 

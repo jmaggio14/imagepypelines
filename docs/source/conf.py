@@ -26,6 +26,7 @@ project = 'imagepypelines'
 copyright = '2018, Nathan Dileas, Ryan Hartzell, Jeff Maggio'
 author = 'Nathan Dileas, Ryan Hartzell, Jeff Maggio'
 
+
 # The short X.Y version
 version = '0.1'
 # The full version, including alpha/beta/rc tags
@@ -111,8 +112,10 @@ html_theme_options = {
     #    (name, "http://example.com", True) # arbitrary absolute url
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
-    'navbar_links': [("Contributors", "http://example.com", True),
-                     ("Tutorials", '../../TUTORIALS.md', True)],
+    'navbar_links': [
+                     # ("Contributors", "http://example.com", True),
+                     ("README", 'readme.html', True),
+                     ("Tutorials", 'tutorials.html', True)],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': True,

@@ -6,10 +6,9 @@ Subpackages
 
 .. toctree::
 
+    imagepypelines.builtin_blocks
+    imagepypelines.builtin_pipelines
     imagepypelines.core
-    imagepypelines.io
-    imagepypelines.ml
-    imagepypelines.util
 
 Submodules
 ----------

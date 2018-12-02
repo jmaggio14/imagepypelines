@@ -9,14 +9,13 @@ import time
 
 
 def function_timer(func):
-    """
-    Decorator to time how long a func takes to run in seconds
+    """Decorator to time how long a func takes to run in seconds
 
     Example:
         >>> @function_timer
         >>> def sleep_for_one_sec():
         ...    time.sleep(1) # sleep for 1 second
-
+        >>>
         >>> sleep_for_one_sec()
         (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
@@ -38,15 +37,14 @@ def function_timer(func):
 
 
 def function_timer_ms(func):
-    """
-    Decorator to time how long a func takes to run in milliseconds
+    """Decorator to time how long a func takes to run in milliseconds
 
     Example:
-        @function_timer
-        def sleep_for_one_sec():
-            time.sleep(1) #sleep for 1 second
-
-        sleep_for_one_sec()
+        >>> @function_timer
+        >>> def sleep_for_one_sec():
+        ...    time.sleep(1) #sleep for 1 second
+        >>>
+        >>> sleep_for_one_sec()
         # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
     # NOTE: JM: relative imports inside function are to avoid python2.7 import issues

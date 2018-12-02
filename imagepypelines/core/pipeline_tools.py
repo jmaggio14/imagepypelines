@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .BaseBlock import SimpleBlock
+from .block_subclasses import SimpleBlock
 
 
 def quick_block(process_fn,

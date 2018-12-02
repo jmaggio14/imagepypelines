@@ -19,13 +19,30 @@ frameworks quickly for prototyping applications,
 and serve as a valuable educational tool for those interested in learning
 traditionally tough subject matter in a friendly environment!
 
+README
+=========
+
+.. toctree::
+    :maxdepth: 2
+
+    readme
+
+
+Tutorials
+=========
+
+.. toctree::
+    :maxdepth: 2
+
+    tutorials
+
+Read More
+=========
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   readme
-   tutorials
    modules
 
 

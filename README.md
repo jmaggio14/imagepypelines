@@ -42,7 +42,7 @@ pip install tensorflow-gpu --user
 pip install tensorflow --user
 ```
 ##### opencv
-we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html). **_However_** unofficial bindings for opencv can be installed with
+we strongly recommend that you [build opencv from source]("https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html"). **_However_** unofficial bindings for opencv can be installed with
 ```console
 pip install opencv-python --user
 ```
@@ -55,7 +55,7 @@ Full documentation for `imagepypelines`, including examples and tutorials, can b
 
 
 ## Licensing / Credit
-`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
+`imagepypelines` is licensed under the [MIT]("https://choosealicense.com/licenses/mit/") permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
 Please credit us if you use `imagepypelines` in your research
 
@@ -65,11 +65,9 @@ Please credit us if you use `imagepypelines` in your research
 `imagepypelines`'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
 
 In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
+![xkcd]("https://imgs.xkcd.com/comics/data_pipeline.png" "cracked pipelines")
 
-
-![xkcd](https://imgs.xkcd.com/comics/data_pipeline.png "cracked pipelines")
-
-(source: [XKCD](https://www.xkcd.com/2054/))
+(source: [XKCD]("https://www.xkcd.com/2054/"))
 
 
 The `Pipeline` object of `imagepypelines` allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
@@ -90,14 +88,14 @@ a _datum_ can be anything: an image array, a filename, a label -- pretty much an
 
 Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
 
-##### Hang on? are all blocks compatible with one another?
+### Hang on? are all blocks compatible with one another?
 not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed
 
 
 ## Building a pipeline
 building a pipeline is super easy
 
-###### Image Display Pipeline
+### Image Display Pipeline
 ```python
 import imagepypelines as ip
 
@@ -111,7 +109,7 @@ pipeline.process( ip.standard_image_filenames() )
 ```
 We just made a processing pipeline that can read in images, resize them and display them! but we can do much more complicated operations.
 
-###### Lowpass Filter Pipeline
+### Lowpass Filter Pipeline
 ```python
 import imagepypelines as ip
 
@@ -135,7 +133,7 @@ One of the more powerful applications of `imagepypelines` is it's ease of use in
 _machine learning_ and _feature engineering_ applications.
 we can easily tailor a pipeline to perform image classification
 
-_this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as **ip.SimpleImageClassifier**_
+this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as **ip.SimpleImageClassifier**
 ```python
 import imagepypelines as ip
 
@@ -164,14 +162,13 @@ We just trained a full neural network classifier!
 ### Processing Blocks built into imagepypelines
 _more are being added with every commit!_
 
-
-###### I/O operations
+#### I/O operations
 - Image Display
 - Camera Capture
 - Image Loader
 - Image Writing
 
-###### Machine Learning
+#### Machine Learning
 - Linear Support Vector Machine
 - Rbf Support Vector Machine
 - Poly Support Vector Machine
@@ -180,7 +177,7 @@ _more are being added with every commit!_
 - 8 Pretrained Neural Networks (for feature extraction)
 - Principle Component Analysis
 
-###### Image Processing
+#### Image Processing
 - colorspace conversion
 - fast fourier transform
 - frequency filtering
@@ -191,7 +188,8 @@ _more are being added with every commit!_
 
 ### Designing your own processing blocks
 There are two ways to create a block
-###### 1) quick block creation
+
+#### 1) quick block creation
 for operations that can be completed in a single function that
 accepts one datum, you can create a block with a single line.
 ```python
@@ -209,7 +207,7 @@ io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
 block = ip.quick_block(normalize_image, io_map)
 ```
 
-###### 2) object inheritance
+#### 2) object inheritance
 _this is covered in more detail on our tutorial pages. this example will not cover training or label handling_
 ```python
 import imagepypelines as ip
@@ -228,11 +226,6 @@ class NormalizeBlock(ip.SimpleBlock):
 		"""overload the processing function for this block"""
 		return img.astype(np.float32) / img.max() * self.max_count
 ```
-
-
-
-
-
 
 # Imaging Science Convenience Functions
 In addition to the Pipeline, imagepypelines also contains convenience

@@ -17,3 +17,6 @@ class RgbImage(ArrayType):
     """convienence wrapper to create an io_map ArrayType for Rgb imagery"""
     def __init__(self):
         super(RgbImage,self).__init__([None,None,3])
+
+RGB = RgbImage()
+GRAY = GrayscaleImage()
