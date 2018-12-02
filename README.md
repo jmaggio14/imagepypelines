@@ -1,4 +1,4 @@
-<img src="https://github.com/jmaggio14/imagepypelines/tree/master/docs/images/docs/images/ip_logo.png" width="64">
+<img src="https://github.com/jmaggio14/imagepypelines/blob/master/docs/images/docs/images/ip_logo.png" width="64">
 
 # imagepypelines
 
@@ -76,12 +76,12 @@ The `Pipeline` object of `imagepypelines` allows for quick construction and prot
 ## The Block
 Pipelines in `imagepypelines` are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
-![pipeline](https://github.com/jmaggio14/imagepypelines/tree/master/docs/images/docs/images/pipeline-example.png "pipeline example")
+![pipeline](https://github.com/jmaggio14/imagepypelines/blob/master/docs/images/docs/images/pipeline-example.png "pipeline example")
 
 Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
 Broadly speaking, each box can be thought of as a black box which simply applies an operation to input data
-![block](https://github.com/jmaggio14/imagepypelines/tree/master/docs/images/docs/images/block.png "block example")
+![block](https://github.com/jmaggio14/imagepypelines/blob/master/docs/images/docs/images/block.png "block example")
 
 a _datum_ can be anything: an image array, a filename, a label -- pretty much an pythonic type.
 
