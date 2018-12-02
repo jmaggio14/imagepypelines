@@ -106,6 +106,8 @@ from .Printer import Printer
 # quick_types.py
 from .quick_types import GrayscaleImage
 from .quick_types import RgbImage
+from .quick_types import RGB
+from .quick_types import GRAY
 
 # standard_image.py
 from .standard_image import STANDARD_IMAGES
