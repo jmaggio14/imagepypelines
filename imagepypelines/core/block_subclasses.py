@@ -7,7 +7,7 @@
 #
 import sys
 from .BaseBlock import BaseBlock
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 
 class SimpleBlock(BaseBlock):
