@@ -7,6 +7,7 @@
 #
 import sys
 from .BaseBlock import BaseBlock
+from abc import ABC, abstractmethod
 
 
 class SimpleBlock(BaseBlock):
@@ -43,6 +44,7 @@ class SimpleBlock(BaseBlock):
 
     """
 
+    @abstractmethod
     def process(self, datum):
         """(required overload)processes a single datum
 
@@ -105,6 +107,7 @@ class BatchBlock(BaseBlock):
 
     """
 
+    @abstractmethod
     def batch_process(self, data):
         """(required overload)processes a list of data using this block's
         algorithm
@@ -135,27 +138,82 @@ class BatchBlock(BaseBlock):
 
 
 class TfBlock(BatchBlock):
-    def __new__(cls):
+    """Subclass of BaseBlock designed to make working with tensorflow in
+    imagepypelines more fluid.
+
+    Users are expected to put all code related to your tensorflow graph in
+    the setup_graph function, where it will be automatically added to the
+    objects `graph` and `sess` variables
+
+    training is left entirely up to the user through the use of overloading the
+    `train` function.
+
+    Do not overload the following functions unless you have read the source code
+    and understand the consequences: _setup_graph_wrapper, before_process,
+    batch_process, after_process, labels, prep_for_serialization,
+    restore_from_serialization
+
+
+    Args:
+        io_map(IoMap,dict): dictionary of input-output mappings for this
+            Block
+        name(str): name for this block, it will be automatically created/modified
+            to make sure it is unique
+        notes(str): a short description of this block
+        requires_training(bool): whether or not this block will require
+            training
+        requires_labels(bool): whether or not this block will require
+            labels during training
+
+    Attributes:
+        io_map(IoMap): object that maps inputs to this block to outputs,
+            subclass of tuple where I/O is stored as:
+            ( (input1,output1),(input2,output2)... )
+        name(str): unique name for this block
+        notes(str): a short description of this block
+        requires_training(bool): whether or not this block will require
+            training
+        trained(bool): whether or not this block has been trained, True
+            by default if requires_training = False
+        printer(ip.Printer): printer object for this block,
+            registered to 'name'
+    """
+    def __init__(self,*args,**kwargs):
         global tf
         import tensorflow as tf
-        return cls
 
-    def __init__(self,*args,**kwargs):
         # inherit from super
         super(TfBlock,self).__init__(*args,**kwargs)
+
+        # setup the graph
         self.fetches = []
-        self.data_fetch_name = "batch_data"
-        self.label_fetch_name = "labels"
+        self.data_feed_name = "batch_data"
+        self.label_feed_name = "labels"
+        self.processed = None
+        self.labels = None
         self.graph, self.sess = self._setup_graph_wrapper()
 
     # JM: called in __init__
     def _setup_graph_wrapper(self):
+        """Wrapper function to call the subclass defined function 'setup_graph'.
+        this function will ensure that all tensorflow graph code is saved to a
+        custom graph and session object - this is to ensure that multiple
+        tf graphs can be operated by different blocks in the pipeline.
+
+        Args:
+            None
+
+        Returns:
+            tf.Session : the session for this block, this will be saved to
+                self.sess
+            tf.Graph : the processing graph for this block, this will be saved
+                to self.graph
+        """
         # ----------- setup tf graph -------------
         graph = tf.Graph()
-        batch_data = tf.placeholder(tf.float32,name=self.data_fetch_name)
-        labels = tf.placeholder(tf.float32,name=self.label_fetch_name)
-
         with graph.as_default():
+            batch_data = tf.placeholder(tf.float32,name=self.data_feed_name)
+            labels = tf.placeholder(tf.float32,name=self.label_feed_name)
             ret = self.setup_graph(batch_data,labels)
 
         sess = tf.Session(graph=graph)
@@ -167,22 +225,23 @@ class TfBlock(BatchBlock):
         # containing (processed_tensor_name, processed_label_name)
         # for using as sess.run fetches
         if isinstance(ret,(tuple,list)):
-            self.printer.critical(error_msg)
             assert len(ret) == 2, error_msg
             self.fetches.extend(ret)
         # JM: checking to see if ret is one element
         # ie only the processed data fetch. see setup_graph docs
         else:
-            self.fetches.append(ret)
             # if setup graph only returned the processed data name,
             # then auto append the tensor name of the labels that were fed
+            self.fetches.append(ret) # append <processed_tensor_name>
             if len(self.fetches) == 1:
-                self.fetches.append(self.label_fetch_name + ':0')
+                self.fetches.append(self.label_feed_name + ':0')
 
-        return graph,sess
+        return graph, sess
 
+    @abstractmethod
     def setup_graph(self,data_placeholder,label_placeholder):
-        """(required overload)sets up the tensorflow graph
+        """(required overload)sets up the tensorflow graph that will be used to
+        execute code for this
 
         Args:
             data_placeholder(tf.placeholder): placeholder tensor into
@@ -191,19 +250,39 @@ class TfBlock(BatchBlock):
                 which label data will be fed during graph execution
 
         Returns:
-            fetches(str,tuple):
-                1) the tensor name of the processed data, a fetch
-                2) a two element tuple containing
-                    (processed tensor name, label tensor name)
+            (str,tuple): fetches - one of
+                1) Tensor name of the processed data: <processed tensor name>
+                2) A two element tuple containing
+                    (<processed tensor name>, <label tensor name>)
         """
         error_msg = "'setup_graph' must be overloaded in all children"
         raise NotImplementedError(error_msg)
 
 
     def before_process(self, batch_data, batch_labels=None):
+        """Processes the data through the tensorflow graph and makes the fetched
+        data available as instance variables in this block. The tensors returned
+        by this function are determined by the output of the overloaded
+        setup_graph function
+
+        This function will feed data into the data and label placeholder tensors
+        and fetch the processed data and label tensors specified by the output
+        of the setup_graph function
+
+        Saves processed data and labels to instance variables so they can
+        be returned in batch_process and labels functions
+
+        Args:
+            batch_data (list): list of datums to process in this tensorflow
+                graph
+            batch_labels (list): list of labels for this graph
+
+        Returns:
+            None
+        """
         feed_dict = {
-                        self.data_fetch_name:batch_data,
-                        self.label_fetch_name:batch_labels
+                        self.data_feed_name:batch_data,
+                        self.label_feed_name:batch_labels
                         }
 
         # process data through the graph and fetch the tensors which
@@ -215,10 +294,36 @@ class TfBlock(BatchBlock):
         self.labels = [labels[i] for i in range(labels.shape[0])]
 
     def batch_process(self,data):
-        return self.processed
+        """returns the processed data retrieved from the tensorflow graph in
+        'before_process'
+
+        Args:
+            data (list): list of raw data to process (not used in this
+                function in a TfBlock)
+
+        Returns:
+            data (list): list of processed data for the next block
+        """
+        return self.data
 
     def labels(self,labels):
+        """returns the labels retrieved from the tensorflow graph in
+        'before_process'
+
+        Args:
+            labels (list): list of raw labels to process (not used in this
+                function in a TfBlock)
+
+        Returns:
+            labels (list): list of processed labels for the next block
+        """
         return self.labels
+
+    def after_process(self):
+        """reduces object memory footprint by setting 'processed' and 'labels'
+        variables to None"""
+        self.processed = None
+        self.labels = None
 
     def prep_for_serialization(self):
         # create saver object
