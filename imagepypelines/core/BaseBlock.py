@@ -307,30 +307,6 @@ class BaseBlock(object):
     """
     __metaclass__ = ABCMeta
     EXTANT = {}
-    # def __new__(cls,
-    #              io_map=None,
-    #              name=None,
-    #              notes=None,
-    #              requires_training=False,
-    #              requires_labels=False,
-    #              ):
-    #
-    #     if requires_training:
-    #         # JM: make cls.train an abstractmethod if this block requires
-    #         # training this is done through metaclassing, so we are technically
-    #         # returning a subclass 'TrainableBaseBlock'
-    #         train_func = abstractmethod(cls.train)
-    #         return type("TrainableBaseBlock",
-    #                     (cls,),
-    #                     {'__new__':ABC.__new__,'train':train_func})
-    #     else:
-    #         # otherwise, we return an unmodified subclass called
-    #         # 'NonTrainableBaseBlock'
-    #         return type("NonTrainableBaseBlock",
-    #                     (cls,),
-    #                     {'__new__':ABC.__new__,})
-    #
-
     def __init__(self,
                  io_map,
                  name=None,
@@ -392,7 +368,8 @@ class BaseBlock(object):
         return self
 
     def train(self, data, labels=None):
-        """(optional overload)trains the block if required
+        """(optional or required overload)trains the block. overloading
+        is required if the 'requires_training' parameter is set to True
 
         users are expected to save pertinent variables as instance
         variables
@@ -405,7 +382,11 @@ class BaseBlock(object):
         Returns:
             None
         """
-        pass
+        if self.requires_training:
+            msg = "{}.train must be overloaded if the " \
+                        + "'requires_training' is set to True".format(self.name)
+            self.printer.critical(msg)
+            raise NotImplementedError(msg)
 
     def before_process(self, data, labels=None):
         """(optional overload)function that runs before processing for
