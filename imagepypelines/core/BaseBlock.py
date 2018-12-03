@@ -496,12 +496,12 @@ class BaseBlock(object):
             raise InvalidLabelStrategy(self)
 
         # making sure that we always have the same number of labels and datums
-        if isinstance(labels,list):
-            if len(processed) != len(labels):
-                raise DataLabelMismatch(processed, labels)
+        if len(processed) != len(labels):
+            raise DataLabelMismatch(processed, labels)
 
         return processed, labels
 
+    @abstractmethod
     def process_strategy(self, data):
         """overarching processing management function for this block
 
@@ -513,6 +513,7 @@ class BaseBlock(object):
         """
         raise NotImplementedError("'process_strategy' must be overloaded in all children")
 
+    @abstractmethod
     def label_strategy(self, labels):
         """overarching label management function for this block
 

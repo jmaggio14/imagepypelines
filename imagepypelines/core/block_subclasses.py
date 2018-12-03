@@ -241,7 +241,7 @@ class TfBlock(BatchBlock):
     @abstractmethod
     def setup_graph(self,data_placeholder,label_placeholder):
         """(required overload)sets up the tensorflow graph that will be used to
-        execute code for this
+        execute code for this block
 
         Args:
             data_placeholder(tf.placeholder): placeholder tensor into
@@ -304,7 +304,7 @@ class TfBlock(BatchBlock):
         Returns:
             data (list): list of processed data for the next block
         """
-        return self.data
+        return self.processed
 
     def labels(self,labels):
         """returns the labels retrieved from the tensorflow graph in
