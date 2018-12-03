@@ -42,7 +42,7 @@ pip install tensorflow-gpu --user
 pip install tensorflow --user
 ```
 ##### opencv
-we strongly recommend that you [build opencv from source]("https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html"). **_However_** unofficial bindings for opencv can be installed with
+we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html). **_However_** unofficial bindings for opencv can be installed with
 ```console
 pip install opencv-python --user
 ```
@@ -55,7 +55,7 @@ Full documentation for `imagepypelines`, including examples and tutorials, can b
 
 
 ## Licensing / Credit
-`imagepypelines` is licensed under the [MIT]("https://choosealicense.com/licenses/mit/") permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
+`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
 Please credit us if you use `imagepypelines` in your research
 
@@ -65,9 +65,9 @@ Please credit us if you use `imagepypelines` in your research
 `imagepypelines`'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
 
 In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
-![xkcd]("https://imgs.xkcd.com/comics/data_pipeline.png" "cracked pipelines")
+![xkcd](https://imgs.xkcd.com/comics/data_pipeline.png "cracked pipelines")
 
-(source: [XKCD]("https://www.xkcd.com/2054/"))
+(source: [XKCD](https://www.xkcd.com/2054/))
 
 
 The `Pipeline` object of `imagepypelines` allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
