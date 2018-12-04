@@ -1,8 +1,8 @@
-<img src="./docs/images/ip_logo.png" width="64">
+<p align="center">
+  <img src="./docs/images/ip_logo.png" width="50%" height="50%">  
+<p/>  
 
-# imagepypelines
-
-![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")
+![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")  
 
 
 The `imagepypelines` package consists of high level tools which simplify the construction of complex image processing, computer vision, and machine learning frameworks. During our time in the undergrad Imaging Science program at the Rochester Institute of Technology, we found ourselves writing and rewriting code for things as simple as data type casting and displaying imagery when debugging, causing more trouble than mathematical or logical bugs themselves! Our hope is that the plug-and-play, easily-customizable nature of `imagepypelines` will allow all data-driven scientists to construct complex frameworks quickly for prototyping applications, and serve as a valuable educational tool for those interested in learning traditionally tough subject matter in a friendly environment!
@@ -16,6 +16,8 @@ To achieve this goal, our development team always adheres to the following 5 cor
 5. We must suffer, lest our users suffer
 
 ## Installation
+<details><summary></summary>
+
 _(make sure you see the **dependencies** section)_
 
 Python compatibility: 3.4-3.6 (Python 2.7 backwards) 64bit
@@ -49,19 +51,34 @@ pip install opencv-python --user
 (while we haven't encountered many problems with these unofficial bindings,
 we do not guarantee support)
 
+</details>
 
 ## Documentation
+
+<details><summary></summary>
+	
 Full documentation for `imagepypelines`, including examples and tutorials, can be found on our website: www.imagepypelines.org
 
+</details>
 
 ## Licensing / Credit
+
+<details><summary></summary>
+	
 `imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
 Please credit us if you use `imagepypelines` in your research
 
+</details>
+
 # What Makes Us Unique?
 
+<details><summary></summary>
+
 ## The Pipeline
+
+<details><summary></summary>
+	
 `imagepypelines`'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
 
 In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
@@ -74,8 +91,12 @@ In our experience as imaging scientists, processing pipelines in both corporate 
 
 The `Pipeline` object of `imagepypelines` allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
 
+</details>
 
 ## The Block
+
+<details><summary></summary>
+	
 Pipelines in `imagepypelines` are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
 ![pipeline](./docs/images/pipeline-example.png "pipeline example")
@@ -90,11 +111,17 @@ a _datum_ can be anything: an image array, a filename, a label -- pretty much an
 
 Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
 
+
 ##### Hang on? are all blocks compatible with one another?
 not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed
 
+</details>
+
 
 ## Building a pipeline
+
+<details><summary></summary>
+
 building a pipeline is super easy
 
 ###### Image Display Pipeline
@@ -129,6 +156,10 @@ pipeline = ip.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
 filenames = ip.standard_image_filenames()
 pipeline.process(filenames)
 ```
+
+</details>
+
+</details>
 
 ### Machine Learning Applications
 One of the more powerful applications of `imagepypelines` is it's ease of use in
