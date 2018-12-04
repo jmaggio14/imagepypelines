@@ -509,7 +509,7 @@ class BaseBlock(object):
             data(list): list of datums to process
 
         Returns:
-            processed (list): processed datums
+            list: processed datums
         """
         raise NotImplementedError("'process_strategy' must be overloaded in all children")
 
