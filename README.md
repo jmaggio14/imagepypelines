@@ -1,7 +1,4 @@
-<p align="center">
-  <img src="./docs/images/ip_logo.png" width="50%" height="50%">  
-<p/>  
-
+<img src="https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png" width="64">
 ![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")  
 
 
@@ -82,8 +79,6 @@ Please credit us if you use `imagepypelines` in your research
 `imagepypelines`'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
 
 In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to _proof-of-concept_ applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
-
-
 ![xkcd](https://imgs.xkcd.com/comics/data_pipeline.png "cracked pipelines")
 
 (source: [XKCD](https://www.xkcd.com/2054/))
@@ -99,20 +94,20 @@ The `Pipeline` object of `imagepypelines` allows for quick construction and prot
 	
 Pipelines in `imagepypelines` are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
-![pipeline](./docs/images/pipeline-example.png "pipeline example")
+![pipeline](https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/pipeline-example.png "pipeline example")
 
 Each `block` _takes in_ a list of data and _returns_ a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
 Broadly speaking, each box can be thought of as a black box which simply applies an operation to input data
-![block](./docs/images/block.png "block example")
+![block](https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/block.png "block example")
 
 a _datum_ can be anything: an image array, a filename, a label -- pretty much an pythonic type.
 
 
 Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
 
+### Hang on? are all blocks compatible with one another?
 
-##### Hang on? are all blocks compatible with one another?
 not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed
 
 </details>
@@ -124,7 +119,7 @@ not entirely, each block has predefined acceptable inputs and outputs. However t
 
 building a pipeline is super easy
 
-###### Image Display Pipeline
+### Image Display Pipeline
 ```python
 import imagepypelines as ip
 
@@ -138,7 +133,7 @@ pipeline.process( ip.standard_image_filenames() )
 ```
 We just made a processing pipeline that can read in images, resize them and display them! but we can do much more complicated operations.
 
-###### Lowpass Filter Pipeline
+### Lowpass Filter Pipeline
 ```python
 import imagepypelines as ip
 
@@ -166,7 +161,7 @@ One of the more powerful applications of `imagepypelines` is it's ease of use in
 _machine learning_ and _feature engineering_ applications.
 we can easily tailor a pipeline to perform image classification
 
-_this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as **ip.SimpleImageClassifier**_
+this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as **ip.SimpleImageClassifier**
 ```python
 import imagepypelines as ip
 
@@ -195,14 +190,13 @@ We just trained a full neural network classifier!
 ### Processing Blocks built into imagepypelines
 _more are being added with every commit!_
 
-
-###### I/O operations
+#### I/O operations
 - Image Display
 - Camera Capture
 - Image Loader
 - Image Writing
 
-###### Machine Learning
+#### Machine Learning
 - Linear Support Vector Machine
 - Rbf Support Vector Machine
 - Poly Support Vector Machine
@@ -211,7 +205,7 @@ _more are being added with every commit!_
 - 8 Pretrained Neural Networks (for feature extraction)
 - Principle Component Analysis
 
-###### Image Processing
+#### Image Processing
 - colorspace conversion
 - fast fourier transform
 - frequency filtering
@@ -222,7 +216,8 @@ _more are being added with every commit!_
 
 ### Designing your own processing blocks
 There are two ways to create a block
-###### 1) quick block creation
+
+#### 1) quick block creation
 for operations that can be completed in a single function that
 accepts one datum, you can create a block with a single line.
 ```python
@@ -240,7 +235,7 @@ io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
 block = ip.quick_block(normalize_image, io_map)
 ```
 
-###### 2) object inheritance
+#### 2) object inheritance
 _this is covered in more detail on our tutorial pages. this example will not cover training or label handling_
 ```python
 import imagepypelines as ip
@@ -259,11 +254,6 @@ class NormalizeBlock(ip.SimpleBlock):
 		"""overload the processing function for this block"""
 		return img.astype(np.float32) / img.max() * self.max_count
 ```
-
-
-
-
-
 
 # Imaging Science Convenience Functions
 In addition to the Pipeline, imagepypelines also contains convenience
@@ -549,7 +539,7 @@ made to decorate functions or classes that are deprecated
 ```python
 import imagepypelines as ip
 
-@ip.deprecated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
+@ip.util.deprecated("'old_function' has been renamed to 'new_function'. references will be removed in a future version!")
 def old_function():
 	pass # real code will do something
 
@@ -565,7 +555,7 @@ made to decorate functions or classes that are experimental and may not be fully
 ```python
 import imagepypelines as ip
 
-@ip.experimental() # you can include a custom message here if you want
+@ip.util.experimental() # you can include a custom message here if you want
 def new_feature():
 	pass
 
@@ -583,7 +573,7 @@ This is a decorator made for unit tests which require a human to verify function
 This is because it is meant for Unit Tests, NOT actual use in a pipeline**
 ```python
 import imagepypelines as ip
-@ip.human_test
+@ip.util.human_test
 def unit_test_for_quick_image_view():
 	ip.quick_image_view( ip.lenna() )
 
@@ -601,7 +591,7 @@ did the test for 'unit_test_for_quick_image_view' succeed? Yes? No?
 Decorator to print out the arguments a function is running with. Unlike other decorators described here, we encourage you to use this decorator frequently in your code during development to avoid silly mistakes
 ```python
 import imagepypelines as ip
-@ip.print_args
+@ip.util.print_args
 def func_with_lots_of_args(a, b, c=3, d=4):
 			pass
 func_with_lots_of_args(1, b=2, c='not 3')

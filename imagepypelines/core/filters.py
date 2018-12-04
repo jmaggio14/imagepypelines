@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .coordinates import dimensions
+from .img_tools import dimensions
 import numpy as np
 
 def low_pass(img,cut_off,filter_type='ideal',butterworth_order=1):

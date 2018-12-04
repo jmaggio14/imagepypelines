@@ -1,0 +1,4 @@
+imagepypelines
+==============
+
+.. mdinclude:: ../../README.md

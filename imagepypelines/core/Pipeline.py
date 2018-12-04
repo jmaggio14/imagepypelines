@@ -12,13 +12,13 @@ from .BaseBlock import ArrayType
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
 import collections
-from .. import util
+from .util.timing import Timer
 import pickle
 import collections
 import numpy as np
 
 def restore_from_file(filename):
-    """restores a pipeline from a pickled state
+    """restores a pipeline from a pickled file
 
     Args:
         filename(str): the pipeline filename
@@ -26,11 +26,26 @@ def restore_from_file(filename):
     Returns:
         pipeline(ip.Pipeline): the loaded pipeline
     """
-    pipeline = pickle.loads(filename)
+    with open(filename,'rb') as f:
+        raw = f.read()
+    return restore_from_pickle(raw)
+
+
+def restore_from_pickle(pickled_pipeline):
+    """restores a pipeline from a pickled state
+
+    Args:
+        pickled_pipeline(pickled obj): a pickled pipeline
+
+    Returns:
+        pipeline(ip.Pipeline): the loaded pipeline
+    """
+    pipeline = pickle.loads(pickled_pipeline)
     for b in pipeline.blocks:
         b.restore_from_serialization()
 
     return pipeline
+
 
 def get_type(datum):
     """retrieves the block data type of the input datum"""
@@ -178,6 +193,8 @@ class Pipeline(object):
                 try:
                     output_type = block.io_map.output_given_input(input_type)
                     broken_pair = False
+                    type_chain[str(block)] = output_type
+                    input_type = output_type
 
                 except IncompatibleTypes as e:
                     msg = []
@@ -198,8 +215,6 @@ class Pipeline(object):
                     print(msg)
                     broken_pair = True
 
-                type_chain[str(block)] = output_type
-                input_type = output_type
 
                 if broken_pair:
                     error_msg = "{} - acceptable types are {}".format(block.name,
@@ -230,7 +245,7 @@ class Pipeline(object):
         return self.step_data,self.step_labels
 
     def _run_block(self,block,data,labels=None):
-        t = util.Timer()
+        t = Timer()
 
         # processing data using the block
         processed,labels = block._pipeline_process(data,labels)
@@ -292,7 +307,7 @@ class Pipeline(object):
         self.step_labels = labels
 
     def _train(self,data,labels=None):
-        t = util.Timer()
+        t = Timer()
         for b in self.blocks:
             self.printer.debug("training {}...".format(b.name))
             b._pipeline_train(self.step_data,self.step_labels)
@@ -353,6 +368,8 @@ class Pipeline(object):
 
         if filename is None:
             filename = self.name + '.pck'
+
+        self.printer.info("saving {} to {}".format(self,filename))
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
 
