@@ -459,6 +459,4 @@ class Pipeline(object):
 
     def __iter__(self):
         """generator to return all blocks in the pipeline"""
-        for b in self.blocks:
-            yield b
         return (b for b in self.blocks)
