@@ -26,7 +26,7 @@ __all__ = [
 
 
 __name__ = 'imagepypelines'
-__version__ = '0.1.2-alpha'
+__version__ = '0.1.3-alpha'
 __description__ = 'data pipeline and convienence library targeted at accelerating the development of imaging projects and research'
 
 __author__ = 'Jeff Maggio, Nathan Dileas, Ryan Hartzell'
@@ -50,7 +50,9 @@ __classifiers__ = [
     'Topic :: Scientific/Engineering :: Information Analysis',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
+    'Programming Language :: Python :: 2',
     'Programming Language :: Python :: 2.7',
+    'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',

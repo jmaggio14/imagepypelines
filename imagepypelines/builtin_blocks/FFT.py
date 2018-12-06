@@ -7,13 +7,14 @@
 from .. import SimpleBlock
 from .. import ArrayType
 import numpy as np
-import cv2
+from ..core import import_opencv
+cv2 = import_opencv()
 
 class FFT(SimpleBlock):
     """Block to calculate a fast fourier transform on input imagery
 
     Attributes:
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -40,18 +41,18 @@ class FFT(SimpleBlock):
             fft(np.ndarray): zero-centered fourier transform
 
         """
-        
+
         if len(datum.shape) == 2:
 
             fft = np.fft.fft2(datum)
             fft = np.fft.fftshift(fft)
 
         if len(datum.shape) == 3:
-            
+
             fft = []
-   
+
             for band in range(0,datum.shape[-1]):
-                
+
                 F = np.fft.fft2(datum[:,:,band])
                 F = np.fft.fftshift(F)
                 fft.append(F)

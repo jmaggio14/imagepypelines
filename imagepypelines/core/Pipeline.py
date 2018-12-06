@@ -160,15 +160,29 @@ class Pipeline(object):
 
         verifies all input-output shapes are compatible with each other
 
-        type comparison for blocks is complicated
+        Developer Note:
+            this function could use a full refactor, especially with regards
+            to printouts when an error is raised - Jeff
+
+            Type comparison between Blocks is complicated and I suspect more
+            bugs are still yet to be discovered.
 
         Raises:
             CrackedPipeline: if there is a input-output shape
                 incompatability
             TypeError: if 'data' isn't a list or tuple
             RuntimeError: if more than one block in the pipeline has the same
-                name
+                name, or not all objects in the block list are BaseBlock
+                subclasses
         """
+
+        # assert that every element in the blocks list is a BaseBlock subclass
+        if not all(isinstance(b,BaseBlock) for b in self.blocks):
+            error_msg = \
+               "all elements of the pipeline must be subclasses of ip.BaseBlock"
+            self.printer.error(error_msg)
+            raise RuntimeError(error_msg)
+
 
         # make sure data is a list
         if not isinstance(data,list):
@@ -264,10 +278,10 @@ class Pipeline(object):
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
-                if b.trained:
-                    continue
-                err_msg = "requires training, but hasn't yet been trained"
-                self.printer.error("{}: ".format(b.name), err_msg)
+                if not b.trained:
+                    err_msg = "requires training, but hasn't yet been trained"
+                    self.printer.error("{}: ".format(b.name), err_msg)
+                    
             raise RuntimeError("you must run Pipeline.train before processing")
 
         # validate pipeline integrity
@@ -445,5 +459,4 @@ class Pipeline(object):
 
     def __iter__(self):
         """generator to return all blocks in the pipeline"""
-        for b in self.blocks:
-            yield b
+        return (b for b in self.blocks)

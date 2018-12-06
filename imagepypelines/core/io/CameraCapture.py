@@ -6,7 +6,8 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
 import time
-import cv2
+from ..imports import import_opencv
+cv2 = import_opencv()
 from ..Exceptions import CameraReadError
 
 class CameraCapture(object):

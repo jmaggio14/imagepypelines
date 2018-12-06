@@ -67,6 +67,10 @@ from .img_tools import norm_01
 from .img_tools import norm_ab
 from .img_tools import norm_dtype
 
+# imports.py
+from .imports import import_tensorflow
+from .imports import import_opencv
+
 # ml_tools.py
 from .ml_tools import accuracy
 from .ml_tools import confidence_99
@@ -104,8 +108,6 @@ from .Printer import comment
 from .Printer import Printer
 
 # quick_types.py
-from .quick_types import GrayscaleImage
-from .quick_types import RgbImage
 from .quick_types import RGB
 from .quick_types import GRAY
 

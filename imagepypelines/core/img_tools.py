@@ -7,7 +7,8 @@
 import numpy as np
 from PIL import Image
 from .error_checking import dtype_type_check
-import cv2
+from .imports import import_opencv
+cv2 = import_opencv()
 
 def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     """normalizes and bins an image

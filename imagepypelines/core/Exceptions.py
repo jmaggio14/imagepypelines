@@ -5,7 +5,8 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .Printer import error as iperror
-import cv2
+from .imports import import_opencv
+cv2 = import_opencv()
 
 class CameraReadError(ValueError):
     """Exception raised when the CameraCapture device is unable to
