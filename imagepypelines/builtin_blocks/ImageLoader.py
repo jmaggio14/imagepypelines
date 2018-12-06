@@ -12,7 +12,8 @@
 #
 from .. import SimpleBlock
 from .. import ArrayType
-import cv2
+from ..core import import_opencv
+cv2 = import_opencv()
 
 
 class ImageLoader(SimpleBlock):

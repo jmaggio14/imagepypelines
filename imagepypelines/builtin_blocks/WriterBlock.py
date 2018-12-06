@@ -7,7 +7,8 @@
 from .. import SimpleBlock
 from .. import ArrayType
 from .. import util
-import cv2
+from ..core import import_opencv
+cv2 = import_opencv()
 import os
 
 
