@@ -55,7 +55,7 @@ deploy:
     keep-history: false
     local-dir: docs/build/html
     on:
-      branch: develop
+      branch: master
 
   # - provider: pypi
   #   username: jmaggio14
