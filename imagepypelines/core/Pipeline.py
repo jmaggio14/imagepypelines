@@ -278,10 +278,10 @@ class Pipeline(object):
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
-                if b.trained:
-                    continue
-                err_msg = "requires training, but hasn't yet been trained"
-                self.printer.error("{}: ".format(b.name), err_msg)
+                if not b.trained:
+                    err_msg = "requires training, but hasn't yet been trained"
+                    self.printer.error("{}: ".format(b.name), err_msg)
+                    
             raise RuntimeError("you must run Pipeline.train before processing")
 
         # validate pipeline integrity
