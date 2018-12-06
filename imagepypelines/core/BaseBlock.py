@@ -57,9 +57,23 @@ class ArrayType(object):
         else:
             raise TypeError("dtypes must be None or a tuple/list of valid numpy dtypes")
 
-        # -------------------- real code begins ---------------------
-        array_shapes = tuple(tuple(shp) for shp in array_shapes)
-        self.shapes = array_shapes
+        # ensure that every element is a positive integer or NoneType
+        shapes = list(list(shp) for shp in shapes)
+        for shp in shapes:
+            for i in range(shp):
+                if isinstance(shp[i],float):
+                    assert shp[i] > 0, "elements of shape must be > 0 or None"
+                    shp[i] = int(shp[i])
+
+                elif isinstance(shp[i],int):
+                    assert shp[i] > 0, "elements of shape must be > 0 or None"
+
+                elif not (shp[i] is None):
+                    error_msg = "all elements must be positive integers or None"
+                    raise ValueError(error_msg)
+
+        # -------------------- create instance variables ---------------------
+        self.shapes = tuple(tuple(shp) for shp in shapes)
         self.dtypes = dtypes
 
     def __str__(self):
@@ -144,8 +158,8 @@ class IoMap(tuple):
         ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
 
         Args:
-            i (ArrayType): input ArrayType
-            o (ArrayType): output ArrayType
+            i (ArrayType): block input
+            o (ArrayType): block output
 
         Returns:
             reduced(tuple): tuple mapping of reduced types ((i1,o1),(i2,o2)...)
