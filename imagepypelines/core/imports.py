@@ -3,7 +3,7 @@ from .Printer import error as iperror
 
 
 def import_tensorflow():
-    """Direct tensorflow imports are discouraged when using imagepypelines
+    """Direct tensorflow imports are discouraged for imagepypelines developers
     because it is not automatically installed alongside imagepypelines, and
     therefore may cause confusing errors to users.
 
@@ -27,7 +27,7 @@ def import_tensorflow():
 
 
 def import_opencv():
-    """Direct opencv imports are discouraged when using imagepypelines
+    """Direct opencv imports are discouraged for imagepypelines developers
     because it is not automatically installed alongside imagepypelines, and
     therefore may cause confusing errors to users.
 
