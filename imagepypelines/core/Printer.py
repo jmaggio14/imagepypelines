@@ -101,7 +101,7 @@ def set_global_printout_level(log_level):
         log_level = Printer.LOG_LEVELS[log_level]
 
     if not isinstance(log_level,(int,float)):
-        ip.error("unable to set log_level to {}, must be an integer".format(
+        error("unable to set log_level to {}, must be an integer".format(
                                                                     log_level))
         return
 
@@ -140,7 +140,7 @@ def comment(*messages):
     """prints a 'comment' level message to the imagepypelines default printer"""
     printer = get_default_printer()
     printer.comment(*messages)
-    
+
 
 class Printer(object):
     """
