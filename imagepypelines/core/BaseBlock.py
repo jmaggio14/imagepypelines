@@ -46,6 +46,9 @@ class ArrayType(object):
         else:
             dtypes = NUMPY_TYPES
 
+        if dtypes is None:
+            dtypes = NUMPY_TYPES
+            
         # check to see if dtypes is a single valid numpy dtype
         if dtypes in NUMPY_TYPES:
             dtypes = (dtypes,)
