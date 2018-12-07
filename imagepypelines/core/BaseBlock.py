@@ -58,7 +58,7 @@ class ArrayType(object):
             raise TypeError("dtypes must be None or a tuple/list of valid numpy dtypes")
 
         # ensure that every element is a positive integer or NoneType
-        shapes = list(list(shp) for shp in shapes)
+        shapes = list(list(shp) for shp in array_shapes)
         for shp in shapes:
             for i in range(shp):
                 if isinstance(shp[i],float):
