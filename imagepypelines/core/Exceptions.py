@@ -101,7 +101,7 @@ class DataLabelMismatch(TypeError):
         error_msg += "Perhaps the size of your dataset is changing? "
         error_msg += "If so, then you'll have to modify number of labels, "
         error_msg += "look into overloading 'before_process', 'labels', "
-        errror_msg += "or 'label' depending on your system".format(
+        error_msg += "or 'label' depending on your system".format(
             len(processed),
             len(labels)
             )
