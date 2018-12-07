@@ -95,7 +95,7 @@ class TestBatchBlock(object):
 
             def batch_process(self, data):
                 data = np.stack(data,axis=1)
-                return [np.squeeze(d) for d in np.vsplit(data+1)]
+                return [np.squeeze(d) for d in np.vsplit(data+1,len(data))]
 
         block = AddOne()
         input_datum = np.zeros( (512,) )
