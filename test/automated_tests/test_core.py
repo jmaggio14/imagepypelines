@@ -18,7 +18,7 @@ def shape_and_dtype(draw):
 
 # test function for ArrayType
 @given(shape_and_dtype())
-@example(shape=[])
+@example([],None)
 def test_ArrayType(shape,dtypes):
     import imagepypelines as ip
     # test instantiation of multiple shapes and dtypes
@@ -34,8 +34,8 @@ class TestIoMap(object):
         """
         import imagepypelines as ip
         # create an Array Type with multiple shapes
-        a = ArrayType([None,None,None],[None,None],[None])
-        b = ArrayType([None,None,None,None],[None,None])
+        a = ip.ArrayType([None,None,None],[None,None],[None])
+        b = ip.ArrayType([None,None,None,None],[None,None])
         io_map = ip.IoMap( {a:b} )
         assert len(io_map.inputs) == 3
         assert len(io_map.outputs) == 2
@@ -46,8 +46,8 @@ class TestIoMap(object):
         """
         import imagepypelines as ip
 
-        a = ArrayType([None,None,None],[None,None],[None])
-        b = ArrayType([None,None,None,None],[None,None])
+        a = ip.ArrayType([None,None,None],[None,None],[None])
+        b = ip.ArrayType([None,None,None,None],[None,None])
         io_map = ip.IoMap( {a:b} )
 
         desired_output = io_map.reduce(b)
