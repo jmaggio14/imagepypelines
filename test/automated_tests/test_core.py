@@ -4,7 +4,7 @@ import numpy as np
 # =================== BaseBlock.py ===================
 # ------------- ArrayType -------------
 # create function to generate shape and dtype for ArrayType Creation
-@composite
+@st.composite
 def shape_and_dtype(draw):
     shape_elements = strategy([one_of((integers_in_range(0, 1000),
                                 None,
