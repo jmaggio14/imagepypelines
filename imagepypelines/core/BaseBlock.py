@@ -60,7 +60,7 @@ class ArrayType(object):
         # ensure that every element is a positive integer or NoneType
         shapes = list(list(shp) for shp in array_shapes)
         for shp in shapes:
-            for i in range(shp):
+            for i in range( len(shp) ):
                 if isinstance(shp[i],float):
                     assert shp[i] > 0, "elements of shape must be > 0 or None"
                     shp[i] = int(shp[i])
