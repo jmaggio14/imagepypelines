@@ -23,8 +23,8 @@ def confidence_99(data):
             for K-fold cross validation
 
     Returns:
-        mean(float): the mean for this distributions
-        h(float): +/- deviation for this distribution
+        float: the mean for this distributions
+        float: +/- deviation for this confidence interval
 
     Example:
         >>> # get 99% confidence interval
@@ -42,8 +42,8 @@ def confidence_95(data):
             for K-fold cross validation
 
     Returns:
-        mean(float): the mean for this distributions
-        h(float): +/- deviation for this distribution
+        float: the mean for this distributions
+        float: +/- deviation for this confidence interval
 
     Example:
         >>> # get 95% confidence interval
@@ -61,8 +61,8 @@ def confidence_90(data):
             for K-fold cross validation
 
     Returns:
-        mean(float): the mean for this distributions
-        h(float): +/- deviation for this distribution
+        float: the mean for this distributions
+        float: +/- deviation for this confidence interval
 
     Example:
         >>> # get 90% confidence interval
@@ -83,8 +83,8 @@ def confidence(data, confidence=0.95):
             the desired mean and deviation for
 
     Returns:
-        mean(float): the mean for this distributions
-        h(float): +/- deviation for this distribution
+        float: the mean for this distributions
+        float: +/- deviation for this confidence interval
 
     Example:
         >>> # get 95% confidence interval
@@ -102,7 +102,7 @@ def batch(data_list, batch_size):
     be truncated if the data_list length isn't a multiple of batch_size
     """
     data_list = iter(data_list)
-    return list(iter( lambda: list(islice(data_list, size)), ()) )
+    return list(iter( lambda: list(islice(data_list, batch_size)), ()) )
 
 def batches_to_list(batches):
     """turns nested iterables into a single list"""
