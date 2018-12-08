@@ -340,7 +340,7 @@ class BaseBlock(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + '({})'.format( self.EXTANT[name] )
+        name = name + '{}'.format( self.EXTANT[name] )
 
 
         # checking if notes were provided for this block
