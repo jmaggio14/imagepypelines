@@ -10,14 +10,166 @@ from __future__ import print_function
 import imagepypelines as ip
 VERBOSE = False
 
-@ip.unit_test
+@ip.util.unit_test
+def test_dataset_mnist():
+    import imagepypelines as ip
+    import numpy as np
+
+    TRAINING_LENGTH = 60000
+    TESTING_LENGTH = 10000
+    NUM_LABELS = 10
+
+
+    dataset = ip.ml.Mnist()
+
+    train_data,train_labels = dataset.get_train()
+    test_data,test_labels = dataset.get_test()
+
+    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+    assert sorted(sorted_train_labels) == sorted_train_labels
+    assert sorted(sorted_test_labels) == sorted_test_labels
+
+    assert len(np.unique(train_labels)) == NUM_LABELS
+
+
+    return True
+
+
+
+@ip.util.unit_test
+def test_dataset_mnist_fashion():
+    import imagepypelines as ip
+    import numpy as np
+
+    TRAINING_LENGTH = 60000
+    TESTING_LENGTH = 10000
+    NUM_LABELS = 10
+
+    dataset = ip.ml.MnistFashion()
+
+    train_data,train_labels = dataset.get_train()
+    test_data,test_labels = dataset.get_test()
+
+    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+    assert sorted(sorted_train_labels) == sorted_train_labels
+    assert sorted(sorted_test_labels) == sorted_test_labels
+
+    assert len(np.unique(train_labels)) == NUM_LABELS
+
+
+    return True
+
+@ip.util.unit_test
+def test_dataset_cifar10():
+    import imagepypelines as ip
+    import numpy as np
+
+    TRAINING_LENGTH = 50000
+    TESTING_LENGTH = 10000
+    NUM_LABELS = 10
+
+    dataset = ip.ml.Cifar10()
+
+    train_data,train_labels = dataset.get_train()
+    test_data,test_labels = dataset.get_test()
+
+    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+    assert sorted(sorted_train_labels) == sorted_train_labels
+    assert sorted(sorted_test_labels) == sorted_test_labels
+
+    assert len(np.unique(train_labels)) == NUM_LABELS
+
+
+    return True
+
+
+@ip.util.unit_test
+def test_dataset_cifar100_fine():
+    import imagepypelines as ip
+    import numpy as np
+
+    TRAINING_LENGTH = 50000
+    TESTING_LENGTH = 10000
+    NUM_LABELS = 100
+
+    dataset = ip.ml.Cifar100('fine')
+
+    train_data,train_labels = dataset.get_train()
+    test_data,test_labels = dataset.get_test()
+
+    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+    assert sorted(sorted_train_labels) == sorted_train_labels
+    assert sorted(sorted_test_labels) == sorted_test_labels
+
+    assert len(np.unique(train_labels)) == NUM_LABELS
+
+    return True
+
+@ip.util.unit_test
+def test_dataset_cifar100_coarse():
+    import imagepypelines as ip
+    import numpy as np
+
+    TRAINING_LENGTH = 50000
+    TESTING_LENGTH = 10000
+    NUM_LABELS = 20
+
+    dataset = ip.ml.Cifar100('coarse')
+
+    train_data,train_labels = dataset.get_train()
+    test_data,test_labels = dataset.get_test()
+
+    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
+    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
+    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
+    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
+
+    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
+    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
+
+    assert sorted(sorted_train_labels) == sorted_train_labels
+    assert sorted(sorted_test_labels) == sorted_test_labels
+
+    assert len(np.unique(train_labels)) == NUM_LABELS
+
+    return True
+
+@ip.util.unit_test
 def test_multilayer_perceptron():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.MultilayerPerceptron(neurons=512,
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.MultilayerPerceptron(neurons=512,
                                             validation=.1,
                                             num_hidden=3,
                                             dropout=.35,
@@ -30,7 +182,7 @@ def test_multilayer_perceptron():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -49,14 +201,14 @@ def test_multilayer_perceptron():
     return False
 
 
-@ip.unit_test
+@ip.util.unit_test
 def test_linear_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.LinearSvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.LinearSvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_linear_svm')
@@ -64,7 +216,7 @@ def test_linear_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -83,14 +235,14 @@ def test_linear_svm():
     return False
 
 
-@ip.unit_test
+@ip.util.unit_test
 def test_rbf_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.RbfSvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.RbfSvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_rbf_svm')
@@ -98,7 +250,7 @@ def test_rbf_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -117,14 +269,14 @@ def test_rbf_svm():
     return False
 
 
-@ip.unit_test
+@ip.util.unit_test
 def test_poly_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.PolySvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.PolySvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_poly_svm')
@@ -132,7 +284,7 @@ def test_poly_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -150,14 +302,14 @@ def test_poly_svm():
         return True
     return False
 
-@ip.unit_test
+@ip.util.unit_test
 def test_sigmoid_svm():
     import imagepypelines as ip
 
-    resizer = ip.Resizer(32,32) #28x28
-    features = ip.PretrainedNetwork() # generate features
-    pca = ip.PCA(256)
-    classifier = ip.SigmoidSvm()
+    resizer = ip.blocks.Resizer(32,32) #28x28
+    features = ip.blocks.PretrainedNetwork() # generate features
+    pca = ip.blocks.PCA(256)
+    classifier = ip.blocks.SigmoidSvm()
 
     pipeline = ip.Pipeline([resizer,features,pca,classifier])
     pipeline.rename('test_sigmoid_svm')
@@ -165,7 +317,7 @@ def test_sigmoid_svm():
 
     # for this example, we'll need to load the standard Mnist handwriting dataset
     # built into `imagepypelines`
-    mnist = ip.Mnist()
+    mnist = ip.ml.Mnist()
     train_data, train_labels = mnist.get_train()
     test_data, ground_truth = mnist.get_test()
 
@@ -185,10 +337,7 @@ def test_sigmoid_svm():
 
 
 
-
-
-
-@ip.unit_test
+@ip.util.unit_test
 def test_all_pretrained_networks():
     import imagepypelines as ip
     import cv2
@@ -201,8 +350,8 @@ def test_all_pretrained_networks():
     for i,network_name in enumerate(ip.PRETRAINED_NETWORKS):
         try:
             printer.info("testing {}...".format(network_name))
-            resizer = ip.Resizer(80,80)
-            pretrained = ip.PretrainedNetwork(network_name)
+            resizer = ip.blocks.Resizer(80,80)
+            pretrained = ip.blocks.PretrainedNetwork(network_name)
 
             pipeline = ip.Pipeline([resizer,pretrained])
             pipeline.process(images)
@@ -217,6 +366,7 @@ def test_all_pretrained_networks():
         except Exception as e:
             printer.error("failure processing ",network_name)
             success.append(False)
+            ip.util.debug(e)
 
     return all(success)
 

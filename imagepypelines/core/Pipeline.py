@@ -12,13 +12,13 @@ from .BaseBlock import ArrayType
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
 import collections
-from .. import util
+from .util.timing import Timer
 import pickle
 import collections
 import numpy as np
 
 def restore_from_file(filename):
-    """restores a pipeline from a pickled state
+    """restores a pipeline from a pickled file
 
     Args:
         filename(str): the pipeline filename
@@ -26,11 +26,26 @@ def restore_from_file(filename):
     Returns:
         pipeline(ip.Pipeline): the loaded pipeline
     """
-    pipeline = pickle.loads(filename)
+    with open(filename,'rb') as f:
+        raw = f.read()
+    return restore_from_pickle(raw)
+
+
+def restore_from_pickle(pickled_pipeline):
+    """restores a pipeline from a pickled state
+
+    Args:
+        pickled_pipeline(pickled obj): a pickled pipeline
+
+    Returns:
+        pipeline(ip.Pipeline): the loaded pipeline
+    """
+    pipeline = pickle.loads(pickled_pipeline)
     for b in pipeline.blocks:
         b.restore_from_serialization()
 
     return pipeline
+
 
 def get_type(datum):
     """retrieves the block data type of the input datum"""
@@ -145,15 +160,29 @@ class Pipeline(object):
 
         verifies all input-output shapes are compatible with each other
 
-        type comparison for blocks is complicated
+        Developer Note:
+            this function could use a full refactor, especially with regards
+            to printouts when an error is raised - Jeff
+
+            Type comparison between Blocks is complicated and I suspect more
+            bugs are still yet to be discovered.
 
         Raises:
             CrackedPipeline: if there is a input-output shape
                 incompatability
             TypeError: if 'data' isn't a list or tuple
             RuntimeError: if more than one block in the pipeline has the same
-                name
+                name, or not all objects in the block list are BaseBlock
+                subclasses
         """
+
+        # assert that every element in the blocks list is a BaseBlock subclass
+        if not all(isinstance(b,BaseBlock) for b in self.blocks):
+            error_msg = \
+               "all elements of the pipeline must be subclasses of ip.BaseBlock"
+            self.printer.error(error_msg)
+            raise RuntimeError(error_msg)
+
 
         # make sure data is a list
         if not isinstance(data,list):
@@ -178,6 +207,8 @@ class Pipeline(object):
                 try:
                     output_type = block.io_map.output_given_input(input_type)
                     broken_pair = False
+                    type_chain[str(block)] = output_type
+                    input_type = output_type
 
                 except IncompatibleTypes as e:
                     msg = []
@@ -198,8 +229,6 @@ class Pipeline(object):
                     print(msg)
                     broken_pair = True
 
-                type_chain[str(block)] = output_type
-                input_type = output_type
 
                 if broken_pair:
                     error_msg = "{} - acceptable types are {}".format(block.name,
@@ -230,7 +259,7 @@ class Pipeline(object):
         return self.step_data,self.step_labels
 
     def _run_block(self,block,data,labels=None):
-        t = util.Timer()
+        t = Timer()
 
         # processing data using the block
         processed,labels = block._pipeline_process(data,labels)
@@ -249,10 +278,10 @@ class Pipeline(object):
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
-                if b.trained:
-                    continue
-                err_msg = "requires training, but hasn't yet been trained"
-                self.printer.error("{}: ".format(b.name), err_msg)
+                if not b.trained:
+                    err_msg = "requires training, but hasn't yet been trained"
+                    self.printer.error("{}: ".format(b.name), err_msg)
+                    
             raise RuntimeError("you must run Pipeline.train before processing")
 
         # validate pipeline integrity
@@ -292,7 +321,7 @@ class Pipeline(object):
         self.step_labels = labels
 
     def _train(self,data,labels=None):
-        t = util.Timer()
+        t = Timer()
         for b in self.blocks:
             self.printer.debug("training {}...".format(b.name))
             b._pipeline_train(self.step_data,self.step_labels)
@@ -353,6 +382,8 @@ class Pipeline(object):
 
         if filename is None:
             filename = self.name + '.pck'
+
+        self.printer.info("saving {} to {}".format(self,filename))
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
 
@@ -428,5 +459,4 @@ class Pipeline(object):
 
     def __iter__(self):
         """generator to return all blocks in the pipeline"""
-        for b in self.blocks:
-            yield b
+        return (b for b in self.blocks)

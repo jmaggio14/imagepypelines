@@ -4,8 +4,9 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .printout import error as iperror
-import cv2
+from .Printer import error as iperror
+from .imports import import_opencv
+cv2 = import_opencv()
 
 class CameraReadError(ValueError):
     """Exception raised when the CameraCapture device is unable to

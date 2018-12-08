@@ -10,7 +10,7 @@ from __future__ import print_function
 import imagepypelines as ip
 VERBOSE = False
 # constants.py
-@ip.unit_test
+@ip.util.unit_test
 def test_constants():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_constants')
@@ -27,11 +27,11 @@ def test_constants():
 
 
 # coordinates.py
-@ip.unit_test
+@ip.util.unit_test
 def test_centroid():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_centroid')
-    tester = ip.Tester(ip.centroid,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.centroid,verbose=VERBOSE)
     lenna = ip.lenna()
     desired_output = (256,256)
     if not tester.exact_test(desired_output, lenna):
@@ -40,11 +40,11 @@ def test_centroid():
     return True
 
 
-@ip.unit_test
+@ip.util.unit_test
 def test_frame_size():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_frame_size')
-    tester = ip.Tester(ip.frame_size,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.frame_size,verbose=VERBOSE)
     lenna = ip.lenna()
     desired_output = tuple( lenna.shape[:2] )
     if not tester.exact_test(desired_output,lenna):
@@ -53,11 +53,11 @@ def test_frame_size():
     return True
 
 
-@ip.unit_test
+@ip.util.unit_test
 def test_dimensions():
     import imagepypelines as ip
     testing_printer = ip.get_printer('test_dimensions')
-    tester = ip.Tester(ip.dimensions,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.dimensions,verbose=VERBOSE)
     lenna = ip.lenna()
     # tuple test
     desired_output = (lenna.shape[0],lenna.shape[1],lenna.shape[2],lenna.dtype)
@@ -78,12 +78,12 @@ def test_dimensions():
 
 
 # img_tools.py
-@ip.unit_test
+@ip.util.unit_test
 def test_normalize_and_bin():
     import imagepypelines as ip
     import numpy as np
     testing_printer = ip.get_printer('test_normalize_and_bin')
-    tester = ip.Tester(ip.normalize_and_bin,verbose=VERBOSE)
+    tester = ip.util.Tester(ip.normalize_and_bin,verbose=VERBOSE)
     lenna = ip.lenna()
     desired_output = np.uint8(lenna.astype(np.float32) / lenna.max() * 255)
     if not tester.exact_test(desired_output,lenna):
@@ -93,17 +93,17 @@ def test_normalize_and_bin():
 
 
 
-@ip.unit_test
+@ip.util.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
     import imagepypelines as ip
     import numpy as np
     testing_printer = ip.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = ip.ImageLoader()
-    resizer = ip.Resizer(to_height=512,to_width=512)
-    color2gray = ip.Color2Gray('rgb')
-    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.blocks.ImageLoader()
+    resizer = ip.blocks.Resizer(to_height=512,to_width=512)
+    color2gray = ip.blocks.Color2Gray('rgb')
+    orb = ip.blocks.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
     pipeline = ip.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
@@ -123,17 +123,17 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         return False
 
 
-@ip.unit_test
+@ip.util.unit_test
 def test_imageloader_resizer_color2gray_orb_pipeline():
     import imagepypelines as ip
     import numpy as np
     testing_printer = ip.get_printer('test_imageloader_resizer_color2gray_orb_pipeline')
     ORB_KEYPOINTS = 10
     # creating all the blocks for the pipeline
-    image_loader = ip.ImageLoader()
-    resizer = ip.Resizer(to_height=512,to_width=512)
-    color2gray = ip.Color2Gray('rgb')
-    orb = ip.Orb(n_keypoints=ORB_KEYPOINTS)
+    image_loader = ip.blocks.ImageLoader()
+    resizer = ip.blocks.Resizer(to_height=512,to_width=512)
+    color2gray = ip.blocks.Color2Gray('rgb')
+    orb = ip.blocks.Orb(n_keypoints=ORB_KEYPOINTS)
 
     # creating pipeline with all blocks
     pipeline = ip.Pipeline(name='test_imageloader_resizer_color2gray_orb_pipeline',
@@ -153,160 +153,32 @@ def test_imageloader_resizer_color2gray_orb_pipeline():
         return False
 
 
-@ip.unit_test
-def test_dataset_mnist():
-    import imagepypelines as ip
-    import numpy as np
-
-    TRAINING_LENGTH = 60000
-    TESTING_LENGTH = 10000
-    NUM_LABELS = 10
-
-
-    dataset = ip.Mnist()
-
-    train_data,train_labels = dataset.get_train()
-    test_data,test_labels = dataset.get_test()
-
-    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
-    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
-    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
-    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
-
-    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
-    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
-
-    assert sorted(sorted_train_labels) == sorted_train_labels
-    assert sorted(sorted_test_labels) == sorted_test_labels
-
-    assert len(np.unique(train_labels)) == NUM_LABELS
-
-
-    return True
+# @ip.util.unit_test
+# def test_caching():
+#     import imagepypelines as ip
+#     import numpy as np
+#     import cv2
+#
+#     # save an object to the builtin 'tmp' cache
+#     a = "this is an example object" # this is an example object
+#     fname = ip.tmp.save(a)
+#     restored_a = ip.tmp.restore(fname)
+#     assert a == restored_a, "failed to restore '{}'".format(a)
+#
+#     #---- make an example cache -----
+#     ip.make_cache('example_cache')
+#     # we can now access the cache via ip.example_cache
+#     assert hasattr(ip,'example_cache'),"failed to create example_cache"
+#
+#
+#     # get a unique cache filename, so you can do your own saving process
+#     fname = ip.example_cache.filename('example-image.png')
+#     img = np.random.rand(512,512,3)
+#     cv2.imwrite(fname,img)
 
 
 
-@ip.unit_test
-def test_dataset_mnist_fashion():
-    import imagepypelines as ip
-    import numpy as np
-
-    TRAINING_LENGTH = 60000
-    TESTING_LENGTH = 10000
-    NUM_LABELS = 10
-
-    dataset = ip.MnistFashion()
-
-    train_data,train_labels = dataset.get_train()
-    test_data,test_labels = dataset.get_test()
-
-    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
-    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
-    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
-    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
-
-    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
-    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
-
-    assert sorted(sorted_train_labels) == sorted_train_labels
-    assert sorted(sorted_test_labels) == sorted_test_labels
-
-    assert len(np.unique(train_labels)) == NUM_LABELS
-
-
-    return True
-
-@ip.unit_test
-def test_dataset_cifar10():
-    import imagepypelines as ip
-    import numpy as np
-
-    TRAINING_LENGTH = 50000
-    TESTING_LENGTH = 10000
-    NUM_LABELS = 10
-
-    dataset = ip.Cifar10()
-
-    train_data,train_labels = dataset.get_train()
-    test_data,test_labels = dataset.get_test()
-
-    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
-    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
-    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
-    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
-
-    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
-    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
-
-    assert sorted(sorted_train_labels) == sorted_train_labels
-    assert sorted(sorted_test_labels) == sorted_test_labels
-
-    assert len(np.unique(train_labels)) == NUM_LABELS
-
-
-    return True
-
-
-@ip.unit_test
-def test_dataset_cifar100_fine():
-    import imagepypelines as ip
-    import numpy as np
-
-    TRAINING_LENGTH = 50000
-    TESTING_LENGTH = 10000
-    NUM_LABELS = 100
-
-    dataset = ip.Cifar100('fine')
-
-    train_data,train_labels = dataset.get_train()
-    test_data,test_labels = dataset.get_test()
-
-    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
-    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
-    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
-    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
-
-    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
-    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
-
-    assert sorted(sorted_train_labels) == sorted_train_labels
-    assert sorted(sorted_test_labels) == sorted_test_labels
-
-    assert len(np.unique(train_labels)) == NUM_LABELS
-
-    return True
-
-@ip.unit_test
-def test_dataset_cifar100_coarse():
-    import imagepypelines as ip
-    import numpy as np
-
-    TRAINING_LENGTH = 50000
-    TESTING_LENGTH = 10000
-    NUM_LABELS = 20
-
-    dataset = ip.Cifar100('coarse')
-
-    train_data,train_labels = dataset.get_train()
-    test_data,test_labels = dataset.get_test()
-
-    assert len(train_data) == TRAINING_LENGTH,"train data is incorrect length"
-    assert len(train_labels) == TRAINING_LENGTH,"train labels is incorrect length"
-    assert len(test_data) == TESTING_LENGTH,"test data is incorrect length"
-    assert len(test_labels) == TESTING_LENGTH,"test labels is incorrect length"
-
-    sorted_train_data,sorted_train_labels = dataset.get_sorted_train()
-    sorted_test_data,sorted_test_labels = dataset.get_sorted_test()
-
-    assert sorted(sorted_train_labels) == sorted_train_labels
-    assert sorted(sorted_test_labels) == sorted_test_labels
-
-    assert len(np.unique(train_labels)) == NUM_LABELS
-
-    return True
-
-
-# @ip.unit_test
+# @ip.util.unit_test
 # def test_thresholding_otsu():
 #     import imagepypelines as ip
 #     import os

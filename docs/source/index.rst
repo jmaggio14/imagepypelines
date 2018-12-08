@@ -6,12 +6,43 @@
 Welcome to imagepypelines's documentation!
 ==========================================
 
+
+The `imagepypelines` package consists of high level tools which simplify the
+construction of complex image processing, computer vision, and machine learning
+frameworks. During our time in the undergrad Imaging Science program at the
+Rochester Institute of Technology, we found ourselves writing and rewriting
+code for things as simple as data type casting and displaying imagery when
+debugging, causing more trouble than mathematical or logical bugs themselves!
+Our hope is that the plug-and-play, easily-customizable nature of
+`imagepypelines` will allow all data-driven scientists to construct complex
+frameworks quickly for prototyping applications,
+and serve as a valuable educational tool for those interested in learning
+traditionally tough subject matter in a friendly environment!
+
+README
+=========
+
+.. toctree::
+    :maxdepth: 2
+
+    readme
+
+
+Tutorials
+=========
+
+.. toctree::
+    :maxdepth: 2
+
+    tutorials
+
+Read More
+=========
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   readme
-   tutorials
    modules
 
 

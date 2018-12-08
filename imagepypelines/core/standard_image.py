@@ -12,7 +12,8 @@ from types import FunctionType
 # JM: replaced SimpleNamespace import with this for python2 compatability
 SimpleNamespace = type('SimpleNamespace', (object,), {})
 
-import cv2
+from .imports import import_opencv
+cv2 = import_opencv()
 import numpy as np
 from functools import partial
 import pkg_resources

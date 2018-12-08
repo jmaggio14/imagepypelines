@@ -6,8 +6,9 @@ Subpackages
 
 .. toctree::
 
-    imagepypelines.core.builtin_blocks
-    imagepypelines.core.builtin_pipelines
+    imagepypelines.core.io
+    imagepypelines.core.ml
+    imagepypelines.core.util
 
 Submodules
 ----------
@@ -44,22 +45,6 @@ imagepypelines.core.Printer module
     :undoc-members:
     :show-inheritance:
 
-imagepypelines.core.Summarizer module
--------------------------------------
-
-.. automodule:: imagepypelines.core.Summarizer
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imagepypelines.core.Tester module
----------------------------------
-
-.. automodule:: imagepypelines.core.Tester
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 imagepypelines.core.Viewer module
 ---------------------------------
 
@@ -68,42 +53,26 @@ imagepypelines.core.Viewer module
     :undoc-members:
     :show-inheritance:
 
+imagepypelines.core.block\_subclasses module
+--------------------------------------------
+
+.. automodule:: imagepypelines.core.block_subclasses
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imagepypelines.core.caching module
+----------------------------------
+
+.. automodule:: imagepypelines.core.caching
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 imagepypelines.core.constants module
 ------------------------------------
 
 .. automodule:: imagepypelines.core.constants
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imagepypelines.core.coordinates module
---------------------------------------
-
-.. automodule:: imagepypelines.core.coordinates
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imagepypelines.core.datasets module
------------------------------------
-
-.. automodule:: imagepypelines.core.datasets
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imagepypelines.core.debug module
---------------------------------
-
-.. automodule:: imagepypelines.core.debug
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imagepypelines.core.development\_decorators module
---------------------------------------------------
-
-.. automodule:: imagepypelines.core.development_decorators
     :members:
     :undoc-members:
     :show-inheritance:
@@ -140,10 +109,18 @@ imagepypelines.core.ml\_tools module
     :undoc-members:
     :show-inheritance:
 
-imagepypelines.core.printout module
------------------------------------
+imagepypelines.core.pipeline\_tools module
+------------------------------------------
 
-.. automodule:: imagepypelines.core.printout
+.. automodule:: imagepypelines.core.pipeline_tools
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+imagepypelines.core.quick\_types module
+---------------------------------------
+
+.. automodule:: imagepypelines.core.quick_types
     :members:
     :undoc-members:
     :show-inheritance:
