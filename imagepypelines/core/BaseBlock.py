@@ -340,7 +340,7 @@ class BaseBlock(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + '({})'.format( self.EXTANT[name] )
+        name = name + '{}'.format( self.EXTANT[name] )
 
 
         # checking if notes were provided for this block
@@ -374,7 +374,7 @@ class BaseBlock(object):
             ip.Block : object reference to this block (self)
 
         Note:
-            unlike naming your pipeline using the `name` parameter in
+            unlike naming your block using the `name` parameter in
             instantiation, imagepypelines will not guarantee that this name
             will be unique. It is considered the user's responsibility to
             determine that this will not cause problems in your pipeline.
