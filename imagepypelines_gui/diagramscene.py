@@ -118,6 +118,38 @@ class DiagramScene(QtGui.QGraphicsScene):
             self.removeItem(item)
             item.deleteLater()
 
+    def deleteItem(self):
+        for item in self.selectedItems():
+            if isinstance(item, DiagramItem):
+                item.removeArrows()
+            self.removeItem(item)
+
+    def bringToFront(self):
+        if not self.selectedItems():
+            return
+
+        selectedItem = self.selectedItems()[0]
+        overlapItems = selectedItem.collidingItems()
+
+        zValue = 0
+        for item in overlapItems:
+            if (item.zValue() >= zValue and isinstance(item, DiagramItem)):
+                zValue = item.zValue() + 0.1
+        selectedItem.setZValue(zValue)
+
+    def sendToBack(self):
+        if not self.selectedItems():
+            return
+
+        selectedItem = self.selectedItems()[0]
+        overlapItems = selectedItem.collidingItems()
+
+        zValue = 0
+        for item in overlapItems:
+            if (item.zValue() <= zValue and isinstance(item, DiagramItem)):
+                zValue = item.zValue() - 0.1
+        selectedItem.setZValue(zValue)
+
     def mousePressEvent(self, mouseEvent):
         if (mouseEvent.button() != QtCore.Qt.LeftButton):
             return

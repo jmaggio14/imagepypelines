@@ -15,7 +15,7 @@ class QtBlock(DiagramItem):
 
         self.textItem = DiagramTextItem(parent, scene)
         self.textItem.setPlainText(block.name)
-
+        
     def setPos(self, y, x):
         print(y,x)
         super(QtBlock, self).setPos(y, x)

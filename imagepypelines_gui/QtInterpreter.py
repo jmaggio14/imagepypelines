@@ -109,8 +109,8 @@ class QtInterpreter(QtGui.QPlainTextEdit):
         print('history', self.history_idx, self.history)
 
     def output(self, text, color='black'):
-        self.verticalScrollBar().setValue(self.verticalScrollBar().maximum())
         self.insertPlainText(text)
+        self.verticalScrollBar().setValue(self.verticalScrollBar().maximum())
         # self.insertHtml('<p style="color:{color}">{text}</p>'.format(color=color, text=text))
 
     def rewrite_line(self, new_line):
