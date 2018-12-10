@@ -7,6 +7,7 @@
 import numpy as np
 from itertools import islice, chain
 import scipy.stats
+import random
 
 def accuracy(predicted,ground_truth):
     """calculates accuracy given ground truth and predicted labels"""
@@ -107,3 +108,31 @@ def batch(data_list, batch_size):
 def batches_to_list(batches):
     """turns nested iterables into a single list"""
     return list( chain(*batches) )
+
+
+def sample(data,labels,sample_fraction=.05):
+    """function to randomly select data and corresponding labels using a uniform
+    distribution
+
+    Example:
+        >>> import random
+        >>> random.seed(0)
+        >>> import imagepypelines as ip
+        >>> data =   [0,1,2,3,4,5,6,7,8,9]
+        >>> labels = ['0','1','2','3','4','5','6','7','8','9']
+        >>>
+        >>> small_data, small_labels = ip.sample(data,labels,.2)
+        >>> small_data
+        [6, 9]
+        >>> small_labels
+        ['6', '9']
+
+    """
+    assert len(data) == len(labels), \
+        "you must have an equal number of data and labels"
+
+    combined = list( zip(data, labels) )
+    n = int(sample_fraction * len(data))
+    sampled = random.sample(combined,n)
+    sampled_data, sampled_labels = zip(*sampled)
+    return list(sampled_data), list(sampled_labels)
