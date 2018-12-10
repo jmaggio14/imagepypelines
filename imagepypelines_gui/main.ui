@@ -61,11 +61,27 @@
           </attribute>
          </widget>
          <widget class="QWidget" name="pipelineBox">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>500</width>
+            <height>157</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>Builtin Pipelines</string>
           </attribute>
          </widget>
          <widget class="QWidget" name="backgroundBox">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>500</width>
+            <height>157</height>
+           </rect>
+          </property>
           <attribute name="label">
            <string>Backgrounds</string>
           </attribute>
@@ -131,6 +147,8 @@
     <property name="title">
      <string>Pipeline</string>
     </property>
+    <addaction name="actionLoad_Pipeline"/>
+    <addaction name="actionSave_Pipeline"/>
     <addaction name="actionNewPipeline"/>
     <addaction name="actionDelete_Pipeline"/>
     <addaction name="separator"/>
@@ -167,6 +185,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionLoad_Pipeline"/>
+   <addaction name="actionSave_Pipeline"/>
    <addaction name="actionNewPipeline"/>
    <addaction name="actionDelete_Pipeline"/>
    <addaction name="actionRun"/>
@@ -322,6 +342,30 @@
    </property>
    <property name="text">
     <string>Debug</string>
+   </property>
+  </action>
+  <action name="actionLoad_Pipeline">
+   <property name="icon">
+    <iconset resource="diagramscene.qrc">
+     <normaloff>:/images/load.png</normaloff>:/images/load.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Pipeline</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave_Pipeline">
+   <property name="icon">
+    <iconset resource="diagramscene.qrc">
+     <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Pipeline</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

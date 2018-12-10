@@ -95,7 +95,6 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
 
     def addPipeline(self, pipeline=None):
         print(pipeline)
-        #Simport pdb;pdb.set_trace()
 
         self.pipelines.append(QtPipeline(self.menuBlock, pipeline=pipeline))
         self.pipelines[-1].itemInserted.connect(self.itemInserted)
@@ -118,6 +117,19 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         new_idx = max(min(new_idx, len(self.pipelines)), 0)   # clip to range
         self.graphicsView.setScene(self.pipelines[new_idx])
         self.active_scene = self.pipelines[new_idx]
+
+    def loadPipelineFromFile(self):
+        # TODO set opening directory to something useful / make it a setting
+        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Pipeline File', 'c:\\', 'Pipeline Files (*.pck);;All Files (*)')
+        if filename:
+            pipeline = ip.restore_from_file(filename)
+            self.addPipeline(pipeline)
+
+    def savePipelineToFile(self):
+        # TODO set opening directory to something useful / make it a setting
+        filename = QtGui.QFileDialog.getSaveFileName(self, 'Save Pipeline File', 'c:\\', 'Pipeline Files (*.pck);;All Files (*)')
+        if filename:
+            self.active_scene.save(filename)
 
     def backgroundButtonGroupClicked(self, button):
         buttons = self.backgroundButtonGroup.buttons()
@@ -142,7 +154,7 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.active_scene.update()
         self.graphicsView.update()
 
-    def buttonGroupClicked(self, id):
+    def blockButtonGroupClicked(self, id):
         buttons = self.blockButtonGroup.buttons()
         for button in buttons:
             if self.blockButtonGroup.button(id) != button:
@@ -248,7 +260,7 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
 
         self.blockButtonGroup = QtGui.QButtonGroup()
         self.blockButtonGroup.setExclusive(False)
-        self.blockButtonGroup.buttonClicked[int].connect(self.buttonGroupClicked)
+        self.blockButtonGroup.buttonClicked[int].connect(self.blockButtonGroupClicked)
 
         self.blockCellWidgets = []
         for name, block in ip.builtin_blocks.__dict__.items():
@@ -289,8 +301,6 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         layout.setColumnStretch(5, 10)
 
         self.pipelineButtonGroup = QtGui.QButtonGroup()
-        self.pipelineButtonGroup.setExclusive(False)
-        self.pipelineButtonGroup.buttonClicked[int].connect(self.buttonGroupClicked)
 
         self.pipelineCellWidgets = []
         self.builtinpipeline_funcs = []
@@ -350,8 +360,7 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
     def connectActions(self):
         # TODO add "save pipeline" action
         # TODO add "load pipeline" action
-        # TODO add "switch pipeline" action
-        # TODO add "debug pipeline" aation
+        # TODO add "debug pipeline" action
         self.actionAbout.triggered.connect(self.about)
         
         self.actionExit.triggered.connect(self.close)
@@ -361,6 +370,8 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
 
         self.actionNewPipeline.triggered.connect(self.addPipeline)
         self.actionRun.triggered.connect(self.active_scene.process)
+        self.actionLoad_Pipeline.triggered.connect(self.loadPipelineFromFile)
+        self.actionSave_Pipeline.triggered.connect(self.savePipelineToFile)
 
         self.pipelineSelector.currentIndexChanged[int].connect(self.switchPipeline)
 
@@ -465,15 +476,21 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
 
         return widget
 
+    # TODO add user cache directory settings
+    # TODO add user interpreter setup script location setting
+    # TODO add 
     def saveSettings(self):
         settings = QtCore.QSettings('imagepypelines', 'imagepypelines GUI')
 
-        settings.setValue('window_geometry', list(self.getGeometry()))
+        geo = self.frameGeometry()
+        settings.setValue('window_geometry', [geo.x(), geo.y(), geo.width(), geo.height()])
 
     def loadSettings(self):
         settings = QtCore.QSettings('imagepypelines', 'imagepypelines GUI')
 
-        self.setGeometry(*settings.value('window_geometry'))
+        geo = settings.value('window_geometry', type=int)
+        if geo:
+            self.setGeometry(*geo)
 
     # def createCellWidget(self, text, diagramType):
     #     item = DiagramItem(diagramType, self.itemMenu)
@@ -531,4 +548,3 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
 
     #     return QtGui.QIcon(pixmap)
 
-# TODO add settings?

@@ -41,6 +41,9 @@ class QtPipeline(DiagramScene):
         self.setSceneRect(QtCore.QRectF(0, 0, 5000, 5000))
         self.display_pipeline()
 
+    def save(self, filename):
+        self._pipeline.save(filename)
+
     def process(self):
         self._pipeline.process()
 
