@@ -63,6 +63,7 @@ from diagramscene import DiagramScene
 
 sys.path.insert(0, '..')   # ND FIXME: Hack for testing
 import imagepypelines as ip
+import cv2
 
 from QtPipeline import QtPipeline
 from QtBlock import QtBlock
@@ -82,15 +83,15 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.connectActions()
 
         # TODO: decide on programmable interface / items to pass here
-        import cv2
-        self.interpwidget.locals.update({'ip':ip, 'np':np, 'numpy':np, 'cv':cv2, 'qscene':self.active_scene})
-
-        # TODO figure out how to display switch to pipeline (drop down box?)
+        self.interpwidget.locals.update({'ip':ip, 'np':np, 'numpy':np, 'cv':cv2, 
+            'addPipeline':self.addPipeline, 'current_qpipeline':self.active_scene,
+            'switchPipeline':self.switchPipeline})
 
     def addPipeline(self, pipeline=None):
+        print(pipeline)
+        #Simport pdb;pdb.set_trace()
 
         self.pipelines.append(QtPipeline(self.menuBlock, pipeline=pipeline))
-        self.pipelines[-1].setSceneRect(QtCore.QRectF(0, 0, 5000, 5000))
         self.pipelines[-1].itemInserted.connect(self.itemInserted)
         self.pipelines[-1].textInserted.connect(self.textInserted)
         self.pipelines[-1].itemSelected.connect(self.itemSelected)
@@ -136,9 +137,9 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.graphicsView.update()
 
     def buttonGroupClicked(self, id):
-        buttons = self.buttonGroup.buttons()
+        buttons = self.blockButtonGroup.buttons()
         for button in buttons:
-            if self.buttonGroup.button(id) != button:
+            if self.blockButtonGroup.button(id) != button:
                 button.setChecked(False)
 
         if id == self.InsertTextButton:
@@ -155,10 +156,10 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
     def itemInserted(self, item):
         self.pointerTypeGroup.button(DiagramScene.MoveItem).setChecked(True)
         self.scene.setMode(self.pointerTypeGroup.checkedId())
-        self.buttonGroup.button(item.diagramType).setChecked(False)
+        self.blockButtonGroup.button(item.diagramType).setChecked(False)
 
     def textInserted(self, item):
-        self.buttonGroup.button(self.InsertTextButton).setChecked(False)
+        self.blockButtonGroup.button(self.InsertTextButton).setChecked(False)
         self.scene.setMode(self.pointerTypeGroup.checkedId())
 
     def currentFontChanged(self, font):
@@ -231,22 +232,23 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
                                 "Here's our github website: <a href='https://github.com/jmaggio14/imagepypelines'>https://github.com/jmaggio14/imagepypelines</a>")
 
     def createToolBox(self):
-        # TODO add builtin pipelines to the tool box
         # TODO add user-defined widgets to the tool box
         # TODO add user-defined pipelines to the tool box
 
+        #### built-in widgets
         layout = QtGui.QGridLayout()
         layout.setRowStretch(2, 10)
         layout.setColumnStretch(5, 10)
 
-        self.buttonGroup = QtGui.QButtonGroup()
-        self.buttonGroup.setExclusive(False)
-        self.buttonGroup.buttonClicked[int].connect(self.buttonGroupClicked)
+        self.blockButtonGroup = QtGui.QButtonGroup()
+        self.blockButtonGroup.setExclusive(False)
+        self.blockButtonGroup.buttonClicked[int].connect(self.buttonGroupClicked)
 
         self.blockCellWidgets = []
         for name, block in ip.builtin_blocks.__dict__.items():
             try:
-                print(name,block)
+                # print(name,block)
+                # TODO split this out to a function?
                 if issubclass(block, ip.core.BaseBlock):
                     n = len(self.blockCellWidgets)  # convert to 2d idx where shape is (2, M)
                     block.name = name
@@ -257,7 +259,7 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
                     button.setIcon(icon)
                     button.setIconSize(QtCore.QSize(50, 50))
                     button.setCheckable(True)
-                    self.buttonGroup.addButton(button, n)
+                    self.blockButtonGroup.addButton(button, n)
 
                     innerlayout = QtGui.QGridLayout()
                     innerlayout.addWidget(button, 0, 0, QtCore.Qt.AlignHCenter)
@@ -270,10 +272,55 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
                 
                     layout.addWidget(widget, int(n//2), int(n%2))
             except TypeError as e:
-                print(e)
+                #print(e)
                 pass   # comes from the non-block non-class items in ip.builtin_blocks
 
         self.blockBox.setLayout(layout)
+
+        #### built-in pipelines
+        layout = QtGui.QGridLayout()
+        layout.setRowStretch(2, 10)
+        layout.setColumnStretch(5, 10)
+
+        self.pipelineButtonGroup = QtGui.QButtonGroup()
+        self.pipelineButtonGroup.setExclusive(False)
+        self.pipelineButtonGroup.buttonClicked[int].connect(self.buttonGroupClicked)
+
+        self.pipelineCellWidgets = []
+        self.builtinpipeline_funcs = []
+        for name in ip.builtin_pipelines.__all__:
+            try:
+                # this appears to a function which constructs a pipeline.
+                pipeline_func = ip.builtin_pipelines.__dict__[name]
+                print(pipeline_func)
+                # TODO split this out to a function?
+                
+                n = len(self.pipelineCellWidgets)  # convert to 2d idx where shape is (2, M)
+                # pipeline.name = name
+                icon = QtGui.QIcon(':/images/addpipeline.png')   # TODO pipeline icon
+
+                button = QtGui.QToolButton()
+                button.setIcon(icon)
+                button.setIconSize(QtCore.QSize(50, 50))
+                # self.builtinpipeline_funcs.append()
+                button.pressed.connect(lambda pipeline_func=pipeline_func:self.addPipeline(pipeline_func()))
+                self.blockButtonGroup.addButton(button, n)
+
+                innerlayout = QtGui.QGridLayout()
+                innerlayout.addWidget(button, 0, 0, QtCore.Qt.AlignHCenter)
+                innerlayout.addWidget(QtGui.QLabel(name), 1, 0, QtCore.Qt.AlignCenter)
+
+                widget = QtGui.QWidget()
+                widget.setLayout(innerlayout)
+
+                self.pipelineCellWidgets.append(widget)
+            
+                layout.addWidget(widget, int(n//2), int(n%2))
+            except TypeError as e:
+                print(e)
+                pass   # comes from the non-block non-class items in ip.builtin_blocks
+
+        self.pipelineBox.setLayout(layout)
 
         self.backgroundButtonGroup = QtGui.QButtonGroup()
         self.backgroundButtonGroup.buttonClicked.connect(
@@ -295,7 +342,6 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.toolBox.setMinimumWidth(backgroundLayout.sizeHint().width())
 
     def connectActions(self):
-        # TODO add "run pipeline" action
         # TODO add "save pipeline" action
         # TODO add "load pipeline" action
         # TODO add "switch pipeline" action
@@ -308,6 +354,7 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.actionMove_to_Front.triggered.connect(self.active_scene.bringToFront)
 
         self.actionNewPipeline.triggered.connect(self.addPipeline)
+        self.actionRun.triggered.connect(self.active_scene.process)
 
         self.pipelineSelector.currentIndexChanged[int].connect(self.switchPipeline)
 
@@ -420,7 +467,7 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
     #     button.setIcon(icon)
     #     button.setIconSize(QtCore.QSize(50, 50))
     #     button.setCheckable(True)
-    #     self.buttonGroup.addButton(button, diagramType)
+    #     self.blockButtonGroup.addButton(button, diagramType)
 
     #     layout = QtGui.QGridLayout()
     #     layout.addWidget(button, 0, 0, QtCore.Qt.AlignHCenter)
@@ -469,29 +516,3 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
     #     return QtGui.QIcon(pixmap)
 
 # TODO add settings?
-
-
-def main():
-    app = QtGui.QApplication(sys.argv)
-
-    mainWindow = MainWindow()
-    mainWindow.setGeometry(100, 100, 800, 500)
-    mainWindow.show()
-
-
-
-    app.aboutToQuit.connect(mainWindow.shutdown_kernel)
-
-    # TODO: add logo
-    mainWindow.setWindowIcon(QtGui.QIcon(':/images/ImSciUtils-Favicon.png'))
-    print(app)
-    sys.exit(app.exec_())
-
-if __name__ == '__main__':
-
-    import sys
-    import time
-    main()
-
-    # test code
-    # qscene.display_pipeline(ip.SimpleImageClassifier())

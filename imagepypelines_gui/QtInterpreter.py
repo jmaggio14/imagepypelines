@@ -54,6 +54,11 @@ class QtInterpreter(QtGui.QPlainTextEdit):
         # hook for macros, shortcuts, etc
         return command
 
+    def spawn(self, command):
+        # hook for executing in another thread; may need sanitization for
+        # objects to allow pickling
+        return self.run_command(command)
+
     def run_command(self, command):
         command = self.preprocess(command)
 

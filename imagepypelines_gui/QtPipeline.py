@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, '..')
-import imagepypelines as iu
+import imagepypelines as ip
 
 from PyQt4 import QtGui, QtCore
 import numpy as np
@@ -26,23 +26,37 @@ exp = make_example_pipeline
 class QtPipeline(DiagramScene):
     def __init__(self, itemMenu, parent=None, pipeline=None):
         super(QtPipeline, self).__init__(itemMenu)
-        self._pipeline = pipeline
+        
+        if pipeline:
+            self._pipeline = pipeline
+        else:
+            self._pipeline = ip.Pipeline()
 
-    def display_pipeline(self, pipeline):
+        self.name = self._pipeline.name
+
+        self.setSceneRect(QtCore.QRectF(0, 0, 5000, 5000))
+        self.display_pipeline()
+
+    def process(self):
+        self._pipeline.process()
+
+    def display_pipeline(self):
         for item in self.items():
             self.removeItem(item)
 
         position = np.asarray(
             [self.sceneRect().width()/2, self.sceneRect().height()/2])
 
+        print(position)
+
         blockitems = []
-        for block in pipeline.blocks:
+        for block in self._pipeline.blocks:
             qblock = self.make_block(block)
             qblock.setPos(*position)
 
             blockitems.append(qblock)
 
-            position += [300, 0]
+            position += [300, 0]   # TODO make this robust
 
         for i in range(len(blockitems) - 1):
             self.connect_blocks(blockitems[i], blockitems[i+1])

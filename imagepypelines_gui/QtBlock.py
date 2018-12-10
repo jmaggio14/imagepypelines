@@ -12,10 +12,11 @@ class QtBlock(DiagramItem):
         super(QtBlock, self).__init__(diagramType, contextMenu, parent, scene)
 
         self._block = block
+        self.name= self._block.name
 
         self.textItem = DiagramTextItem(parent, scene)
         self.textItem.setPlainText(block.name)
-        
+
     def setPos(self, y, x):
         print(y,x)
         super(QtBlock, self).setPos(y, x)

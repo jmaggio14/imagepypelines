@@ -76,7 +76,6 @@ class DiagramScene(QtGui.QGraphicsScene):
         self.myTextColor = QtCore.Qt.black
         self.myLineColor = QtCore.Qt.black
         self.myFont = QtGui.QFont()
-        print('diagramscene constructor')
 
     def setLineColor(self, color):
         self.myLineColor = color

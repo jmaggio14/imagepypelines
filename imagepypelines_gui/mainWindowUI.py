@@ -36,6 +36,12 @@ class Ui_ImagePypelines(object):
         self.horizontalLayout.setMargin(0)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.toolBox = QtGui.QToolBox(self.graphicswidget)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.toolBox.sizePolicy().hasHeightForWidth())
+        self.toolBox.setSizePolicy(sizePolicy)
+        self.toolBox.setMinimumSize(QtCore.QSize(200, 0))
         self.toolBox.setObjectName(_fromUtf8("toolBox"))
         self.blockBox = QtGui.QWidget()
         self.blockBox.setGeometry(QtCore.QRect(0, 0, 500, 157))
@@ -175,7 +181,7 @@ class Ui_ImagePypelines(object):
         self.toolBar.addSeparator()
 
         self.retranslateUi(ImagePypelines)
-        self.toolBox.setCurrentIndex(0)
+        self.toolBox.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(ImagePypelines)
 
     def retranslateUi(self, ImagePypelines):
