@@ -31,9 +31,6 @@ from .format import format_dict
 from .Summarizer import Summarizer
 from .Summarizer import summary
 
-# Tester.py
-from .Tester import Tester
-
 # timing.py
 from .timing import function_timer
 from .timing import function_timer_ms
