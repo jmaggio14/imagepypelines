@@ -74,6 +74,8 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
     def __init__(self):
         super(MainWindow, self).__init__()
 
+        self.loadSettings()
+
         self.setupUi(self)   # inherited from converted ui file
 
         self.pipelines = []
@@ -86,6 +88,10 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.interpwidget.locals.update({'ip':ip, 'np':np, 'numpy':np, 'cv':cv2, 
             'addPipeline':self.addPipeline, 'current_qpipeline':self.active_scene,
             'switchPipeline':self.switchPipeline})
+
+    def closeEvent(self, event):
+        self.saveSettings()
+        super(MainWindow, self).closeEvent(event)
 
     def addPipeline(self, pipeline=None):
         print(pipeline)
@@ -458,6 +464,16 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         widget.setLayout(layout)
 
         return widget
+
+    def saveSettings(self):
+        settings = QtCore.QSettings('imagepypelines', 'imagepypelines GUI')
+
+        settings.setValue('window_geometry', list(self.getGeometry()))
+
+    def loadSettings(self):
+        settings = QtCore.QSettings('imagepypelines', 'imagepypelines GUI')
+
+        self.setGeometry(*settings.value('window_geometry'))
 
     # def createCellWidget(self, text, diagramType):
     #     item = DiagramItem(diagramType, self.itemMenu)

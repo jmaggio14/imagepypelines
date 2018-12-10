@@ -24,6 +24,10 @@ exp = make_example_pipeline
 
 
 class QtPipeline(DiagramScene):
+
+    blockInserted = QtCore.pyqtSignal(QtGui.QGraphicsItem)
+    blocksConnected = QtCore.pyqtSignal(QtGui.QGraphicsItem, QtGui.QGraphicsItem)
+
     def __init__(self, itemMenu, parent=None, pipeline=None):
         super(QtPipeline, self).__init__(itemMenu)
         

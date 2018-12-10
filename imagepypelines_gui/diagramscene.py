@@ -64,6 +64,7 @@ class DiagramScene(QtGui.QGraphicsScene):
 
     itemSelected = QtCore.pyqtSignal(QtGui.QGraphicsItem)
 
+
     def __init__(self, itemMenu, parent=None):
         super(DiagramScene, self).__init__(parent)
 
