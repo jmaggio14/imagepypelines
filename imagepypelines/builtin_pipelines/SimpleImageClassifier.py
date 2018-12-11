@@ -79,8 +79,6 @@ def SimpleImageClassifier(neurons=512,
         >>> predictions = classifier.process(x_test)
         >>> # print the accuracy
         >>> accuracy = ip.accuracy(predictions,ground_truth)
-        >>> print('accuracy: {}%'.format(accuracy * 100) )
-
     """
     loader = blocks.ImageLoader()
     features = blocks.PretrainedNetwork(network=pretrained_network,

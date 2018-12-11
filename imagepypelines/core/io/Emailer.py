@@ -22,7 +22,7 @@ class Emailer(object):
     Example:
         >>> import os
         >>> with Emailer(os.environ['GMAIL_USER'], [os.environ['GMAIL_USER']]) as emailer:
-        ...     emailer.body('this is a test:\n\n\n\nblah -nate')
+        ...     emailer.body('this is a test -nate')
         ...     emailer.send(os.environ['GMAIL_PASS'])
         >>>
     """

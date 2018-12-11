@@ -124,8 +124,8 @@ def color_text(text, color="r", background=None, attrs=None):
     ...                                color = 'red',
     ...                                background = 'yellow',
     ...                                attrs = ['bold','underline'])
-    >>> warning_msg
-    '\x1b[4m\x1b[1m\x1b[43m\x1b[31mthis is a warning\x1b[0m'
+    >>> print(warning_msg)
+    \x1b[4m\x1b[1m\x1b[43m\x1b[31mthis is a warning\x1b[0m
     """
     assert isinstance(text, str), "'text' must be a string"
     assert isinstance(color, str), "color' must be a string"

@@ -125,11 +125,12 @@ def print_args(func):
         ... def func_with_lots_of_args(a, b, c=3, d=4):
         ...    pass
         >>> func_with_lots_of_args(1, b=2, c='not 3')
-        >>> # produces the following in the terminal
-        (  positional  ) a : 1
-        (   keyword    ) b : 2
-        (   keyword    ) c : not 3
-        (  positional  ) d : 4
+        (func_with_lots_of_args)[    INFO    ] running 'func_with_lots_of_args' with the following args:
+            positional    | a : 1
+            keyword       | b : 2
+            keyword       | c : not 3
+            default       | d : 4
+            
     """
 
     def _print_args(*args,**kwargs):
