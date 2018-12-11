@@ -2,6 +2,11 @@ sudo: false
 
 language: python
 
+os:
+  - windows
+  - linux
+  - osx
+
 python:
   - 2.7
   - 3.4
