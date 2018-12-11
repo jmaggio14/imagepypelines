@@ -119,7 +119,6 @@ from .standard_image import standard_image_filenames
 from .standard_image import standard_image_gen
 from .standard_image import list_standard_images
 from .standard_image import standard_images
-from .standard_image import standard_image_input
 from .standard_image import funcs
 
 import sys

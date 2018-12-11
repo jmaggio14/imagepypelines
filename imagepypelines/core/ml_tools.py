@@ -29,7 +29,7 @@ def confidence_99(data):
 
     Example:
         >>> # get 99% confidence interval
-        >>> mean, deviation = confidence_99(accuracies)
+        >>> mean, error = confidence_99(accuracies)
     """
     return confidence(data,.99)
 
@@ -48,7 +48,7 @@ def confidence_95(data):
 
     Example:
         >>> # get 95% confidence interval
-        >>> mean, deviation = confidence_95(accuracies)
+        >>> mean, error = confidence_95(accuracies)
     """
     return confidence(data,.95)
 
@@ -67,7 +67,7 @@ def confidence_90(data):
 
     Example:
         >>> # get 90% confidence interval
-        >>> mean, deviation = confidence_90(accuracies)
+        >>> mean, error = confidence_90(accuracies)
     """
     return confidence(data,.90)
 
@@ -89,7 +89,7 @@ def confidence(data, confidence=0.95):
 
     Example:
         >>> # get 95% confidence interval
-        >>> mean, deviation = confidence(accuracies,.95)
+        >>> mean, error = confidence(accuracies,.95)
     """
     data = np.asarray(data,dtype=np.float32)
     m, se = np.mean(a), scipy.stats.sem(a)

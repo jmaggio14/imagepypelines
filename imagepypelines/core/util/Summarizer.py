@@ -32,6 +32,8 @@ class Summarizer(dict):
 
     Example:
         >>> import imagepypelines as ip
+        >>> import numpy as np
+        >>> np.random.seed(0)
         >>> a = np.random.rand(512,512)
         >>> a = ip.util.Summarizer(a)
         >>> print(a)
