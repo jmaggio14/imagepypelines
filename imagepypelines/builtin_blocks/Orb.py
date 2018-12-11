@@ -31,13 +31,15 @@ class Orb(SimpleBlock):
 
     Example:
         >>> import imagepypelines as ip
-        >>> orb = ip.ORB(n_keypoints=120)
+        >>> orb = ip.blocks.Orb(n_keypoints=120)
         >>>
         >>> pipeline = ip.Pipeline()
         >>> pipeline.add( orb )
         >>>
         >>> lenna_gray = ip.lenna_gray()
         >>> lenna_gray_descriptors = pipeline.process( [lenna_gray] )[0]
+        >>> ip.util.summary(lenna_gray_descriptors)
+        [ARRAY SUMMARY | shape: (120, 32) | size: 3840 | max: 255.0 | min: 0.0 | mean: 131.493 | dtype: float64]
     """
     def __init__(self,n_keypoints=100):
         if not isinstance(n_keypoints,(int,float)):
@@ -77,9 +79,9 @@ class Orb(SimpleBlock):
             mask = np.ones(zeros.shape).astype(int)
             des = np.ma.masked_array(zeros,mask)
         elif des.shape[0] < self.n_keypoints:
-            zeros = np.zeros( (self.n_keypoints-des.shape,32) )
-            mask = np.vstack( ( np.zeros((des.shape,32)),np.ones(zeros.shape)) )
-            des = np.ma.masked_array( np.vstack(des,zeros),mask )
+            zeros = np.zeros( (self.n_keypoints-des.shape[0],32) )
+            mask = np.vstack( ( np.zeros((des.shape[0],32)),np.ones(zeros.shape)) )
+            des = np.ma.masked_array( np.vstack((des,zeros)),mask )
 
         # JM: DEBUG #TEMP
         # for some reason, maximum number of features set in ORB doesn't
