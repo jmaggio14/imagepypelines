@@ -103,6 +103,48 @@ class TestBatchBlock(object):
         assert np.all( np.around(proc1,1) == 1.0 )
         assert np.all( np.around(proc2,1) == 1.0 )
 
+
+class TestTfBlock(object):
+    """
+    Create a test BatchBlock and run some data through it
+    """
+    def test_block_creation_and_processing(self):
+        import imagepypelines as ip
+        import tensorflow as tf
+        # create a test block via object inheritance
+        class AddOne(ip.TfBlock):
+            def __init__(self):
+                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+                super(AddOne,self).__init__(io_map)
+
+            def setup_graph(self,data_placeholder,label_placeholder):
+                one = tf.constant(1.0,tf.float32)
+                processed = tf.math.add(data_placeholder,one,name='processed')
+                return processed.name
+
+        block = AddOne()
+        input_datum = np.zeros( (512,) )
+        data = [input_datum,input_datum]
+        labels = [0,1]
+        (proc1,proc2),lbls = block._pipeline_process(data,labels)
+
+        assert labels == lbls, "label fetching failed"
+        assert np.all( np.around(proc1,1) == 1.0 )
+        assert np.all( np.around(proc2,1) == 1.0 )
+
+        # try to save and restore the pipeline
+        pipeline = ip.Pipeline([block])
+        pipeline_hash = hash(pipeline)
+
+        restored_pipeline = ip.restore_from_file( pipeline.save() )
+        assert hash(restored_pipeline) == pipeline_hash
+
+
+# =================== caching.py ===================
+# JM: @Ryan, I'm leaving this blank for you to populate
+
+
+
 # =================== constants.py ===================
 def test_constants():
     import imagepypelines as ip
