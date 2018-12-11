@@ -22,7 +22,7 @@ script:
   # license enforcer
   - python enforcer.py
   # running tests and code coverage report
-  - py.test --doctest-module
+  - py.test --doctest-module --ignore=setup.py
   - py.test --cov=imagepypelines tests/
   # Building documentation
   - sphinx-apidoc -o docs/source imagepypelines
