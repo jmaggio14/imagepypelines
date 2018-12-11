@@ -3,7 +3,7 @@ sudo: false
 language: python
 
 os:
-  - windows
+  # - windows # Python not supported yet for travis windows builds 12/11/2018
   - linux
   - osx
 
