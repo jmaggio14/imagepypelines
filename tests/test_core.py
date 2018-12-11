@@ -152,3 +152,49 @@ def test_constants():
     assert 'NUMPY_TYPES' in dir(ip)
     assert 'IMAGE_EXTENSIONS' in dir(ip)
     assert 'PRETRAINED_NETWORKS' in dir(ip)
+
+
+# =================== error_checking.py ===================
+# TODO - JM
+
+# =================== Exceptions.py ===================
+# TODO - JM
+
+# =================== filters.py ===================
+# TODO - JM
+
+# =================== img_tools.py ===================
+# TODO - JM
+
+# =================== imports.py ===================
+class TestImports(object):
+    def test_opencv(self):
+        import imagepypelines as ip
+        import cv2
+        assert cv2 == ip.import_opencv()
+
+    def test_tensorflow(self):
+        import imagepypelines as ip
+        import tensorflow as tf
+        assert tf == ip.import_tensorflow()
+
+# =================== ml_tools.py ===================
+# TODO - JM
+
+# =================== pipeline_tools.py ===================
+# TODO - JM
+
+# =================== Pipeline.py ===================
+# TODO - JM
+
+# =================== Printer.py ===================
+# TODO - JM
+
+# =================== quick_types.py ===================
+# TODO - JM
+
+# =================== standard_image.py ===================
+# TODO - JM
+
+# =================== Viewer.py ===================
+# TODO - JM
