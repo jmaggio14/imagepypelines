@@ -81,7 +81,7 @@ def human_test(func):
     Example:
         >>> import imagepypelines as ip
         >>> @ip.util.human_test # no parantheses are needed!
-        >>> def function_that_displays_something():
+        ... def function_that_displays_something():
         ...    pass
         >>>
     """
@@ -122,7 +122,7 @@ def print_args(func):
     Example:
         >>> import imagepypelines as ip
         >>> @ip.util.print_args
-        >>> def func_with_lots_of_args(a, b, c=3, d=4):
+        ... def func_with_lots_of_args(a, b, c=3, d=4):
         ...    pass
         >>> func_with_lots_of_args(1, b=2, c='not 3')
         >>> # produces the following in the terminal
