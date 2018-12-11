@@ -29,18 +29,6 @@ class Orb(SimpleBlock):
         printer(ip.Printer): printer object for this block,
             registered to 'name'
 
-    Example:
-        >>> import imagepypelines as ip
-        >>> ip.disable_printout_colors()
-        >>> orb = ip.blocks.Orb(n_keypoints=120)
-        >>>
-        >>> pipeline = ip.Pipeline()
-        >>> pipeline.add( orb )
-        (    Pipeline1    )[    INFO    ] adding block Orb1 to the pipeline
-        >>> lenna_gray = ip.lenna_gray()
-        >>> lenna_gray_descriptors = pipeline.process( [lenna_gray] )[0]
-        >>> ip.util.summary(lenna_gray_descriptors)
-        [ARRAY SUMMARY | shape: (120, 32) | size: 3840 | max: 255.0 | min: 0.0 | mean: 131.493 | dtype: float64]
     """
     def __init__(self,n_keypoints=100):
         if not isinstance(n_keypoints,(int,float)):
