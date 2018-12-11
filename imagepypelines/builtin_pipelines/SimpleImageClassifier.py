@@ -27,7 +27,7 @@ def SimpleImageClassifier(neurons=512,
     blocks.
     This pipeline will take in image filenames and return the predicted label
 
-    ImageLoader --> PretrainedNetwork --> PCA --> MultilayerPerceptron
+    PretrainedNetwork --> PCA --> MultilayerPerceptron
 
     Args:
         neurons(int): the number of neurons in each of the
@@ -64,23 +64,7 @@ def SimpleImageClassifier(neurons=512,
     Returns:
         classifier(ip.Pipeline): a pipeline that will process and classify
             input imagery after training
-
-
-    Example:
-        >>> import imagepypelines as ip
-        >>> classifier = ip.pipelines.SimpleImageClassifier()
-        >>> cifar10 = ip.ml.Cifar10()
-        >>> x_train, y_train = cifar10.get_train()
-        >>> x_test, ground_truth = cifar10.get_test()
-        >>> # get data subsample for the purposes of this example
-        >>> x_train, y_train = ip.sample(x_train, y_train, 0.05)
-        >>> x_test, ground_truth = ip.sample(x_test, ground_truth, 0.05)
-        >>> classifier.train(x_train,y_train)
-        >>> predictions = classifier.process(x_test)
-        >>> # print the accuracy
-        >>> accuracy = ip.accuracy(predictions,ground_truth)
     """
-    loader = blocks.ImageLoader()
     features = blocks.PretrainedNetwork(network=pretrained_network,
                                     pooling_type=pooling_type)
     pca = blocks.PCA(pca_components)
@@ -95,7 +79,7 @@ def SimpleImageClassifier(neurons=512,
                                             validation=validation,
                                             num_epochs=num_epochs,
                                             )
-    pipeline = Pipeline([loader,features,pca,perceptron],
+    pipeline = Pipeline([features,pca,perceptron],
                             name='SimpleImageClassifier')
 
     return pipeline

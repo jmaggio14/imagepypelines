@@ -17,14 +17,6 @@ class Emailer(object):
     """
     Goal is to build an object which can be used to automatically send emails
     after a test or run completes.
-    simplicity trumps functionality here, we mostly want it to be easy to use
-
-    Example:
-        >>> import os
-        >>> with Emailer(os.environ['GMAIL_USER'], [os.environ['GMAIL_USER']]) as emailer:
-        ...     emailer.body('this is a test -nate')
-        ...     emailer.send(os.environ['GMAIL_PASS'])
-        >>>
     """
 
     def __init__(self,

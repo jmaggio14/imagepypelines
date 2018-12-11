@@ -35,7 +35,7 @@ class Orb(SimpleBlock):
         >>>
         >>> pipeline = ip.Pipeline()
         >>> pipeline.add( orb )
-        >>>
+        (    Pipeline1    )[    INFO    ] adding block Orb1 to the pipeline
         >>> lenna_gray = ip.lenna_gray()
         >>> lenna_gray_descriptors = pipeline.process( [lenna_gray] )[0]
         >>> ip.util.summary(lenna_gray_descriptors)

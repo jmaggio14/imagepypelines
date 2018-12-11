@@ -28,8 +28,13 @@ def confidence_99(data):
         float: +/- deviation for this confidence interval
 
     Example:
+        >>> import numpy as np
+        >>> import imagepypelines as ip
+        >>> # create sample test 'accuracies' from a normal distribution
+        >>> # mean accuracy is 75%, std is 10% for this example
+        >>> accuracies = np.random.normal(.75, .1, 1000)
         >>> # get 99% confidence interval
-        >>> mean, error = confidence_99(accuracies)
+        >>> mean, error = ip.confidence_99(accuracies)
     """
     return confidence(data,.99)
 
@@ -47,8 +52,13 @@ def confidence_95(data):
         float: +/- deviation for this confidence interval
 
     Example:
+        >>> import numpy as np
+        >>> import imagepypelines as ip
+        >>> # create sample test 'accuracies' from a normal distribution
+        >>> # mean accuracy is 75%, std is 10% for this example
+        >>> accuracies = np.random.normal(.75, .1, 1000)
         >>> # get 95% confidence interval
-        >>> mean, error = confidence_95(accuracies)
+        >>> mean, error = ip.confidence_95(accuracies)
     """
     return confidence(data,.95)
 
@@ -66,8 +76,13 @@ def confidence_90(data):
         float: +/- deviation for this confidence interval
 
     Example:
+        >>> import numpy as np
+        >>> import imagepypelines as ip
+        >>> # create sample test 'accuracies' from a normal distribution
+        >>> # mean accuracy is 75%, std is 10% for this example
+        >>> accuracies = np.random.normal(.75, .1, 1000)
         >>> # get 90% confidence interval
-        >>> mean, error = confidence_90(accuracies)
+        >>> mean, error = ip.confidence_90(accuracies)
     """
     return confidence(data,.90)
 
@@ -88,11 +103,16 @@ def confidence(data, confidence=0.95):
         float: +/- deviation for this confidence interval
 
     Example:
+        >>> import numpy as np
+        >>> import imagepypelines as ip
+        >>> # create sample test 'accuracies' from a normal distribution
+        >>> # mean accuracy is 75%, std is 10% for this example
+        >>> accuracies = np.random.normal(.75, .1, 1000)
         >>> # get 95% confidence interval
-        >>> mean, error = confidence(accuracies,.95)
+        >>> mean, error = ip.confidence(accuracies,.95)
     """
     data = np.asarray(data,dtype=np.float32)
-    m, se = np.mean(a), scipy.stats.sem(a)
+    m, se = np.mean(data), scipy.stats.sem(data)
     h = se * scipy.stats.t.ppf((1 + confidence) / 2.0, len(data)-1)
     return m, h
 
