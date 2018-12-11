@@ -31,6 +31,7 @@ class Orb(SimpleBlock):
 
     Example:
         >>> import imagepypelines as ip
+        >>> ip.disable_printout_colors()
         >>> orb = ip.blocks.Orb(n_keypoints=120)
         >>>
         >>> pipeline = ip.Pipeline()
