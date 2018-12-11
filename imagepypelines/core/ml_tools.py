@@ -142,11 +142,6 @@ def sample(data,labels,sample_fraction=.05):
         >>> labels = ['0','1','2','3','4','5','6','7','8','9']
         >>>
         >>> small_data, small_labels = ip.sample(data,labels,.2)
-        >>> small_data
-        [6, 9]
-        >>> small_labels
-        ['6', '9']
-
     """
     assert len(data) == len(labels), \
         "you must have an equal number of data and labels"
