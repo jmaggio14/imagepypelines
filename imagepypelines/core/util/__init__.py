@@ -24,9 +24,6 @@ from .development_decorators import human_test
 from .development_decorators import print_args
 from .development_decorators import unit_test
 
-# format.py
-from .format import format_dict
-
 # Sumarizer.py
 from .Summarizer import Summarizer
 from .Summarizer import summary

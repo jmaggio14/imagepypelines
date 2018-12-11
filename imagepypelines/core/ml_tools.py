@@ -118,7 +118,7 @@ def sample(data,labels,sample_fraction=.05):
         >>> import random
         >>> random.seed(0)
         >>> import imagepypelines as ip
-        >>> data =   [0,1,2,3,4,5,6,7,8,9]
+        >>> data = [0,1,2,3,4,5,6,7,8,9]
         >>> labels = ['0','1','2','3','4','5','6','7','8','9']
         >>>
         >>> small_data, small_labels = ip.sample(data,labels,.2)

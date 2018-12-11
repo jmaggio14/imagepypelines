@@ -24,9 +24,9 @@ def deprecated(depreciation_msg):
     Example:
         >>> import imagepypelines as ip
         >>> @ip.util.deprecated("custom depreciation message here")
-        >>> def new_feature():
+        ... def old_feature():
         ...    pass
-
+        >>>
     """
     def _deprecated(func):
         def __deprecated(*args,**kwargs):
@@ -49,8 +49,9 @@ def experimental(experimental_msg=None):
     Example:
         >>> import imagepypelines as ip
         >>> @ip.util.experimental("optional message - you can leave blank")
-        >>> def new_feature():
-        ...    do_something()
+        ... def new_feature():
+        ...    pass
+        >>>
 
     """
     create_message = False
@@ -81,8 +82,8 @@ def human_test(func):
         >>> import imagepypelines as ip
         >>> @ip.util.human_test # no parantheses are needed!
         >>> def function_that_displays_something():
-        ...    do_something()
-
+        ...    pass
+        >>>
     """
     query_string = "did the test for '{}' succeed? {Y}es? {N}o?\n".format(func.__name__,
                                                                     Y=colored('Y',attrs=['bold']),

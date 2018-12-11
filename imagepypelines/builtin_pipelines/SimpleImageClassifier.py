@@ -72,10 +72,11 @@ def SimpleImageClassifier(neurons=512,
         >>> cifar10 = ip.ml.Cifar10()
         >>> x_train, y_train = cifar10.get_train()
         >>> x_test, ground_truth = cifar10.get_test()
-        >>>
-        >>> classifier.train(x_train,y_train
+        >>> # get data subsample for the purposes of this example
+        >>> x_train, y_train = ip.sample(x_train, y_train, 0.05)
+        >>> x_test, ground_truth = ip.sample(x_test, ground_truth, 0.05)
+        >>> classifier.train(x_train,y_train)
         >>> predictions = classifier.process(x_test)
-        >>>
         >>> # print the accuracy
         >>> accuracy = ip.accuracy(predictions,ground_truth)
         >>> print('accuracy: {}%'.format(accuracy * 100) )
@@ -97,6 +98,6 @@ def SimpleImageClassifier(neurons=512,
                                             num_epochs=num_epochs,
                                             )
     pipeline = Pipeline([loader,features,pca,perceptron],
-                            name='SimpleImageClassifier').debug()
+                            name='SimpleImageClassifier')
 
     return pipeline

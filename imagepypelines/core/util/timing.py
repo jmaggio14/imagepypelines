@@ -15,11 +15,9 @@ def function_timer(func):
 
     Example:
         >>> @function_timer
-        >>> def sleep_for_one_sec():
+        ... def sleep_for_one_sec():
         ...    time.sleep(1) # sleep for 1 second
         >>>
-        >>> sleep_for_one_sec()
-        (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
     # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
@@ -41,11 +39,9 @@ def function_timer_ms(func):
 
     Example:
         >>> @function_timer
-        >>> def sleep_for_one_sec():
+        ... def sleep_for_one_sec():
         ...    time.sleep(1) #sleep for 1 second
         >>>
-        >>> sleep_for_one_sec()
-        # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
     # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
