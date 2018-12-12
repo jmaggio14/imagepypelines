@@ -2,64 +2,48 @@ sudo: false
 
 language: python
 
+os:
+  # - windows # Python not supported yet for travis windows builds 12/11/2018
+  - linux
+  # - osx # Python not supported yet for travis osx builds 12/11/2018
+
 python:
   - 2.7
   - 3.4
   - 3.5
   - 3.6
-  # - 3.7 # JM: this won't work currently with travis, workaround below
-
-# JM:
-# enabling 3.7 workaround in accordance with this post:
-# https://github.com/travis-ci/travis-ci/issues/9815
-# JM 10/21/18 - comment out python 3.7 as keras/tensorflow don't support it yet
-# matrix:
-#   include:
-#     - python: 3.7
-#       dist: xenial
-#       sudo: true
-
-# ------------------------------------------
 
 install:
-  # ND
+  # imagepypelines Requirements
   - pip install -r requirements.txt
-  - pip install sphinx_bootstrap_theme
   - pip install .
-  - pip install opencv-python #this is no longer in our requirements.txt
-  - pip install tensorflow==1.10.0
-  - pip install m2r
-  - pip install Sphinx sphinx_bootstrap_theme
+  - pip install tensorflow==1.10.0 opencv-python
+  # codecov requirements
+  - pip install Sphinx sphinx_bootstrap_theme m2r
+  # codecov requirements
+  - pip install codecov pytest-cov hypothesis
 
 script:
-  # JM: running license enforcer
+  # license enforcer
   - python enforcer.py
-
-  # JM: separate automated_tests down here::
-  - python test/automated_tests.py --verbose
-
-  # JM: ---------------- Building documentation -------------------------
-  # building *.rst files
+  # running tests and code coverage report
+  - py.test --doctest-module --ignore=setup.py
+  - py.test --cov=imagepypelines tests/
+  # Building documentation
   - sphinx-apidoc -o docs/source imagepypelines
-  # making the website
-  - cd docs && make html # JM: puts html in docs/build/html
-  # copies cname over from source directory
+  - cd docs && make html
   - cp ../CNAME build/html/CNAME
 
-# JM: for github pages setup.
-# target branch defaults to 'gh-pages'
+after_success:
+  - codecov
+
 deploy:
+  # Website Deployment
   - provider: pages
     skip-cleanup: true
-    github-token: $GITHUB_TOKEN  # JM: references environmental variable I setup from github
+    github-token: $GITHUB_TOKEN
     keep-history: false
     local-dir: docs/build/html
     on:
+      python: '3.6'
       branch: master
-
-  # - provider: pypi
-  #   username: jmaggio14
-  #   password:
-  #     secure: "e5FUOY6WkTXVLc2sLWZUK/3lleniZvBVHVT04i94sZKp6O+ERRK8SF06NEz0hv4b4XDtOxr4BTLvoNEHYEXNRq2QyYiCRrK9wilZp1dxYP9vb7FiALT4C/R2j4eaFNGu+XzVcrOiGPOCcVEzt/EBw2d01QFS9Pp13DnMk6NPVmmleeLwLauKARGddt27FCEIqJ4dIizS62J0brNrTXgL6jbjRij3TtA1G9dWGQ9isGaynOjLcmUtR0p5MGaug1efwSxMtVqr9Y6fE5DK12Z5LrtaP+KyuQZvemv3wUGWnU3Vi+bYWkUo5eHePFznSHQuEc3oRs1QGwXTKLNSJeE2CKuSiPD9rbbv4AvJ8sFICnqaFNlV2bvLGMPi5s/1+Gb+X8GnCfh8oRlkBwSWPiHOXeyhgCLjVXnyrhVdTf0pgq3Nfkkk2aItLb5SShavVORJUvGTCrvlaiZoZGOeB6IbU/lf+/SMsxGUoH0zruDLfZVOz92+9EUOs46AkhP7h3pcdACMg3lToHrnSOYC6vvout/g+KV1TABiOrDOGiLzp6dJUzC34uQZHEvsGVipw2IFev0zcpTuPWwv+D19rtNFr0BpPownRZNUTvb/G3lHm1rv2n+o4fERtcnFRh8it4CL14CP73SdpF1KhGk2TyTDcANSCtN4aKthCRN3bbHVnuo="
-  #   on:
-  #     branch: master

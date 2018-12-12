@@ -281,7 +281,7 @@ class Pipeline(object):
                 if not b.trained:
                     err_msg = "requires training, but hasn't yet been trained"
                     self.printer.error("{}: ".format(b.name), err_msg)
-                    
+
             raise RuntimeError("you must run Pipeline.train before processing")
 
         # validate pipeline integrity
@@ -386,6 +386,8 @@ class Pipeline(object):
         self.printer.info("saving {} to {}".format(self,filename))
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
+
+        return filename
 
     def _text_graph(self,type_chains):
         for chain in type_chains:

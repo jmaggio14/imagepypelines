@@ -7,6 +7,7 @@
 #
 import sys
 from .BaseBlock import BaseBlock
+from .imports import import_tensorflow
 from abc import abstractmethod
 
 
@@ -180,7 +181,7 @@ class TfBlock(BatchBlock):
     """
     def __init__(self,*args,**kwargs):
         global tf
-        import tensorflow as tf
+        tf = import_tensorflow()
 
         # inherit from super
         super(TfBlock,self).__init__(*args,**kwargs)
@@ -190,7 +191,7 @@ class TfBlock(BatchBlock):
         self.data_feed_name = "batch_data"
         self.label_feed_name = "labels"
         self.processed = None
-        self.labels = None
+        self.lbls = None
         self.graph, self.sess = self._setup_graph_wrapper()
 
     # JM: called in __init__
@@ -234,7 +235,7 @@ class TfBlock(BatchBlock):
             # then auto append the tensor name of the labels that were fed
             self.fetches.append(ret) # append <processed_tensor_name>
             if len(self.fetches) == 1:
-                self.fetches.append(self.label_feed_name + ':0')
+                self.fetches.append(self.label_feed_name+':0')
 
         return graph, sess
 
@@ -281,8 +282,8 @@ class TfBlock(BatchBlock):
             None
         """
         feed_dict = {
-                        self.data_feed_name:batch_data,
-                        self.label_feed_name:batch_labels
+                        self.data_feed_name+':0':batch_data,
+                        self.label_feed_name+':0':batch_labels
                         }
 
         # process data through the graph and fetch the tensors which
@@ -291,7 +292,7 @@ class TfBlock(BatchBlock):
 
         # unstacking the data and returning a list
         self.processed = [processed[i] for i in range(processed.shape[0])]
-        self.labels = [labels[i] for i in range(labels.shape[0])]
+        self.lbls = [labels[i] for i in range(labels.shape[0])]
 
     def batch_process(self,data):
         """returns the processed data retrieved from the tensorflow graph in
@@ -317,26 +318,30 @@ class TfBlock(BatchBlock):
         Returns:
             labels (list): list of processed labels for the next block
         """
-        return self.labels
+        return self.lbls
 
     def after_process(self):
         """reduces object memory footprint by setting 'processed' and 'labels'
         variables to None"""
         self.processed = None
-        self.labels = None
+        self.lbls = None
 
     def prep_for_serialization(self):
-        # create saver object
-        saver = tf.train.Saver()
+        with tf.Session(graph=self.graph) as sess:
+            init_op = tf.initialize_all_variables()
+            sess.run(init_op)
 
-        # retrieve filename for the metadata cache
-        self.sess_filename = metadata.filename(self.name + '.ckpt')
-        msg = "this object will save pertinent data to {}. Keep this in mind "\
-            + "if you are transferring this pipeline to a different machine"\
-                .format(self.sess_filename)
+            # create saver object
+            saver = tf.train.Saver()
 
-        self.printer.warning(msg)
-        saver.save(self.sess_filename)
+            # retrieve filename for the metadata cache
+            self.sess_filename = metadata.filename(self.name)
+            msg = "this object will save pertinent data to {}. Keep this in mind "\
+                + "if you are transferring this pipeline to a different machine"\
+                    .format(self.sess_filename)
+
+            self.printer.warning(msg)
+            saver.save(sess, self.sess_filename)
 
         # delete GPU bound objects
         del self.sess

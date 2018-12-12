@@ -32,8 +32,10 @@ class Summarizer(dict):
 
     Example:
         >>> import imagepypelines as ip
+        >>> import numpy as np
+        >>> np.random.seed(0)
         >>> a = np.random.rand(512,512)
-        >>> a = ip.Summarizer(a)
+        >>> a = ip.util.Summarizer(a)
         >>> print(a)
         [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
     """

@@ -24,9 +24,9 @@ def deprecated(depreciation_msg):
     Example:
         >>> import imagepypelines as ip
         >>> @ip.util.deprecated("custom depreciation message here")
-        >>> def new_feature():
+        ... def old_feature():
         ...    pass
-
+        >>>
     """
     def _deprecated(func):
         def __deprecated(*args,**kwargs):
@@ -49,8 +49,9 @@ def experimental(experimental_msg=None):
     Example:
         >>> import imagepypelines as ip
         >>> @ip.util.experimental("optional message - you can leave blank")
-        >>> def new_feature():
-        ...    do_something()
+        ... def new_feature():
+        ...    pass
+        >>>
 
     """
     create_message = False
@@ -80,9 +81,9 @@ def human_test(func):
     Example:
         >>> import imagepypelines as ip
         >>> @ip.util.human_test # no parantheses are needed!
-        >>> def function_that_displays_something():
-        ...    do_something()
-
+        ... def function_that_displays_something():
+        ...    pass
+        >>>
     """
     query_string = "did the test for '{}' succeed? {Y}es? {N}o?\n".format(func.__name__,
                                                                     Y=colored('Y',attrs=['bold']),
@@ -117,18 +118,6 @@ def print_args(func):
 
     Args:
         func (callable): function or callable to print input arguments of
-
-    Example:
-        >>> import imagepypelines as ip
-        >>> @ip.util.print_args
-        >>> def func_with_lots_of_args(a, b, c=3, d=4):
-        ...    pass
-        >>> func_with_lots_of_args(1, b=2, c='not 3')
-        >>> # produces the following in the terminal
-        (  positional  ) a : 1
-        (   keyword    ) b : 2
-        (   keyword    ) c : not 3
-        (  positional  ) d : 4
     """
 
     def _print_args(*args,**kwargs):
