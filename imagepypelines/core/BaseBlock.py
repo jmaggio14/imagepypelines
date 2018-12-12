@@ -96,6 +96,7 @@ class ArrayType(object):
         return False
 
     def __hash__(self):
+        # NOTE(Jeff Maggio) - possible issue here because tuples aren't sorted 
         return hash(self.shapes + self.dtypes)
 
 # acceptable types for datums passed between blocks

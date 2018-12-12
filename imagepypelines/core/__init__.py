@@ -119,8 +119,9 @@ from .standard_image import standard_image_filenames
 from .standard_image import standard_image_gen
 from .standard_image import list_standard_images
 from .standard_image import standard_images
-from .standard_image import funcs
+from .standard_image import get_standard_image
 
+from .standard_image import funcs
 import sys
 
 curr_module = sys.modules[__name__]
