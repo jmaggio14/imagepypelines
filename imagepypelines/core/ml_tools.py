@@ -151,7 +151,7 @@ def xysample(data,labels,sample_fraction=.05):
         >>> data = [0,1,2,3,4,5,6,7,8,9]
         >>> labels = ['0','1','2','3','4','5','6','7','8','9']
         >>>
-        >>> small_data, small_labels = ip.sample(data,labels,.2)
+        >>> small_data, small_labels = ip.xysample(data,labels,.2)
     """
     assert isinstance(data,list),"data must be a list"
     assert isinstance(labels,list),"labels must be a list"
