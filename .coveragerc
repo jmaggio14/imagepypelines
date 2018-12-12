@@ -1,0 +1,15 @@
+[report]
+exclude_lines =
+    if self.debug:
+    pragma: no cover
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    def __repr__(self):
+ignore_errors = True
+omit =
+    tests/*
+    docs/*
+    examples/*
+    setup.py
+    enforcer.py
+    check_readme_examples.py
