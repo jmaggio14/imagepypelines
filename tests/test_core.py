@@ -106,7 +106,7 @@ class TestBatchBlock(object):
 
 class TestTfBlock(object):
     """
-    Create a test BatchBlock and run some data through it
+    Create a test TfBlock and run some data through it
     """
     def test_block_creation_and_processing(self):
         import imagepypelines as ip
