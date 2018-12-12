@@ -21,18 +21,19 @@ install:
   # codecov requirements
   - pip install Sphinx sphinx_bootstrap_theme m2r
   # codecov requirements
-  - pip install codecov pytest-cov hypothesis
+  - pip install pytest pytest-cov hypothesis coverage codecov
 
 script:
   # license enforcer
   - python enforcer.py
   # running tests and code coverage report
   - py.test --doctest-module --ignore=setup.py
-  - py.test --cov=imagepypelines tests/
+  - py.test --cov=./imagepypelines tests/
   # Building documentation
   - sphinx-apidoc -o docs/source imagepypelines
   - cd docs && make html
-  - cp ../CNAME build/html/CNAME
+  - cd ..
+  - cp CNAME docs/build/html/CNAME
 
 after_success:
   - codecov
