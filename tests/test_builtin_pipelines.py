@@ -14,8 +14,8 @@ def test_SimpleImageClassifier():
     x_train_base, y_train_base = cifar10.get_train()
     x_test_base, ground_truth_base = cifar10.get_test()
 
-    x_train, y_train = ip.xysample(x_train_base, y_train_base,.05)
-    x_test, ground_truth = ip.xysample(x_test_base, ground_truth_base,.05)
+    x_train, y_train = ip.xysample(x_train_base, y_train_base,.01)
+    x_test, ground_truth = ip.xysample(x_test_base, ground_truth_base,.01)
 
     classifier = ip.pipelines.SimpleImageClassifier().debug()
     classifier.train(x_train,y_train)
