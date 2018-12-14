@@ -101,18 +101,5 @@ for img_name in STANDARD_IMAGES.keys():
 del partial_func
 
 
-def main():
-    """tests functionality by loading and printing out every image"""
-
-    # ND 9/7/18 - FIXME:, this func should be a separate test file
-    # Since it's here I'll add a line showing how my functonality can be used.
-
-    for img in STANDARD_IMAGES:
-        print(get_standard_image(img))
-
-    print(funcs.lenna())
-    print(funcs.roger())
-
-
 if __name__ == "__main__":
     main()

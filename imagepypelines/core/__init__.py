@@ -79,7 +79,8 @@ from .ml_tools import confidence_90
 from .ml_tools import confidence
 from .ml_tools import batch
 from .ml_tools import batches_to_list
-from .ml_tools import sample
+from .ml_tools import xsample
+from .ml_tools import xysample
 
 # pipeline_tools.py
 from .pipeline_tools import quick_block
@@ -119,8 +120,9 @@ from .standard_image import standard_image_filenames
 from .standard_image import standard_image_gen
 from .standard_image import list_standard_images
 from .standard_image import standard_images
-from .standard_image import funcs
+from .standard_image import get_standard_image
 
+from .standard_image import funcs
 import sys
 
 curr_module = sys.modules[__name__]

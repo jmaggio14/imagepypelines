@@ -132,7 +132,7 @@ class TestTfBlock(object):
         assert np.all( np.around(proc1,1) == 1.0 )
         assert np.all( np.around(proc2,1) == 1.0 )
 
-        # TEMP COMMENT 12/11/18 uncomment ASAP 
+        # TEMP COMMENT 12/11/18 uncomment ASAP
         # try to save and restore the pipeline
         # pipeline = ip.Pipeline([block])
         # pipeline_hash = hash(pipeline)
@@ -192,10 +192,58 @@ class TestImports(object):
 # TODO - JM
 
 # =================== quick_types.py ===================
-# TODO - JM
+def test_quick_types():
+    import imagepypelines as ip
+    assert hasattr(ip,'GRAY')
+    assert hasattr(ip,'RGB')
+    assert ip.GRAY == ip.ArrayType([None,None])
+    assert ip.RGB == ip.ArrayType([None,None,3])
 
 # =================== standard_image.py ===================
-# TODO - JM
+# a lot of tests simplY run the function to verify there are no errors
+# they do not all check outputs due to the dynamic nature of the standard image set
+
+class TestStandardImages(object):
+    def test_list_standard_images(self):
+        import imagepypelines as ip
+        ip.list_standard_images()
+
+    def test_standard_image_filenames(self):
+        import imagepypelines as ip
+        import os
+        fnames = ip.standard_image_filenames()
+        assert all(os.path.exists(f) for f in fnames),\
+            "not all standard images filenames exist"
+
+    def test_standard_image_gen(self):
+        import imagepypelines as ip
+        import types
+        std_images = ip.standard_image_gen()
+        assert isinstance(std_images,types.GeneratorType)
+
+    def test_standard_images(self):
+        import imagepypelines as ip
+        std_images = ip.standard_images()
+        assert isinstance(std_images,list)
+
+    def test_get_standard_image(self):
+        import imagepypelines as ip
+        import numpy as np
+        # test known filenames
+        fnames = ip.list_standard_images()
+        assert all(isinstance(ip.get_standard_image(f),np.ndarray) for f in fnames)
+        # test known non-existant filename
+        import uuid
+        fname = uuid.uuid4().hex # create random file string
+        try:
+            ip.get_standard_image(fname)
+        except ValueError:
+            pass
+
+
+
+
+
 
 # =================== Viewer.py ===================
 # TODO - JM

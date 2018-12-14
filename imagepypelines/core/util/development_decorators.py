@@ -9,7 +9,7 @@ from ..Printer import info as ipinfo
 from ..Printer import get_printer
 from ..error_checking import is_numpy_array
 from . import color
-import six
+import sys
 from termcolor import colored
 import inspect
 import collections
@@ -89,7 +89,7 @@ def human_test(func):
                                                                     Y=colored('Y',attrs=['bold']),
                                                                     N=colored('N',attrs=['bold']))
     def _ask_input():
-        if six.PY2:
+        if not (sys.version_info > (3, 0)):
             out = raw_input(query_string)
         else:
             out = input(query_string)

@@ -44,7 +44,6 @@ Example:
 import sys
 import os
 import glob
-import six
 import fnmatch
 
 

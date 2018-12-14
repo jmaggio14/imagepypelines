@@ -129,9 +129,19 @@ def batches_to_list(batches):
     """turns nested iterables into a single list"""
     return list( chain(*batches) )
 
+def xsample(data,sample_fraction):
+    """function to randomly sample list data using a uniform distribution
+    """
+    assert isinstance(data,list),"data must be a list"
+    assert min(0,sample_fraction) == 0 and max(1,sample_fraction) == 1,\
+        "sample_fraction must be a float between 0 and 1"
 
-def sample(data,labels,sample_fraction=.05):
-    """function to randomly select data and corresponding labels using a uniform
+    n = int(sample_fraction * len(data))
+    sampled = random.sample(data,n)
+    return sampled
+
+def xysample(data,labels,sample_fraction=.05):
+    """function to randomly sample list data and corresponding labels using a uniform
     distribution
 
     Example:
@@ -141,10 +151,14 @@ def sample(data,labels,sample_fraction=.05):
         >>> data = [0,1,2,3,4,5,6,7,8,9]
         >>> labels = ['0','1','2','3','4','5','6','7','8','9']
         >>>
-        >>> small_data, small_labels = ip.sample(data,labels,.2)
+        >>> small_data, small_labels = ip.xysample(data,labels,.2)
     """
+    assert isinstance(data,list),"data must be a list"
+    assert isinstance(labels,list),"labels must be a list"
     assert len(data) == len(labels), \
         "you must have an equal number of data and labels"
+    assert min(0,sample_fraction) == 0 and max(1,sample_fraction) == 1,\
+        "sample_fraction must be a float between 0 and 1"
 
     combined = list( zip(data, labels) )
     n = int(sample_fraction * len(data))
