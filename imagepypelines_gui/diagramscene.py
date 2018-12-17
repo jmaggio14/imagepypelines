@@ -64,13 +64,16 @@ class DiagramScene(QtGui.QGraphicsScene):
 
     itemSelected = QtCore.pyqtSignal(QtGui.QGraphicsItem)
 
+    itemsConnected = QtCore.pyqtSignal(QtGui.QGraphicsItem, QtGui.QGraphicsItem)
+
+
 
     def __init__(self, itemMenu, parent=None):
         super(DiagramScene, self).__init__(parent)
 
         self.myItemMenu = itemMenu
         self.myMode = self.MoveItem
-        self.myItemType = DiagramItem.Step
+        self.myItemType = DiagramItem.Block
         self.line = None
         self.textItem = None
         self.myItemColor = QtCore.Qt.white
@@ -212,6 +215,7 @@ class DiagramScene(QtGui.QGraphicsScene):
                 arrow.setZValue(-1000.0)
                 self.addItem(arrow)
                 arrow.updatePosition()
+                self.itemsConnected.emit(startItem, endItem, arrow)
 
         self.line = None
         super(DiagramScene, self).mouseReleaseEvent(mouseEvent)

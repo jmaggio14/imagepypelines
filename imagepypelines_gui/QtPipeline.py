@@ -25,21 +25,44 @@ exp = make_example_pipeline
 
 class QtPipeline(DiagramScene):
 
-    blockInserted = QtCore.pyqtSignal(QtGui.QGraphicsItem)
-    blocksConnected = QtCore.pyqtSignal(QtGui.QGraphicsItem, QtGui.QGraphicsItem)
-
-    def __init__(self, itemMenu, parent=None, pipeline=None):
+    def __init__(self, itemMenu, parent=None, pipeline=None, blocks=[]):
         super(QtPipeline, self).__init__(itemMenu)
+
+        self.itemsConnected.connect(self.on_blocks_connected)
+        self.itemInserted.connect(self.on_block_inserted)
+
+        self._blocks = blocks  # this holds the function references to the items that make up the pipeline
         
-        if pipeline:
+        if isinstance(pipeline, ip.Pipeline):
             self._pipeline = pipeline
         else:
-            self._pipeline = ip.Pipeline()
+            self._pipeline = ip.Pipeline(blocks=self._blocks)
 
         self.name = self._pipeline.name
 
+        # TODO decide this scaling.
         self.setSceneRect(QtCore.QRectF(0, 0, 5000, 5000))
         self.display_pipeline()
+
+    def verify_pipeline(self):
+        pass
+        # verify the pipeline connections
+
+        # turn arrows to green if OK, red if not
+
+        # turn blocks red if they need an input, maybe highlight a field?
+
+    def on_blocks_connected(self, b1, b2):
+        # when two blocks are connected, then insert it into the pipeline (if it belongs)
+
+        # turn the arrow connection yellow   
+        pass
+
+    def on_block_inserted(self, block):
+        if isinstance(block, QtBlock):
+            print('TODO add the block to the pipeline')
+
+        pass    
 
     def save(self, filename):
         self._pipeline.save(filename)
@@ -54,22 +77,22 @@ class QtPipeline(DiagramScene):
         position = np.asarray(
             [self.sceneRect().width()/2, self.sceneRect().height()/2])
 
-        print(position)
+        #print(position)
+        self._blocks = [self.make_block(block=None, itemType=DiagramItem.Start)]
 
-        blockitems = []
         for block in self._pipeline.blocks:
-            qblock = self.make_block(block)
+            qblock = self.make_block(block, DiagramItem.Block)
             qblock.setPos(*position)
 
-            blockitems.append(qblock)
+            self._blocks.append(qblock)
 
             position += [300, 0]   # TODO make this robust
 
-        for i in range(len(blockitems) - 1):
-            self.connect_blocks(blockitems[i], blockitems[i+1])
+        for i in range(len(self._blocks) - 1):
+            self.connect_blocks(self._blocks[i], self._blocks[i+1])
 
-    def make_block(self, block):
-        qblock = QtBlock(block=block, diagramType=DiagramItem.Step, contextMenu=self.myItemMenu, scene=self)
+    def make_block(self, block, itemType):
+        qblock = QtBlock(block=block, contextMenu=self.myItemMenu, scene=self, itemType=itemType)
         qblock.setBrush(self.myItemColor)
 
         qblock.textItem.setFont(self.myFont)
@@ -78,9 +101,9 @@ class QtPipeline(DiagramScene):
         # qblock.textItem.lostFocus.connect(self.editorLostFocus)
         qblock.textItem.selectedChange.connect(self.itemSelected)
         qblock.textItem.setDefaultTextColor(self.myTextColor)
-        self.textInserted.emit(qblock.textItem)
-
+        
         self.addItem(qblock)
+        self.textInserted.emit(qblock.textItem)
         self.itemInserted.emit(qblock)
         
         return qblock
@@ -93,4 +116,6 @@ class QtPipeline(DiagramScene):
         arrow.setZValue(-1000.0)
         self.addItem(arrow)
         arrow.updatePosition()
+        self.itemsConnected.emit(blockitem1, blockitem2)
+
         return arrow

@@ -40,6 +40,7 @@
 
 import math
 import sys
+import os
 
 # This is only needed for Python v2 but is harmless for Python v3.
 import sip
@@ -68,6 +69,8 @@ import cv2
 from QtPipeline import QtPipeline
 from QtBlock import QtBlock
 
+# TODO need a "delete arrow" button thing
+
 class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
     InsertTextButton = 10
 
@@ -85,6 +88,11 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.connectActions()
 
         # TODO: decide on programmable interface / items to pass here
+        # TODO: need some sort of module creator function to wrap this ability
+        # TODO will need a "make_block" function
+        # TODO will need programmtic access to the pipeline / blocks in it
+        #   so that someone can programatically add a data input, for example
+        
         self.interpwidget.locals.update({'ip':ip, 'np':np, 'numpy':np, 'cv':cv2, 
             'addPipeline':self.addPipeline, 'current_qpipeline':self.active_scene,
             'switchPipeline':self.switchPipeline})
@@ -94,7 +102,6 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         super(MainWindow, self).closeEvent(event)
 
     def addPipeline(self, pipeline=None):
-        print(pipeline)
 
         self.pipelines.append(QtPipeline(self.menuBlock, pipeline=pipeline))
         self.pipelines[-1].itemInserted.connect(self.itemInserted)
@@ -112,22 +119,22 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.pipelineSelector.setCurrentIndex(len(self.pipelines)-1)
 
     def switchPipeline(self, new_idx):
-        # TODO figure out if slots/signals need to be connected here
+        # TODO figure out if slots/signals need to be (dis/)connected here - maybe fix the item already added error
         # TODO maybe reset the scrolling?
         new_idx = max(min(new_idx, len(self.pipelines)), 0)   # clip to range
         self.graphicsView.setScene(self.pipelines[new_idx])
         self.active_scene = self.pipelines[new_idx]
 
     def loadPipelineFromFile(self):
-        # TODO set opening directory to something useful / make it a setting
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Pipeline File', 'c:\\', 'Pipeline Files (*.pck);;All Files (*)')
+        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open Pipeline File', self.opendir, 'Pipeline Files (*.pck);;All Files (*)')
+        # TODO figure out the opened directory and remember it
         if filename:
             pipeline = ip.restore_from_file(filename)
             self.addPipeline(pipeline)
 
     def savePipelineToFile(self):
-        # TODO set opening directory to something useful / make it a setting
-        filename = QtGui.QFileDialog.getSaveFileName(self, 'Save Pipeline File', 'c:\\', 'Pipeline Files (*.pck);;All Files (*)')
+        filename = QtGui.QFileDialog.getSaveFileName(self, 'Save Pipeline File', self.opendir, 'Pipeline Files (*.pck);;All Files (*)')
+        # TODO figure out the opened directory and remember it
         if filename:
             self.active_scene.save(filename)
 
@@ -358,8 +365,6 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
         self.toolBox.setMinimumWidth(backgroundLayout.sizeHint().width())
 
     def connectActions(self):
-        # TODO add "save pipeline" action
-        # TODO add "load pipeline" action
         # TODO add "debug pipeline" action
         self.actionAbout.triggered.connect(self.about)
         
@@ -377,7 +382,6 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
 
 
     # def createToolbars(self):
-    #     # TODO add actions to toolbars
     #     self.editToolBar = self.addToolBar("Edit")
     #     self.editToolBar.addAction(self.actionDelete)
     #     self.editToolBar.addAction(self.actionMove_to_Front)
@@ -478,19 +482,20 @@ class MainWindow(QtGui.QMainWindow, Ui_ImagePypelines):
 
     # TODO add user cache directory settings
     # TODO add user interpreter setup script location setting
-    # TODO add 
     def saveSettings(self):
         settings = QtCore.QSettings('imagepypelines', 'imagepypelines GUI')
 
         geo = self.frameGeometry()
         settings.setValue('window_geometry', [geo.x(), geo.y(), geo.width(), geo.height()])
+        settings.setValue('opendir', self.opendir)
 
     def loadSettings(self):
         settings = QtCore.QSettings('imagepypelines', 'imagepypelines GUI')
 
-        geo = settings.value('window_geometry', type=int)
-        if geo:
-            self.setGeometry(*geo)
+        geo = settings.value('window_geometry', [100, 100, 800, 500], type=int)
+        self.setGeometry(*geo)
+        # TODO make platform invariant (windows for now)
+        self.opendir = settings.value('opendir', os.environ.get('USERPROFILE', 'C:\\'))
 
     # def createCellWidget(self, text, diagramType):
     #     item = DiagramItem(diagramType, self.itemMenu)

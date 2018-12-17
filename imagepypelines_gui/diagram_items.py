@@ -47,6 +47,7 @@ from PyQt4 import QtCore, QtGui
 
 
 class Arrow(QtGui.QGraphicsLineItem):
+
     def __init__(self, startItem, endItem, parent=None, scene=None):
         super(Arrow, self).__init__(parent, scene)
 
@@ -165,7 +166,7 @@ class DiagramTextItem(QtGui.QGraphicsTextItem):
 
 
 class DiagramItem(QtGui.QGraphicsPolygonItem):
-    Step, Conditional, StartEnd, Io = range(4)
+    Block, Start = range(2)
 
     def __init__(self, diagramType, contextMenu, parent=None, scene=None):
         super(DiagramItem, self).__init__(parent, scene)
@@ -176,7 +177,9 @@ class DiagramItem(QtGui.QGraphicsPolygonItem):
         self.contextMenu = contextMenu
 
         path = QtGui.QPainterPath()
-        if self.diagramType == self.StartEnd:
+
+        # TODO Ryan make up a design for these items?
+        if self.diagramType == self.Start:
             path.moveTo(200, 50)
             path.arcTo(150, 0, 50, 50, 0, 90)
             path.arcTo(50, 0, 50, 50, 90, 90)
@@ -184,12 +187,8 @@ class DiagramItem(QtGui.QGraphicsPolygonItem):
             path.arcTo(150, 50, 50, 50, 270, 90)
             path.lineTo(200, 25)
             self.myPolygon = path.toFillPolygon()
-        elif self.diagramType == self.Conditional:
-            self.myPolygon = QtGui.QPolygonF([
-                QtCore.QPointF(-100, 0), QtCore.QPointF(0, 100),
-                QtCore.QPointF(100, 0), QtCore.QPointF(0, -100),
-                QtCore.QPointF(-100, 0)])
-        elif self.diagramType == self.Step:
+            
+        elif self.diagramType == self.Block:
             self.myPolygon = QtGui.QPolygonF([
                 QtCore.QPointF(-100, -100), QtCore.QPointF(100, -100),
                 QtCore.QPointF(100, 100), QtCore.QPointF(-100, 100),
