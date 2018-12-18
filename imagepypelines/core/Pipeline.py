@@ -15,6 +15,7 @@ import collections
 from .util.timing import Timer
 import pickle
 import collections
+import copy
 import numpy as np
 
 def restore_from_file(filename):
@@ -154,6 +155,101 @@ class Pipeline(object):
         # appends to instance block list
         self.printer.info("adding block {} to the pipeline".format(block.name))
         self.blocks.append(block)
+
+    def insert(self, index, block):
+        """inserts processing block into the pipeline processing chain
+
+        Args:
+            index (int): index at which block object is to be inserted
+
+            block (ip.BaseBlock): block object to add to this pipeline
+
+        Returns:
+            None
+
+        Raise:
+            TypeError: if 'block' is not a subclass of BaseBlock, or 'index' is not instance of int
+        """
+        # checking to make sure block is a real block
+        if (not isinstance(block, BaseBlock)):
+            error_msg = "'block' must be a subclass of ip.BaseBlock"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        # checking to make sure index is integer
+        if (isinstance(index, int)):
+            error_msg = "'index' must be int"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        self.printer.info("inserting block {0} into pipeline at index {1}".format(block.name, index))
+
+        self.blocks.insert(index, block)
+
+    def remove(self, block_name):
+        """removes processing block from the pipeline processing chain
+
+        Args:
+            block_name (str): unique string name of block object to remove
+
+        Returns:
+            None
+
+        Raise:
+            TypeError: if 'block_name' is not an instance of str
+
+            ValueError: if 'block_name' is not member of list self.names
+        """
+        # checking to make sure block_name is string
+        if (not isinstance(block_name, str)):
+            error_msg = "'block_name' must be a string"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        # checking to make sure block_name is member of self.names
+        if (block_name in self.names):
+            error_msg = "'block_name' must be member of list self.names"
+            self.printer.error(error_msg)
+            raise ValueError(error_msg)
+
+        self.printer.info("removing block {} from the pipeline".format(block_name))
+
+        # get index from block name and delete corresponding item from self.blocks
+        i = self.names.index(block_name)
+        self.__delitem__(i)
+
+    def copy(self):
+        """provides deepcopy of pipeline processing chain
+
+        Args:
+            None
+
+        Returns:
+            deepcopy: a deepcopy of the entire pipeline instance, 'self'
+
+        Raise:
+            None
+        """
+        # returns a deepcopy of entire pipeline (this will be useful for cache?)
+        return copy.deepcopy(self)
+
+    def clear(self):
+        """clears all processing blocks from the pipeline processing chain
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Raise:
+            None
+        """
+        # cycle through blocks and handle individual deletion, reset empty list
+        for i in range(len(self.blocks)):
+            self.__delitem__(i)
+
+        self.blocks = []
 
     def validate(self,data):
         """validates the integrity of the pipeline
@@ -446,6 +542,10 @@ class Pipeline(object):
 
     def __repr__(self):
         return str(self)
+
+    def __delitem__(self, i):
+        # Method for cleaning up file io and multiprocessing with caching revamp
+        self.blocks.pop(i)
 
     def __getitem__(self,index):
         return self.blocks[index]
