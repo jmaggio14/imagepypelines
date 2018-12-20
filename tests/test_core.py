@@ -223,7 +223,7 @@ def test_batch():
     # we should have 9 lists of length 91, and one of length 82
     batches = ip.batch(example,n)
 
-    assert all( len(x) == 91 for x in batches[:len(batches)-1])
+    assert all( len(x) == 91 for x in batches[:-1])
     assert len(batches[-1]) == 82
 
 
