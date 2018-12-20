@@ -17,7 +17,7 @@ install:
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
-  - pip install tensorflow==1.10.0 opencv-python
+  - pip install tensorflow opencv-python
   # codecov requirements
   - pip install Sphinx sphinx_bootstrap_theme m2r
   # codecov requirements
