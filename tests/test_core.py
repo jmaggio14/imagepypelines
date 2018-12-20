@@ -229,10 +229,35 @@ def test_batch():
 
 def test_chunks2list():
     import imagepypelines as ip
+    import copy
     ls = list(range(1000))
-    ls2 = ls.copy()
+    ls2 = copy.deepcopy(ls)
     chunks = ip.chunk(ls, 10)
     assert ls == ip.chunks2list(chunks)
+
+def test_xsample():
+    import imagepypelines as ip
+    fraction = 0.05
+
+    population = list( range(100) )
+
+    sample = ip.xsample(population,fraction)
+
+def test_xysample():
+    import imagepypelines as ip
+    fraction = 0.05
+
+    population = list( range(100) )
+    pop_labels = copy.deepcopy(population)
+
+    sample,lbls = ip.xysample(population,pop_labels,fraction)
+
+    # check to make sure corresponding labels are returned for the data
+    assert len(sample) == len(lbls)
+    assert all(sample[i] == lbls[i] for i in range(len(sample)))
+    assert len(samples) == int(fraction * len(population))
+
+
 
 # =================== pipeline_tools.py ===================
 # TODO - JM
