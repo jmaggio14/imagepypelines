@@ -256,7 +256,7 @@ def test_xysample():
     # check to make sure corresponding labels are returned for the data
     assert len(sample) == len(lbls)
     assert all(sample[i] == lbls[i] for i in range(len(sample)))
-    assert len(samples) == int(fraction * len(population))
+    assert len(sample) == int(fraction * len(population))
 
 
 
