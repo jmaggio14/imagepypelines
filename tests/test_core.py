@@ -261,7 +261,24 @@ def test_xysample():
 
 
 # =================== pipeline_tools.py ===================
-# TODO - JM
+
+def test_quick_block():
+    import imagepypelines as ip
+    import numpy as np
+
+    io_map = {ip.GRAY:ip.GRAY}
+    process_fn = lambda x : x+1
+    name = "this is a test"
+
+    plus_one_block = ip.quick_block(process_fn,io_map,name)
+
+    assert isinstance(plus_one_block,ip.BaseBlock)
+    assert plus_one_block.name == name + ':1'
+
+    pipeline = ip.Pipeline([plus_one_block])
+    processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
+    assert np.all(np.around(processed,3) == 1)
+
 
 # =================== Pipeline.py ===================
 # TODO - JM
