@@ -77,8 +77,9 @@ from .ml_tools import confidence_99
 from .ml_tools import confidence_95
 from .ml_tools import confidence_90
 from .ml_tools import confidence
+from .ml_tools import chunk
 from .ml_tools import batch
-from .ml_tools import batches_to_list
+from .ml_tools import chunks2list
 from .ml_tools import xsample
 from .ml_tools import xysample
 
