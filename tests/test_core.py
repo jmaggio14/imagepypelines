@@ -206,7 +206,7 @@ def test_accuracy():
 def test_chunk():
     import imagepypelines as ip
     size = 901
-    n = 10
+    n = 10.0
     example = list( range(size) )
     # we should have 9 lists of length 91, and one of length 82
     chunks = ip.chunk(example,n)
