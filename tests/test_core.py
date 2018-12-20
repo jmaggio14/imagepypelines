@@ -35,8 +35,7 @@ class TestIoMap(object):
         a = ip.ArrayType([None,None,None],[None,None],[None])
         b = ip.ArrayType([None,None,None,None],[None,None])
         io_map = ip.IoMap( {a:b} )
-        assert len(io_map.inputs) == 6
-        assert len(io_map.outputs) == 6
+        assert len(io_map.inputs) == len(io_map.outputs) == 6
 
     def test_output_given_input(self):
         """
@@ -104,33 +103,33 @@ class TestBatchBlock(object):
         assert np.all( np.around(proc2,1) == 1.0 )
 
 
-class TestTfBlock(object):
-    """
-    Create a test TfBlock and run some data through it
-    """
-    def test_block_creation_and_processing(self):
-        import imagepypelines as ip
-        import tensorflow as tf
-        # create a test block via object inheritance
-        class AddOne(ip.TfBlock):
-            def __init__(self):
-                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
-                super(AddOne,self).__init__(io_map)
-
-            def setup_graph(self,data_placeholder,label_placeholder):
-                one = tf.constant(1.0,tf.float32)
-                processed = tf.math.add(data_placeholder,one,name='processed')
-                return processed.name
-
-        block = AddOne()
-        input_datum = np.zeros( (512,) )
-        data = [input_datum,input_datum]
-        labels = [0,1]
-        (proc1,proc2),lbls = block._pipeline_process(data,labels)
-
-        assert labels == lbls, "label fetching failed"
-        assert np.all( np.around(proc1,1) == 1.0 )
-        assert np.all( np.around(proc2,1) == 1.0 )
+# class TestTfBlock(object):
+#     """
+#     Create a test TfBlock and run some data through it
+#     """
+#     def test_block_creation_and_processing(self):
+#         import imagepypelines as ip
+#         import tensorflow as tf
+#         # create a test block via object inheritance
+#         class AddOne(ip.TfBlock):
+#             def __init__(self):
+#                 io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+#                 super(AddOne,self).__init__(io_map)
+#
+#             def setup_graph(self,data_placeholder,label_placeholder):
+#                 one = tf.constant(1.0,tf.float32)
+#                 processed = tf.math.add(data_placeholder,one,name='processed')
+#                 return processed.name
+#
+#         block = AddOne()
+#         input_datum = np.zeros( (512,) )
+#         data = [input_datum,input_datum]
+#         labels = [0,1]
+#         (proc1,proc2),lbls = block._pipeline_process(data,labels)
+#
+#         assert labels == lbls, "label fetching failed"
+#         assert np.all( np.around(proc1,1) == 1.0 )
+#         assert np.all( np.around(proc2,1) == 1.0 )
 
         # TEMP COMMENT 12/11/18 uncomment ASAP
         # try to save and restore the pipeline
@@ -180,7 +179,59 @@ class TestImports(object):
         assert tf == ip.import_tensorflow()
 
 # =================== ml_tools.py ===================
-# TODO - JM
+def test_accuracy():
+    predicted =    [0,1,0,1,0,1,0,1,0,1]
+    ground_truth = [1,1,1,1,1,1,1,1,1,1]
+    # we should have 50% accuracy
+    accuracy = round(ip.accuracy(predicted,ground_truth),3)
+    assert accuracy == .5
+
+
+# class TestSample(object):
+#     def test_xsample(self):
+#         """confirm that xsample returns a uniform sample by confirming the null
+#         hypothesis
+#         """
+#         import imagepypelines as ip
+#         import numpy as np
+#
+#         alpha = 1e-3 # null hypothesis cutoff
+#         # create a random uniform distribution min = 0, max = 1
+#         uni = [x for x in np.random.uniform(0,1,1000)]
+#
+#         if p < alpha:
+
+
+def test_chunk():
+    import imagepypelines as ip
+    size = 901
+    n = 10
+    example = list( range(size) )
+    # we should have 9 lists of length 91, and one of length 82
+    chunks = ip.chunk(example,n)
+
+    assert all( len(x) == 91 for x in chunks[:len(chunks)-1])
+    assert len(chunks[-1]) == 82
+
+
+def test_batch():
+    import imagepypelines as ip
+    size = 901
+    n = 91
+    example = list( range(size) )
+    # we should have 9 lists of length 91, and one of length 82
+    batches = ip.batch(example,n)
+
+    assert all( len(x) == 91 for x in batches[:len(batches)-1])
+    assert len(batches[-1]) == 82
+
+
+def test_chunks2list():
+    import imagepypelines as ip
+    ls = list(range(1000))
+    ls2 = ls.copy()
+    chunks = ip.chunk(ls, 10)
+    assert ls == ip.chunks2list(chunks)
 
 # =================== pipeline_tools.py ===================
 # TODO - JM
