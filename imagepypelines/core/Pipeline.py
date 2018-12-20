@@ -110,7 +110,7 @@ class Pipeline(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + str(self.EXTANT[name])
+        name = name + ':{}'.format( self.EXTANT[name] )
 
         self.name = name
         self.verbose = verbose
