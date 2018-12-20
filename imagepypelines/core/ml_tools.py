@@ -8,6 +8,7 @@ import numpy as np
 from itertools import islice, chain
 import scipy.stats
 import random
+import math
 
 def accuracy(predicted,ground_truth):
     """calculates accuracy given ground truth and predicted labels"""
@@ -112,11 +113,17 @@ def confidence(data, confidence=0.95):
         >>> mean, error = ip.confidence(accuracies,.95)
     """
     data = np.asarray(data,dtype=np.float32)
+    # calculate mean and standard error of measurement
     m, se = np.mean(data), scipy.stats.sem(data)
+    # find error using the percent point function and standard error
     h = se * scipy.stats.t.ppf((1 + confidence) / 2.0, len(data)-1)
     return m, h
 
 
+def chunk(data,n):
+    """chunk a list into n chunks"""
+    chunk_size = math.ceil( len(data) / n )
+    return batch(data, chunk_size)
 
 def batch(data_list, batch_size):
     """chunks a list into multiple batch_size chunks, the last batch will
