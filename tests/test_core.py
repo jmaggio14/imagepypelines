@@ -103,33 +103,33 @@ class TestBatchBlock(object):
         assert np.all( np.around(proc2,1) == 1.0 )
 
 
-# class TestTfBlock(object):
-#     """
-#     Create a test TfBlock and run some data through it
-#     """
-#     def test_block_creation_and_processing(self):
-#         import imagepypelines as ip
-#         import tensorflow as tf
-#         # create a test block via object inheritance
-#         class AddOne(ip.TfBlock):
-#             def __init__(self):
-#                 io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
-#                 super(AddOne,self).__init__(io_map)
-#
-#             def setup_graph(self,data_placeholder,label_placeholder):
-#                 one = tf.constant(1.0,tf.float32)
-#                 processed = tf.math.add(data_placeholder,one,name='processed')
-#                 return processed.name
-#
-#         block = AddOne()
-#         input_datum = np.zeros( (512,) )
-#         data = [input_datum,input_datum]
-#         labels = [0,1]
-#         (proc1,proc2),lbls = block._pipeline_process(data,labels)
-#
-#         assert labels == lbls, "label fetching failed"
-#         assert np.all( np.around(proc1,1) == 1.0 )
-#         assert np.all( np.around(proc2,1) == 1.0 )
+class TestTfBlock(object):
+    """
+    Create a test TfBlock and run some data through it
+    """
+    def test_block_creation_and_processing(self):
+        import imagepypelines as ip
+        import tensorflow as tf
+        # create a test block via object inheritance
+        class AddOne(ip.TfBlock):
+            def __init__(self):
+                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+                super(AddOne,self).__init__(io_map)
+
+            def setup_graph(self,data_placeholder,label_placeholder):
+                one = tf.constant(1.0,tf.float32)
+                processed = tf.math.add(data_placeholder,one,name='processed')
+                return processed.name
+
+        block = AddOne()
+        input_datum = np.zeros( (512,) )
+        data = [input_datum,input_datum]
+        labels = [0,1]
+        (proc1,proc2),lbls = block._pipeline_process(data,labels)
+
+        assert labels == lbls, "label fetching failed"
+        assert np.all( np.around(proc1,1) == 1.0 )
+        assert np.all( np.around(proc2,1) == 1.0 )
 
         # TEMP COMMENT 12/11/18 uncomment ASAP
         # try to save and restore the pipeline
@@ -180,6 +180,7 @@ class TestImports(object):
 
 # =================== ml_tools.py ===================
 def test_accuracy():
+    import imagepypelines as ip
     predicted =    [0,1,0,1,0,1,0,1,0,1]
     ground_truth = [1,1,1,1,1,1,1,1,1,1]
     # we should have 50% accuracy
