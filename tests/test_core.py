@@ -245,6 +245,7 @@ def test_xsample():
 
 def test_xysample():
     import imagepypelines as ip
+    import copy
     fraction = 0.05
 
     population = list( range(100) )
