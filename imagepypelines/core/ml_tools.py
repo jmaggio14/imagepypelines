@@ -125,12 +125,12 @@ def chunk(data,n):
     chunk_size = math.ceil( len(data) / n )
     return batch(data, chunk_size)
 
-def batch(data_list, batch_size):
+def batch(data, batch_size):
     """chunks a list into multiple batch_size chunks, the last batch will
-    be truncated if the data_list length isn't a multiple of batch_size
+    be truncated if the data length isn't a multiple of batch_size
     """
-    data_list = iter(data_list)
-    return list(iter( lambda: list(islice(data_list, batch_size)), ()) )
+    data = iter(data)
+    return list(iter( lambda: list(islice(data, batch_size)), []) )
 
 def chunks2list(batches):
     """turns nested iterables into a single list"""
