@@ -5,6 +5,7 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .imports import import_opencv
+from .constants import NUMPY_TYPES
 cv2 = import_opencv()
 
 class CameraReadError(ValueError):
@@ -46,7 +47,7 @@ class InvalidNumpyType(TypeError):
     def __init__(self,dtype):
         error_string = "'dtype' ({}) must be one of the following!"\
                                                             .format(dtype)
-        error_string += "\n\t".join(ip.NUMPY_TYPES)
+        error_string += "\n\t".join(str(t) for t in NUMPY_TYPES)
         super(InvalidNumpyType,self).__init__(error_string)
 
 
@@ -65,7 +66,7 @@ class InvalidBlockInputData(TypeError):
     def __init__(self,block):
         error_msg = "invalid input to block: {}, must be a list containing ({})".format(
             block.name,
-            block.input_shape,
+            block.io_map.inputs,
         )
         super(InvalidBlockInputData,self).__init__(error_msg)
 
