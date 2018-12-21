@@ -14,7 +14,6 @@ from .Exceptions import IncompatibleTypes
 import collections
 from .util.timing import Timer
 import pickle
-import collections
 import copy
 import numpy as np
 
@@ -543,9 +542,21 @@ class Pipeline(object):
     def __repr__(self):
         return str(self)
 
+    def __del__(self):
+        for b in self.blocks:
+            del b
+
+        del self.blocks
+        del self
+
     def __delitem__(self, i):
         # Method for cleaning up file io and multiprocessing with caching revamp
-        self.blocks.pop(i)
+        if not isinstance(i, int):
+            error_msg = "'i' must be an int"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        del self.blocks[i]
 
     def __getitem__(self,index):
         return self.blocks[index]
@@ -562,3 +573,8 @@ class Pipeline(object):
     def __iter__(self):
         """generator to return all blocks in the pipeline"""
         return (b for b in self.blocks)
+
+    def __next__(self):
+        """yields next item of self.blocks via generator"""
+        for b in self.blocks:
+            yield b
