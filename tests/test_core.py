@@ -261,7 +261,6 @@ def test_xysample():
 
 
 # =================== pipeline_tools.py ===================
-
 def test_quick_block():
     import imagepypelines as ip
     import numpy as np
@@ -270,6 +269,7 @@ def test_quick_block():
     process_fn = lambda x : x+1
     name = "this is a test"
 
+    # try a block with a custom name
     plus_one_block = ip.quick_block(process_fn,io_map,name)
 
     assert isinstance(plus_one_block,ip.BaseBlock)
@@ -278,6 +278,24 @@ def test_quick_block():
     pipeline = ip.Pipeline([plus_one_block])
     processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
     assert np.all(np.around(processed,3) == 1)
+
+    # try a block with a generated name
+    plus_one_block = ip.quick_block(process_fn,io_map)
+
+    assert isinstance(plus_one_block,ip.BaseBlock)
+    assert plus_one_block.name == '<lambda>' + ':1'
+
+    pipeline = ip.Pipeline([plus_one_block])
+    processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
+    assert np.all(np.around(processed,3) == 1)
+
+
+
+
+
+
+
+
 
 
 # =================== Pipeline.py ===================
