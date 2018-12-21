@@ -6,7 +6,6 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from __future__ import print_function
 from termcolor import colored
-import sys
 
 def get_printer(name, log_level='info'):
     """
@@ -259,7 +258,7 @@ class Printer(object):
             prefix = colored(prefix,'cyan',attrs=['bold'])
             messages = [colored(msg,'cyan',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages, file=sys.stderr)
+        print(prefix, *messages)
 
     def info(self, *messages):
         """
@@ -274,7 +273,7 @@ class Printer(object):
             return
 
         prefix = self.level_text['info']
-        print(prefix, *messages, file=sys.stderr)
+        print(prefix, *messages)
 
     def warning(self, *messages):
         """
@@ -293,7 +292,7 @@ class Printer(object):
             prefix = colored(prefix,'yellow',attrs=['bold'])
             messages = [colored(msg,'yellow',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages, file=sys.stderr)
+        print(prefix, *messages)
 
     def error(self, *messages):
         """
@@ -312,7 +311,7 @@ class Printer(object):
             prefix = colored(prefix,'red',attrs=['bold'])
             messages = [colored(msg,'red',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages, file=sys.stderr)
+        print(prefix, *messages)
 
     def critical(self, *messages):
         """
@@ -332,7 +331,7 @@ class Printer(object):
             prefix = colored(prefix,'red')
             messages = [colored(msg,'red') for msg in messages]
 
-        print(prefix, *messages, file=sys.stderr)
+        print(prefix, *messages)
 
     def comment(self, *messages):
         """
@@ -352,7 +351,7 @@ class Printer(object):
             prefix = colored(prefix,'green',attrs=['bold'])
             messages = [colored(msg,'green',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages, file=sys.stderr)
+        print(prefix, *messages)
 
     def __del__(self):
         if self.name in self.ACTIVE_PRINTERS:
