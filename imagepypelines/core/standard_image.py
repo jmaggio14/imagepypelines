@@ -12,7 +12,8 @@ from types import FunctionType
 # JM: replaced SimpleNamespace import with this for python2 compatability
 SimpleNamespace = type('SimpleNamespace', (object,), {})
 
-import cv2
+from .imports import import_opencv
+cv2 = import_opencv()
 import numpy as np
 from functools import partial
 import pkg_resources
@@ -39,41 +40,6 @@ def standard_image_gen():
 def standard_images():
     """returns a list of all standard image arrays"""
     return list( standard_image_gen() )
-
-
-
-
-def standard_image_input(func):
-    """
-    decorator which will parse a function inputs and retrieve a standard
-    test image to feed into the function
-
-    This decorator assumes that the first argument it's wrapped function
-    is meant to be a numpy array image.
-
-    Example:
-        >>> import numpy as np
-        >>> import cv2
-        >>> @standard_image_input
-        >>> def add_one_to_image(img):
-        ...    assert isinstance(img,np.ndarray) #forcing a np.ndarray input type
-        ...    return img + 1
-
-        >>> lenna_plus_one = add_one_to_image('lenna')
-        >>> # these are now equivalent
-        >>> lenna_plus_one = add_one_to_image( cv2.imread('lenna.jpg') )
-
-    """
-    def _standard_image_input(img, *args, **kwargs):
-        if not isinstance(img, np.ndarray):
-            # must check if img is numpy array first, because numpy
-            # arrays are not hashable
-            if img in STANDARD_IMAGES:
-                img = get_standard_image(img)
-
-        ret = func(img, *args, **kwargs)
-        return ret
-    return _standard_image_input
 
 
 def get_standard_image(img_name):
@@ -133,19 +99,6 @@ for img_name in STANDARD_IMAGES.keys():
 
 # JM: deletes last remaining partial function from scope to remove Sphinx warning
 del partial_func
-
-
-def main():
-    """tests functionality by loading and printing out every image"""
-
-    # ND 9/7/18 - FIXME:, this func should be a separate test file
-    # Since it's here I'll add a line showing how my functonality can be used.
-
-    for img in STANDARD_IMAGES:
-        print(get_standard_image(img))
-
-    print(funcs.lenna())
-    print(funcs.roger())
 
 
 if __name__ == "__main__":

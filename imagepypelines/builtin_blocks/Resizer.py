@@ -6,7 +6,8 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
 from .. import ArrayType
-import cv2
+from ..core import import_opencv
+cv2 = import_opencv()
 
 class Resizer(SimpleBlock):
     def __init__(self,
@@ -21,7 +22,7 @@ class Resizer(SimpleBlock):
                     ArrayType([None,None,3]):ArrayType([self.to_height,self.to_width,3])}
 
         super(Resizer,self).__init__(io_map,requires_training=False)
-        
+
     def process(self,datum):
         resized = cv2.resize(datum,
                        dsize=(self.to_width,self.to_height),

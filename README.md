@@ -3,6 +3,7 @@
 # imagepypelines
 
 ![build](https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master "master build success")
+[![codecov](https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg)](https://codecov.io/gh/jmaggio14/imagepypelines)
 
 
 The `imagepypelines` package consists of high level tools which simplify the construction of complex image processing, computer vision, and machine learning frameworks. During our time in the undergrad Imaging Science program at the Rochester Institute of Technology, we found ourselves writing and rewriting code for things as simple as data type casting and displaying imagery when debugging, causing more trouble than mathematical or logical bugs themselves! Our hope is that the plug-and-play, easily-customizable nature of `imagepypelines` will allow all data-driven scientists to construct complex frameworks quickly for prototyping applications, and serve as a valuable educational tool for those interested in learning traditionally tough subject matter in a friendly environment!
@@ -14,6 +15,8 @@ To achieve this goal, our development team always adheres to the following 5 cor
 3. Therefore coding should be like playing with Legos
 4. Imagery is fun, so that will always be our focus
 5. We must suffer, lest our users suffer
+
+**_This project is currently in alpha_**
 
 ## Installation
 _(make sure you see the **dependencies** section)_
@@ -55,9 +58,17 @@ Full documentation for `imagepypelines`, including examples and tutorials, can b
 
 
 ## Licensing / Credit
-`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
+`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for research or commercial use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
 Please credit us if you use `imagepypelines` in your research
+```
+@misc{imagepypelines,
+  title="imagepypelines - imaging science acceleration library",
+  author="Hartzell, Dileas, Maggio",
+  YEAR="2018",
+  howpublished="\url{https://github.com/jmaggio14/imagepypelines}",
+}
+```
 
 # What Makes Us Unique?
 

@@ -34,7 +34,7 @@ def dtype_type_check(dtype):
     imagepypelines.InvalidInterpolationType error
     """
     if dtype not in NUMPY_TYPES:
-        raise InvalidNumpyType(interp)
+        raise InvalidNumpyType(dtype)
 
     return True
 
@@ -47,25 +47,3 @@ def is_numpy_array(arr):
 def is_iterable(var):
     """returns True if input is an iterable type, false otherwise"""
     return isinstance(var,collections.Iterable)
-
-
-def type_error_message(variable,variable_name,desired_types):
-    """
-    returns an error message for a type error_msg
-
-    Args:
-        variable (the variable you want raise an error for):
-        variable_name (the name of variable):
-        desired_types (type,iterable of desired types):
-
-    Returns:
-        error_msg (str): formatted error message string
-    """
-    if not isinstance(desired_types,collections.Iterable):
-        desired_types = [desired_types]
-    error_msg =  "'{name}' must be on of [{desired}], currently is {cur}"\
-        .format(
-            name=variable_name,
-            desired=','.join(desired_types),
-            cur=type(variable))
-    return error_msg

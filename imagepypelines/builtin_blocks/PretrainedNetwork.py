@@ -10,7 +10,8 @@ import numpy as np
 from .. import BatchBlock
 from .. import ArrayType
 from .. import dimensions
-import cv2
+from ..core import import_opencv
+cv2 = import_opencv()
 
 SUBMODULES = {'xception': 'keras.applications.xception',
                 'vgg16': 'keras.applications.vgg16',

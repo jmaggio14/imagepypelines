@@ -42,20 +42,20 @@ class Cache(object):
         Save and Restore a Pyton Object
         >>>
         >>> # save a pythonic object
-        >>> obj = "this is an example object"
-        >>> fname = {name}.save(obj)
+        >>> #obj = "this is an example object"
+        >>> #fname = tmp.save(obj)
         >>>
         >>> # restore the object
-        >>> obj = {name}.restore(fname)
+        >>> # obj = tmp.restore(fname)
 
 
-        Get a {name} filename and save the data yourself
-        >>> import numpy as np
-        >>> import cv2
+        Get a tmp filename and save the data yourself
+        >>> # import numpy as np
+        >>> # import cv2
         >>>
-        >>> random_img = np.random.rand(512,512,3)
-        >>> fname = {name}.filename('optional-prefix')
-        >>> cv2.imwrite(fname, random_img)
+        >>> # random_img = np.random.rand(512,512,3)
+        >>> # fname = tmp.filename('optional-prefix')
+        >>> # cv2.imwrite(fname, random_img)
     """
     def __init__(self,cache_name):
             self.subdir = os.path.join(CACHE,cache_name)
@@ -63,8 +63,6 @@ class Cache(object):
             if not os.path.exists(self.subdir):
                 os.makedirs(self.subdir)
                 self.printer.info("creating Cache for: ",self.subdir)
-            else:
-                self.printer.info("found Cache for: ",self.subdir)
 
 
     def filename(self,basename="no-key"):
@@ -77,10 +75,14 @@ class Cache(object):
 
         Example:
             Create new cache filename
-            >>> fname = ip.cache.filename("optional-prefix")
+            # replace tmp with the name of your cache
+            >>> # import imagepypelines as ip
+            >>> # fname = ip.tmp.filename("optional-prefix")
 
             Retrieve the full filename given just the basename
-            >>> fname = ip.cache.filename(basename)
+            # replace tmp with the name of your cache
+            >>> # import imagepypelines as ip
+            >>> # fname = ip.tmp.filename(basename)
         """
         basename = os.path.basename(basename)
 

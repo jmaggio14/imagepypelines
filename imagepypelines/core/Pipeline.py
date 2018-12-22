@@ -15,6 +15,7 @@ import collections
 from .util.timing import Timer
 import pickle
 import collections
+import copy
 import numpy as np
 
 def restore_from_file(filename):
@@ -110,7 +111,7 @@ class Pipeline(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + str(self.EXTANT[name])
+        name = name + ':{}'.format( self.EXTANT[name] )
 
         self.name = name
         self.verbose = verbose
@@ -155,20 +156,129 @@ class Pipeline(object):
         self.printer.info("adding block {} to the pipeline".format(block.name))
         self.blocks.append(block)
 
+    def insert(self, index, block):
+        """inserts processing block into the pipeline processing chain
+
+        Args:
+            index (int): index at which block object is to be inserted
+
+            block (ip.BaseBlock): block object to add to this pipeline
+
+        Returns:
+            None
+
+        Raise:
+            TypeError: if 'block' is not a subclass of BaseBlock, or 'index' is not instance of int
+        """
+        # checking to make sure block is a real block
+        if (not isinstance(block, BaseBlock)):
+            error_msg = "'block' must be a subclass of ip.BaseBlock"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        # checking to make sure index is integer
+        if (isinstance(index, int)):
+            error_msg = "'index' must be int"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        self.printer.info("inserting block {0} into pipeline at index {1}".format(block.name, index))
+
+        self.blocks.insert(index, block)
+
+    def remove(self, block_name):
+        """removes processing block from the pipeline processing chain
+
+        Args:
+            block_name (str): unique string name of block object to remove
+
+        Returns:
+            None
+
+        Raise:
+            TypeError: if 'block_name' is not an instance of str
+
+            ValueError: if 'block_name' is not member of list self.names
+        """
+        # checking to make sure block_name is string
+        if (not isinstance(block_name, str)):
+            error_msg = "'block_name' must be a string"
+            self.printer.error(error_msg)
+            raise TypeError(error_msg)
+
+        # checking to make sure block_name is member of self.names
+        if (block_name in self.names):
+            error_msg = "'block_name' must be member of list self.names"
+            self.printer.error(error_msg)
+            raise ValueError(error_msg)
+
+        self.printer.info("removing block {} from the pipeline".format(block_name))
+
+        # get index from block name and delete corresponding item from self.blocks
+        i = self.names.index(block_name)
+        self.__delitem__(i)
+
+    def copy(self):
+        """provides deepcopy of pipeline processing chain
+
+        Args:
+            None
+
+        Returns:
+            deepcopy: a deepcopy of the entire pipeline instance, 'self'
+
+        Raise:
+            None
+        """
+        # returns a deepcopy of entire pipeline (this will be useful for cache?)
+        return copy.deepcopy(self)
+
+    def clear(self):
+        """clears all processing blocks from the pipeline processing chain
+
+        Args:
+            None
+
+        Returns:
+            None
+
+        Raise:
+            None
+        """
+        # cycle through blocks and handle individual deletion, reset empty list
+        for i in range(len(self.blocks)):
+            self.__delitem__(i)
+
+        self.blocks = []
+
     def validate(self,data):
         """validates the integrity of the pipeline
 
         verifies all input-output shapes are compatible with each other
 
-        type comparison for blocks is complicated
+        Developer Note:
+            this function could use a full refactor, especially with regards
+            to printouts when an error is raised - Jeff
+
+            Type comparison between Blocks is complicated and I suspect more
+            bugs are still yet to be discovered.
 
         Raises:
             CrackedPipeline: if there is a input-output shape
                 incompatability
             TypeError: if 'data' isn't a list or tuple
             RuntimeError: if more than one block in the pipeline has the same
-                name
+                name, or not all objects in the block list are BaseBlock
+                subclasses
         """
+
+        # assert that every element in the blocks list is a BaseBlock subclass
+        if not all(isinstance(b,BaseBlock) for b in self.blocks):
+            error_msg = \
+               "all elements of the pipeline must be subclasses of ip.BaseBlock"
+            self.printer.error(error_msg)
+            raise RuntimeError(error_msg)
+
 
         # make sure data is a list
         if not isinstance(data,list):
@@ -264,10 +374,10 @@ class Pipeline(object):
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
-                if b.trained:
-                    continue
-                err_msg = "requires training, but hasn't yet been trained"
-                self.printer.error("{}: ".format(b.name), err_msg)
+                if not b.trained:
+                    err_msg = "requires training, but hasn't yet been trained"
+                    self.printer.error("{}: ".format(b.name), err_msg)
+
             raise RuntimeError("you must run Pipeline.train before processing")
 
         # validate pipeline integrity
@@ -307,6 +417,8 @@ class Pipeline(object):
         self.step_labels = labels
 
     def _train(self,data,labels=None):
+        # TODO Add a check to see throw an error if self.requires_labels == True
+        # and no labels are passed into this function
         t = Timer()
         for b in self.blocks:
             self.printer.debug("training {}...".format(b.name))
@@ -373,6 +485,8 @@ class Pipeline(object):
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
 
+        return filename
+
     def _text_graph(self,type_chains):
         for chain in type_chains:
             print("type-chain1:")
@@ -431,6 +545,10 @@ class Pipeline(object):
     def __repr__(self):
         return str(self)
 
+    def __delitem__(self, i):
+        # Method for cleaning up file io and multiprocessing with caching revamp
+        self.blocks.pop(i)
+
     def __getitem__(self,index):
         return self.blocks[index]
 
@@ -445,5 +563,4 @@ class Pipeline(object):
 
     def __iter__(self):
         """generator to return all blocks in the pipeline"""
-        for b in self.blocks:
-            yield b
+        return (b for b in self.blocks)

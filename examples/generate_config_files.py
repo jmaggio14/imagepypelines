@@ -32,7 +32,7 @@ CONFIGS = {'learning_rate':[.001, .01, .1],
             }
 
 # build a config permutator using imagepypelines
-permutation_generator = ip.util.Permuter(**CONFIGS)
+permutation_generator = ip.ml.ConfigFactory(**CONFIGS)
 
 # iterating through all config permutations
 index = 1
@@ -61,8 +61,9 @@ for _,configs in permutation_generator:
     ip.comment("building '{}' with the following kwargs".format(filename) + ''.join( '\n\t{} : {}'.format(k,v) for k,v in configs.items() ))
     ip.info(permutation_generator)
     # saving the config file
-    with open(filename,'w') as f:
-        file_str = yaml.dump(configs, default_flow_style=False)
-        f.write(file_str)
+    # with open(filename,'w') as f:
+    file_str = yaml.dump(configs, default_flow_style=False)
+    print(file_str)
+        # f.write(file_str)
 
     index += 1

@@ -3,7 +3,6 @@ Pillow>=4.0
 colorama>=0.4.0
 keras>=2.2.4
 numpy>=1.14
-six>=1.11.0
 scikit_learn>=0.20.0
 scipy>=1.1.0
 termcolor>=1.0

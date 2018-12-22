@@ -6,6 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from __future__ import print_function
 from termcolor import colored
+import sys
 
 def get_printer(name, log_level='info'):
     """
@@ -101,7 +102,7 @@ def set_global_printout_level(log_level):
         log_level = Printer.LOG_LEVELS[log_level]
 
     if not isinstance(log_level,(int,float)):
-        ip.error("unable to set log_level to {}, must be an integer".format(
+        error("unable to set log_level to {}, must be an integer".format(
                                                                     log_level))
         return
 
@@ -140,7 +141,7 @@ def comment(*messages):
     """prints a 'comment' level message to the imagepypelines default printer"""
     printer = get_default_printer()
     printer.comment(*messages)
-    
+
 
 class Printer(object):
     """
@@ -258,7 +259,7 @@ class Printer(object):
             prefix = colored(prefix,'cyan',attrs=['bold'])
             messages = [colored(msg,'cyan',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages)
+        print(prefix, *messages, file=sys.stderr)
 
     def info(self, *messages):
         """
@@ -273,7 +274,7 @@ class Printer(object):
             return
 
         prefix = self.level_text['info']
-        print(prefix, *messages)
+        print(prefix, *messages, file=sys.stderr)
 
     def warning(self, *messages):
         """
@@ -292,7 +293,7 @@ class Printer(object):
             prefix = colored(prefix,'yellow',attrs=['bold'])
             messages = [colored(msg,'yellow',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages)
+        print(prefix, *messages, file=sys.stderr)
 
     def error(self, *messages):
         """
@@ -311,7 +312,7 @@ class Printer(object):
             prefix = colored(prefix,'red',attrs=['bold'])
             messages = [colored(msg,'red',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages)
+        print(prefix, *messages, file=sys.stderr)
 
     def critical(self, *messages):
         """
@@ -331,7 +332,7 @@ class Printer(object):
             prefix = colored(prefix,'red')
             messages = [colored(msg,'red') for msg in messages]
 
-        print(prefix, *messages)
+        print(prefix, *messages, file=sys.stderr)
 
     def comment(self, *messages):
         """
@@ -351,7 +352,7 @@ class Printer(object):
             prefix = colored(prefix,'green',attrs=['bold'])
             messages = [colored(msg,'green',attrs=['bold']) for msg in messages]
 
-        print(prefix, *messages)
+        print(prefix, *messages, file=sys.stderr)
 
     def __del__(self):
         if self.name in self.ACTIVE_PRINTERS:

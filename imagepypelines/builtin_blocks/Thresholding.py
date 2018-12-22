@@ -6,7 +6,8 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock, ArrayType
-import cv2
+from ..core import import_opencv
+cv2 = import_opencv()
 import numpy as np
 
 

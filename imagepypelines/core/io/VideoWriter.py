@@ -4,7 +4,8 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-import cv2
+from ..imports import import_opencv
+cv2 = import_opencv()
 
 class VideoWriter(object):
     """

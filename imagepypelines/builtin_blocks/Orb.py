@@ -6,7 +6,8 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
 from .. import ArrayType
-import cv2
+from ..core import import_opencv
+cv2 = import_opencv()
 import numpy as np
 
 class Orb(SimpleBlock):
@@ -28,15 +29,6 @@ class Orb(SimpleBlock):
         printer(ip.Printer): printer object for this block,
             registered to 'name'
 
-    Example:
-        >>> import imagepypelines as ip
-        >>> orb = ip.ORB(n_keypoints=120)
-        >>>
-        >>> pipeline = ip.Pipeline()
-        >>> pipeline.add( orb )
-        >>>
-        >>> lenna_gray = ip.lenna_gray()
-        >>> lenna_gray_descriptors = pipeline.process( [lenna_gray] )[0]
     """
     def __init__(self,n_keypoints=100):
         if not isinstance(n_keypoints,(int,float)):
@@ -76,9 +68,9 @@ class Orb(SimpleBlock):
             mask = np.ones(zeros.shape).astype(int)
             des = np.ma.masked_array(zeros,mask)
         elif des.shape[0] < self.n_keypoints:
-            zeros = np.zeros( (self.n_keypoints-des.shape,32) )
-            mask = np.vstack( ( np.zeros((des.shape,32)),np.ones(zeros.shape)) )
-            des = np.ma.masked_array( np.vstack(des,zeros),mask )
+            zeros = np.zeros( (self.n_keypoints-des.shape[0],32) )
+            mask = np.vstack( ( np.zeros((des.shape[0],32)),np.ones(zeros.shape)) )
+            des = np.ma.masked_array( np.vstack((des,zeros)),mask )
 
         # JM: DEBUG #TEMP
         # for some reason, maximum number of features set in ORB doesn't

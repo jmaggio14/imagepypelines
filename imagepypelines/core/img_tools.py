@@ -7,7 +7,8 @@
 import numpy as np
 from PIL import Image
 from .error_checking import dtype_type_check
-import cv2
+from .imports import import_opencv
+cv2 = import_opencv()
 
 def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     """normalizes and bins an image
@@ -28,7 +29,7 @@ def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     assert isinstance(max_count, (int, float)), "'max_count' must be number"
     dtype_type_check(cast_type)
 
-    img = norm_ab(src, src.min(), max_count).astype(cast_type)
+    img = norm_ab(src, 0, max_count).astype(cast_type)
     return img
 
 
@@ -53,13 +54,12 @@ def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
     assert isinstance(title, str), "'title' must be a string"
 
     if normalize_and_bin:
-        img = globals()['normalize_and_bin'](img,
-                                                max_count=255,
-                                                cast_type=np.uint8)
+        img = norm_ab(img, 0, 255)
 
     if len(img.shape) > 2:
         img = np.flip(img, 2)
 
+    img = img.astype(np.uint8)
     img = Image.fromarray(img)
     img.show(title)
 

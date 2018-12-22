@@ -37,7 +37,6 @@ from .error_checking import interpolation_type_check
 from .error_checking import dtype_type_check
 from .error_checking import is_numpy_array
 from .error_checking import is_iterable
-from .error_checking import type_error_message
 
 # Exceptions.py
 from .Exceptions import CameraReadError
@@ -67,14 +66,21 @@ from .img_tools import norm_01
 from .img_tools import norm_ab
 from .img_tools import norm_dtype
 
+# imports.py
+from .imports import import_tensorflow
+from .imports import import_opencv
+
 # ml_tools.py
 from .ml_tools import accuracy
 from .ml_tools import confidence_99
 from .ml_tools import confidence_95
 from .ml_tools import confidence_90
 from .ml_tools import confidence
+from .ml_tools import chunk
 from .ml_tools import batch
-from .ml_tools import batches_to_list
+from .ml_tools import chunks2list
+from .ml_tools import xsample
+from .ml_tools import xysample
 
 # pipeline_tools.py
 from .pipeline_tools import quick_block
@@ -104,8 +110,6 @@ from .Printer import comment
 from .Printer import Printer
 
 # quick_types.py
-from .quick_types import GrayscaleImage
-from .quick_types import RgbImage
 from .quick_types import RGB
 from .quick_types import GRAY
 
@@ -116,9 +120,9 @@ from .standard_image import standard_image_filenames
 from .standard_image import standard_image_gen
 from .standard_image import list_standard_images
 from .standard_image import standard_images
-from .standard_image import standard_image_input
-from .standard_image import funcs
+from .standard_image import get_standard_image
 
+from .standard_image import funcs
 import sys
 
 curr_module = sys.modules[__name__]
