@@ -27,14 +27,15 @@ def quick_block(process_fn,
 
     Example:
         >>> import imagepypelines as ip
+        >>> import cv2
         >>> def calculate_orb_features(datum):
         ...     _,des = cv2.ORB_create().detectAndCompute(datum,None)
         ...     return des
         >>>
-        >>> block = ip.simple_block(calculate_orb_features,
-        ...                         input_shape=[None,None],
-        ...                         output_shape=[None,32])
-        >>>
+        >>> io_map = {ip.GRAY:ip.GRAY}
+        >>> block = ip.quick_block(calculate_orb_features, io_map)
+        >>> block.name
+        'calculate_orb_features1'
     """
     if name is None:
         name = process_fn.__name__

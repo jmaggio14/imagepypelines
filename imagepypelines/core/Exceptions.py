@@ -4,7 +4,6 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .Printer import error as iperror
 from .imports import import_opencv
 cv2 = import_opencv()
 
@@ -34,7 +33,6 @@ class InvalidInterpolationType(TypeError):
         error_string = "'interpolation' ({}) must be one of the following!"\
                                                             .format(interp)
         error_string = error_string + '\n' + interp_string
-        iperror(error_string)
         super(InvalidInterpolationType,self).__init__(error_string)
 
 
@@ -49,7 +47,6 @@ class InvalidNumpyType(TypeError):
         error_string = "'dtype' ({}) must be one of the following!"\
                                                             .format(dtype)
         error_string += "\n\t".join(ip.NUMPY_TYPES)
-        iperror(error_string)
         super(InvalidNumpyType,self).__init__(error_string)
 
 
@@ -70,7 +67,6 @@ class InvalidBlockInputData(TypeError):
             block.name,
             block.input_shape,
         )
-        iperror(error_msg)
         super(InvalidBlockInputData,self).__init__(error_msg)
 
 class InvalidBlockInputLabels(TypeError):
@@ -78,21 +74,18 @@ class InvalidBlockInputLabels(TypeError):
         error_msg = "{}: input labels must a list or NoneType".format(
             block.name,
         )
-        iperror(error_msg)
         super(InvalidBlockInputData,self).__init__(error_msg)
 
 class InvalidProcessStrategy(TypeError):
     def __init__(self,block):
         error_msg = "{}: function 'batch_process' must return a list!".format(
             block.name)
-        iperror(error_msg)
         super(InvalidProcessStrategy,self).__init__(error_msg)
 
 class InvalidLabelStrategy(TypeError):
     def __init__(self,block):
         error_msg = "{}: function 'labels' must return a list or NoneType!".format(
             block.name)
-        iperror(error_msg)
         super(InvalidLabelStrategy,self).__init__(error_msg)
 
 class DataLabelMismatch(TypeError):
@@ -101,9 +94,8 @@ class DataLabelMismatch(TypeError):
         error_msg += "Perhaps the size of your dataset is changing? "
         error_msg += "If so, then you'll have to modify number of labels, "
         error_msg += "look into overloading 'before_process', 'labels', "
-        errror_msg += "or 'label' depending on your system".format(
+        error_msg += "or 'label' depending on your system".format(
             len(processed),
             len(labels)
             )
-        iperror(error_msg)
         super(DataLabelMismatch,self).__init__(error_msg)

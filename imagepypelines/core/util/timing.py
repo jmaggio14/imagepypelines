@@ -6,30 +6,28 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from __future__ import absolute_import
 import time
+from ..Printer import get_printer
 
+PRINTER = get_printer('function_timer')
 
 def function_timer(func):
     """Decorator to time how long a func takes to run in seconds
 
     Example:
         >>> @function_timer
-        >>> def sleep_for_one_sec():
+        ... def sleep_for_one_sec():
         ...    time.sleep(1) # sleep for 1 second
         >>>
-        >>> sleep_for_one_sec()
-        (  function_timer  )[    INFO    ] ran function '_function_timer' in 1.001sec
     """
     # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
-    from .. import core
-    printer = core.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
         ret = func(*args,**kwargs)
         run_time = round(time.time() - start,3)
         msg = "ran function '{name}' in {t}sec".format(name=func.__name__,
                                                             t=run_time)
-        printer.info(msg)
+        PRINTER.info(msg)
 
         return ret
 
@@ -41,23 +39,19 @@ def function_timer_ms(func):
 
     Example:
         >>> @function_timer
-        >>> def sleep_for_one_sec():
+        ... def sleep_for_one_sec():
         ...    time.sleep(1) #sleep for 1 second
         >>>
-        >>> sleep_for_one_sec()
-        # (  function_timer  )[    INFO    ] ran function 'sleep_for_one_sec' in 1000.118ms
     """
     # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
-    from .. import core
-    printer = core.get_printer('function_timer')
     def _function_timer(*args,**kwargs):
         start = time.time()
         ret = func(*args,**kwargs)
         run_time = round((time.time() - start) * 1000,3)
         msg = "ran function '{name}' in {t}ms".format(name=func.__name__,
                                                             t=run_time)
-        printer.info(msg)
+        PRINTER.info(msg)
 
         return ret
 

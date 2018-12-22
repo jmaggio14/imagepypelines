@@ -24,7 +24,7 @@ def import_tensorflow():
     try:
         import tensorflow as tf
     except ImportError:
-        iperror("tensorflow must to be installed separately!")
+        iperror("tensorflow must be installed!")
         iperror("'pip install tensorflow --user' (for CPU only)")
         iperror("'pip install tensorflow-gpu --user' (for CPU+GPU)")
         iperror("see README: https://github.com/jmaggio14/imagepypelines")

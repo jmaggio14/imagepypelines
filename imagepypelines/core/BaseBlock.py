@@ -46,6 +46,9 @@ class ArrayType(object):
         else:
             dtypes = NUMPY_TYPES
 
+        if dtypes is None:
+            dtypes = NUMPY_TYPES
+
         # check to see if dtypes is a single valid numpy dtype
         if dtypes in NUMPY_TYPES:
             dtypes = (dtypes,)
@@ -57,9 +60,23 @@ class ArrayType(object):
         else:
             raise TypeError("dtypes must be None or a tuple/list of valid numpy dtypes")
 
-        # -------------------- real code begins ---------------------
-        array_shapes = tuple(tuple(shp) for shp in array_shapes)
-        self.shapes = array_shapes
+        # ensure that every element is a positive integer or NoneType
+        shapes = list(list(shp) for shp in array_shapes)
+        for shp in shapes:
+            for i in range( len(shp) ):
+                if isinstance(shp[i],float):
+                    assert shp[i] > 0, "elements of shape must be > 0 or None"
+                    shp[i] = int(shp[i])
+
+                elif isinstance(shp[i],int):
+                    assert shp[i] > 0, "elements of shape must be > 0 or None"
+
+                elif not (shp[i] is None):
+                    error_msg = "all elements must be positive integers or None"
+                    raise ValueError(error_msg)
+
+        # -------------------- create instance variables ---------------------
+        self.shapes = tuple(tuple(shp) for shp in shapes)
         self.dtypes = dtypes
 
     def __str__(self):
@@ -79,6 +96,7 @@ class ArrayType(object):
         return False
 
     def __hash__(self):
+        # NOTE(Jeff Maggio) - possible issue here because tuples aren't sorted 
         return hash(self.shapes + self.dtypes)
 
 # acceptable types for datums passed between blocks
@@ -144,8 +162,8 @@ class IoMap(tuple):
         ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
 
         Args:
-            i (ArrayType): input ArrayType
-            o (ArrayType): output ArrayType
+            i (ArrayType): block input
+            o (ArrayType): block output
 
         Returns:
             reduced(tuple): tuple mapping of reduced types ((i1,o1),(i2,o2)...)
@@ -323,7 +341,7 @@ class BaseBlock(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + '({})'.format( self.EXTANT[name] )
+        name = name + '{}'.format( self.EXTANT[name] )
 
 
         # checking if notes were provided for this block
@@ -357,7 +375,7 @@ class BaseBlock(object):
             ip.Block : object reference to this block (self)
 
         Note:
-            unlike naming your pipeline using the `name` parameter in
+            unlike naming your block using the `name` parameter in
             instantiation, imagepypelines will not guarantee that this name
             will be unique. It is considered the user's responsibility to
             determine that this will not cause problems in your pipeline.
