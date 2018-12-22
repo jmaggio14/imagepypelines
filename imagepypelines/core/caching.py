@@ -63,8 +63,6 @@ class Cache(object):
             if not os.path.exists(self.subdir):
                 os.makedirs(self.subdir)
                 self.printer.info("creating Cache for: ",self.subdir)
-            else:
-                self.printer.info("found Cache for: ",self.subdir)
 
 
     def filename(self,basename="no-key"):

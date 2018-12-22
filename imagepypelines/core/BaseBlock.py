@@ -96,7 +96,7 @@ class ArrayType(object):
         return False
 
     def __hash__(self):
-        # NOTE(Jeff Maggio) - possible issue here because tuples aren't sorted 
+        # NOTE(Jeff Maggio) - possible issue here because tuples aren't sorted
         return hash(self.shapes + self.dtypes)
 
 # acceptable types for datums passed between blocks
@@ -341,7 +341,7 @@ class BaseBlock(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + '{}'.format( self.EXTANT[name] )
+        name = name + ':{}'.format( self.EXTANT[name] )
 
 
         # checking if notes were provided for this block

@@ -37,7 +37,6 @@ from .error_checking import interpolation_type_check
 from .error_checking import dtype_type_check
 from .error_checking import is_numpy_array
 from .error_checking import is_iterable
-from .error_checking import type_error_message
 
 # Exceptions.py
 from .Exceptions import CameraReadError
@@ -77,8 +76,9 @@ from .ml_tools import confidence_99
 from .ml_tools import confidence_95
 from .ml_tools import confidence_90
 from .ml_tools import confidence
+from .ml_tools import chunk
 from .ml_tools import batch
-from .ml_tools import batches_to_list
+from .ml_tools import chunks2list
 from .ml_tools import xsample
 from .ml_tools import xysample
 

@@ -111,7 +111,7 @@ class Pipeline(object):
             self.EXTANT[name] += 1
         else:
             self.EXTANT[name] = 1
-        name = name + str(self.EXTANT[name])
+        name = name + ':{}'.format( self.EXTANT[name] )
 
         self.name = name
         self.verbose = verbose
@@ -417,6 +417,8 @@ class Pipeline(object):
         self.step_labels = labels
 
     def _train(self,data,labels=None):
+        # TODO Add a check to see throw an error if self.requires_labels == True
+        # and no labels are passed into this function
         t = Timer()
         for b in self.blocks:
             self.printer.debug("training {}...".format(b.name))
