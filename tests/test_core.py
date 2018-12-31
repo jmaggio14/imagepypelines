@@ -37,7 +37,7 @@ class TestIoMap(object):
         io_map = ip.IoMap( {a:b} )
         assert len(io_map.inputs) == len(io_map.outputs) == 6
 
-    def test_output_given_input(self):
+    def test_output(self):
         """
         check that the block io mapping system is operating correctly
         """
@@ -48,7 +48,7 @@ class TestIoMap(object):
         io_map = ip.IoMap( {a:b} )
 
         desired_output = ip.ArrayType([None]), ip.ArrayType([None,None])
-        given_output = io_map.output_given_input(ip.ArrayType([None]))
+        given_output = io_map.output(ip.ArrayType([None]))
 
         assert set(desired_output) == set(given_output)
 
