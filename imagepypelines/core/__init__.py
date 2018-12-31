@@ -10,6 +10,8 @@ from .constants import *
 
 # BaseBlock.py
 from .BaseBlock import ArrayType
+from .BaseBlock import Same
+from .BaseBlock import Incompatible
 from .BaseBlock import IoMap
 from .BaseBlock import BaseBlock
 
@@ -86,8 +88,6 @@ from .ml_tools import xysample
 from .pipeline_tools import quick_block
 
 # Pipeline.py
-from .Pipeline import restore_from_file
-from .Pipeline import restore_from_pickle
 from .Pipeline import Pipeline
 
 # Printer.py
