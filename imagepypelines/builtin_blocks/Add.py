@@ -1,6 +1,6 @@
 from .. import SimpleBlock
 from .. import ArrayType
-from .. import Same
+from .. import _ND, SAME
 import numpy as np
 
 class Add(SimpleBlock):
@@ -8,7 +8,7 @@ class Add(SimpleBlock):
         assert isinstance(term,(int,float,np.ndarray))
         self.term = term
         io_map = {
-                    ArrayType():Same(),
+                    _ND:SAME,
                     int:float,
                     float:float
                     }

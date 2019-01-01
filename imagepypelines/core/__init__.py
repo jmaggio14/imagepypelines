@@ -110,8 +110,7 @@ from .Printer import comment
 from .Printer import Printer
 
 # quick_types.py
-from .quick_types import RGB
-from .quick_types import GRAY
+from .quick_types import *
 
 # standard_image.py
 from .standard_image import STANDARD_IMAGES
