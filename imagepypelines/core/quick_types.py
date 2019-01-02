@@ -11,11 +11,11 @@ __all__ = [
             'GRAY',
             'RGB',
             'RGBA',
-            '_1D',
-            '_2D',
-            '_3D',
-            '_4D',
-            '_ND',
+            'ARRAY_1D',
+            'ARRAY_2D',
+            'ARRAY_3D',
+            'ARRAY_4D',
+            'ARRAY_ND',
             'SAME',
             ]
 # --------------- Convienence Type Variables --------------------
@@ -28,19 +28,19 @@ RGB = ArrayType([None,None,3])
 RGBA = ArrayType([None,None,4])
 """convienence variable to create an io_map ArrayType for RGBA imagery"""
 
-_1D = ArrayType([None])
+ARRAY_1D = ArrayType([None])
 """convienence variable to create an io_map ArrayType for 1D arrays"""
 
-_2D = ArrayType([None,None])
+ARRAY_2D = ArrayType([None,None])
 """convienence variable to create an io_map ArrayType for 2D arrays"""
 
-_3D = ArrayType([None,None,None])
+ARRAY_3D = ArrayType([None,None,None])
 """convienence variable to create an io_map ArrayType for 3D arrays"""
 
-_4D = ArrayType([None,None,None,None])
+ARRAY_4D = ArrayType([None,None,None,None])
 """convienence variable to create an io_map ArrayType for 4D arrays"""
 
-_ND = ArrayType()
+ARRAY_ND = ArrayType()
 """convienence variable to create an io_map ArrayType for arbitrarily shaped arrays"""
 
 SAME = Same()
