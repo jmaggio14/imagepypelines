@@ -32,7 +32,13 @@ def name_pipeline(name,obj):
     if name is None:
         name = obj.__class__.__name__
 
-    return name
+    global PIPELINE_NAMES
+    if name in PIPELINE_NAMES:
+        PIPELINE_NAMES[name] += 1
+    else:
+        PIPELINE_NAMES[name] = 1
+
+    return name + ':1'
 
 def get_types(data):
     """retrieves the block data type of the input datum"""
@@ -108,8 +114,10 @@ class Pipeline(object):
 
         # print incompatability warnings
         for pred_chain in predicted_type_chains:
-            if INCOMPATIBLE in pred_chain.values():
-                idx = tuple(pred_chain.values()).index(INCOMPATIBLE)
+            vals = tuple(pred_chain.values())
+            if INCOMPATIBLE in vals:
+                import pdb; pdb.set_trace()
+                idx = vals.index(INCOMPATIBLE) - 1
                 block1 = self.blocks[idx-1]
                 block2 = self.blocks[idx]
 
@@ -138,8 +146,9 @@ class Pipeline(object):
                     output_types = INCOMPATIBLE
                 else:
                     try:
-                        output_types = block.io_map.output(input_type)
+                        output_types = block.io_map.output( input_type )
                     except IncompatibleTypes as e:
+                        import pdb; pdb.set_trace()
                         output_types = INCOMPATIBLE
 
                 predicted_chain[str(block)] = output_types
@@ -188,10 +197,12 @@ class Pipeline(object):
             self.step_types.append(step_types)
 
             try:
-                block.io_map.output(step_types)
+                for step_type in step_types:
+                    block.io_map.output(step_type)
             except IncompatibleTypes as e:
-                msg = "not all block inputs ({}) compatible with {}'s' IoMap inputs({}). attempting to compute regardless..."
-                msg = msg.format(step_types, block, block.io_map.inputs )
+                import pdb; pdb.set_trace()
+                msg = "not all {} outputs ({}) compatible with {}'s IoMap inputs({}). attempting to compute regardless..."
+                msg = msg.format(self.blocks[self.step_index-1], step_types, block, block.io_map.inputs )
                 self.printer.warning(msg)
 
         self.step_data,self.step_labels = self._run_block(block,

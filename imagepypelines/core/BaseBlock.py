@@ -82,6 +82,8 @@ class Same(object):
 class Incompatible(object):
     def __str__(self):
         return "No known outputs due to incompatible Inputs"
+    def __repr__(self):
+        return str(self)
 
 class IoMap(tuple):
     """mapping object to determine the output of block
@@ -132,7 +134,7 @@ class IoMap(tuple):
             i (ArrayType): block input
             o (ArrayType): block output
         Returns:
-            reduced(tuple): tuple mapping of reduced types ((i1,o1),(i2,o2)...)
+            tuple: mapping of reduced types ((i1,o1),(i2,o2)...)
         """
         if not isinstance(i,ArrayType):
             reduced_i = ((i, o), )
@@ -213,13 +215,17 @@ class IoMap(tuple):
 
 
             else:
-                raise IncompatibleTypes("invalid input type, must be ({})"\
-                     + "not {}".format(self.inputs,input_type))
+                raise IncompatibleTypes("invalid input type, must be"\
+                     + "({}) not {}".format(self.inputs,input_type))
 
 
-            return outputs
+            return tuple(outputs)
 
+    def __str__(self):
+        return str(self)
 
+    def __repr__(self):
+        return ',\n'.join(str(i) for i in self)
 
 
 
