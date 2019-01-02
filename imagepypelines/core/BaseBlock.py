@@ -56,7 +56,7 @@ class ArrayType(object):
         if len(self.shapes) == 0:
             return "ArrayType(<arbitrary shape>)"
         else:
-            return "ArrayType({})".format(', '.join(self.shapes))
+            return "ArrayType({})".format(', '.join(str(s) for s in self.shapes))
 
     def __repr__(self):
         return str(self)
