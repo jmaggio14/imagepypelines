@@ -8,33 +8,33 @@
 
 # add the name of any imports to this variable
 __all__ = [
-            'Add',
-            'BlockViewer',
-            'CameraBlock',
-            'Color2Gray',
-            'Divide',
-            'FFT',
-            'Lowpass',
-            'Highpass',
-            'Flatten',
-            'Gray2Color',
-            'IFFT',
-            'ImageLoader',
-            'MultilayerPerceptron',
-            'Multiply',
-            'Normalize',
-            'Orb',
-            'PCA',
-            'PretrainedNetwork',
-            'Resizer',
-            'Subtract',
-            'SupportVectorMachine',
-            'LinearSvm',
-            'RbfSvm',
-            'PolySvm',
-            'SigmoidSvm',
-            'Otsu',
-            'WriterBlock',
+            'Add',                   #1
+            'BlockViewer',           #2
+            'CameraBlock',           #3
+            'Color2Gray',            #4
+            'Divide',                #5
+            'FFT',                   #6
+            'Lowpass',               #7
+            'Highpass',              #8
+            'Flatten',               #9
+            'Gray2Color',            #10
+            'IFFT',                  #11
+            'ImageLoader',           #12
+            'MultilayerPerceptron',  #13
+            'Multiply',              #14
+            'Normalize',             #15
+            'Orb',                   #16
+            'PCA',                   #17
+            'PretrainedNetwork',     #18
+            'Resizer',               #19
+            'Subtract',              #20
+            'SupportVectorMachine',  #21
+            'LinearSvm',             #22
+            'RbfSvm',                #23
+            'PolySvm',               #24
+            'SigmoidSvm',            #25
+            'Otsu',                  #26
+            'WriterBlock',           #27        
             ]
 # Add.py
 from .Add import Add

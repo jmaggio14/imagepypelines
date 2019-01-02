@@ -19,7 +19,7 @@ class Subtract(SimpleBlock):
                     int:float,
                     float:float
                     }
-        super(Add,self).__init__(io_map)
+        super(Subtract,self).__init__(io_map)
 
     def process(self, datum):
         if isinstance(datum,int):

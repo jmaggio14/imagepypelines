@@ -19,7 +19,7 @@ class Multiply(SimpleBlock):
                     int:float,
                     float:float
                     }
-        super(Add,self).__init__(io_map)
+        super(Divide,self).__init__(io_map)
 
     def process(self, datum):
         if isinstance(datum,int):

@@ -16,7 +16,7 @@ class Normalize(SimpleBlock):
         self.a = a
         self.b = b
         io_map = {ArrayType():Same()}
-        super(Add,self).__init__(io_map)
+        super(Normalize,self).__init__(io_map)
 
     def process(self, datum):
         return norm_ab(datum,a,b)
