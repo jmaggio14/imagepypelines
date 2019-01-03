@@ -69,9 +69,6 @@ class SimpleBlock(BaseBlock):
         """calls self.label for each datum and returns a list or Nonetype"""
         return [self.label(lbl) for lbl in labels]
 
-    def __repr__(self):
-        return (str(self) + '-(SimpleBlock)' + '\n' + self.notes)
-
 
 class BatchBlock(BaseBlock):
     """Block subclass that processes datums as a batch
@@ -133,9 +130,6 @@ class BatchBlock(BaseBlock):
     def label_strategy(self, labels):
         """runs self.labels"""
         return self.labels(labels)
-
-    def __repr__(self):
-        return (str(self) + '-(BatchBlock)' + '\n' + self.notes)
 
 
 class TfBlock(BatchBlock):
