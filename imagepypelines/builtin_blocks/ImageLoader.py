@@ -35,7 +35,7 @@ class ImageLoader(SimpleBlock):
             registered to 'name'
     """
     def __init__(self):
-        io_map = {str:ArrayType([None,None],[None,None,3],[None,None,4])}
+        io_map = {str:ArrayType([None,None],[None,None,3])}
         notes = "loads images from disk given an input filename"
         super(ImageLoader,self).__init__(io_map,
                                         notes=notes,
