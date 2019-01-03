@@ -139,7 +139,10 @@ class IoMap(tuple):
         if not isinstance(i,ArrayType):
             reduced_i = ((i, o), )
         else:
-            split = tuple(ArrayType(shp) for shp in i.shapes)
+            if i.arbitrary:
+                split = (ArrayType(),)
+            else:
+                split = tuple(ArrayType(shp) for shp in i.shapes)
             reduced_i = zip(split, (o,)*len(split))
 
         reduced = []
@@ -147,7 +150,10 @@ class IoMap(tuple):
             if not isinstance(o,ArrayType):
                 reduced.append((i, o))
             else:
-                split = tuple(ArrayType(shp) for shp in o.shapes)
+                if o.arbitrary:
+                    split = (ArrayType(),)
+                else:
+                    split = tuple(ArrayType(shp) for shp in o.shapes)
                 reduced.extend(zip((i,)*len(split), split))
 
         return tuple( reduced )
@@ -158,7 +164,7 @@ class IoMap(tuple):
         compatability
         Args:
             input_array(tuple): input ArrayType
-            acceptable_array(tuple): Acceptable ArrayTypes
+            acceptable_array(tuple): acceptable ArrayTypes
         Returns:
             compatible(bool): whether or the input shape is compatible with
                 this block
@@ -230,19 +236,24 @@ class IoMap(tuple):
     def __repr__(self):
         return ',\n'.join(str(i) for i in self)
 
+def describe_block(block,notes):
+    if notes is None:
+        notes = "<no description provided by the author>"
+    # create a 'readable' io map that simply replaces outputs defined as 'Same'
+    # with it's corresponding input
+    # (ArrayType((512,512)),Same)-->(ArrayType((512,512)),ArrayType((512,512)))
+    readable_io = [(i,(i if isinstance(o,Same) else o)) for i,o in block.io_map]
 
+    io_map_str = "\n".join("{} --> {}".format(i,o) for i,o in readable_io)
+    description = \
+"""{name}
 
+{notes}
 
+io mapping:
+{io_map}""".format(name=block.name,notes=notes,io_map=io_map_str)
 
-
-
-
-
-
-
-
-
-
+    return description
 
 class BaseBlock(object):
     """BaseBlock object which is the root class for SimpleBlock and BatchBlock
@@ -270,14 +281,17 @@ class BaseBlock(object):
             subclass of tuple where I/O is stored as:
             ( (input1,output1),(input2,output2)... )
         name(str): unique name for this block
-        notes(str): a short description of this block
+        notes(str): a short description of this block, what operations it
+            performs, etc. This will be included in the blocks 'description'
+            variance
         requires_training(bool): whether or not this block will require
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
         printer(ip.Printer): printer object for this block,
             registered to 'name'
-
+        description(str): a readable description of this block that includes
+            user defined notes and a summary of inputs and outputs
     """
     __metaclass__ = ABCMeta
     EXTANT = {}
@@ -299,17 +313,9 @@ class BaseBlock(object):
             self.EXTANT[name] = 1
         name = name + ':{}'.format( self.EXTANT[name] )
 
-
-        # checking if notes were provided for this block
-        if notes is None:
-            notes = "No Description provided by the author"
-        if not isinstance(notes,str):
-            raise TypeError("notes must be a string description or None")
-
         # ------ setting up instance variables
         self.io_map = IoMap(io_map)
         self.name = name
-        self.notes = notes
         self.requires_training = requires_training
         self.requires_labels = requires_labels
 
@@ -318,6 +324,9 @@ class BaseBlock(object):
             self.trained = True
 
         self.printer = get_printer(self.name)
+
+        # create a block description
+        self.description = describe_block(self,notes)
 
         super(BaseBlock,self).__init__()
 
@@ -504,7 +513,7 @@ class BaseBlock(object):
         return self.name
 
     def __repr__(self):
-        return (str(self) + '\n' + self.notes)
+        return self.description
 
     def prep_for_serialization(self):
         pass
