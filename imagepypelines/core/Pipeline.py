@@ -20,7 +20,7 @@ import pickle
 import collections
 import copy
 import numpy as np
-from termcolor import colored
+from termcolor import cprint
 
 PIPELINE_NAMES = {}
 INCOMPATIBLE = (Incompatible(),)
@@ -45,7 +45,7 @@ def get_types(data):
     def _get_types():
         for datum in data:
             if isinstance(datum,np.ndarray):
-                yield (ArrayType(datum.shape,dtypes=datum.dtype),)
+                yield (ArrayType(datum.shape),)
             else:
                 yield (type(datum),)
 
@@ -64,7 +64,7 @@ class Pipeline(object):
         self.name = name_pipeline(name,self)
         self.skip_validation = skip_validation
         self.track_types = track_types
-        self.debug = debug
+        self._debug = debug
 
         self.printer = get_printer(self.name)
         self.blocks = []
@@ -165,9 +165,10 @@ class Pipeline(object):
             buf = ' ' * 6
             for b,output in chain.items():
                 color = 'red' if output == INCOMPATIBLE else None
+                output = ',  '.join(str(s) for s in output)
+                out_str = '  {buf}|\n  {buf}|{out}\n  {buf}|'
+                out_str = out_str.format(buf=' ' * 6, out=output)
 
-                out_str = '  {buf}|\n  {buf}|{out}  {buf}|'
-                out_str = out_str.format(buf=' ' * 6, out=',  '.join(output))
                 cprint('  {}'.format(b), color)
                 if b == 'pipeline_output':
                     break
@@ -177,7 +178,7 @@ class Pipeline(object):
         """enables debug mode which turns on all printouts for this pipeline
         to aide in debugging
         """
-        self.debug = True
+        self._debug = True
         return self
 
     def graph(self):

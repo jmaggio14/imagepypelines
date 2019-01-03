@@ -15,12 +15,11 @@ numpy_types = [np.uint8,
                 np.complex128]
 
 # test function for ArrayType
-@given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))),
-        dtypes=st.lists(st.sampled_from(numpy_types)) )
-def test_ArrayType(shape, dtypes):
+@given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))) )
+def test_ArrayType(shape):
     """test ArrayType instantiation of multiple shapes and dtypes"""
     import imagepypelines as ip
-    ip.ArrayType(shape,dtypes=dtypes)
+    ip.ArrayType(shape)
 
 # ------------- IoMap -------------
 class TestIoMap(object):
@@ -48,7 +47,7 @@ class TestIoMap(object):
         io_map = ip.IoMap( {a:b} )
 
         desired_output = ip.ArrayType([None]), ip.ArrayType([None,None])
-        given_output = io_map.output(ip.ArrayType([None]))
+        given_output = io_map.output( (ip.ArrayType([None]),) )
 
         assert set(desired_output) == set(given_output)
 

@@ -168,8 +168,11 @@ class IoMap(tuple):
         if acceptable_array.arbitrary:
             return True
 
+        input_shape = input_array.shapes[0]
+        acceptable_shape = acceptable_array.shapes[0]
+
         # if they have a different number of axis, they aren't compatible
-        if len(input_array.shape) != len(acceptable_array.shape):
+        if len(input_shape) != len(acceptable_shape):
             return False
 
         # compare every element
@@ -208,7 +211,7 @@ class IoMap(tuple):
             elif isinstance(input_type, ArrayType):
                 for arr_in,arr_out in self.arrays:
                     if self.shape_comparison(input_type,arr_in):
-                        if isinstance(out,Same):
+                        if isinstance(arr_out,Same):
                             outputs.add(arr_in)
                         else:
                             outputs.add(arr_out)
