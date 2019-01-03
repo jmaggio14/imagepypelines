@@ -116,7 +116,6 @@ class Pipeline(object):
         for pred_chain in predicted_type_chains:
             vals = tuple(pred_chain.values())
             if INCOMPATIBLE in vals:
-                import pdb; pdb.set_trace()
                 idx = vals.index(INCOMPATIBLE) - 1
                 block1 = self.blocks[idx-1]
                 block2 = self.blocks[idx]
@@ -148,7 +147,6 @@ class Pipeline(object):
                     try:
                         output_types = block.io_map.output( input_type )
                     except IncompatibleTypes as e:
-                        import pdb; pdb.set_trace()
                         output_types = INCOMPATIBLE
 
                 predicted_chain[str(block)] = output_types
@@ -201,7 +199,6 @@ class Pipeline(object):
                 for step_type in step_types:
                     block.io_map.output(step_type)
             except IncompatibleTypes as e:
-                import pdb; pdb.set_trace()
                 msg = "not all {} outputs ({}) compatible with {}'s IoMap inputs({}). attempting to compute regardless..."
                 msg = msg.format(self.blocks[self.step_index-1], step_types, block, block.io_map.inputs )
                 self.printer.warning(msg)
