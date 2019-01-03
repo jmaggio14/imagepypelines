@@ -4,13 +4,14 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+#
 
+from .. import Pipeline
+from .. import builtin_blocks as blocks
 
-# add the name of any imports to this variable
-__all__ = [
-            'SimpleImageClassifier',
-            'LinearTransform',
-            ]
+def LinearTransform(m,b):
+    mult = blocks.Multiply(m)
+    add = blocks.Add(b)
 
-from .SimpleImageClassifier import SimpleImageClassifier
-from .LinearTransform import LinearTransform
+    pipeline = Pipeline([mult,add],name="LinearTransform")
+    return pipeline

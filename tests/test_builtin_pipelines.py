@@ -22,3 +22,16 @@ def test_SimpleImageClassifier():
 
     predicted = classifier.process(x_test)
     accuracy = ip.accuracy(predicted,ground_truth)
+
+
+
+
+def test_LinearTransform():
+    import imagepypelines as ip
+
+    linear = ip.pipelines.LinearTransform(10,-50)
+
+    data = list( range(10) )
+
+    processed = linear.process(data)
+    assert processed == [float(f) for f in range(-50,50,10)]
