@@ -83,7 +83,7 @@ class Divide1000(ip.SimpleBlock):
     io_dict = {
                 int : float,
                 float : float,
-                ip.ARRAY_ND : ip.Same,
+                ip.ARRAY_ND : ip.Same(),
               }
     super().__init__(io_dict, notes=notes)
 
