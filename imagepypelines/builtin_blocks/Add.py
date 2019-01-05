@@ -13,18 +13,21 @@ import numpy as np
 class Add(SimpleBlock):
     def __init__(self,term):
         assert isinstance(term,(int,float,np.ndarray))
+        # forceably convert term to a float so integer datum
+        # will consistently be a float
+        if isinstance(term,int):
+            term = float(term)
         self.term = term
+
         io_map = {
                     ARRAY_ND:SAME,
                     int:float,
                     float:float
                     }
-        super(Add,self).__init__(io_map)
+        notes = "adds a user-defined term to a numerical input"
+        super(Add,self).__init__(io_map,notes=notes)
 
     def process(self, datum):
-        if isinstance(datum,int):
-            datum = float(datum)
-
         return datum + self.term
 
 

@@ -11,9 +11,9 @@ from .. import Same
 import numpy as np
 
 class Divide(SimpleBlock):
-    def __init__(self,term):
-        assert isinstance(term,(int,float,np.ndarray))
-        self.term = term
+    def __init__(self,divisor):
+        assert isinstance(divisor,(int,float,np.ndarray))
+        self.divisor = divisor
         io_map = {
                     ArrayType():Same(),
                     int:float,
@@ -22,4 +22,4 @@ class Divide(SimpleBlock):
         super(Divide,self).__init__(io_map)
 
     def process(self, datum):
-        return datum / self.term
+        return datum / self.divisor

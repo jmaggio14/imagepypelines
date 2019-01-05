@@ -231,20 +231,27 @@ class IoMap(tuple):
             return tuple(outputs)
 
     def __str__(self):
-        return str(self)
+        return repr(self)
 
     def __repr__(self):
-        return ',\n'.join(str(i) for i in self)
+        # create a 'readable' io map that simply replaces outputs defined as 'Same'
+        # with it's corresponding input
+        # (ArrayType((512,512)),Same)-->(ArrayType((512,512)),ArrayType((512,512)))
+        io = []
+        for i,o in self:
+            if isinstance(o,Same) and isinstance(i,ArrayType):
+                o = str(i) + " [same shape as input]"
+            io.append( (i,o) )
+
+        io_map_str = "\n".join("{} --> {}".format(i,o) for i,o in io)
+        return io_map_str
+
 
 def describe_block(block,notes):
     if notes is None:
         notes = "<no description provided by the author>"
-    # create a 'readable' io map that simply replaces outputs defined as 'Same'
-    # with it's corresponding input
-    # (ArrayType((512,512)),Same)-->(ArrayType((512,512)),ArrayType((512,512)))
-    readable_io = [(i,(i if isinstance(o,Same) else o)) for i,o in block.io_map]
 
-    io_map_str = "\n".join("{} --> {}".format(i,o) for i,o in readable_io)
+    io_map_str = repr(block.io_map)
     description = \
 """{name}
 

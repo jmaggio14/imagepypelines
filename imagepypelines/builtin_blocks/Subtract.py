@@ -13,6 +13,10 @@ import numpy as np
 class Subtract(SimpleBlock):
     def __init__(self,term):
         assert isinstance(term,(int,float,np.ndarray))
+        # forceably convert term to a float so integer datum
+        # will consistently be a float
+        if isinstance(term,int):
+            term = float(term)
         self.term = term
         io_map = {
                     ArrayType():Same(),
@@ -22,7 +26,4 @@ class Subtract(SimpleBlock):
         super(Subtract,self).__init__(io_map)
 
     def process(self, datum):
-        if isinstance(datum,int):
-            datum = float(datum)
-
         return datum - self.term
