@@ -74,9 +74,10 @@ convenience variables for commonly used array types are preincluded and defined 
 
 ## Example Block Creation
 ```python
+import imagepypelines as ip
 # Let's create a block to divide an input by 1000
 # this block will take in any numerical input
-class Divide1000(object):
+class Divide1000(ip.SimpleBlock):
   def __init__(self):
     notes = "divides a numerical input by 1000"
     io_dict = {
