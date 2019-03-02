@@ -14,7 +14,7 @@ import sys
 
 from .. import CACHE
 from .Printer import get_default_printer
-from .Pipeline import Pipeline, restore_from_pickle
+from .Pipeline import Pipeline
 from .BaseBlock import BaseBlock
 
 

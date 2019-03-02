@@ -191,8 +191,6 @@ def norm_ab(img, a, b):
     Returns:
         np.ndarray: normalized image, dtype=np.float64
     """
-    assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
-
     img_out = norm_01(img)
     # scale to the extent of the range, then shift to match
     img_out = (img_out * (b - a)) + a
