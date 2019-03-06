@@ -40,7 +40,7 @@ def name_pipeline(name,obj):
     return name + ':1'
 
 def get_types(data):
-    """retrieves the block data type of the input datum"""
+    """Retrieves the block data type of the input datum"""
     def _get_types():
         for datum in data:
             if isinstance(datum,np.ndarray):
@@ -52,6 +52,34 @@ def get_types(data):
 
 class Pipeline(object):
     """
+            Pipeline object to apply a sequence of algorithms to input data
+
+            Pipelines pass data between block objects and validate the integrity
+            of a data processing pipeline. It is intended to be a quick, flexible, and
+            modular approach to creating a processing graph. It also contains helper
+            functions for documentation and saving these pipelines for use by other
+            researchers/users.
+
+            Args:
+                name(str): name for this pipeline that will be enumerated to be unique,
+                    defaults to the name of the subclass<index>
+                blocks(list): list of blocks to instantiate this pipeline with, shortcut
+                    to the 'add' function. defaults to []
+                verbose(bool): whether or not to enable printouts for this pipeline,
+                    defaults to True
+                enable_text_graph(bool): whether or not to print out a graph of
+                    pipeline blocks and outputs
+
+            Attributes:
+                name(str): unique name for this pipeline
+                blocks(list): list of block objects being used by this pipeline,
+                    in order of their processing sequence
+                verbose(bool): whether or not this pipeline with print
+                    out its status
+                enable_text_graph(bool): whether or not to print out a graph of
+                    pipeline blocks and outputs
+                printer(ip.Printer): printer object for this pipeline,
+                    registered with 'name'
     """
     def __init__(self,
                     blocks=[],
@@ -97,7 +125,7 @@ class Pipeline(object):
         # assert that every element in the blocks list is a BaseBlock subclass
         if not all(isinstance(b,BaseBlock) for b in self.blocks):
             error_msg = \
-               "all elements of the pipeline must be subclasses of ip.BaseBlock"
+               "All elements of the pipeline must be subclasses of ip.BaseBlock"
             raise RuntimeError(error_msg)
 
         # make sure data is a list
@@ -131,7 +159,7 @@ class Pipeline(object):
             self._text_graph(predicted_type_chains)
 
     def predict_type_chain(self,data):
-        """predict the types at each stage of the pipeline
+        """Predict the types at each stage of the pipeline
         """
         data_types = get_types(data)
 
@@ -172,7 +200,7 @@ class Pipeline(object):
                 cprint(out_str, color)
 
     def debug(self):
-        """enables debug mode which turns on all printouts for this pipeline
+        """Enables debug mode which turns on all printouts for this pipeline
         to aide in debugging
         """
         self._debug = True
@@ -306,7 +334,7 @@ class Pipeline(object):
     # ================== utility functions / properties ==================
     def save(self, filename=None):
         """
-        pickles and saves the entire pipeline as a pickled object, so it can
+        Pickles and saves the entire pipeline as a pickled object, so it can
         be used by others or at another time
 
         Args:
@@ -330,17 +358,17 @@ class Pipeline(object):
 
     @property
     def names(self):
-        """returns the names of all blocks"""
+        """Returns the names of all blocks"""
         return [b.name for b in self.blocks]
 
     @property
     def trained(self):
-        """returns whether or not this pipeline has been trained"""
+        """Returns whether or not this pipeline has been trained"""
         return all(b.trained for b in self.blocks)
 
     @property
     def requires_labels(self):
-        """returns whether or not this pipeline requires labels"""
+        """Returns whether or not this pipeline requires labels"""
         return any(b.requires_labels for b in self.blocks)
 
     def __str__(self):
@@ -360,7 +388,7 @@ class Pipeline(object):
 
     # ======== block list manipulation / List functionality functions ========
     def add(self, block):
-        """adds processing block to the pipeline processing chain
+        """Adds processing block to the pipeline processing chain
 
         Args:
             block (ip.BaseBlock): block object to add to this pipeline
@@ -382,7 +410,7 @@ class Pipeline(object):
         self.blocks.append(block)
 
     def insert(self, index, block):
-        """inserts processing block into the pipeline processing chain
+        """Inserts processing block into the pipeline processing chain
 
         Args:
             index (int): index at which block object is to be inserted
@@ -444,7 +472,7 @@ class Pipeline(object):
         self.__delitem__(i)
 
     def copy(self):
-        """provides deepcopy of pipeline processing chain
+        """Provides deepcopy of pipeline processing chain
 
         Args:
             None
@@ -459,7 +487,7 @@ class Pipeline(object):
         return copy.deepcopy(self)
 
     def clear(self):
-        """clears all processing blocks from the pipeline processing chain
+        """Clears all processing blocks from the pipeline processing chain
 
         Args:
             None
@@ -477,8 +505,19 @@ class Pipeline(object):
         self.blocks = []
 
     def join(self,pipeline):
-        """adds the blocks from the pipeline passed in to this pipeline
+        """Adds the blocks from an input pipeline to the current pipeline
+
+        Args:
+            pipeline(ip.Pipeline): a valid pipeline object containing blocks
+
+        Returns:
+            None
+
+        Raise:
+            None
+
         """
+
         for b in pipeline.blocks:
             self.add(b)
 
