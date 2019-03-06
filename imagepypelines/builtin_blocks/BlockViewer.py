@@ -6,6 +6,7 @@
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock, ArrayType
 from .. import Viewer
+from .. import GRAY, RGB
 import time
 
 
@@ -41,9 +42,8 @@ class BlockViewer(SimpleBlock):
                  normalize=False,
                  enable_frame_counter=True):
         self.pause_time = pause_time
-        io_map = {ArrayType([None, None]): ArrayType([None, None]),
-                  ArrayType([None, None, 3]): ArrayType([None, None, 3])
-                  }
+        io_map = {GRAY : GRAY,
+                  RGB : RGB}
         super(BlockViewer, self).__init__(io_map,
                                           requires_training=False)
         self.viewer = Viewer(self.name, FFT=FFT, normalize=normalize)

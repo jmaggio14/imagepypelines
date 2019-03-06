@@ -35,7 +35,7 @@ def quick_block(process_fn,
         >>> io_map = {ip.GRAY:ip.GRAY}
         >>> block = ip.quick_block(calculate_orb_features, io_map)
         >>> block.name
-        'calculate_orb_features1'
+        'calculate_orb_features:1'
     """
     if name is None:
         name = process_fn.__name__

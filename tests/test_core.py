@@ -15,12 +15,11 @@ numpy_types = [np.uint8,
                 np.complex128]
 
 # test function for ArrayType
-@given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))),
-        dtypes=st.lists(st.sampled_from(numpy_types)) )
-def test_ArrayType(shape, dtypes):
+@given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))) )
+def test_ArrayType(shape):
     """test ArrayType instantiation of multiple shapes and dtypes"""
     import imagepypelines as ip
-    ip.ArrayType(shape,dtypes=dtypes)
+    ip.ArrayType(shape)
 
 # ------------- IoMap -------------
 class TestIoMap(object):
@@ -35,10 +34,9 @@ class TestIoMap(object):
         a = ip.ArrayType([None,None,None],[None,None],[None])
         b = ip.ArrayType([None,None,None,None],[None,None])
         io_map = ip.IoMap( {a:b} )
-        assert len(io_map.inputs) == 6
-        assert len(io_map.outputs) == 6
+        assert len(io_map.inputs) == len(io_map.outputs) == 6
 
-    def test_output_given_input(self):
+    def test_output(self):
         """
         check that the block io mapping system is operating correctly
         """
@@ -49,7 +47,7 @@ class TestIoMap(object):
         io_map = ip.IoMap( {a:b} )
 
         desired_output = ip.ArrayType([None]), ip.ArrayType([None,None])
-        given_output = io_map.output_given_input(ip.ArrayType([None]))
+        given_output = io_map.output( (ip.ArrayType([None]),) )
 
         assert set(desired_output) == set(given_output)
 
@@ -156,7 +154,63 @@ def test_constants():
 
 
 # =================== error_checking.py ===================
-# TODO - JM
+def test_interpolation_type_check():
+    import imagepypelines as ip
+    import cv2
+
+    for inter in ip.CV2_INTERPOLATION_TYPES:
+        ip.interpolation_type_check(inter)
+
+
+    failure = -1
+    try:
+        ip.interpolation_type_check(failure)
+    except ip.InvalidInterpolationType:
+        pass
+
+def test_dtype_type_check():
+    import imagepypelines as ip
+    import numpy as np
+
+    # success
+    for dtype in ip.NUMPY_TYPES:
+        ip.dtype_type_check(dtype)
+
+    # failure
+    try:
+        ip.dtype_type_check(-1)
+    except ip.InvalidNumpyType:
+        pass
+    else:
+        raise RuntimeError("failure failed")
+
+def test_is_numpy_array():
+    import imagepypelines as ip
+    import numpy as np
+
+    ls = [1,2,3,4,5,6,7,8,9,0]
+    assert not ip.is_numpy_array(ls)
+
+    a = np.array(ls)
+    assert ip.is_numpy_array(a)
+
+
+
+def test_is_iterable():
+    import imagepypelines as ip
+    import numpy as np
+
+    assert ip.is_iterable( list() )
+    assert ip.is_iterable( tuple() )
+    assert ip.is_iterable( np.array([1,2,3,4]) )
+    # test a generator
+    assert ip.is_iterable( x for x in range(10) )
+    assert ip.is_iterable( "this a string" )
+
+    assert not ip.is_iterable( 5 )
+    assert not ip.is_iterable( 10.0 )
+
+
 
 # =================== Exceptions.py ===================
 # TODO - JM
@@ -180,10 +234,124 @@ class TestImports(object):
         assert tf == ip.import_tensorflow()
 
 # =================== ml_tools.py ===================
-# TODO - JM
+def test_accuracy():
+    import imagepypelines as ip
+    predicted =    [0,1,0,1,0,1,0,1,0,1]
+    ground_truth = [1,1,1,1,1,1,1,1,1,1]
+    # we should have 50% accuracy
+    accuracy = round(ip.accuracy(predicted,ground_truth),3)
+    assert accuracy == .5
+
+
+# class TestSample(object):
+#     def test_xsample(self):
+#         """confirm that xsample returns a uniform sample by confirming the null
+#         hypothesis
+#         """
+#         import imagepypelines as ip
+#         import numpy as np
+#
+#         alpha = 1e-3 # null hypothesis cutoff
+#         # create a random uniform distribution min = 0, max = 1
+#         uni = [x for x in np.random.uniform(0,1,1000)]
+#
+#         if p < alpha:
+
+
+def test_chunk():
+    import imagepypelines as ip
+    size = 901
+    n = 10.0
+    example = list( range(size) )
+    # we should have 9 lists of length 91, and one of length 82
+    chunks = ip.chunk(example,n)
+
+    assert all( len(x) == 91 for x in chunks[:len(chunks)-1])
+    assert len(chunks[-1]) == 82
+
+
+def test_batch():
+    import imagepypelines as ip
+    size = 901
+    n = 91
+    example = list( range(size) )
+    # we should have 9 lists of length 91, and one of length 82
+    batches = ip.batch(example,n)
+
+    assert all( len(x) == 91 for x in batches[:-1])
+    assert len(batches[-1]) == 82
+
+
+def test_chunks2list():
+    import imagepypelines as ip
+    import copy
+    ls = list(range(1000))
+    ls2 = copy.deepcopy(ls)
+    chunks = ip.chunk(ls, 10)
+    assert ls == ip.chunks2list(chunks)
+
+def test_xsample():
+    import imagepypelines as ip
+    fraction = 0.05
+
+    population = list( range(100) )
+
+    sample = ip.xsample(population,fraction)
+
+def test_xysample():
+    import imagepypelines as ip
+    import copy
+    fraction = 0.05
+
+    population = list( range(100) )
+    pop_labels = copy.deepcopy(population)
+
+    sample,lbls = ip.xysample(population,pop_labels,fraction)
+
+    # check to make sure corresponding labels are returned for the data
+    assert len(sample) == len(lbls)
+    assert all(sample[i] == lbls[i] for i in range(len(sample)))
+    assert len(sample) == int(fraction * len(population))
+
+
 
 # =================== pipeline_tools.py ===================
-# TODO - JM
+def test_quick_block():
+    import imagepypelines as ip
+    import numpy as np
+
+    io_map = {ip.GRAY:ip.GRAY}
+    process_fn = lambda x : x+1
+    name = "this is a test"
+
+    # try a block with a custom name
+    plus_one_block = ip.quick_block(process_fn,io_map,name)
+
+    assert isinstance(plus_one_block,ip.BaseBlock)
+    assert plus_one_block.name == name + ':1'
+
+    pipeline = ip.Pipeline([plus_one_block])
+    processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
+    assert np.all(np.around(processed,3) == 1)
+
+    # try a block with a generated name
+    plus_one_block = ip.quick_block(process_fn,io_map)
+
+    assert isinstance(plus_one_block,ip.BaseBlock)
+    assert plus_one_block.name == '<lambda>' + ':1'
+
+    pipeline = ip.Pipeline([plus_one_block])
+    processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
+    assert np.all(np.around(processed,3) == 1)
+
+
+
+
+
+
+
+
+
 
 # =================== Pipeline.py ===================
 # RH - Taking this guy over Jiff

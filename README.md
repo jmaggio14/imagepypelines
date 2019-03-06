@@ -58,9 +58,17 @@ Full documentation for `imagepypelines`, including examples and tutorials, can b
 
 
 ## Licensing / Credit
-`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for commercial or research use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
+`imagepypelines` is licensed under the [MIT](https://choosealicense.com/licenses/mit/) permissive software license. You may use this code for research or commercial use so long as it conforms to the terms of the license included in this repo as well as the licenses of `imagepypelines` dependencies.
 
 Please credit us if you use `imagepypelines` in your research
+```
+@misc{imagepypelines,
+  title="imagepypelines - imaging science acceleration library",
+  author="Hartzell, Dileas, Maggio",
+  YEAR="2018",
+  howpublished="\url{https://github.com/jmaggio14/imagepypelines}",
+}
+```
 
 # What Makes Us Unique?
 

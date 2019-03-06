@@ -9,6 +9,8 @@
 # add the name of any imports to this variable
 __all__ = [
             'SimpleImageClassifier',
+            'LinearTransform',
             ]
 
 from .SimpleImageClassifier import SimpleImageClassifier
+from .LinearTransform import LinearTransform

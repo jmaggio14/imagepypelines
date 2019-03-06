@@ -8,7 +8,6 @@ os:
   # - osx # Python not supported yet for travis osx builds 12/11/2018
 
 python:
-  - 2.7
   - 3.4
   - 3.5
   - 3.6
@@ -17,7 +16,7 @@ install:
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
-  - pip install tensorflow==1.10.0 opencv-python
+  - pip install tensorflow opencv-python
   # codecov requirements
   - pip install Sphinx sphinx_bootstrap_theme m2r
   # codecov requirements
@@ -27,7 +26,7 @@ script:
   # license enforcer
   - python enforcer.py
   # running tests and code coverage report
-  - py.test --doctest-module --ignore=setup.py --ignore=tests/
+  - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
   - py.test --cov=./imagepypelines tests/
   # Building documentation
   - sphinx-apidoc -o docs/source imagepypelines
