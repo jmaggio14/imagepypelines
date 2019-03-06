@@ -217,7 +217,7 @@ class Pipeline(object):
         i = self.names.index(block_name)
         self.__delitem__(i)
 
-    def copy(self):
+    def __deepcopy__(self):
         """provides deepcopy of pipeline processing chain
 
         Args:
@@ -229,8 +229,8 @@ class Pipeline(object):
         Raise:
             None
         """
-        # returns a deepcopy of entire pipeline (this will be useful for cache?)
-        return copy.deepcopy(self)
+        # returns a deepcopy of entire pipeline (__deepcopy__ must be done for base block)
+        return Pipeline(copy.deepcopy(self.blocks),copy.deepcopy(self.name))
 
     def clear(self):
         """clears all processing blocks from the pipeline processing chain

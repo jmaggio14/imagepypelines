@@ -216,10 +216,10 @@ class TestPipeline(object):
         P.join(FFT())
         P.join(ip.Pipeline([12,'a']),name=float(12))
 
-        sstr = P.__repr__()
-        outstr = P.__str__()
+        sstr = repr(P)
+        outstr = str(P)
         it = iter(P)
-        nxt = P.__next__()
+        nxt = next(P)
 
         names = P_copy.names
         trained = P_copy.trained
