@@ -15,7 +15,7 @@
 
 .. add in the header image
 
-.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png
+.. image::https://raw.githubusercontent.com/jmaggio14/imagepypelines/develop/docs/images/ip_logo_mini.png
   :align: center
   :alt: ip_logo
   :width: 128
