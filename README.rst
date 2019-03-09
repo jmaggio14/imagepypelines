@@ -11,9 +11,11 @@
 
 .. _logging: https://docs.python.org/3.7/library/logging.html
 
+.. _build opencv from source: https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.htmll
+
 .. add in the header image
 
-:raw-html:`<img src="https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png" align="middle" width="64">`
+:raw-html:`<img src="https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png" align="center" width="64">`
 
 :raw-html:`<h1 align="center">imagepypelines</h1>`
 
@@ -85,8 +87,9 @@ on your machine
 
   pip install tensorflow --user
 
+
 **opencv**
-we strongly recommend that you [build opencv from source](https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html). *However* unofficial bindings for Opencv can be installed with
+we strongly recommend that you `build opencv from source`_. *However* unofficial bindings for Opencv can be installed with
 
 .. code-block:: shell
 
