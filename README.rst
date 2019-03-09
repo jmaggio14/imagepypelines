@@ -12,10 +12,8 @@
 .. _logging: https://docs.python.org/3.7/library/logging.html
 
 .. add in the header image
-.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png
-  :width: 128
-  :alt: ip_logo
-  :align: center
+
+:raw-html:`<img src="https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png" align="middle" width="64">`
 
 :raw-html:`<h1 align="center">imagepypelines</h1>`
 
