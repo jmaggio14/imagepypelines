@@ -15,10 +15,9 @@
 
 .. add in the header image
 
-.. image::https://raw.githubusercontent.com/jmaggio14/imagepypelines/develop/docs/images/ip_logo_mini.png
+.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/develop/docs/images/ip_logo_mini.png
   :align: center
   :alt: ip_logo
-  :width: 128
 
 :raw-html:`<h1 align="center">imagepypelines</h1>`
 
