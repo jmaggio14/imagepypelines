@@ -15,19 +15,22 @@
 
 .. add in the header image
 
-:raw-html:`<img src="https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png" align="center" width="64">`
+.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/ip_logo.png
+  :align: center
+  :alt: ip_logo
+  :width: 128
 
 :raw-html:`<h1 align="center">imagepypelines</h1>`
 
 
 
 .. image:: https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg
-  :alt: ip_logo
+  :alt: coverage
   :height: 20
 
 
 .. image:: https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master
-  :alt: ip_logo
+  :alt: build
   :height: 20
 
 
