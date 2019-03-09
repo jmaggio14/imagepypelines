@@ -27,7 +27,6 @@
   :alt: coverage
   :height: 20
 
-
 .. image:: https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master
   :alt: build
   :height: 20
