@@ -18,19 +18,25 @@ import sys
 import sphinx_bootstrap_theme
 sys.path.insert(0, os.path.abspath('../..'))
 
-
+# System to automatically load in the correct
+CURRENT_DIR = os.path.dirname(__file__)
+VERSION_FILE = os.path.join(CURRENT_DIR,'..','..','imagepypelines','version_info.py')
+with open(VERSION_FILE,'r') as f:
+    raw = f.read()
+# load in version variables into 'version_info' dict
+version_info = {}
+exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
-
-project = 'imagepypelines'
-copyright = '2018, Nathan Dileas, Ryan Hartzell, Jeff Maggio'
-author = 'Nathan Dileas, Ryan Hartzell, Jeff Maggio'
+project = version_info['__name__']
+copyright = version_info['__copyright__']
+author = version_info['__author__']
 
 
 # The short X.Y version
-version = '0.1'
+version = '.'.join(version_info["__version__"].split('.',2)[:2])
 # The full version, including alpha/beta/rc tags
-release = '0.1.1a'
+release = version_info["__version__"]
 
 
 # -- General configuration ---------------------------------------------------
@@ -76,7 +82,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None
+pygments_style = 'friendly'
 
 
 # -- Options for HTML output -------------------------------------------------
