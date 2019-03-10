@@ -354,7 +354,52 @@ def test_quick_block():
 
 
 # =================== Pipeline.py ===================
-# TODO - JM
+# RH - Taking this guy over Jiff
+class TestPipeline(object):
+    def test_list_methods(self):
+        import imagepypelines as ip
+
+        # All of this can be cleaned up. Want to have graceful failure too!!!
+
+        C2G = ip.builtin_blocks.Color2Gray
+        FFT = ip.builtin_blocks.FFT
+        IFFT = ip.builtin_blocks.IFFT
+
+        P = ip.Pipeline([C2G(),FFT(),IFFT()],name='Arbitrary')
+
+        P.debug()
+
+        P.add(FFT())
+
+        P_copy = P.copy()
+        P_copy.rename('Arbitrary_copy')
+
+        P.insert(2,FFT())
+        P.insert(12,C2G())
+        P.insert('a',IFFT())
+        P.remove(P.names[2])
+        P.remove(12)
+        P.clear()
+        P.join(ip.Pipeline([C2G(),FFT()],name='Arbitrary2'))
+        P.join(FFT())
+        P.join(ip.Pipeline([12,'a']),name=float(12))
+
+        sstr = repr(P)
+        outstr = str(P)
+        it = iter(P)
+        nxt = next(P)
+
+        names = P_copy.names
+        trained = P_copy.trained
+        req_labels = P_copy.requires_labels
+
+        P[2] = 12
+        P[2] = FFT()
+        blk = P[-1]
+
+        del P_copy[2]
+
+        del P_copy
 
 # =================== Printer.py ===================
 # TODO - JM

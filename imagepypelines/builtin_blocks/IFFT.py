@@ -18,7 +18,7 @@ class IFFT(SimpleBlock):
     Attributes:
         discard_imaginary (bool): whether or not to discard the imaginary output
             of the ifft. Default is True
-        
+
         io_map(IoMap): object that maps inputs to this block to outputs
         name(str): unique name for this block
         requires_training(bool): whether or not this block will require
@@ -40,24 +40,24 @@ class IFFT(SimpleBlock):
         """calculates a fast-fourier transform on an input image
 
         Args:
-            datum (np.ndarray): image numpy array to take fourier transform of
+            datum (np.ndarray): image numpy array to take IFFT of
 
         Returns:
-            fft(np.ndarray): zero-centered fourier transform
+            ifft(np.ndarray): zero-centered inverse fast fourier transform
 
         """
-        
+
         if len(datum.shape) == 2:
-            
+
             ifft = np.fft.ifftshift(datum)
             ifft = np.abs(np.fft.ifft2(ifft))
 
         if len(datum.shape) == 3:
-            
+
             ifft = []
 
             for band in range(0,datum.shape[-1]):
-                
+
                 ifft_single = np.fft.ifftshift(datum[:,:,band])
                 ifft_single = np.abs(np.fft.ifft2(ifft_single))
                 ifft.append(ifft_single)
