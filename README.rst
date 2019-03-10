@@ -182,6 +182,7 @@ We just made a processing pipeline that can read in images, resize them and disp
 
 Lowpass Filter Pipeline
 """""""""""""""""""""""
+
 .. code-block:: python
 
   import imagepypelines as ip
@@ -357,6 +358,7 @@ quick image viewer:
 
 when you want to quickly display an image without any bells and whistles,
 you can use the `quick_image_view` function
+
 .. code-block:: python
 
   import imagepypelines as ip
@@ -410,8 +412,9 @@ Array Summarization
 ^^^^^^^^^^^^^^^^^^^
 when debugging an image pipeline, printing out an image
 can be counter productive. Imaging scientists frequently default
-to printing out the shape or size of the data. `imagepypelines` contains
+to printing out the shape or size of the data. Imagepypelines_ contains
 a helper class to quickly summarize an image in a formatted string
+
 .. code-block:: python
 
   import imagepypelines as ip

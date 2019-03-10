@@ -46,4 +46,4 @@ deploy:
     local-dir: docs/build/html
     on:
       python: '3.6'
-      branch: master
+      branch: blockIO
