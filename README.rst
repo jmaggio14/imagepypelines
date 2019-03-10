@@ -110,6 +110,7 @@ Licensing / Credit
 Imagepypelines_ is licensed under the MIT_ permissive software license. You may use this code for research or commercial use so long as it conforms to the terms of the license included in this repo as well as the licenses of Imagepypelines_ dependencies.
 
 Please credit us if you use `imagepypelines` in your research
+
  .. code-block:: latex
 
   @misc{imagepypelines,
@@ -164,6 +165,7 @@ building a pipeline is super easy
 
 Image Display Pipeline
 """"""""""""""""""""""
+
 .. code-block:: python
 
   import imagepypelines as ip
@@ -191,11 +193,11 @@ Lowpass Filter Pipeline
   ifft = ip.IFFT()
   display = ip.BlockViewer(pause_time=1)
 
-  # pipeline = ip.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
-  #
-  # # process a set of images (using imagepypelines' example data)
-  # filenames = ip.standard_image_filenames()
-  # pipeline.process(filenames)
+  pipeline = ip.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
+
+  # process a set of images (using imagepypelines' example data)
+  filenames = ip.standard_image_filenames()
+  pipeline.process(filenames)
 
 
 
@@ -209,26 +211,26 @@ this classifier is available as a builtin Pipeline with fully tweakable hyperpar
 
 .. code-block:: python
 
-  #
-  # import imagepypelines as ip
-  #
-  # features = ip.PretrainedNetwork() # image feature block
-  # pca = ip.PCA(256) # principle component analysis block
-  # neural_network = ip.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
-  #
-  # classifier = ip.Pipeline([features,pca,neural_network])
-  #
-  # # loading example data
-  # cifar10 = ip.Cifar10()
-  # train_data, train_labels = cifar10.get_train()
-  # test_data, ground_truth = cifar10.get_test()
-  #
-  # classifier.train(train_data,train_labels) # train the classifier
-  # predictions = classifier.process(test_data) # test the classifier
-  #
-  # # print the accuracy
-  # accuracy = ip.accuracy(predictions,ground_truth) * 100
-  # print('pipeline classification accuracy is {}%!'.format(accuracy))
+
+  import imagepypelines as ip
+
+  features = ip.PretrainedNetwork() # image feature block
+  pca = ip.PCA(256) # principle component analysis block
+  neural_network = ip.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
+
+  classifier = ip.Pipeline([features,pca,neural_network])
+
+  # loading example data
+  cifar10 = ip.Cifar10()
+  train_data, train_labels = cifar10.get_train()
+  test_data, ground_truth = cifar10.get_test()
+
+  classifier.train(train_data,train_labels) # train the classifier
+  predictions = classifier.process(test_data) # test the classifier
+
+  # print the accuracy
+  accuracy = ip.accuracy(predictions,ground_truth) * 100
+  print('pipeline classification accuracy is {}%!'.format(accuracy))
 
 
 
@@ -297,21 +299,21 @@ accepts one datum, you can create a block with a single line.
 
 .. code-block:: python
 
-  # import imagepypelines as ip
-  #
-  # class NormalizeBlock(ip.SimpleBlock):
-  # 	"""normalize block between 0 and max_count, inclusive"""
-  # 	def __init__(self,max_count=1):
-  # 		self.max_count = max_count
-  # 		# set up the block to work with grayscale and color imagery
-  # 		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  # 					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
-  #
-  # 		super(NormalizeBlock,self).__init__(io_map)
-  #
-  # 	def process(self,img):
-  # 		"""overload the processing function for this block"""
-  # 		return img.astype(np.float32) / img.max() * self.max_count
+  import imagepypelines as ip
+
+  class NormalizeBlock(ip.SimpleBlock):
+  	"""normalize block between 0 and max_count, inclusive"""
+  	def __init__(self,max_count=1):
+  		self.max_count = max_count
+  		# set up the block to work with grayscale and color imagery
+  		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+  					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+
+  		super(NormalizeBlock,self).__init__(io_map)
+
+  	def process(self,img):
+  		"""overload the processing function for this block"""
+  		return img.astype(np.float32) / img.max() * self.max_count
 
 *************************************
 Imaging Science Convenience Functions
@@ -456,6 +458,7 @@ or code block
 
 absolute timing
 """"""""""""""""
+
 .. code-block:: python
 
   from imagepypelines.util import Timer
@@ -468,6 +471,7 @@ absolute timing
 
 lap timing
 """"""""""
+
 .. code-block:: python
 
   from imagepypelines.util import Timer
@@ -480,6 +484,7 @@ lap timing
 
 perform operation for N seconds
 """""""""""""""""""""""""""""""
+
 .. code-block:: python
 
   from imagepypelines.util import Timer
@@ -572,12 +577,14 @@ printer messages can be filtered be priority so that only desired messages can b
 Any level that is less than the current `GLOBAL_LOG_LEVEL` will **NOT** be printed. This makes it easy to filter out statements which may be erroneous or too numerous to make sense of.
 
 this value can be set with the `set_global_printout_level` function
+
 .. code-block:: python
 
   import imagepypelines as ip
   ip.set_global_printout_level('warning') # debug and info statements will not print now
 
 local printer levels can be set with `Printer.set_log_level`
+
 .. code-block:: python
 
   import imagepypelines as ip
