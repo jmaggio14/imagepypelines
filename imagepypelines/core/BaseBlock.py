@@ -103,7 +103,9 @@ class IoMap(tuple):
         if isinstance(io_map, IoMap):
             return io_map
         elif not isinstance(io_map, dict):
-            raise TypeError("IoMap must be instantiated with a dictionary")
+            raise TypeError(
+                "IoMap must be instantiated with a dictionary, not %s" \
+                % type(io_map))
 
         # ---------------- Breaking dictionary up into a mapping --------------
         # {key1:val1,key2:val2} --> ( (key1,val1),(key2,val2) )
