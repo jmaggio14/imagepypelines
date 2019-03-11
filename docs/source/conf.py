@@ -29,7 +29,7 @@ exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
 project = version_info['__name__']
-copyright = version_info['__copyright__']
+copyright = "2018 (c) " + version_info['__author__']
 author = version_info['__author__']
 
 
@@ -82,7 +82,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'friendly'
+pygments_style = 'colorful'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -120,8 +120,11 @@ html_theme_options = {
     # an arbitrary url.
     'navbar_links': [
                      # ("Contributors", "http://example.com", True),
+                     ("About", 'about.html', True),
                      ("README", 'readme.html', True),
-                     ("Tutorials", 'tutorials.html', True)],
+                     ("Tutorials", 'tutorials.html', True),
+                     ("Installation", 'installation.html', True),
+                     ],
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': True,

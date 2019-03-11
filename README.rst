@@ -52,7 +52,7 @@ Installation
 
 *(make sure you see the dependencies section)*
 
-**Python compatibility:** 3.4-3.6 (Python 2.7 backwards) 64bit
+**Python compatibility:** 3.4-3.6 64bit
 
 **via pip**
 

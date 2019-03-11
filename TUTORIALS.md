@@ -5,7 +5,7 @@ Pipelines are constructed of `blocks` which are simply objects that take in data
 process it, and output the processed data. Pipelines simply provide a high level
 interface to control and apply processing algorithms for your workflows.
 
-![pipeline](./docs/images/pipeline-example.png "pipeline example")
+![pipeline](docs/images/pipeline-example.png "pipeline example")
 
 ### let's create an example fourier transform pipeline
 ```python
