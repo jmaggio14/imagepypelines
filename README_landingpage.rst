@@ -27,15 +27,29 @@
   :align: center
   :alt: ip_logo
 
-:raw-html:`<h1 align="center">imagepypelines</h1>`
+:raw-html:`<h1 align="center">ImagePypelines</h1>`
+
 
 
 .. image:: https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master
-    :alt: build
+  :target: https://www.travis-ci.com/jmaggio14/imagepypelines
+  :alt: build
+
+.. image:: https://img.shields.io/pypi/l/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
 
 .. image:: https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jmaggio14/imagepypelines
   :alt: coverage
 
+.. image:: https://img.shields.io/pypi/pyversions/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://badge.fury.io/py/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://img.shields.io/pypi/status/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
 
 Imagepypelines is a package built by imaging scientists for imaging scientists.
 It contains a simplistic front-end interface to construct complex image
