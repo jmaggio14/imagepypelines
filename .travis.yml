@@ -20,7 +20,7 @@ install:
   # codecov requirements
   - pip install Sphinx sphinx_bootstrap_theme m2r
   # codecov requirements
-  - pip install pytest pytest-cov hypothesis coverage codecov
+  - pip install pytest pytest-cov hypothesis coverage codecov --upgrade
 
 script:
   # license enforcer
