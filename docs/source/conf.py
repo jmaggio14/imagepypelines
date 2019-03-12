@@ -28,7 +28,7 @@ version_info = {}
 exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
-project = version_info['__name__']
+project = ImagePypelines
 copyright = version_info['__author__']
 author = version_info['__author__']
 
