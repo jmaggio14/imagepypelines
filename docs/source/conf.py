@@ -124,7 +124,6 @@ html_theme_options = {
                      ("Tutorials", 'tutorials.html', True),
                      ("Installation", 'installation.html', True),
                      ("Documentation", 'imagepypelines.html',True),
-                     ("Contributors", "http://example.com", True),
                      ("Github",'https://github.com/jmaggio14/imagepypelines',True),
                      ],
 
