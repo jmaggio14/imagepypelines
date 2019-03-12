@@ -4,37 +4,3 @@
    contain the root `toctree` directive.
 
 .. include:: ../../README_landingpage.rst
-
-README
-=========
-
-.. toctree::
-    :maxdepth: 2
-
-    readme
-
-
-Tutorials
-=========
-
-.. toctree::
-    :maxdepth: 2
-
-    tutorials
-
-Read More
-=========
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   modules
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

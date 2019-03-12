@@ -62,71 +62,25 @@ who currently work in imaging related research or industries.
 
 :raw-html:`<h5><i>This project is currently in alpha</i></h5>`
 
-======================
-Installation and Setup
-======================
-**Python compatibility:** 3.4-3.6 | 64bit
-
-The Imagepypelines shell
-************************
-`imagepypelines` provides `docker images`_ (virtual environments) which contain
-all the libraries and tools you'll need to develop and run imagepypeline's code
-
-1) Simply `install Docker`_
-2) type :code:`imagepypelines shell` into your terminal!
 
 
-You be will launched into a virtual environment that is guaranteed to work
-hassle-free without installing your dependencies.
+.. toctree:: installation.rst
+    :maxdepth: 2
 
-.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/12d3c4d7dd2b04f0dbf38eb1ae84d532aa226cdf/docs/images/imagepypelines-shell.png
-    :alt: Imagepypelines Shell
+.. toctree:: about.rst
+    :maxdepth: 2
 
-Installation
-************************
+.. toctree:: tutorials.rst
+    :maxdepth: 2
 
-**via pip**
-^^^^^^^^^^^
-
-.. code-block:: shell
-
-  pip install imagepypelines --user
-
-**dependencies**
-^^^^^^^^^^^^^^^^
-
-when running natively, imagepypelines requires *opencv* and *tensorflow* to be installed
-on your machine
-
-**tensorflow**
-""""""""""""""
-
-.. code-block:: shell
-
-    pip install tensorflow --user
-    # OR if you have a GPU
-    # pip install tensorflow-gpu --user
-
-**opencv**
-""""""""""
-
-we **strongly recommend** that you `build opencv from source`_. However unofficial bindings for Opencv can be installed with
-
-.. code-block:: shell
-
-  pip install opencv-python --user
-
-*(while we haven't encountered many problems with these unofficial bindings,
-they will likely not be as optimized and we do not guarantee support)*
+.. toctree:: modules.rst
+    :maxdepth: 2
 
 
 
 
 
-=============
-Documentation
-=============
-Full documentation for `imagepypelines`, including examples and tutorials, can be found on our website: Imagepypelines_
+
 
 
 

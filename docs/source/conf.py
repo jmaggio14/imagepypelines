@@ -29,7 +29,7 @@ exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
 project = version_info['__name__']
-copyright = "2018 (c) " + version_info['__author__']
+copyright = version_info['__author__']
 author = version_info['__author__']
 
 
@@ -119,25 +119,27 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-                     # ("Contributors", "http://example.com", True),
                      ("About", 'about.html', True),
-                     ("README", 'readme.html', True),
+                     # ("Readme", 'readme.html', True),
                      ("Tutorials", 'tutorials.html', True),
                      ("Installation", 'installation.html', True),
+                     ("Documentation", 'imagepypelines.html',True),
+                     ("Contributors", "http://example.com", True),
+                     ("Github",'https://github.com/jmaggio14/imagepypelines',True),
                      ],
 
     # Render the next and previous page links in navbar. (Default: true)
-    'navbar_sidebarrel': True,
+    'navbar_sidebarrel': False,
 
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': True,
+    'navbar_pagenav': False,
 
     # Tab name for the current pages TOC. (Default: "Page")
     'navbar_pagenav_name': "Page",
 
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 2,
+    'globaltoc_depth': 1,
 
     # Include hidden TOCs in Site navbar?
     #

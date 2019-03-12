@@ -1,3 +1,7 @@
+--------
+About Us
+--------
+
 
 
 Origin Story
@@ -29,9 +33,17 @@ Contact
 =======
 Please contact us with any questions, feature requests, or bug reports.
 
-Please `Report an issue on Github`_ OR email us at jmaggio14@gmail.com
+Please `report an issue on Github`_ OR email us at jmaggio14@gmail.com
 
-.. _Report an issue on Github: https://github.com/jmaggio14/imagepypelines/issues
+.. _report an issue on Github: https://github.com/jmaggio14/imagepypelines/issues
+
+About the Contributors
+======================
+NOTE: maybe some stuff about us here. linkedin-style pic + where we work
++ 1 sentence bio? 
+
+Feel like you can contribute to ImagePypelines? Shoot us an email or comment
+on our Github, we'd love to get in touch!
 
 Licensing / Credit
 ==================
@@ -42,6 +54,7 @@ the terms of the license included in this repo as well as the licenses of
 `Imagepypelines dependencies`_.
 
 .. _Imagepypelines dependencies: https://github.com/jmaggio14/imagepypelines/blob/master/DEPENDENCY-LICENSE.md
+.. _MIT: https://choosealicense.com/licenses/mit/
 
 Please credit us if you use imagepypelines in your research
 
@@ -54,6 +67,7 @@ Please credit us if you use imagepypelines in your research
     howpublished="\url{https://github.com/jmaggio14/imagepypelines}",
     }
 
-**Full text of our license is below:**
+**Our License:**
+----------------
 
 .. include:: ../../LICENSE

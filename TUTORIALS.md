@@ -1,4 +1,4 @@
-# imagepypelines tutorials
+# Tutorials
 
 ## building your own pipeline
 Pipelines are constructed of `blocks` which are simply objects that take in data,
