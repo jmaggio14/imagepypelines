@@ -7,13 +7,13 @@ About Us
 Origin Story
 ============
 
-The `imagepypelines` package consists of high level tools which simplify the
+The ImagePypelines package consists of high level tools which simplify the
 construction of complex image processing, computer vision, and machine learning
 frameworks. During our time in the undergrad Imaging Science program at the
 Rochester Institute of Technology, we found ourselves writing and rewriting code
 for things as simple as data type casting and displaying imagery when debugging,
 causing more trouble than mathematical or logical bugs themselves! Our hope is
-that the plug-and-play, easily-customizable nature of `imagepypelines` will
+that the plug-and-play, easily-customizable nature of ImagePypelines will
 allow all data-driven scientists to construct complex frameworks quickly for
 prototyping applications, and serve as a valuable educational tool for those
 interested in learning traditionally tough subject matter in a friendly
@@ -40,7 +40,7 @@ Please `report an issue on Github`_ OR email us at jmaggio14@gmail.com
 About the Contributors
 ======================
 NOTE: maybe some stuff about us here. linkedin-style pic + where we work
-+ 1 sentence bio? 
++ 1 sentence bio?
 
 Feel like you can contribute to ImagePypelines? Shoot us an email or comment
 on our Github, we'd love to get in touch!

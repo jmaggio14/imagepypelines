@@ -225,7 +225,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'imagepypelines.tex', 'imagepypelines Documentation',
+    (master_doc, 'imagepypelines.tex', 'ImagePypelines Documentation',
      'Nathan Dileas, Ryan Hartzell, Jeff Maggio', 'manual'),
 ]
 
@@ -235,7 +235,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'imagepypelines', 'imagepypelines Documentation',
+    (master_doc, 'ImagePypelines', 'ImagePypelines Documentation',
      [author], 1)
 ]
 

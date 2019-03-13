@@ -2,12 +2,8 @@
 Installation and Setup
 ======================
 
-- `The Imagepypelines Shell`_
-- `Installation`_
-    * `via pip`_
-    * `dependencies`_
-        + `tensorflow`_
-        + `opencv`_
+.. .. contents:: Installation
+..     :depth: 2
 
 **Python compatibility:** 3.4-3.6 | 64bit
 
@@ -24,7 +20,7 @@ Installation
 **dependencies**
 ^^^^^^^^^^^^^^^^
 
-when running natively, imagepypelines requires *opencv* and *tensorflow* to be installed
+when running natively, ImagePypelines requires *opencv* and *tensorflow* to be installed
 on your machine
 
 **tensorflow**
@@ -51,10 +47,10 @@ they will likely not be as optimized and we do not guarantee support)*
 .. _build opencv from source: https://docs.opencv.org/3.4/df/d65/tutorial_table_of_content_introduction.html
 
 
-The Imagepypelines shell
+The ImagePypelines shell
 ************************
-`imagepypelines` provides `docker images`_ (virtual environments) which contain
-all the libraries and tools you'll need to develop and run imagepypeline's code
+ImagePypelines provides `docker images`_ (virtual environments) which contain
+all the libraries and tools you'll need to develop and run ImagePypeline's code
 
 1) Simply `install Docker`_
 2) type :code:`imagepypelines shell` into your terminal!
@@ -66,4 +62,4 @@ You be will launched into a virtual environment that is guaranteed to work
 hassle-free without installing your dependencies.
 
 .. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/12d3c4d7dd2b04f0dbf38eb1ae84d532aa226cdf/docs/images/imagepypelines-shell.png
-    :alt: Imagepypelines Shell
+    :alt: ImagePypelines Shell
