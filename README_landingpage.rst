@@ -3,7 +3,7 @@
     :format: html
 
 .. defining hyperlinks Substitutions
-.. _Imagepypelines: http://www.imagepypelines.org/
+.. _ImagePypelines: http://www.imagepypelines.org/
 
 .. _MIT: https://choosealicense.com/licenses/mit/
 
@@ -15,7 +15,7 @@
 
 .. _docker images: https://hub.docker.com/r/imagepypelines/imagepypelines-tools
 
-.. _Imaging Science Program: https://www.cis.rit.edu/
+.. _Chester F. Carlson Center for Imaging Science: https://www.cis.rit.edu/
 
 .. _RIT: https://www.rit.edu/
 
@@ -51,14 +51,14 @@
 .. image:: https://img.shields.io/pypi/status/imagepypelines.svg
   :target: https://badge.fury.io/py/imagepypelines
 
-Imagepypelines is a package built by imaging scientists for imaging scientists.
+ImagePypelines is a package built by imaging scientists for imaging scientists.
 It contains a simplistic front-end interface to construct complex image
-processing pipelines, whilst automatically performing error checking,
-task management and ultimately decreasing development time for many imaging
-projects.
+processing pipelines, while automatically performing error checking,
+task management and ultimately decreasing development time for many imaging and
+data analysis projects.
 
-Imagepypelines is developed by alumni from RIT_'s `Imaging Science Program`_
-who currently work in imaging related research or industries.
+ImagePypelines is developed by alumni of RIT_'s `Chester F. Carlson Center for
+Imaging Science`_ who currently work in imaging related research or industries.
 
 :raw-html:`<h5><i>This project is currently in alpha</i></h5>`
 
@@ -89,7 +89,7 @@ What Makes Us Unique?
 
 The Pipeline
 ^^^^^^^^^^^^
-Imagepypelines_'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
+ImagePypelines_'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
 
 In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to *proof-of-concept* applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
 
@@ -98,24 +98,26 @@ In our experience as imaging scientists, processing pipelines in both corporate 
   :align: center
 
 
-The **Pipeline** object of Imagepypelines_ allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
+The **Pipeline** object of ImagePypelines_ allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
 
 
 The Block
 ^^^^^^^^^
-Pipelines in Imagepypelines_ are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
+Pipelines in ImagePypelines_ are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
 .. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/pipeline-example.png
-
-
-Each **block** *takes in* a list of data and *returns* a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
-
-Broadly speaking, each box can be thought of as a black box which simply applies an operation to input data
-
-.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/block.png
+    :alt: pipeline diagram
     :align: center
 
-a **datum** can be anything: an image array, a filename, a label -- pretty much any pythonic type.
+Each **Block** *takes in* a list of data and *returns* a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
+
+Broadly speaking, each box can be thought of as a black box which applies an operation to input data while handling nuances such as shape or data-type.
+
+.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/block.png
+    :alt: block diagram
+    :align: center
+
+A **Datum** can be anything: an image array, a filename, a data label -- pretty much any pythonic type.
 
 
 Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
@@ -126,28 +128,32 @@ not entirely, each block has predefined acceptable inputs and outputs. However t
 
 
 Building a pipeline
-"""""""""""""""""""
+*******************
 building a pipeline is super easy
 
 Image Display Pipeline
-""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
+  # imagepypelines shortens nicely to 'ip'
   import imagepypelines as ip
 
+  # This is how a Pipeline object is instantiated
   pipeline = ip.Pipeline(name='image display')
-  pipeline.add( ip.ImageLoader() ) # each one of these elements are 'blocks'
-  pipeline.add( ip.Resizer() )
-  pipeline.add( ip.BlockViewer() )
+
+  # Each one of these elements adds a Block object to our pipeline
+  pipeline.add(ip.ImageLoader())
+  pipeline.add(ip.Resizer())
+  pipeline.add(ip.BlockViewer())
 
   # now let's display some example data!
-  pipeline.process( ip.standard_image_filenames() )
+  pipeline.process(ip.standard_image_filenames())
 
-We just made a processing pipeline that can read in images, resize them and display them! but we can do much more complicated operations.
+Voila! We've just made a processing pipeline that can read in images, resize them, and display them! But we can do much more complicated operations.
 
 Lowpass Filter Pipeline
-"""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
@@ -160,17 +166,17 @@ Lowpass Filter Pipeline
   ifft = ip.IFFT()
   display = ip.BlockViewer(pause_time=1)
 
-  pipeline = ip.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
+  pipeline = ip.Pipeline(blocks=[load, resize, fft, lowpass, ifft, display])
 
   # process a set of images (using imagepypelines' example data)
   filenames = ip.standard_image_filenames()
   pipeline.process(filenames)
 
-
+This pipeline takes in a set of standard images, resizes them, performs an FFT, applies a lowpass filter in frequency space, performs an inverse FFT, and displays them!
 
 Machine Learning Applications
-"""""""""""""""""""""""""""""
-One of the more powerful applications of Imagepypelines_ is it's ease of use in
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+One of the more powerful applications of ImagePypelines_ is it's ease of use in
 *machine learning* and *feature engineering* applications.
 we can easily tailor a pipeline to perform image classification
 
