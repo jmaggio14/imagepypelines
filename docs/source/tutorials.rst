@@ -181,3 +181,5 @@ Lets create a super simple example just to demonstrate how you can create a batc
 Simple Blocks
 -------------
 Simple Blocks on the other hand simply process one piece of data at a time
+=======
+.. mdinclude:: ../../TUTORIALS.md
