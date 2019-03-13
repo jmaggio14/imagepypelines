@@ -21,7 +21,9 @@ Changed
 ^^^^^^^
 - Removes Python 2 Support
 - Updates Block IO to support arbitrarily shaped arrays
+- Significant improvements & reorganization of the website
 
+--------------------------------------------------------------------------------
 
 [0.1.4a]  Dec 22, 2018
 ----------------------

@@ -75,6 +75,11 @@ Imaging Science`_ who currently work in imaging related research or industries.
 .. toctree:: modules.rst
     :maxdepth: 2
 
+.. toctree:: changelog.rst
+    :maxdepth: 2
+
+
+
 
 
 
@@ -131,31 +136,31 @@ Processing Blocks Built into ImagePypelines
 
 More are being added with every commit, but here's what we've got packaged with ImagePypelines_ so far!
 
-  I/O Operations
-  --------------
-  - Image Display
-  - Camera Capture
-  - Image Loader
-  - Image Writing
+I/O Operations
+--------------
+- Image Display
+- Camera Capture
+- Image Loader
+- Image Writing
 
-  Image Processing
-  ----------------
-  - Colorspace Conversion
-  - Fast Fourier Transform
-  - Frequency Filtering
-  - Otsu Image Segmentation
-  - ORB Keypoints and Descriptors
-  - Image Resizing
+Image Processing
+----------------
+- Colorspace Conversion
+- Fast Fourier Transform
+- Frequency Filtering
+- Otsu Image Segmentation
+- ORB Keypoints and Descriptors
+- Image Resizing
 
-  Machine Learning
-  ----------------
-  - Linear Support Vector Machine
-  - Rbf Support Vector Machine
-  - Poly Support Vector Machine
-  - Sigmoid Support Vector Machine
-  - Trainable Neural Networks
-  - 8 Pretrained Neural Networks (for feature extraction)
-  - Principle Component Analysis
+Machine Learning
+----------------
+- Linear Support Vector Machine
+- Rbf Support Vector Machine
+- Poly Support Vector Machine
+- Sigmoid Support Vector Machine
+- Trainable Neural Networks
+- 8 Pretrained Neural Networks (for feature extraction)
+- Principle Component Analysis
 
 
 Doing It Yourself!

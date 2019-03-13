@@ -106,7 +106,7 @@ html_logo = "../images/ip_logo.png"
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "imagepypelines",
+    'navbar_title': "ImagePypelines",
 
     # Tab name for entire site. (Default: "Site")
     'navbar_site_name': "Site",
@@ -246,8 +246,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'imagepypelines', 'imagepypelines Documentation',
-     author, 'imagepypelines', 'One line description of project.',
+    (master_doc, 'ImagePypelines', 'ImagePypelines Documentation',
+     author, 'ImagePypelines', 'One line description of project.',
      'Miscellaneous'),
 ]
 
