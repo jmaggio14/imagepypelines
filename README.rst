@@ -23,13 +23,25 @@
 
 
 
-.. image:: https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg
-  :alt: coverage
-  :height: 20
-
 .. image:: https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master
+  :target: https://www.travis-ci.com/jmaggio14/imagepypelines
   :alt: build
-  :height: 20
+
+.. image:: https://img.shields.io/pypi/l/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jmaggio14/imagepypelines
+  :alt: coverage
+
+.. image:: https://img.shields.io/pypi/pyversions/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://badge.fury.io/py/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://img.shields.io/pypi/status/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
 
 
 
