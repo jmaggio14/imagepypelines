@@ -21,6 +21,8 @@
 
 .. _install Docker: https://docs.docker.com
 
+.. _Python: https://www.python.org
+
 .. add in the header image
 
 .. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/develop/docs/images/ip_logo_mini.png
@@ -58,10 +60,7 @@ task management and ultimately decreasing development time for many imaging and
 data analysis projects.
 
 ImagePypelines is developed by alumni of RIT_'s `Chester F. Carlson Center for
-Imaging Science`_ who currently work in imaging related research or industries.
-
-:raw-html:`<h5><i>This project is currently in alpha</i></h5>`
-
+Imaging Science`_ who currently work in imaging related research or industries... GO TIGERS!!!
 
 
 .. toctree:: installation.rst
@@ -89,9 +88,10 @@ What Makes Us Unique?
 
 The Pipeline
 ^^^^^^^^^^^^
-ImagePypelines_'s most powerful feature is a high level interface to create data processing pipelines which apply a sequence of algorithms to input data automatically.
 
-In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated to *proof-of-concept* applications only. Many custom pipelines may also not provide step-by-step error checking, which can make debugging a challenge.
+ImagePypelines_'s most powerful feature is a high level interface to create data processing pipelines. These are objects which apply a sequence of algorithms to input data automatically, all while handling the nuance of data shape or type seamlessly.
+
+In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated solely to *proof-of-concept* applications. Many custom pipelines may also lack step-by-step error checking, which can make debugging a challenge.
 
 .. image:: https://imgs.xkcd.com/comics/data_pipeline.png
   :alt: cracked pipelines
@@ -109,7 +109,7 @@ Pipelines in ImagePypelines_ are constructed of processing `blocks` which apply 
     :alt: pipeline diagram
     :align: center
 
-Each **Block** *takes in* a list of data and *returns* a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
+Each **Block** takes in a list of data and returns a list of data, passing it onto the next block or out of the pipeline. This system ensures that blocks are compatible with algorithms that process data in batches or individually. Blocks also support label handling, and thus are **compatible with supervised machine learning systems or other algorithms that require training**
 
 Broadly speaking, each box can be thought of as a black box which applies an operation to input data while handling nuances such as shape or data-type.
 
@@ -122,21 +122,110 @@ A **Datum** can be anything: an image array, a filename, a data label -- pretty 
 
 Blocks can also output more or less datums than they take in and are thus capable of being used for culling or injecting data into the pipeline.
 
-Hang on? are all blocks compatible with one another?
-""""""""""""""""""""""""""""""""""""""""""""""""""""
-not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed
+Hang on - are all blocks compatible with one another?
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
+Not entirely, each block has predefined acceptable inputs and outputs. However the `Pipeline` object will validate the pipeline integrity before any data is processed.
+
+Processing Blocks Built into ImagePypelines
+"""""""""""""""""""""""""""""""""""""""""""
+
+More are being added with every commit, but here's what we've got packaged with ImagePypelines_ so far!
+
+  I/O Operations
+  --------------
+  - Image Display
+  - Camera Capture
+  - Image Loader
+  - Image Writing
+
+  Image Processing
+  ----------------
+  - Colorspace Conversion
+  - Fast Fourier Transform
+  - Frequency Filtering
+  - Otsu Image Segmentation
+  - ORB Keypoints and Descriptors
+  - Image Resizing
+
+  Machine Learning
+  ----------------
+  - Linear Support Vector Machine
+  - Rbf Support Vector Machine
+  - Poly Support Vector Machine
+  - Sigmoid Support Vector Machine
+  - Trainable Neural Networks
+  - 8 Pretrained Neural Networks (for feature extraction)
+  - Principle Component Analysis
 
 
-Building a pipeline
-*******************
-building a pipeline is super easy
+Doing It Yourself!
+******************
 
-Image Display Pipeline
-^^^^^^^^^^^^^^^^^^^^^^
+At the end of the day, we want our users to be able to generate *their own* content that works in an interconnected way with other blocks, pipelines, and custom workflows that aren't part of vanilla ImagePypelines_. So how do you get started? Well, to begin, think of these best practices as ImagePypelines_' PYP to Python_'s PEP ;)
+
+Designing Processing Blocks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There are two ways to create a block:
+
+1) Quick Block Creation
+"""""""""""""""""""""""
+For operations that can be completed in a single function that
+accepts one datum, you can create a block with a single line.
 
 .. code-block:: python
 
-  # imagepypelines shortens nicely to 'ip'
+  import imagepypelines as ip
+
+  # Create the function we use to process images
+  def normalize_image(img):
+    return img / img.max()
+
+  # Set up the block to work with grayscale and color imagery (Note the type and size mappings)
+  io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+  			ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+
+  # Instantiate a quick block using your processing func and io_map
+  block = ip.quick_block(normalize_image, io_map)
+
+
+2) Object Inheritance
+"""""""""""""""""""""
+
+Another method is to set up your block by object inheritance, also known as a subclass. This is the preferred, flexible method of setting up your own blocks for use, however it's a little more legwork. Therefore, this is covered in more detail on our tutorial pages. Such topics as training and label handling for machine learning applications can also be found on our tutorial pages.
+
+.. code-block:: python
+
+  import imagepypelines as ip
+
+  # Note that we inherit from ip.SimpleBlock
+  class NormalizeBlock(ip.SimpleBlock):
+  	"""Normalize block between 0 and max_count, inclusive"""
+
+    def __init__(self, max_count=1):
+
+      self.max_count = max_count
+
+  		# set up the block to work with grayscale and color imagery
+  		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+  					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+
+  		super(NormalizeBlock,self).__init__(io_map)
+
+  	def process(self,img):
+  		"""Overload the processing function for this block"""
+
+      return img.astype(np.float32) / img.max() * self.max_count
+
+Designing Pipelines
+^^^^^^^^^^^^^^^^^^^
+Now that you've gotten a sense of how blocks are structured, here's a brief look at creating your very own pipeline. After all, building a pipeline is super easy!
+
+Image Display Pipeline
+""""""""""""""""""""""
+
+.. code-block:: python
+
   import imagepypelines as ip
 
   # This is how a Pipeline object is instantiated
@@ -153,7 +242,7 @@ Image Display Pipeline
 Voila! We've just made a processing pipeline that can read in images, resize them, and display them! But we can do much more complicated operations.
 
 Lowpass Filter Pipeline
-^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""
 
 .. code-block:: python
 
@@ -175,15 +264,14 @@ Lowpass Filter Pipeline
 This pipeline takes in a set of standard images, resizes them, performs an FFT, applies a lowpass filter in frequency space, performs an inverse FFT, and displays them!
 
 Machine Learning Applications
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""
 One of the more powerful applications of ImagePypelines_ is it's ease of use in
 *machine learning* and *feature engineering* applications.
-we can easily tailor a pipeline to perform image classification
+We can easily tailor a pipeline to perform image classification, for example.
 
-this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as `ip.SimpleImageClassifier`
+This classifier is available as a built-in pipeline with fully tweakable hyperparameters as `ip.SimpleImageClassifier`.
 
 .. code-block:: python
-
 
   import imagepypelines as ip
 
@@ -206,84 +294,6 @@ this classifier is available as a builtin Pipeline with fully tweakable hyperpar
   print('pipeline classification accuracy is {}%!'.format(accuracy))
 
 
-
 We just trained a full neural network classifier!
 
-
-Processing Blocks built into imagepypeline
-------------------------------------------
-*more are being added with every commit!*
-
-I/O operations
-^^^^^^^^^^^^^^
-- Image Display
-- Camera Capture
-- Image Loader
-- Image Writing
-
-Machine Learning
-^^^^^^^^^^^^^^^^
-- Linear Support Vector Machine
-- Rbf Support Vector Machine
-- Poly Support Vector Machine
-- Sigmoid Support Vector Machine
-- trainable neural networks
-- 8 Pretrained Neural Networks (for feature extraction)
-- Principle Component Analysis
-
-Image Processing
-^^^^^^^^^^^^^^^^
-- colorspace conversion
-- fast fourier transform
-- frequency filtering
-- Otsu Image Segmentation
-- ORB keypoint and description
-- Image resizing
-
-
-Designing your own processing blocks
-------------------------------------
-There are two ways to create a block
-
-1) quick block creation
-^^^^^^^^^^^^^^^^^^^^^^^
-for operations that can be completed in a single function that
-accepts one datum, you can create a block with a single line.
-
-.. code-block:: python
-
-  import imagepypelines as ip
-
-  # create the function we use to process images
-  def normalize_image(img):
-  	return img / img.max()
-
-  # set up the block to work with grayscale and color imagery
-  io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  			ip.ArrayType([None,None,3]):ipimagepypelines.ArrayType([None,None,3])}
-
-
-  block = ip.quick_block(normalize_image, io_map)
-
-
-2) object inheritance
-^^^^^^^^^^^^^^^^^^^^^
-*this is covered in more detail on our tutorial pages. this example will not cover training or label handling*
-
-.. code-block:: python
-
-  import imagepypelines as ip
-
-  class NormalizeBlock(ip.SimpleBlock):
-  	"""normalize block between 0 and max_count, inclusive"""
-  	def __init__(self,max_count=1):
-  		self.max_count = max_count
-  		# set up the block to work with grayscale and color imagery
-  		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
-
-  		super(NormalizeBlock,self).__init__(io_map)
-
-  	def process(self,img):
-  		"""overload the processing function for this block"""
-  		return img.astype(np.float32) / img.max() * self.max_count
+Head on over to our tutorials page for more in depth intros to how ImagePypelines can be a useful tool for you!
