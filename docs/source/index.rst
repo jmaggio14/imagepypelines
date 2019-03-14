@@ -38,6 +38,8 @@ data analysis projects.
 ImagePypelines is developed by alumni of RIT_'s `Chester F. Carlson Center for
 Imaging Science`_ who currently work in imaging related research or industries.
 
+**ImagePypelines is currently in Alpha**
+
 .. toctree:: about.rst
     :maxdepth: 2
 
@@ -52,15 +54,6 @@ Imaging Science`_ who currently work in imaging related research or industries.
 
 .. toctree:: changelog.rst
     :maxdepth: 2
-
-
-
-
-
-
-
-
-
 
 
 What Makes Us Unique?
