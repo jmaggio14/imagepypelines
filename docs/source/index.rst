@@ -38,11 +38,10 @@ data analysis projects.
 ImagePypelines is developed by alumni of RIT_'s `Chester F. Carlson Center for
 Imaging Science`_ who currently work in imaging related research or industries.
 
-
-.. toctree:: installation.rst
+.. toctree:: about.rst
     :maxdepth: 2
 
-.. toctree:: about.rst
+.. toctree:: installation.rst
     :maxdepth: 2
 
 .. toctree:: tutorials.rst
@@ -154,20 +153,20 @@ There are two ways to create a block:
 For operations that can be completed in a single function that
 accepts one datum, you can create a block with a single line.
 
-.. code-block:: python
-
-  import imagepypelines as ip
-
-  # Create the function we use to process images
-  def normalize_image(img):
-    return img / img.max()
-
-  # Set up the block to work with grayscale and color imagery (Note the type and size mappings)
-  io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  			ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
-
-  # Instantiate a quick block using your processing func and io_map
-  block = ip.quick_block(normalize_image, io_map)
+.. .. code-block:: python
+..
+..   >>> import imagepypelines as ip
+..   >>>
+..   >>> # Create the function we use to process images
+..   >>> def normalize_image(img):
+..   ...   return img / img.max()
+..   >>>
+..   >>> # Set up the block to work with grayscale and color imagery (Note the type and size mappings)
+..   >>> io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+..   ...       ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+..   >>>
+..   >>> # Instantiate a quick block using your processing func and io_map
+..   >>> block = ip.quick_block(normalize_image, io_map)
 
 
 2) Object Inheritance

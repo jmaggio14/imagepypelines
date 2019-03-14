@@ -29,7 +29,7 @@ exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
 project = "ImagePypelines"
-copyright = version_info['__author__']
+copyright = '2018-2019 ' + version_info['__author__']
 author = version_info['__author__']
 
 
@@ -54,6 +54,7 @@ extensions = [
     'sphinx.ext.napoleon',   # nD: support for google style docstrings
     'm2r',   # ND: add support for MarkDown, to allow readme importing,
     'sphinx.ext.githubpages', # JM add .nojekyll creation for github
+    'sphinx.ext.doctest', # JM: adds doctest directives
 ]
 
 # Add any paths that contain templates here, relative to this directory.
