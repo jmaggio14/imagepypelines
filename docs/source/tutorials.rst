@@ -2,6 +2,9 @@
 Tutorials
 =========
 
+.. contents::
+    :depth: 3
+
 building your own pipeline
 **************************
 

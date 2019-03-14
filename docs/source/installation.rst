@@ -10,14 +10,14 @@ Installation and Setup
 Installation
 ************
 
-**via pip**
+via pip
 ^^^^^^^^^^^
 
 .. code-block:: shell
 
   pip install imagepypelines --user
 
-**dependencies**
+dependencies
 ^^^^^^^^^^^^^^^^
 
 when running natively, ImagePypelines requires *opencv* and *tensorflow* to be installed

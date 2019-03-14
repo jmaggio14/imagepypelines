@@ -109,7 +109,7 @@ html_theme_options = {
     'navbar_title': "ImagePypelines",
 
     # Tab name for entire site. (Default: "Site")
-    'navbar_site_name': "Site",
+    'navbar_site_name': "",
 
     # A list of tuples containing pages or urls to link to.
     # Valid tuples should be in the following forms:
@@ -138,7 +138,7 @@ html_theme_options = {
 
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 1,
+    'globaltoc_depth': 0,
 
     # Include hidden TOCs in Site navbar?
     #

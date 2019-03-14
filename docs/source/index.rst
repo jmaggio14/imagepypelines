@@ -3,8 +3,6 @@
     :format: html
 
 .. defining hyperlinks Substitutions
-.. _ImagePypelines: http://www.imagepypelines.org/
-
 .. _MIT: https://choosealicense.com/licenses/mit/
 
 .. _XKCD: https://imgs.xkcd.com/comics/data_pipeline.png
@@ -72,7 +70,7 @@ What Makes Us Unique?
 The Pipeline
 ^^^^^^^^^^^^
 
-ImagePypelines_'s most powerful feature is a high level interface to create data processing pipelines. These are objects which apply a sequence of algorithms to input data automatically, all while handling the nuance of data shape or type seamlessly.
+ImagePypelines's most powerful feature is a high level interface to create data processing pipelines. These are objects which apply a sequence of algorithms to input data automatically, all while handling the nuance of data shape or type seamlessly.
 
 In our experience as imaging scientists, processing pipelines in both corporate or academic settings are not always easy to adapt for new purposes and are therefore too often relegated solely to *proof-of-concept* applications. Many custom pipelines may also lack step-by-step error checking, which can make debugging a challenge.
 
@@ -81,12 +79,12 @@ In our experience as imaging scientists, processing pipelines in both corporate 
   :align: center
 
 
-The **Pipeline** object of ImagePypelines_ allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
+The **Pipeline** object of ImagePypelines allows for quick construction and prototyping, ensures end-to-end compatibility through each layer of a workflow, and leverages helpful in-house debugging utilities for use in image-centric or high-dimensional data routines.
 
 
 The Block
 ^^^^^^^^^
-Pipelines in ImagePypelines_ are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
+Pipelines in ImagePypelines are constructed of processing `blocks` which apply an algorithm to a sequence of data passed into it.
 
 .. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/91b5f297632df16c2c246492782e37ea0a263b45/docs/images/pipeline-example.png
     :alt: pipeline diagram
@@ -112,7 +110,7 @@ Not entirely, each block has predefined acceptable inputs and outputs. However t
 Processing Blocks Built into ImagePypelines
 """""""""""""""""""""""""""""""""""""""""""
 
-More are being added with every commit, but here's what we've got packaged with ImagePypelines_ so far!
+More are being added with every commit, but here's what we've got packaged with ImagePypelines so far!
 
 I/O Operations
 --------------
@@ -144,7 +142,7 @@ Machine Learning
 Doing It Yourself!
 ******************
 
-At the end of the day, we want our users to be able to generate *their own* content that works in an interconnected way with other blocks, pipelines, and custom workflows that aren't part of vanilla ImagePypelines_. So how do you get started? Well, to begin, think of these best practices as ImagePypelines_' PYP to Python_'s PEP ;)
+At the end of the day, we want our users to be able to generate *their own* content that works in an interconnected way with other blocks, pipelines, and custom workflows that aren't part of vanilla ImagePypelines. So how do you get started? Well, to begin, think of these best practices as ImagePypelines' PYP to Python_'s PEP ;)
 
 Designing Processing Blocks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -248,7 +246,7 @@ This pipeline takes in a set of standard images, resizes them, performs an FFT, 
 
 Machine Learning Applications
 """""""""""""""""""""""""""""
-One of the more powerful applications of ImagePypelines_ is it's ease of use in
+One of the more powerful applications of ImagePypelines is it's ease of use in
 *machine learning* and *feature engineering* applications.
 We can easily tailor a pipeline to perform image classification, for example.
 
