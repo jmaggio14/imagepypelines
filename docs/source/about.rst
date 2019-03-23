@@ -33,9 +33,9 @@ Contact
 =======
 Please contact us with any questions, feature requests, or bug reports.
 
-Please `report an issue on Github`_ OR email us at jmaggio14@gmail.com
+`Report an issue on Github`_ OR email us at jmaggio14@gmail.com
 
-.. _report an issue on Github: https://github.com/jmaggio14/imagepypelines/issues
+.. _Report an issue on Github: https://github.com/jmaggio14/imagepypelines/issues
 
 About the Contributors
 ======================
