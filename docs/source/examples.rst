@@ -1,4 +1,6 @@
-
+==============
+Examples
+==============
 .. toctree:: convenience.rst
   :maxdepth: 2
 

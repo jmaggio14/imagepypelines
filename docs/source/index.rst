@@ -49,6 +49,9 @@ Imaging Science`_ who currently work in imaging related research or industries.
 .. toctree:: tutorials.rst
     :maxdepth: 2
 
+.. toctree:: examples.rst
+    :maxdepth: 2
+
 .. toctree:: modules.rst
     :maxdepth: 2
 
