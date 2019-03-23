@@ -330,8 +330,7 @@ class BaseBlock(object):
         self.requires_training = requires_training
         self.requires_labels = requires_labels
 
-        self.trained = True if not self.requires_training:
-            self.trained = True
+        self.trained = False if self.requires_training else True
 
         self.printer = get_printer(self.name)
 
