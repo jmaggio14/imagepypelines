@@ -13,6 +13,8 @@ from .Exceptions import BlockRequiresLabels
 from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES
 import copy
+import time
+import uuid
 from abc import ABCMeta, abstractmethod
 
 class ArrayType(object):
@@ -328,14 +330,28 @@ class BaseBlock(object):
         self.requires_training = requires_training
         self.requires_labels = requires_labels
 
-        self.trained = False
-        if not self.requires_training:
+        self.trained = True if not self.requires_training:
             self.trained = True
 
         self.printer = get_printer(self.name)
 
         # create a block description
         self.description = describe_block(self,notes)
+
+        # setup initial metadata dictionary
+        self._metadata = {'processing_time':0.0,
+                            'num_in':int(0),
+                            'num_out':int(0),
+                            'total_in':int(0),
+                            'total_out':int(0),
+                            'training_time':None,
+                            }
+
+        # setup initial tags
+        self.tags = set()
+
+        # setup absolutely unique 8 char hash id for this block
+        self.uuid = uuid.uuid4().hex[:8]
 
         super(BaseBlock,self).__init__()
 
@@ -419,6 +435,7 @@ class BaseBlock(object):
             BlockRequiresLabels: if this block requires labels and None
                 was passed in
         """
+        start = time.time()
         if self.requires_labels and (labels is None):
             msg = "{} requires labels for training but none were passed in"\
                 .format(self)
@@ -432,6 +449,9 @@ class BaseBlock(object):
 
         self.train(data, labels)
         self.trained = True
+
+        # update metadata
+        self._metadata['training_time'] = round(time.time() - start,3)
 
     def _pipeline_process(self, data, labels=None):
         """function pipeline calls to process data using this block
@@ -447,18 +467,18 @@ class BaseBlock(object):
             labels(list): list of corresponding labels for processed
 
         Raises:
-            InvalidBlockInputData: if data is not a list or tuple
+            InvalidBlockInputData: if data is not a list
             InvalidProcessingStrategy: if processed output is not a list
             InvalidLabelStrategy: if labels output is not a list
             DataLabelMismatch: if there is mismatch in the number of labels
                 and processed datums
 
         """
+        start = time.time()
         # ---------------- INPUT ERROR CHECKING ------------------------
         if not isinstance(data, list):
-            error_msg = "input data into a block must be a list"
-            self.printer.error(error)
-            raise InvalidBlockInputData(self)
+            raise InvalidBlockInputData(
+                "input data into a block must be a list")
 
         if labels is None:
             labels = [None] * len(data)
@@ -491,6 +511,12 @@ class BaseBlock(object):
         if len(processed) != len(labels):
             raise DataLabelMismatch(processed, labels)
 
+        # update the metadata
+        self._metadata['num_in'] = len(data)
+        self._metadata['num_out'] = len(processed)
+        self._metadata['processing_time'] = round(time.time() - start,3)
+        self._metadata['total_in'] += self._metadata['num_in']
+        self._metadata['total_out'] += self._metadata['num_out']
         return processed, labels
 
     @abstractmethod
@@ -503,7 +529,8 @@ class BaseBlock(object):
         Returns:
             list: processed datums
         """
-        raise NotImplementedError("'process_strategy' must be overloaded in all children")
+        raise NotImplementedError(
+            "'process_strategy' must be overloaded in all children")
 
     @abstractmethod
     def label_strategy(self, labels):
@@ -516,7 +543,8 @@ class BaseBlock(object):
         Returns:
             labels (list): labels for datums (Nones for unsupervised systems)
         """
-        raise NotImplementedError("'label_strategy' must be overloaded in all children")
+        raise NotImplementedError(
+            "'label_strategy' must be overloaded in all children")
 
     def __str__(self):
         return self.name
