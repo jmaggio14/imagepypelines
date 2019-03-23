@@ -123,6 +123,7 @@ html_theme_options = {
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
                      ("Tutorials", 'tutorials.html', True),
+                     ("Examples", 'examples.html', True),
                      ("Installation", 'installation.html', True),
                      ("Documentation", 'imagepypelines.html',True),
                      ("Github",'https://github.com/jmaggio14/imagepypelines',True),
