@@ -32,7 +32,7 @@ script:
   # Building documentation
   - sphinx-apidoc -o docs/source imagepypelines
   - cd docs && make html
-  - cd .
+  - cd ..
   - cp CNAME docs/build/html/CNAME
 
 after_success:
