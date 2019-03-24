@@ -27,12 +27,12 @@ script:
   - python enforcer.py
   # running tests and code coverage report
   - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
-  - py.test --doctest-glob='*.rst'
+  # - py.test --doctest-glob='*.rst'
   - py.test --cov=./imagepypelines tests/
   # Building documentation
   - sphinx-apidoc -o docs/source imagepypelines
   - cd docs && make html
-  - cd ..
+  - cd .
   - cp CNAME docs/build/html/CNAME
 
 after_success:
