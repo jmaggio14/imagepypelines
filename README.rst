@@ -23,18 +23,30 @@
 
 
 
-.. image:: https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg
-  :alt: coverage
-  :height: 20
-
 .. image:: https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master
+  :target: https://www.travis-ci.com/jmaggio14/imagepypelines
   :alt: build
-  :height: 20
+
+.. image:: https://img.shields.io/pypi/l/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jmaggio14/imagepypelines
+  :alt: coverage
+
+.. image:: https://img.shields.io/pypi/pyversions/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://badge.fury.io/py/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://img.shields.io/pypi/status/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
 
 
 
 
-The `imagepypelines` package consists of high level tools which simplify the construction of complex image processing, computer vision, and machine learning frameworks. During our time in the undergrad Imaging Science program at the Rochester Institute of Technology, we found ourselves writing and rewriting code for things as simple as data type casting and displaying imagery when debugging, causing more trouble than mathematical or logical bugs themselves! Our hope is that the plug-and-play, easily-customizable nature of `imagepypelines` will allow all data-driven scientists to construct complex frameworks quickly for prototyping applications, and serve as a valuable educational tool for those interested in learning traditionally tough subject matter in a friendly environment!
+The `imagepypelines` package consists of high level tools which simplify the construction of complex image processing, computer vision, and machine learning frameworks. During our time in the undergrad Imaging Science program at the Rochester Institute of Technology, we found ourselves writing and rewriting code for things as simple as data type casting and displaying imagery when debugging, causing more trouble than mathematical or logical bugs themselves! Our hope is that the plug-and-play, easily-customizable nature of `imagepypelines` allows all data-driven scientists to construct complex frameworks quickly for prototyping applications, and serve as a valuable educational tool for those interested in learning traditionally tough subject matter in a friendly environment!
 
 To achieve this goal, our development team always adheres to the following 5 core principles:
 
@@ -52,7 +64,7 @@ Installation
 
 *(make sure you see the dependencies section)*
 
-**Python compatibility:** 3.4-3.6 (Python 2.7 backwards) 64bit
+**Python compatibility:** 3.4-3.6 64bit
 
 **via pip**
 
@@ -110,6 +122,7 @@ Licensing / Credit
 Imagepypelines_ is licensed under the MIT_ permissive software license. You may use this code for research or commercial use so long as it conforms to the terms of the license included in this repo as well as the licenses of Imagepypelines_ dependencies.
 
 Please credit us if you use `imagepypelines` in your research
+
  .. code-block:: latex
 
   @misc{imagepypelines,
@@ -164,6 +177,7 @@ building a pipeline is super easy
 
 Image Display Pipeline
 """"""""""""""""""""""
+
 .. code-block:: python
 
   import imagepypelines as ip
@@ -180,6 +194,7 @@ We just made a processing pipeline that can read in images, resize them and disp
 
 Lowpass Filter Pipeline
 """""""""""""""""""""""
+
 .. code-block:: python
 
   import imagepypelines as ip
@@ -191,11 +206,11 @@ Lowpass Filter Pipeline
   ifft = ip.IFFT()
   display = ip.BlockViewer(pause_time=1)
 
-  # pipeline = ip.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
-  #
-  # # process a set of images (using imagepypelines' example data)
-  # filenames = ip.standard_image_filenames()
-  # pipeline.process(filenames)
+  pipeline = ip.Pipeline(blocks=[load,resize,fft,lowpass,ifft,display])
+
+  # process a set of images (using imagepypelines' example data)
+  filenames = ip.standard_image_filenames()
+  pipeline.process(filenames)
 
 
 
@@ -209,26 +224,26 @@ this classifier is available as a builtin Pipeline with fully tweakable hyperpar
 
 .. code-block:: python
 
-  #
-  # import imagepypelines as ip
-  #
-  # features = ip.PretrainedNetwork() # image feature block
-  # pca = ip.PCA(256) # principle component analysis block
-  # neural_network = ip.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
-  #
-  # classifier = ip.Pipeline([features,pca,neural_network])
-  #
-  # # loading example data
-  # cifar10 = ip.Cifar10()
-  # train_data, train_labels = cifar10.get_train()
-  # test_data, ground_truth = cifar10.get_test()
-  #
-  # classifier.train(train_data,train_labels) # train the classifier
-  # predictions = classifier.process(test_data) # test the classifier
-  #
-  # # print the accuracy
-  # accuracy = ip.accuracy(predictions,ground_truth) * 100
-  # print('pipeline classification accuracy is {}%!'.format(accuracy))
+
+  import imagepypelines as ip
+
+  features = ip.PretrainedNetwork() # image feature block
+  pca = ip.PCA(256) # principle component analysis block
+  neural_network = ip.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
+
+  classifier = ip.Pipeline([features,pca,neural_network])
+
+  # loading example data
+  cifar10 = ip.Cifar10()
+  train_data, train_labels = cifar10.get_train()
+  test_data, ground_truth = cifar10.get_test()
+
+  classifier.train(train_data,train_labels) # train the classifier
+  predictions = classifier.process(test_data) # test the classifier
+
+  # print the accuracy
+  accuracy = ip.accuracy(predictions,ground_truth) * 100
+  print('Pipeline classification accuracy is {}%!'.format(accuracy))
 
 
 
@@ -297,21 +312,21 @@ accepts one datum, you can create a block with a single line.
 
 .. code-block:: python
 
-  # import imagepypelines as ip
-  #
-  # class NormalizeBlock(ip.SimpleBlock):
-  # 	"""normalize block between 0 and max_count, inclusive"""
-  # 	def __init__(self,max_count=1):
-  # 		self.max_count = max_count
-  # 		# set up the block to work with grayscale and color imagery
-  # 		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  # 					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
-  #
-  # 		super(NormalizeBlock,self).__init__(io_map)
-  #
-  # 	def process(self,img):
-  # 		"""overload the processing function for this block"""
-  # 		return img.astype(np.float32) / img.max() * self.max_count
+  import imagepypelines as ip
+
+  class NormalizeBlock(ip.SimpleBlock):
+  	"""normalize block between 0 and max_count, inclusive"""
+  	def __init__(self,max_count=1):
+  		self.max_count = max_count
+  		# set up the block to work with grayscale and color imagery
+  		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+  					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+
+  		super(NormalizeBlock,self).__init__(io_map)
+
+  	def process(self,img):
+  		"""overload the processing function for this block"""
+  		return img.astype(np.float32) / img.max() * self.max_count
 
 *************************************
 Imaging Science Convenience Functions
@@ -355,6 +370,7 @@ quick image viewer:
 
 when you want to quickly display an image without any bells and whistles,
 you can use the `quick_image_view` function
+
 .. code-block:: python
 
   import imagepypelines as ip
@@ -408,8 +424,9 @@ Array Summarization
 ^^^^^^^^^^^^^^^^^^^
 when debugging an image pipeline, printing out an image
 can be counter productive. Imaging scientists frequently default
-to printing out the shape or size of the data. `imagepypelines` contains
+to printing out the shape or size of the data. Imagepypelines_ contains
 a helper class to quickly summarize an image in a formatted string
+
 .. code-block:: python
 
   import imagepypelines as ip
@@ -456,6 +473,7 @@ or code block
 
 absolute timing
 """"""""""""""""
+
 .. code-block:: python
 
   from imagepypelines.util import Timer
@@ -468,6 +486,7 @@ absolute timing
 
 lap timing
 """"""""""
+
 .. code-block:: python
 
   from imagepypelines.util import Timer
@@ -480,6 +499,7 @@ lap timing
 
 perform operation for N seconds
 """""""""""""""""""""""""""""""
+
 .. code-block:: python
 
   from imagepypelines.util import Timer
@@ -572,12 +592,14 @@ printer messages can be filtered be priority so that only desired messages can b
 Any level that is less than the current `GLOBAL_LOG_LEVEL` will **NOT** be printed. This makes it easy to filter out statements which may be erroneous or too numerous to make sense of.
 
 this value can be set with the `set_global_printout_level` function
+
 .. code-block:: python
 
   import imagepypelines as ip
   ip.set_global_printout_level('warning') # debug and info statements will not print now
 
 local printer levels can be set with `Printer.set_log_level`
+
 .. code-block:: python
 
   import imagepypelines as ip

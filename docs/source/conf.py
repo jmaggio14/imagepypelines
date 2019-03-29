@@ -18,19 +18,25 @@ import sys
 import sphinx_bootstrap_theme
 sys.path.insert(0, os.path.abspath('../..'))
 
-
+# System to automatically load in the correct
+CURRENT_DIR = os.path.dirname(__file__)
+VERSION_FILE = os.path.join(CURRENT_DIR,'..','..','imagepypelines','version_info.py')
+with open(VERSION_FILE,'r') as f:
+    raw = f.read()
+# load in version variables into 'version_info' dict
+version_info = {}
+exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
-
-project = 'imagepypelines'
-copyright = '2018, Nathan Dileas, Ryan Hartzell, Jeff Maggio'
-author = 'Nathan Dileas, Ryan Hartzell, Jeff Maggio'
+project = "ImagePypelines"
+copyright = '2018-2019 ' + version_info['__author__']
+author = version_info['__author__']
 
 
 # The short X.Y version
-version = '0.1'
+version = '.'.join(version_info["__version__"].split('.',2)[:2])
 # The full version, including alpha/beta/rc tags
-release = '0.1.1a'
+release = version_info["__version__"]
 
 
 # -- General configuration ---------------------------------------------------
@@ -48,6 +54,8 @@ extensions = [
     'sphinx.ext.napoleon',   # nD: support for google style docstrings
     'm2r',   # ND: add support for MarkDown, to allow readme importing,
     'sphinx.ext.githubpages', # JM add .nojekyll creation for github
+    'sphinx.ext.doctest', # JM: adds doctest directives
+    'sphinx_copybutton', # adds a copy button to our code blocks
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -76,7 +84,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = None
+pygments_style = 'colorful'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -100,10 +108,10 @@ html_logo = "../images/ip_logo.png"
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': "imagepypelines",
+    'navbar_title': "ImagePypelines",
 
     # Tab name for entire site. (Default: "Site")
-    'navbar_site_name': "Site",
+    'navbar_site_name': "",
 
     # A list of tuples containing pages or urls to link to.
     # Valid tuples should be in the following forms:
@@ -113,22 +121,27 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-                     # ("Contributors", "http://example.com", True),
-                     ("README", 'readme.html', True),
-                     ("Tutorials", 'tutorials.html', True)],
+                     ("About", 'about.html', True),
+                     # ("Readme", 'readme.html', True),
+                     ("Tutorials", 'tutorials.html', True),
+                     ("Examples", 'examples.html', True),
+                     ("Installation", 'installation.html', True),
+                     ("Documentation", 'imagepypelines.html',True),
+                     ("Github",'https://github.com/jmaggio14/imagepypelines',True),
+                     ],
 
     # Render the next and previous page links in navbar. (Default: true)
-    'navbar_sidebarrel': True,
+    'navbar_sidebarrel': False,
 
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': True,
+    'navbar_pagenav': False,
 
     # Tab name for the current pages TOC. (Default: "Page")
     'navbar_pagenav_name': "Page",
 
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 2,
+    'globaltoc_depth': 0,
 
     # Include hidden TOCs in Site navbar?
     #
@@ -215,7 +228,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'imagepypelines.tex', 'imagepypelines Documentation',
+    (master_doc, 'imagepypelines.tex', 'ImagePypelines Documentation',
      'Nathan Dileas, Ryan Hartzell, Jeff Maggio', 'manual'),
 ]
 
@@ -225,7 +238,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'imagepypelines', 'imagepypelines Documentation',
+    (master_doc, 'ImagePypelines', 'ImagePypelines Documentation',
      [author], 1)
 ]
 
@@ -236,8 +249,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'imagepypelines', 'imagepypelines Documentation',
-     author, 'imagepypelines', 'One line description of project.',
+    (master_doc, 'ImagePypelines', 'ImagePypelines Documentation',
+     author, 'ImagePypelines', 'One line description of project.',
      'Miscellaneous'),
 ]
 

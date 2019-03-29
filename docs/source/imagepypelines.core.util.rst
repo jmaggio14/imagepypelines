@@ -12,14 +12,6 @@ imagepypelines.core.util.Summarizer module
     :undoc-members:
     :show-inheritance:
 
-imagepypelines.core.util.Tester module
---------------------------------------
-
-.. automodule:: imagepypelines.core.util.Tester
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 imagepypelines.core.util.color module
 -------------------------------------
 
@@ -40,14 +32,6 @@ imagepypelines.core.util.development\_decorators module
 -------------------------------------------------------
 
 .. automodule:: imagepypelines.core.util.development_decorators
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-imagepypelines.core.util.format module
---------------------------------------
-
-.. automodule:: imagepypelines.core.util.format
     :members:
     :undoc-members:
     :show-inheritance:

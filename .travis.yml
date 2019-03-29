@@ -18,15 +18,16 @@ install:
   - pip install .
   - pip install tensorflow opencv-python
   # codecov requirements
-  - pip install Sphinx sphinx_bootstrap_theme m2r
+  - pip install Sphinx sphinx_bootstrap_theme m2r sphinx-copybutton
   # codecov requirements
-  - pip install pytest pytest-cov hypothesis coverage codecov
+  - pip install pytest pytest-cov hypothesis coverage codecov --upgrade
 
 script:
   # license enforcer
   - python enforcer.py
   # running tests and code coverage report
   - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
+  # - py.test --doctest-glob='*.rst'
   - py.test --cov=./imagepypelines tests/
   # Building documentation
   - sphinx-apidoc -o docs/source imagepypelines
@@ -46,4 +47,4 @@ deploy:
     local-dir: docs/build/html
     on:
       python: '3.6'
-      branch: master
+      branch: blockIO
