@@ -57,20 +57,6 @@ lenna
 
 *---- all other std images and functions here here ----*
 
-.. ----- quick_image_view
-quick_image_view
-****************
-
-**description**
-"""""""""""""""
-*this is a description of what I do*
-
-**Example**
-"""""""""""
-.. code-block:: python
-
-  >>> <code>
-
 .. ----------------------- Viewing Imagery -----------------------
 Viewing Imagery
 ~~~~~~~~~~~~~~~

@@ -55,6 +55,7 @@ extensions = [
     'm2r',   # ND: add support for MarkDown, to allow readme importing,
     'sphinx.ext.githubpages', # JM add .nojekyll creation for github
     'sphinx.ext.doctest', # JM: adds doctest directives
+    'sphinx_copybutton', # adds a copy button to our code blocks
 ]
 
 # Add any paths that contain templates here, relative to this directory.
