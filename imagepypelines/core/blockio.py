@@ -23,19 +23,25 @@ TODO:
 """
 
 import math
+import string
+from abc import ABC
 
 
 # ============================ Globals ============================
-OPERATORS = '+-*/%^'
+OPERATORS = ['+','-','*','**','/','%']
+"""acceptable operators"""
+
+CHOP_CHARS = OPERATORS + ['(',')']
+"""chracters used to split the expression string"""
 
 FUNCTIONS = {
-            # python builtins
+            # python builtin math functions
             'abs':abs,
             'max':max,
             'min':min,
             'pow':pow,
             'round':round,
-            # python math module
+            # python math module functions
             'ceil':math.ceil,
             'copysign':math.copysign,
             'factorial':math.factorial,
@@ -71,53 +77,143 @@ FUNCTIONS = {
             'erfc':math.erfc,
             'gamma':math.gamma,
             'lgamma':math.lgamma,
+            # Constants
+            'pi':math.pi,
+            'e':math.e,
             }
-"""dictionary of acceptable functions for use in axis expressions"""
+"""dictionary of acceptable functions and constants in axis expressions"""
 
-RESERVED = {'pi':math.pi,
-            'e':math.e}
-"""Dictionary of reserved constant values such as e and pi"""
-
-# ============================ String Parsing ============================
-class Expression(object):
-    def __init__(self,expr):
-        """
-        1) check syntax
-        2) split string by operators
-        3) find builtin functions
-        4) identify variables
-        5) compile
-        """
+ALLOWED = CHOP_CHARS + list(FUNCTIONS.keys())
 
 
-
-# ============================ Builtin IO Types ============================
-class FuncType(object):
-    def __init__(self,func):
-        assert callable(func),"FuncType must be instantiated with a function"
-        self.func = func
-
-    def __call__(self,input_type):
-        return self.func(input_type)
+INPUT_CHARS_ALLOWED = list(string.ascii_letters + '_')
+# ============================ Base Class(es) ============================
+class Output(ABC):
+    @abstractmethod
+    def output(self,input_type):
+        pass
 
 
-class ArrayType(FuncType):
+class AxisKernel(ABC):
+    @abstractmethod
+    def evaluate(self):
+        pass
+
+    @abstractmethod
+    def __get__(self):
+        pass
+
+# ======================== Builtin IO Types ========================
+class ArrayType(object):
+    def __init__(self,shape):
+        # go through each element in the shape and evaluate it as a
+        # string or 'constant' type
+        self.shape = []
+        for axis in out_shape:
+            # keep numbers the same
+            if isinstance(axis,(float,int)):
+                self.shape.append( int(axis) )
+
+            # turn some strings into
+            elif isinstance(axis,str):
+                self.shape.append( AxisExpression(axis) )
+
+            else:
+                raise ValueError(
+                    "Array Axes can only be defined as strings or numbers")
+
+
+# ======================== Builtin IO Output Classes ========================
+class ConstantOutput(Output):
+    def output(self,input_type):
+        return input_type
+
+class ArrayOutput(Output):
     def __init__(self,
-                 shape,
-                 all_axis_rule=None,
-                 error=None):
+                input_shape,
+                 output_shape
+                 ):
 
-        # if there is a rule that applies to all axes, ignore the shape and build
-        # build a ru
-        if all_axis_rule:
-            self.shape = None
-            # TODO: generate string parse here
+        # generate axis variable names for each axis in the input shape
+        # inputs must be strings or integers
+        varnames = []
+        for i,axis in enumerate(input_shape):
+            # if our axis is an integer, we can just generate a variable name
+            # e.g. [10,20,'C'] --{make varnames}--> ['$AXIS1','$AXIS2','C']
+            if isinstance(axis,int):
+                varnames.append('$AXIS%s' % i)
 
-        else:
-            expressions = [ Expression(expr) for expr in self.shape ]
+            # raise a ValueError if the input axis contains a banned character
+            elif isinstance(axis,str):
+                if not all(chr in INPUT_CHARS_ALLOWED for chr in axis):
+                    raise ValueError(
+                        "input axis can only contain {}"\
+                        .format(INPUT_CHARS_ALLOWED))
+                varnames.append(axis)
 
-        self.shape = shape
-        all_axis_rule = None
+            # if it's not a integer or string, then we have to raise a
+            # ValueError
+            else:
+                raise ValueError("only acceptable input types are int and str")
+
+
+        self.axis_kernels = ArrayType(output_shape)
+
+    def output(self, input_array):
+        axes = input_array.shape
+        out_shape = [ker.evaluate(axes,self.varnames) for ker in self.axis_kernels]
+        return ArrayType(out_shape)
+
+
+# ========================= Axis Length Evaluation =========================
+class AxisInteger(AxisKernel):
+    def __init__(self,val):
+        self.val = val
+
+    def evaluate(self,varnames=None):
+        return self.val
+
+    def __get__(self):
+        return self.val
+
+
+class AxisExpression(AxisKernel):
+    def __init__(self,expr,varnames):
+        # break string up into pieces for sanitization
+        chopped = []
+        start = 0
+        current = 0
+        for chr in expression:
+            if (chr in OPERATORS) or (current == len(expression)):
+                chopped.append(expression[start:current])
+                chopped.append(chr)
+                start = current
+            else:
+                current += 1
+
+        # sanitize the input
+        for i,chop in enumerate(chopped):
+            if chop in varnames:
+                # replace varname with a string insertion so it can be filled
+                # in later on
+                # (N*M) --> ({0}*{1})
+                chopped[i] = '{%s}' % str( varnames.index(chop) )
+
+            elif chop not in ALLOWED:
+                # reject anything that's not in our criteria
+                raise ValueError(
+                    "invalid variable, operator or function {}".format(chop))
+
+        self.sanitized = ''.join(chopped)
+
+
+    def evaluate(self,axes):
+        # NOTE: eval must not have access to module locals and globals
+        # the only thing it should have access to the values in FUNCTIONS
+        out = eval(self.sanitized.format(*axes), {}, FUNCTIONS)
+        return int( out )
+
+
 
 
 
