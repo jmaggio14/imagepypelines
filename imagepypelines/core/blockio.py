@@ -1,3 +1,10 @@
+# @Email: jmaggio14@gmail.com
+# @Website: https://www.imagepypelines.org/
+# @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
+# @github: https://github.com/jmaggio14/imagepypelines
+#
+# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+#
 """
 
 goal is to enable this functionality
@@ -214,6 +221,11 @@ class AxisExpression(AxisKernel):
         return int( out )
 
 
+# ============================== IoMap ==============================
+
+class IoMap(object):
+    def __init__(self,io_map_dict):
+        
 
 
 
