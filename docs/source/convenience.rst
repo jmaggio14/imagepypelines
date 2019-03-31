@@ -47,7 +47,8 @@ lenna
 
 **description**
 """""""""""""""
-*this is a description of what I do*
+`ImagePypelines` contains helper functions to quickly retrieve imagery that are
+frequently used as benchmarks in the Imaging Science community
 
 **Example**
 """""""""""
@@ -55,7 +56,18 @@ lenna
 
     >>> import imagepypeplines as ip
     >>> lenna = ip.lenna()
-    >>> ip.quick_image_view( lenna )
+    >>> linear_gradient = ip.linear()
+    >>> giza = ip.giza()
+    >>> panda = ip.panda()
+
+A full list of standard images can be retrieved with `list_standard_images()`
+
+.. code-block:: python
+
+    >>> import imagepypelines as ip
+    >>> ip.quick_image_view( ip.carlenna() )
+    >>> ip.quick_image_view( ip.roger() )
+    >>> ip.quick_image_view( ip.pig() )
 
 
 *---- all other std images and functions here here ----*

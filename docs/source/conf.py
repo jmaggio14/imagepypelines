@@ -49,8 +49,8 @@ release = version_info["__version__"]
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 
-# def setup(app):
-#     app.add_javascript('copybutton.js')
+def setup(app):
+    app.add_javascript('copybutton.js')
 
 
 extensions = [
