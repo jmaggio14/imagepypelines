@@ -53,7 +53,10 @@ lenna
 """""""""""
 .. code-block:: python
 
-  >>> <code>
+    >>> import imagepypeplines as ip
+    >>> lenna = ip.lenna()
+    >>> ip.quick_image_view( lenna )
+
 
 *---- all other std images and functions here here ----*
 

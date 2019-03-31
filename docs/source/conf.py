@@ -48,6 +48,11 @@ release = version_info["__version__"]
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+
+def setup(app):
+    app.add_javascript('copybutton.js')
+
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
@@ -55,7 +60,7 @@ extensions = [
     'm2r',   # ND: add support for MarkDown, to allow readme importing,
     'sphinx.ext.githubpages', # JM add .nojekyll creation for github
     'sphinx.ext.doctest', # JM: adds doctest directives
-    'sphinx_copybutton', # adds a copy button to our code blocks
+    # 'sphinx_copybutton', # adds a copy button to our code blocks
 ]
 
 # Add any paths that contain templates here, relative to this directory.
