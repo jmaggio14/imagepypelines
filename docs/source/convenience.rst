@@ -11,24 +11,6 @@ accelerate working with imagery and machine learning
 .. contents:: Convenience Utilities
   :depth: 3
 
-*Topic*
--------
-
-*Subset*
-~~~~~~~
-
-*Name*
-******
-
-**description**
-"""""""""""""""
-*this is a description of what I do*
-
-**Example**
-"""""""""""
-.. code-block:: python
-
-  >>> <code>
 .. ============================================================================
 ..                                 IMAGERY
 .. ============================================================================
@@ -60,7 +42,10 @@ frequently used as benchmarks in the Imaging Science community
     >>> giza = ip.giza()
     >>> panda = ip.panda()
 
-A full list of standard images can be retrieved with `list_standard_images()`
+A full list of standard images can be retrieved with `ip.list_standard_images()`
+
+for those of you in the Imaging Science program at RIT, there are a couple
+easter eggs for ya ;)
 
 .. code-block:: python
 
@@ -68,9 +53,6 @@ A full list of standard images can be retrieved with `list_standard_images()`
     >>> ip.quick_image_view( ip.carlenna() )
     >>> ip.quick_image_view( ip.roger() )
     >>> ip.quick_image_view( ip.pig() )
-
-
-*---- all other std images and functions here here ----*
 
 .. ----------------------- Viewing Imagery -----------------------
 Viewing Imagery
@@ -82,13 +64,21 @@ Viewer
 
 **description**
 """""""""""""""
-*this is a description of what I do*
+Video Viewer
 
 **Example**
 """""""""""
 .. code-block:: python
 
-  >>> <code>
+  >>> import imagepypelines as ip
+  >>> import time
+  >>>
+  >>> viewer = ip.Viewer('example_name')
+  >>> # display all standard images in sequence
+  >>> for img in ip.standard_image_gen():
+  ...   viewer.view(img)
+  ...   time.pause(.1)
+  >>>
 
 
 .. ----- quick_image_view

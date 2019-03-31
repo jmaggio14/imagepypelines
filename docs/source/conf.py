@@ -50,7 +50,7 @@ release = version_info["__version__"]
 # ones.
 
 def setup(app):
-    app.add_javascript('copybutton.js')
+    app.add_javascript('js/copybutton.js')
 
 
 extensions = [
