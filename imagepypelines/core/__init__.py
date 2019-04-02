@@ -58,7 +58,7 @@ from .filters import low_pass
 from .filters import high_pass
 
 # img_tools.py
-from .img_tools import normalize_and_bin
+from .img_tools import display_safe
 from .img_tools import quick_image_view
 from .img_tools import number_image
 from .img_tools import centroid

@@ -87,48 +87,23 @@ quick_image_view
 
 **description**
 """""""""""""""
-*this is a description of what I do*
+To display a single image in its own window
 
 **Example**
 """""""""""
 .. code-block:: python
 
-  >>> <code>
+  >>> import imagepypelines as ip
+  >>> lenna = ip.lenna()
+  >>>
+  >>> ip.quick_image_view(lenna)
+  >>> # this next line will normalize and bin the image first
+  >>> ip.quick_image_view(lenna, True)
 
 
 .. ----------------------- Image Coordinates -----------------------
 Image Coordinates
 ~~~~~~~~~~~~~~~~~
-
-.. ----- centroid
-centroid
-****************
-
-**description**
-"""""""""""""""
-*this is a description of what I do*
-
-**Example**
-"""""""""""
-.. code-block:: python
-
-  >>> <code>
-
-
-.. ----- frame_size
-frame_size
-****************
-
-**description**
-"""""""""""""""
-*this is a description of what I do*
-
-**Example**
-"""""""""""
-.. code-block:: python
-
-  >>> <code>
-
 
 .. ----- dimensions
 dimensions
@@ -136,83 +111,63 @@ dimensions
 
 **description**
 """""""""""""""
-*this is a description of what I do*
+Get quick coordinates and dimensions for imagery. Mostly useful to clean up
+code and avoid silly mistakes
 
 **Example**
 """""""""""
 .. code-block:: python
 
-  >>> <code>
-
+  >>> import imagepypelines as ip
+  >>> lenna = ip.lenna()
+  >>>
+  >>> # center pixel in the image
+  >>> center_row, center_col = ip.centroid(lenna)
+  >>>
+  >>> # number of rows and columns
+  >>> rows, cols = ip.frame_size(lenna)
+  >>>
+  >>> # shape and dtype
+  >>> rows, cols, bands, dtype = ip.dimensions(lenna)
 
 
 .. ----------------------- Normalization and Binning Imagery -----------------------
 Normalization and Binning Imagery
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. ----- normalize_and_bin
-normalize_and_bin
-*****************
+.. ----- display_safe
+normalization to various ranges
+*******************************
 
 **description**
 """""""""""""""
-*this is a description of what I do*
+Forgetting to make imagery normalized or display_safe gets you more often
+than you think...
 
 **Example**
 """""""""""
 .. code-block:: python
 
-  >>> <code>
+  >>> import imagepypelines as ip
+  >>> import numpy as np
+  >>>
+  >>> random_pattern = np.random.rand(512, 512).astype(np.float32)
+  >>> lenna = ip.lenna()
+  >>>
+  >>> # normalize [0,255] and cast to uint8 for display
+  >>> display_safe = ip.display_safe(random_pattern)
+  >>>
+  >>> # normalize lenna to [0,1] inclusive
+  >>> lenna_0_1 = ip.norm_01( lenna )
+  >>> # normalize lenna to [a,b] inclusive
+  >>> lenna_100_255 = ip.norm_ab(lenna, 100, 255)
+  >>> # normalize to the whole 16bit range
+  >>> lenna_16bit = ip.norm_dtype(lenna, np.uint16)
 
-
-.. ----- norm_01
-norm_01
-****************
-
-**description**
-"""""""""""""""
-*this is a description of what I do*
-
-**Example**
-"""""""""""
-.. code-block:: python
-
-  >>> <code>
-
-
-.. ----- norm_ab
-norm_ab
-****************
-
-**description**
-"""""""""""""""
-*this is a description of what I do*
-
-**Example**
-"""""""""""
-.. code-block:: python
-
-  >>> <code>
-
-
-.. ----- norm_dtype
-norm_dtype
-****************
-
-**description**
-"""""""""""""""
-*this is a description of what I do*
-
-**Example**
-"""""""""""
-.. code-block:: python
-
-  >>> <code>
 
 .. =============================================================================
 ..                                 MACHINE LEARNING
 .. =============================================================================
-====
 
 Machine Learning
 ----------------

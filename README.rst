@@ -380,7 +380,7 @@ you can use the `quick_image_view` function
   ip.quick_image_view( lenna )
 
   # display lenna normalized to 255
-  ip.quick_image_view(lenna, normalize_and_bin=True)
+  ip.quick_image_view(lenna, display_safe=True)
 
 Robust Image Viewer:
 ^^^^^^^^^^^^^^^^^^^^
@@ -417,7 +417,7 @@ an image
   import numpy as np
   random_pattern = np.random.rand(512,512).astype(np.float32)
 
-  display_safe = ip.normalize_and_bin(random_pattern)
+  display_safe = ip.display_safe(random_pattern)
   ip.Viewer().view(display_safe)
 
 Array Summarization

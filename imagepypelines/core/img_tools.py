@@ -10,7 +10,7 @@ from .error_checking import dtype_type_check
 from .imports import import_opencv
 cv2 = import_opencv()
 
-def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
+def display_safe(src, max_count=255, cast_type=np.uint8):
     """normalizes and bins an image
 
     normalizes and bins the bins the input image to a given bit depth
@@ -33,14 +33,14 @@ def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     return img
 
 
-def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
+def quick_image_view(img, display_safe=False, title="quick view image"):
     """
     quickly displays the image using a PIL Image Viewer
     (which uses ImageMagick over X11 -- this will work over ssh)
 
     Args:
         img (np.ndarray): input image you want to view
-        normalize_and_bin (bool, optional): Defaults to False
+        display_safe (bool, optional): Defaults to False
             boolean value indicating whether or not to normalize
             and bin the image
         title (str, optional): title for the image window.
@@ -50,10 +50,10 @@ def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
         None
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
-    assert isinstance(normalize_and_bin, int), "'normalize_and_bin' must be int"
+    assert isinstance(display_safe, int), "'display_safe' must be int"
     assert isinstance(title, str), "'title' must be a string"
 
-    if normalize_and_bin:
+    if display_safe:
         img = norm_ab(img, 0, 255)
 
     if len(img.shape) > 2:
