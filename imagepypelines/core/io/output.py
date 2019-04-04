@@ -5,6 +5,10 @@
 #
 # Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import os
+from ..imports import import_opencv
+from ..constants import IMAGE_EXTENSIONS
+
+cv2 = import_opencv()
 
 def prevent_overwrite(filename,create_file=False):
     """
@@ -97,3 +101,55 @@ def make_numbered_prefix(file_number,number_digits=5):
 
     numbered_string = prefix + file_number_string
     return numbered_string
+
+
+def convert_to(fname, format, output_dir=None, no_overwrite=False):
+    """converts an image file to the specificed format
+    "example.png" --> "example.jpg"
+
+    Args:
+        fname (str): the filename of the image you want to convert
+        format (str): the format you want to convert to, acceptable options are:
+            'png','jpg','tiff','tif','bmp','dib','jp2','jpe','jpeg','webp',
+            'pbm','pgm','ppm','sr','ras'.
+        output_dir (str,None): optional, a directory to save the reformatted
+            image to. Default = None
+        no_overwrite (bool): whether of not to prevent this function from
+            overwriting a file if it already exists. see
+            :prevent_overwrite:~`imagepypelines.io.prevent_overwrite` for
+            more information
+
+    Returns:
+        str: the output filename that the converted file was saved to
+    """
+    # eg convert .PNG --> png if required
+    format = format.lower().replace('.','')
+
+    file_path, ext = os.path.splitext(fname)
+    if output_dir is None:
+        out_name = file_path + . + format
+    else:
+        basename = os.path.basename(file_path)
+        out_name = os.path.join(output_dir, basename + '.' + format)
+
+
+    if format not in IMAGE_EXTENSIONS:
+        raise TypeError("format must be one of {}".format(IMAGE_EXTENSIONS))
+
+
+    if no_overwrite:
+        # check if the file exists
+        out_name = prevent_overwrite(out_name)
+
+    img = cv2.imread(fname)
+    if img is None:
+        raise RuntimeError("Unable to open up file {}".format(fname))
+
+    cv2.imwrite(out_name, img)
+
+    return out_name
+
+
+
+
+# END

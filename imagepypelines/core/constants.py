@@ -41,21 +41,21 @@ CV2_INTERPOLATION_TYPES = (cv2.INTER_NEAREST,
 
 
 
-IMAGE_EXTENSIONS = ['.png',
-                    '.jpg',
-                    '.tiff',
-                    '.tif',
-                    '.bmp',
-                    '.dib',
-                    '.jp2',
-                    '.jpe',
-                    '.jpeg',
-                    '.webp',
-                    '.pbm',
-                    '.pgm',
-                    '.ppm',
-                    '.sr',
-                    '.ras']
+IMAGE_EXTENSIONS = ['png',
+                    'jpg',
+                    'tiff',
+                    'tif',
+                    'bmp',
+                    'dib',
+                    'jp2',
+                    'jpe',
+                    'jpeg',
+                    'webp',
+                    'pbm',
+                    'pgm',
+                    'ppm',
+                    'sr',
+                    'ras']
 """module variable which contains all image extensions openable by opencv's imread"""
 
 
