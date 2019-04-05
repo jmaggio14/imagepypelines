@@ -121,7 +121,7 @@ def frame_size(img):
 
     Example:
         >>> import imagepypelines as ip
-        >>> lenna_framesize = frame_size( ip.lenna() )
+        >>> height, width = frame_size( ip.lenna() )
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
@@ -129,21 +129,19 @@ def frame_size(img):
     return frame_size
 
 
-def dimensions(img, return_as_dict=False):
+def dimensions(img):
     """
     function which returns the dimensions and data_type of a given image
 
     Args:
         img (np.ndarray): input image
-        return_as_dict (bool): whether or not to return a dictionary.
-            Default is False
 
     Returns:
-        tuple: dimensions of the form (rows, cols, bands, dtype)
+        tuple: dimensions of the form (rows, cols, bands)
 
     Example:
         >>> import imagepypelines as ip
-        >>> dims = dimensions( ip.lenna() )
+        >>> rows, cols, bands = ip.dimensions( ip.lenna() )
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
@@ -153,12 +151,8 @@ def dimensions(img, return_as_dict=False):
         bands = img.shape[2]
     else:
         bands = 1
-    dims = (rows, cols, bands, img.dtype)
 
-    if return_as_dict:
-        dims = dict(zip(('rows','cols','bands','dtype'), dims))
-
-    return dims
+    return (rows, cols, bands, img.dtype)
 
 def norm_01(img):
     """ Normalize img to the range [0, 1], inclusive.
