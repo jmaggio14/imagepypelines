@@ -127,7 +127,7 @@ def convert_to(fname, format, output_dir=None, no_overwrite=False):
 
     file_path, ext = os.path.splitext(fname)
     if output_dir is None:
-        out_name = file_path + . + format
+        out_name = file_path + '.' + format
     else:
         basename = os.path.basename(file_path)
         out_name = os.path.join(output_dir, basename + '.' + format)
