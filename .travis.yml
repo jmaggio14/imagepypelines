@@ -1,4 +1,4 @@
-sudo: false
+sudo: sudo
 
 language: python
 
@@ -14,11 +14,12 @@ python:
 
 install:
   # imagepypelines Requirements
+  - travis_retry sudo apt install graphviz
   - pip install -r requirements.txt
   - pip install .
   - pip install tensorflow opencv-python
   # codecov requirements
-  - pip install Sphinx sphinx_bootstrap_theme m2r
+  - pip install Sphinx sphinx_bootstrap_theme m2r sphinx-automodapi graphviz
   # codecov requirements
   - pip install pytest pytest-cov hypothesis coverage codecov --upgrade
 

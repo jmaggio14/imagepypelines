@@ -2,6 +2,7 @@
 snippet_tester.py
 Pipfile
 pipfile.lock
+docs/source/api/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,7 +1,5 @@
 imagepypelines
 ==============
 
-.. toctree::
-   :maxdepth: 4
-
-   imagepypelines
+.. toctree:: docs/index.rst
+    :maxdepth: 2

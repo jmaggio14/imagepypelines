@@ -52,6 +52,8 @@ release = version_info["__version__"]
 def setup(app):
     app.add_javascript('js/copybutton.js')
 
+# JM idk what this does but the automodapi docs say you should do this
+numpydoc_show_class_members = False
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -60,8 +62,12 @@ extensions = [
     'm2r',   # ND: add support for MarkDown, to allow readme importing,
     'sphinx.ext.githubpages', # JM add .nojekyll creation for github
     'sphinx.ext.doctest', # JM: adds doctest directives
-    # 'sphinx_copybutton', # adds a copy button to our code blocks
+    'sphinx_automodapi.automodapi', # hopefully should make separate pages for every object
+    # 'sphinx_automodapi.smart_resolver'
 ]
+
+# JM - show inherited class attributes
+automodsumm_inherited_members = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -131,7 +137,7 @@ html_theme_options = {
                      ("Tutorials", 'tutorials.html', True),
                      ("Examples", 'examples.html', True),
                      ("Installation", 'installation.html', True),
-                     ("Documentation", 'imagepypelines.html',True),
+                     ("Documentation", 'docs/index.html',True),
                      ("Github",'https://github.com/jmaggio14/imagepypelines',True),
                      ],
 
