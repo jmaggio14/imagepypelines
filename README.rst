@@ -459,7 +459,7 @@ Mostly useful to clean up code and avoid silly mistakes
   rows, cols = ip.frame_size(lenna)
 
   # shape and dtype
-  rows, cols, bands, dtype = ip.dimensions(lenna)
+  rows, cols, bands = ip.dimensions(lenna)
 
 Timing
 ^^^^^^

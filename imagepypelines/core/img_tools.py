@@ -74,7 +74,7 @@ def number_image(img, num):
     Returns:
         np.ndarray: numbered image
     """
-    r,c,b,_ = dimensions(img)
+    r,c,b = dimensions(img)
     loc = int( min(r,c) * .95 )
     color = (255,255,255)
     if np.mean(img[int(.9*r):r,int(.9*c):c]) > 128:

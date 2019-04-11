@@ -21,7 +21,7 @@ def low_pass(img,cut_off,filter_type='ideal',butterworth_order=1):
     Returns:
         filter(np.ndarray) 2D filter
     """
-    r,c,b,_ = dimensions(img)
+    r,c,b = dimensions(img)
     u = np.arange(r)
     v = np.arange(c)
     u, v = np.meshgrid(u, v)
