@@ -34,14 +34,12 @@ script:
   - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
   # - py.test --doctest-glob='*.rst'
   - py.test --cov=./imagepypelines tests/
-  # Building documentation
-  - sphinx-apidoc -o docs/source imagepypelines
-  - cd docs && make html
-  - cd ..
-  - cp CNAME docs/build/html/CNAME
 
 after_success:
   - codecov
+# Building website
+- cd docs && make html && cd ..
+- cp CNAME docs/build/html/CNAME
 
 deploy:
   # Website Deployment
@@ -53,3 +51,10 @@ deploy:
     on:
       python: '3.6'
       branch: blockIO
+
+  - provider: pypi
+    user: jmaggio14
+    password: $PYPI_PASS
+    on:
+      branch: master
+      tags: true
