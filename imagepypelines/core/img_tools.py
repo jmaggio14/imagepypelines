@@ -152,7 +152,7 @@ def dimensions(img):
     else:
         bands = 1
 
-    return (rows, cols, bands, img.dtype)
+    return (rows, cols, bands)
 
 def norm_01(img):
     """ Normalize img to the range [0, 1], inclusive.
