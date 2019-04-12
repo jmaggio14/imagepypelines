@@ -10,7 +10,7 @@ import numpy as np
 from datetime import datetime
 
 from .img_tools import number_image, norm_dtype
-from .error_checking import interpolation_type_check
+from .util import interpolation_type_check
 
 class Viewer(object):
     """

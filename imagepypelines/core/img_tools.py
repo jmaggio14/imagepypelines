@@ -6,7 +6,7 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
 from PIL import Image
-from .error_checking import dtype_type_check
+from .util import dtype_type_check
 from .imports import import_opencv
 cv2 = import_opencv()
 

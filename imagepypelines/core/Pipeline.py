@@ -10,12 +10,12 @@ from .Printer import set_global_printout_level
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .BaseBlock import Incompatible
-
-
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
+from .util import Timer
+
+
 import collections
-from .util.timing import Timer
 import pickle
 import copy
 import numpy as np
