@@ -432,7 +432,7 @@ a helper class to quickly summarize an image in a formatted string
   import imagepypelines as ip
   lenna = ip.lenna()
 
-  summary = ip.Summarizer(lenna)
+  summary = ip.arrsummary(lenna)
   print(summary)
 
 produces the following

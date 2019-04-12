@@ -130,10 +130,16 @@ for img_name in STANDARD_IMAGES.keys():
 # ND 9/7/18 - delete these so that the imagepypelines namespace is not polluted
 del sys, curr_module, funcs, STANDARD_IMAGES
 
+# util.py
+from .util import print_args
+from .util import arrsummary
+from .util import function_timer
+from .util import function_timer_ms
+from .util import Timer
+
 # Viewer.py
 from .Viewer import Viewer
 
 # import submodules
-from . import util
 from . import io
 from . import ml

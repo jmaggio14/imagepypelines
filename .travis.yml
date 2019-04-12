@@ -37,9 +37,9 @@ script:
 
 after_success:
   - codecov
-# Building website
-- cd docs && make html && cd ..
-- cp CNAME docs/build/html/CNAME
+  # Building website
+  - cd docs && make html && cd ..
+  - cp CNAME docs/build/html/CNAME
 
 deploy:
   # Website Deployment

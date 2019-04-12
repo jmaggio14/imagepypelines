@@ -184,34 +184,6 @@ def test_dtype_type_check():
     else:
         raise RuntimeError("failure failed")
 
-def test_is_numpy_array():
-    import imagepypelines as ip
-    import numpy as np
-
-    ls = [1,2,3,4,5,6,7,8,9,0]
-    assert not ip.is_numpy_array(ls)
-
-    a = np.array(ls)
-    assert ip.is_numpy_array(a)
-
-
-
-def test_is_iterable():
-    import imagepypelines as ip
-    import numpy as np
-
-    assert ip.is_iterable( list() )
-    assert ip.is_iterable( tuple() )
-    assert ip.is_iterable( np.array([1,2,3,4]) )
-    # test a generator
-    assert ip.is_iterable( x for x in range(10) )
-    assert ip.is_iterable( "this a string" )
-
-    assert not ip.is_iterable( 5 )
-    assert not ip.is_iterable( 10.0 )
-
-
-
 # =================== Exceptions.py ===================
 # TODO - JM
 
