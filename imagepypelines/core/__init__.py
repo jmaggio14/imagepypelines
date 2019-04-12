@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
 # constants.py
 from .constants import *
@@ -37,7 +37,6 @@ make_cache('datasets',
 # error_checking.py
 from .error_checking import interpolation_type_check
 from .error_checking import dtype_type_check
-from .error_checking import is_numpy_array
 from .error_checking import is_iterable
 
 # Exceptions.py

@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from __future__ import print_function
 from .Printer import get_printer
 from .Printer import set_global_printout_level

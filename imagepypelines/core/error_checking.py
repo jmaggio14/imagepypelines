@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from __future__ import absolute_import
 import numpy as np
 import collections
@@ -37,11 +37,6 @@ def dtype_type_check(dtype):
         raise InvalidNumpyType(dtype)
 
     return True
-
-
-def is_numpy_array(arr):
-    """returns True if input is a numpy array or subclass of numpy array"""
-    return isinstance(arr,np.ndarray)
 
 
 def is_iterable(var):
