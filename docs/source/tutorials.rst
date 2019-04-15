@@ -31,7 +31,8 @@ let's create an example fourier transform pipeline
     >>> # load in a list of example image filenames
     >>> filenames = ip.standard_image_filenames()
     >>> # process the data
-    >>> ffts = fft_pipeline.process(filenames)
+    >>> ffts = fft_pipeline.process(filenames) # doctest: +ELLIPSIS
+    ...
 
 Simple Input Output Operations
 ------------------------------
@@ -49,18 +50,17 @@ and then save them to disk
 
     >>> import imagepypelines as ip
     >>>
-    >>> standard_image_filenames = ip.standard_image_filenames()
-    >>>
     >>> # build blocks for this pipeline
     >>> loader = ip.blocks.ImageLoader()
+    >>> rgb2gray = ip.blocks.Color2Gray()
     >>> otsu = ip.blocks.Otsu()
     >>> writer = ip.blocks.WriterBlock('./output_dir',return_type='filename')
     >>>
     >>> # pipeline construction
-    >>> pipeline = ip.Pipeline([loader,otsu,writer])
+    >>> pipeline = ip.Pipeline([loader,rgb2gray,otsu,writer])
     >>>
     >>> # get filenames of saved thresholded data
-    >>> processed_filenames = pipeline.process(standard_image_filenames)
+    >>> processed_filenames = pipeline.process( ip.standard_image_filenames() )
 
 
 Pulling imagery off of a webcam and injecting it directly into a pipeline
@@ -69,11 +69,13 @@ This is also a good example of how blocks can inject data into a pipeline.
 A block with a single input can result in N outputs
 
 .. doctest:: python
+    :skipif: IP_NO_CAMERA
 
     >>> import imagepypelines as ip
     >>>
     >>> # let's make a pipeline to talk to a webcam and save them to disk
     >>> camera = ip.blocks.CameraBlock(device='/dev/video0')
+    >>> rgb2gray = ip.blocks.Color2Gray()
     >>> otsu = ip.blocks.Otsu()
     >>> writer = ip.blocks.WriterBlock(output_dir='./output_dir')
     >>>
@@ -82,7 +84,8 @@ A block with a single input can result in N outputs
     >>>
     >>> # run loop until there's a keyboard interrupt
     >>> while True:
-    ...     pipeline.process([10]) # capture 10 images and save them to disk
+    ...     pipeline.process([10]) # capture 10 images and save them to disk  # doctest:+ELLIPSIS
+    ...
 
 Machine Learning Applications
 -----------------------------
@@ -100,7 +103,7 @@ You can tweak this example with your own image data and hyperparameters to make 
     >>> import imagepypelines as ip
     >>>
     >>> # ----------------- loading example data ---------------
-    >>> cifar10 = ip.Cifar10()
+    >>> cifar10 = ip.ml.Cifar10()
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
     >>>
@@ -112,12 +115,14 @@ You can tweak this example with your own image data and hyperparameters to make 
     >>> classifier = ip.Pipeline([features,pca,neural_network])
     >>>
     >>> # -------------- train and predict the classifier ---------------
-    >>> classifier.train(train_data,train_labels) # train the classifier
-    >>> predictions = classifier.process(test_data) # test the classifier
-    >>>
+    >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
+    ...
+    >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
+    ...
     >>> # print the accuracy
     >>> accuracy = ip.accuracy(predictions,ground_truth)
-    >>> print('accuracy: {}%'.format(accuracy * 100) )
+    >>> print('accuracy: {}%'.format(accuracy * 100) ) # doctest:+ELLIPSIS
+    accuracy: ...%
 
 Classification using a Support Vector Machine
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -126,7 +131,7 @@ Classification using a Support Vector Machine
     >>> import imagepypelines as ip
     >>>
     >>> # ----------------- loading example data ---------------
-    >>> cifar10 = ip.Cifar10()
+    >>> cifar10 = ip.ml.Cifar10()
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
     >>>
@@ -139,12 +144,15 @@ Classification using a Support Vector Machine
     >>> classifier = ip.Pipeline([features,pca,neural_network])
     >>>
     >>> # -------------- train and predict the classifier ---------------
-    >>> classifier.train(train_data,train_labels) # train the classifier
-    >>> predictions = classifier.process(test_data) # test the classifier
+    >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
+    ...
+    >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
+    ...
     >>>
     >>> # print the accuracy
     >>> accuracy = ip.accuracy(predictions,ground_truth)
-    >>> print('accuracy: {}%'.format(accuracy * 100) )
+    >>> print('accuracy: {}%'.format(accuracy * 100) ) # doctest:+ELLIPSIS
+    accuracy: ...%
 
 Creating your own block
 ***********************
@@ -181,12 +189,5 @@ Lets create a super simple example just to demonstrate how you can create a batc
     ...         return processed_batch
     >>>
     >>> p = ip.Pipeline( [AddOneBlock()] )
-    >>> std_images_plus_one = p.process( ip.standard_images() )
-
-
-
-Simple Blocks
--------------
-Simple Blocks on the other hand simply process one piece of data at a time
-=======
-.. mdinclude:: ../../TUTORIALS.md
+    >>> std_images_plus_one = p.process( ip.standard_images() ) #doctest: +ELLIPSIS
+    ...

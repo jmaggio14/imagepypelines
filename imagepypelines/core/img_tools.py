@@ -102,7 +102,7 @@ def centroid(img):
 
     Example:
         >>> import imagepypelines as ip
-        >>> lenna_centroid = centroid( ip.lenna() )
+        >>> lenna_centroid = ip.centroid( ip.lenna() )
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
@@ -121,7 +121,7 @@ def frame_size(img):
 
     Example:
         >>> import imagepypelines as ip
-        >>> height, width = frame_size( ip.lenna() )
+        >>> height, width = ip.frame_size( ip.lenna() )
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 

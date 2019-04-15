@@ -36,7 +36,7 @@ frequently used as benchmarks in the Imaging Science community
 """""""""""
 .. doctest:: python
 
-    >>> import imagepypeplines as ip
+    >>> import imagepypelines as ip
     >>> lenna = ip.lenna()
     >>> linear_gradient = ip.linear()
     >>> giza = ip.giza()
@@ -77,7 +77,7 @@ Video Viewer
   >>> # display all standard images in sequence
   >>> for img in ip.standard_image_gen():
   ...   viewer.view(img)
-  ...   time.pause(.1)
+  ...   time.sleep(.1)
   >>>
 
 
@@ -128,7 +128,7 @@ code and avoid silly mistakes
   >>> rows, cols = ip.frame_size(lenna)
   >>>
   >>> # shape and dtype
-  >>> rows, cols, bands, dtype = ip.dimensions(lenna)
+  >>> rows, cols, bands = ip.dimensions(lenna)
 
 
 .. ----------------------- Normalization and Binning Imagery -----------------------
@@ -188,7 +188,7 @@ accuracy
 """""""""""
 .. doctest:: python
 
-  >>> <code>
+  >>> # <code>
 
 
 .. ----- confidence
@@ -203,7 +203,7 @@ confidence
 """""""""""
 .. doctest:: python
 
-  >>> <code>
+  >>> # <code>
 
 
 
@@ -223,7 +223,7 @@ DatasetManager
 """""""""""
 .. doctest:: python
 
-  >>> <code>
+  >>> # <code>
 
 .. ----- Mnist
 Mnist
@@ -237,7 +237,7 @@ Mnist
 """""""""""
 .. doctest:: python
 
-  >>> <code>
+  >>> # <code>
 
 
 .. ----- MnistFashion
@@ -252,7 +252,7 @@ MnistFashion
 """""""""""
 .. doctest:: python
 
-  >>> <code>
+  >>> # <code>
 
 
 .. ----- Cifar10
@@ -267,7 +267,7 @@ Cifar10
 """""""""""
 .. doctest:: python
 
-  >>> <code>
+  >>> # <code>
 
 
 .. ----- Cifar100
@@ -282,7 +282,7 @@ Cifar100
 """""""""""
 .. doctest:: python
 
-  >>> <code>
+  >>> # <code>
 
 .. =============================================================================
 ..                                 Development Tools

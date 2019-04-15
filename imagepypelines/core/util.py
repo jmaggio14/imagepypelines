@@ -13,6 +13,8 @@ import inspect
 import collections
 import time
 
+TIMER_PRINTER = get_printer('TIMER')
+
 ################################################################################
 #                                 Error Checking
 ################################################################################
@@ -255,10 +257,15 @@ def function_timer(func):
     """Decorator to time how long a func takes to run in seconds
 
     Example:
-        >>> @function_timer
-        ... def sleep_for_one_sec():
-        ...    time.sleep(1) # sleep for 1 second
+        >>> import imagepypelines as ip
+        >>> import time
         >>>
+        >>> @ip.function_timer
+        ... def sleep_for_one_sec():
+        ...    time.sleep(1) #sleep for 1 second
+        >>>
+        >>> sleep_for_one_sec() # doctest: +ELLIPSIS
+        ...
     """
     # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file
@@ -279,10 +286,15 @@ def function_timer_ms(func):
     """Decorator to time how long a func takes to run in milliseconds
 
     Example:
-        >>> @function_timer
+        >>> import imagepypelines as ip
+        >>> import time
+        >>>
+        >>> @ip.function_timer_ms
         ... def sleep_for_one_sec():
         ...    time.sleep(1) #sleep for 1 second
         >>>
+        >>> sleep_for_one_sec() # doctest: +ELLIPSIS
+        ...
     """
     # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
     # TODO: JM: remove relative imports inside these functions and move to top of file

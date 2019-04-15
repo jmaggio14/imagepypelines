@@ -31,7 +31,7 @@ script:
   # license enforcer
   - python enforcer.py
   # running docstring tests
-  - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
+  # - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
   # generate percent test coverage and a coverage report
   - py.test --cov=./imagepypelines tests/
   # running doctest on website code snippets

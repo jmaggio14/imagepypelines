@@ -20,6 +20,7 @@ class ConfigFactory(object):
     from a sample of arguments and keyword arguments
 
     Example:
+        >>> import imagepypelines as ip
         >>> def run_important_test(arg1,arg2,arg3,first,second,third):
         ...    # real code will do something
         ...    pass
@@ -34,7 +35,7 @@ class ConfigFactory(object):
         ...            'third':['i','j','k'], # trials for 'third' keyword argument
         ...            }
 
-        >>> permuter = ConfigFactory(*arg_trials,**kwarg_trials)
+        >>> permuter = ip.ml.ConfigFactory(*arg_trials,**kwarg_trials)
         >>> for args,kwargs in permuter:
         ...    run_important_test(*args,**kwargs)
     """

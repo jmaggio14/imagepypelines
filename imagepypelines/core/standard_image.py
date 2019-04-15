@@ -56,7 +56,8 @@ def get_standard_image(img_name):
         ValueError: if invalid img_name is provided
 
     Example:
-        >>> lenna = get_standard_image('lenna')
+        >>> import imagepypelines as ip
+        >>> lenna = ip.get_standard_image('lenna')
     """
     if img_name in STANDARD_IMAGES:
         img = cv2.imread(STANDARD_IMAGES[img_name], cv2.IMREAD_UNCHANGED)

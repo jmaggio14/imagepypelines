@@ -66,7 +66,42 @@ extensions = [
     # 'sphinx_automodapi.smart_resolver'
 ]
 
-# JM - show inherited class attributes
+# doctest config
+doctest_global_setup = '''
+import imagepypelines as ip
+
+IP_DEVNULL = None
+
+def IP_SILENCE_STDOUT():
+    import sys, os
+    # silence all standard output for global setup
+    global IP_DEVNULL
+    IP_DEVNULL = open(os.devnull, 'w')
+    sys.stdout = IP_DEVNULL
+
+def IP_RESET_STDOUT():
+    import sys
+    global IP_DEVNULL
+    if IP_DEVNULL is not None:
+        IP_DEVNULL.close()
+        sys.stdout = sys.__stdout__
+
+# check if this camera has a webcam
+IP_SILENCE_STDOUT()
+try:
+    camera = ip.blocks.CameraBlock(device=0)
+    ip.Pipeline([camera]).process([1])
+    IP_NO_CAMERA = False
+except ip.CameraReadError:
+    IP_NO_CAMERA = True
+IP_RESET_STDOUT()
+...
+# cleanup environment and reset stdout
+del ip
+'''
+
+
+# JM - show inherited class attributes in automodapi
 automodsumm_inherited_members = True
 
 # Add any paths that contain templates here, relative to this directory.
