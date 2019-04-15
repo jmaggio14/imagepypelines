@@ -35,7 +35,7 @@ script:
   # generate percent test coverage and a coverage report
   - py.test --cov=./imagepypelines tests/
   # running doctest on website code snippets
-  - cd docs && make html && cd ..
+  - cd docs && make doctest && cd ..
 
 after_success:
   # upload coverage report
