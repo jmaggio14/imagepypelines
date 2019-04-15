@@ -149,7 +149,7 @@ There are two ways to create a block:
 For operations that can be completed in a single function that
 accepts one datum, you can create a block with a single line.
 
-.. .. code-block:: python
+.. .. doctest:: python
 ..
 ..   >>> import imagepypelines as ip
 ..   >>>
@@ -170,7 +170,7 @@ accepts one datum, you can create a block with a single line.
 
 Another method is to set up your block by object inheritance, also known as a subclass. This is the preferred, flexible method of setting up your own blocks for use, however it's a little more legwork. Therefore, this is covered in more detail on our tutorial pages. Such topics as training and label handling for machine learning applications can also be found on our tutorial pages.
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 
@@ -200,7 +200,7 @@ Now that you've gotten a sense of how blocks are structured, here's a brief look
 Image Display Pipeline
 """"""""""""""""""""""
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 
@@ -220,7 +220,7 @@ Voila! We've just made a processing pipeline that can read in images, resize the
 Lowpass Filter Pipeline
 """""""""""""""""""""""
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 
@@ -247,7 +247,7 @@ We can easily tailor a pipeline to perform image classification, for example.
 
 This classifier is available as a built-in pipeline with fully tweakable hyperparameters as `ip.SimpleImageClassifier`.
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 

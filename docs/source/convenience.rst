@@ -34,7 +34,7 @@ frequently used as benchmarks in the Imaging Science community
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
     >>> import imagepypeplines as ip
     >>> lenna = ip.lenna()
@@ -47,7 +47,7 @@ A full list of standard images can be retrieved with `ip.list_standard_images()`
 for those of you in the Imaging Science program at RIT, there are a couple
 easter eggs for ya ;)
 
-.. code-block:: python
+.. doctest:: python
 
     >>> import imagepypelines as ip
     >>> ip.quick_image_view( ip.carlenna() )
@@ -68,7 +68,7 @@ Video Viewer
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> import imagepypelines as ip
   >>> import time
@@ -91,7 +91,7 @@ To display a single image in its own window
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> import imagepypelines as ip
   >>> lenna = ip.lenna()
@@ -116,7 +116,7 @@ code and avoid silly mistakes
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> import imagepypelines as ip
   >>> lenna = ip.lenna()
@@ -146,7 +146,7 @@ than you think...
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> import imagepypelines as ip
   >>> import numpy as np
@@ -186,7 +186,7 @@ accuracy
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> <code>
 
@@ -201,7 +201,7 @@ confidence
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> <code>
 
@@ -221,7 +221,7 @@ DatasetManager
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> <code>
 
@@ -235,7 +235,7 @@ Mnist
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> <code>
 
@@ -250,7 +250,7 @@ MnistFashion
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> <code>
 
@@ -265,7 +265,7 @@ Cifar10
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> <code>
 
@@ -280,7 +280,7 @@ Cifar100
 
 **Example**
 """""""""""
-.. code-block:: python
+.. doctest:: python
 
   >>> <code>
 

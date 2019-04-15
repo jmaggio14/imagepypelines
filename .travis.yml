@@ -30,12 +30,15 @@ install:
 script:
   # license enforcer
   - python enforcer.py
-  # running tests and code coverage report
+  # running docstring tests
   - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
-  # - py.test --doctest-glob='*.rst'
+  # generate percent test coverage and a coverage report
   - py.test --cov=./imagepypelines tests/
+  # running doctest on website code snippets
+  - cd docs && make html && cd ..
 
 after_success:
+  # upload coverage report
   - codecov
   # Building website
   - cd docs && make html && cd ..
