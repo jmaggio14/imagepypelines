@@ -6,8 +6,8 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
 from .. import ArrayType
-from .. import util
-from ..core import import_opencv
+from .. import io
+from .. import import_opencv
 cv2 = import_opencv()
 import os
 
@@ -100,7 +100,7 @@ class WriterBlock(SimpleBlock):
                 or the written filename if return_type == 'filename'
         """
         self.image_number += 1
-        image_number = util.make_numbered_prefix(self.image_number,6)
+        image_number = io.make_numbered_prefix(self.image_number, 6)
         filename = os.path.join(self.batch_dirs[self.batch_index],
                                         image_number + self.base_filename)
 

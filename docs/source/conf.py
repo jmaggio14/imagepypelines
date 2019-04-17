@@ -69,33 +69,38 @@ extensions = [
 # doctest config
 doctest_global_setup = '''
 import imagepypelines as ip
+import doctest
+doctest.ELLIPSIS_MARKER = "--ANY--"
 
 IP_DEVNULL = None
 
-def IP_SILENCE_STDOUT():
+def IP_SILENCE_STDOUT_STDERR():
     import sys, os
     # silence all standard output for global setup
     global IP_DEVNULL
     IP_DEVNULL = open(os.devnull, 'w')
     sys.stdout = IP_DEVNULL
+    sys.stderr = IP_DEVNULL
 
-def IP_RESET_STDOUT():
+def IP_RESET_STDOUT_STDERR():
     import sys
     global IP_DEVNULL
     if IP_DEVNULL is not None:
         IP_DEVNULL.close()
         sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        IP_DEVNULL = None
 
-# check if this camera has a webcam
-IP_SILENCE_STDOUT()
+# check if this computer has a webcam
+IP_SILENCE_STDOUT_STDERR()
 try:
     camera = ip.blocks.CameraBlock(device=0)
     ip.Pipeline([camera]).process([1])
     IP_NO_CAMERA = False
 except ip.CameraReadError:
     IP_NO_CAMERA = True
-IP_RESET_STDOUT()
-...
+IP_RESET_STDOUT_STDERR()
+
 # cleanup environment and reset stdout
 del ip
 '''

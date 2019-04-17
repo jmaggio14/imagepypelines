@@ -27,15 +27,20 @@ install:
   # codecov requirements
   - pip install pytest pytest-cov hypothesis coverage codecov --upgrade
 
+before_script:
+  - docs/prevent_travis_timeout.sh &
+  - export PREVENT_TRAVIS_TIMEOUT_PID=$!
+
 script:
   # license enforcer
   - python enforcer.py
-  # running docstring tests
-  # - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
   # generate percent test coverage and a coverage report
   - py.test --cov=./imagepypelines tests/
-  # running doctest on website code snippets
+  # running doctest on website examples & code snippets
   - cd docs && make doctest && cd ..
+
+after_script:
+  - kill -9 PREVENT_TRAVIS_TIMEOUT_PID
 
 after_success:
   # upload coverage report
@@ -43,6 +48,7 @@ after_success:
   # Building website
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
+
 
 deploy:
   # Website Deployment
