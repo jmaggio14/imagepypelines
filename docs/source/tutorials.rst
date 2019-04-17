@@ -91,7 +91,7 @@ A block with a single input can result in N outputs
 
 Machine Learning Applications
 -----------------------------
-One of the more powerful applications of ImagePypelines is it's ease of use in
+One of the more powerful applications of ImagePypelines is its ease of use in
 *machine learning* and *feature engineering* applications. We can easily build
 a simple image classifier that is tailored to your purposes
 
