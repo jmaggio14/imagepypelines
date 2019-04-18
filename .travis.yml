@@ -64,7 +64,7 @@ deploy:
     local-dir: docs/build/html
     on:
       python: '3.6'
-      branch: blockIO
+      branch: master
 
   - provider: pypi
     user: jmaggio14
