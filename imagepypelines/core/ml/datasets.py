@@ -4,9 +4,42 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+from ..ml_tools import xysample
 import numpy as np
+import importlib
 
 class DatasetRetrieval(object):
+    def __init__(self, dataset, fraction=1):
+        data = importlib.import_module('keras.datasets.' + dataset)
+        from keras import backend as K
+        K.set_image_data_format('channels_last')
+
+        (x_train,y_train), (x_test,y_test) = data.load_data()
+
+        GRAY = True if x_train.ndim == 3 else False
+
+        if GRAY:
+            self.x_train = [np.squeeze(x_train[i,:,:]) for i in range(x_train.shape[0])]
+            self.y_train = [int(i) for i in y_train]
+
+            self.x_test = [np.squeeze(x_test[i,:,:]) for i in range(x_test.shape[0])]
+            self.y_test = [int(i) for i in y_test]
+        else:
+            self.x_train = [np.squeeze(x_train[i,:,:,:]) for i in range(x_train.shape[0])]
+            self.y_train = [int(i) for i in y_train]
+
+            self.x_test = [np.squeeze(x_test[i,:,:,:]) for i in range(x_test.shape[0])]
+            self.y_test = [int(i) for i in y_test]
+
+        self.fraction = fraction
+
+        self.x_train, self.y_train = xysample(self.x_train,
+                                                self.y_train,
+                                                self.fraction)
+        self.x_test, self.y_test = xysample(self.x_test,
+                                                self.y_test,
+                                                self.fraction)
+
     def get_sorted_train(self):
         """retrieves data and labels for train set sorted by label"""
 
@@ -27,6 +60,30 @@ class DatasetRetrieval(object):
 
         return sorted_data,sorted_labels
 
+    def get_train(self):
+        """
+        retrieves the mnist numbers train dataset using keras
+
+        Args:
+            None
+        Returns:
+            list: training data
+            list: training labels
+        """
+        return self.x_train, self.y_train
+
+    def get_test(self):
+        """
+        retrieves the mnist numbers test dataset using keras
+
+        Args:
+            None
+        Returns:
+            list: testing data
+            list: testing labels
+        """
+        return self.x_test, self.y_test
+
 
 class Mnist(DatasetRetrieval):
     """
@@ -38,15 +95,8 @@ class Mnist(DatasetRetrieval):
         x_test(list): 10,000 monochromatic 28x28 images
         y_test(list): corresponding integer labels for the data
     """
-    def __init__(self):
-        from keras.datasets import mnist
-        (x_train,y_train), (x_test,y_test) = mnist.load_data()
-
-        self.x_train = [np.squeeze(x_train[i,:,:]) for i in range(x_train.shape[0])]
-        self.y_train = [int(i) for i in y_train]
-
-        self.x_test = [np.squeeze(x_test[i,:,:]) for i in range(x_test.shape[0])]
-        self.y_test = [int(i) for i in y_test]
+    def __init__(self, fraction=1):
+        super().__init__('mnist', fraction)
 
     def get_train(self):
         """
@@ -58,7 +108,7 @@ class Mnist(DatasetRetrieval):
             x_train(list): 60,000 monochromatic 28x28 images
             y_train(list): corresponding integer labels for the data
         """
-        return self.x_train,self.y_train
+        return super().get_train()
 
     def get_test(self):
         """
@@ -70,7 +120,7 @@ class Mnist(DatasetRetrieval):
             x_test(list): 10,000 monochromatic 28x28 images
             y_test(list): corresponding integer labels for the data
         """
-        return self.x_test,self.y_test
+        return super().get_test()
 
 
 class MnistFashion(DatasetRetrieval):
@@ -83,15 +133,8 @@ class MnistFashion(DatasetRetrieval):
         x_test(list): 10,000 monochromatic 28x28 images
         y_test(list): corresponding integer labels for the data
     """
-    def __init__(self):
-        from keras.datasets import fashion_mnist
-        (x_train,y_train), (x_test,y_test) = fashion_mnist.load_data()
-
-        self.x_train = [np.squeeze(x_train[i,:,:]) for i in range(x_train.shape[0])]
-        self.y_train = [int(i) for i in y_train]
-
-        self.x_test = [np.squeeze(x_test[i,:,:]) for i in range(x_test.shape[0])]
-        self.y_test = [int(i) for i in y_test]
+    def __init__(self, fraction=1):
+        super().__init__('fashion_mnist', fraction)
 
     def get_train(self):
         """
@@ -103,7 +146,7 @@ class MnistFashion(DatasetRetrieval):
             x_train(list): 60,000 monochromatic 28x28 images
             y_train(list): corresponding integer labels for the data
         """
-        return self.x_train,self.y_train
+        return super().get_train()
 
     def get_test(self):
         """
@@ -115,7 +158,7 @@ class MnistFashion(DatasetRetrieval):
             x_test(list): 10,000 monochromatic 28x28 images
             y_test(list): corresponding integer labels for the data
         """
-        return self.x_test,self.y_test
+        return super().get_test()
 
 
 class Cifar10(DatasetRetrieval):
@@ -129,17 +172,8 @@ class Cifar10(DatasetRetrieval):
         y_test(list): corresponding integer labels for the data
 
     """
-    def __init__(self):
-        from keras.datasets import cifar10
-        from keras import backend as K
-        K.set_image_data_format('channels_last')
-        (x_train,y_train), (x_test,y_test) = cifar10.load_data()
-
-        self.x_train = [np.squeeze(x_train[i,:,:,:]) for i in range(x_train.shape[0])]
-        self.y_train = [int(i) for i in y_train]
-
-        self.x_test = [np.squeeze(x_test[i,:,:,:]) for i in range(x_test.shape[0])]
-        self.y_test = [int(i) for i in y_test]
+    def __init__(self, fraction=1):
+        super().__init__('cifar10', fraction)
 
     def get_train(self):
         """
@@ -181,17 +215,8 @@ class Cifar100(DatasetRetrieval):
         y_test(list): corresponding integer labels for the data
 
     """
-    def __init__(self,label_mode='fine'):
-        from keras.datasets import cifar100
-        from keras import backend as K
-        K.set_image_data_format('channels_last')
-        (x_train,y_train), (x_test,y_test) = cifar100.load_data(label_mode)
-
-        self.x_train = [np.squeeze(x_train[i,:,:,:]) for i in range(x_train.shape[0])]
-        self.y_train = [int(i) for i in y_train]
-
-        self.x_test = [np.squeeze(x_test[i,:,:,:]) for i in range(x_test.shape[0])]
-        self.y_test = [int(i) for i in y_test]
+    def __init__(self, fraction=1):
+        super().__init__('cifar100', fraction)
 
     def get_train(self):
         """

@@ -105,7 +105,7 @@ You can tweak this example with your own image data and hyperparameters to make 
     >>> import imagepypelines as ip
     >>>
     >>> # ----------------- loading example data ---------------
-    >>> cifar10 = ip.ml.Cifar10()
+    >>> cifar10 = ip.ml.Cifar10(fraction=.01)
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
     >>>
@@ -133,7 +133,7 @@ Classification using a Support Vector Machine
     >>> import imagepypelines as ip
     >>>
     >>> # ----------------- loading example data ---------------
-    >>> cifar10 = ip.ml.Cifar10()
+    >>> cifar10 = ip.ml.Cifar10(fraction=.01)
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
     >>>
@@ -172,24 +172,24 @@ Batch Processing blocks in ImagePypelines simply contain a processing function t
 
 Lets create a super simple example just to demonstrate how you can create a batch processing block in ImagePypelines.
 
-.. doctest:: python
+.. testcode:: python
 
-    >>> import imagepypelines as ip
-    >>>
-    >>> class AddOneBlock(ip.BatchBlock):
-    ...     def __init__(self):
-    ...         io_map = {ip.RGB:ip.RGB(),
-    ...                       ip.GRAY:ip.GRAY}
-    ...         super(AddOneBlock,self).__init__(io_map)
-    ...     def batch_process(self,batch_data):
-    ...         """take in a list of datums and return a processed list of datums"""
-    ...         # turn this list of data into a single array
-    ...         img_stack = np.stack(batch_data, axis=0) # [(N,M,3),(N,M,3)] --> (2,N,M,3)
-    ...         img_stack = img_stack + 1 # add one to images
-    ...         # (2,N,M,3) --> [(N,M,3),(N,M,3)]
-    ...         processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
-    ...         return processed_batch
-    >>>
-    >>> p = ip.Pipeline( [AddOneBlock()] )
-    >>> std_images_plus_one = p.process( ip.standard_images() ) #doctest: +ELLIPSIS
-    --ANY--
+    import imagepypelines as ip
+    import numpy as np
+
+    class AddOneBlock(ip.BatchBlock):
+        def __init__(self):
+            io_map = {ip.RGB:ip.RGB,
+                          ip.GRAY:ip.GRAY}
+            super(AddOneBlock,self).__init__(io_map)
+        def batch_process(self,batch_data):
+            """take in a list of datums and return a processed list of datums"""
+            # turn this list of data into a single array
+            img_stack = np.stack(batch_data, axis=0) # [(N,M,3),(N,M,3)] --> (2,N,M,3)
+            img_stack = img_stack + 1 # add one to images
+            # (2,N,M,3) --> [(N,M,3),(N,M,3)]
+            processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
+            return processed_batch
+
+    p = ip.Pipeline( [AddOneBlock()] )
+    std_images_plus_one = p.process( ip.standard_images() )
