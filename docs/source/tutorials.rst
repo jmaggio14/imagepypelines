@@ -190,5 +190,5 @@ Lets create a super simple example just to demonstrate how you can create a batc
             processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
             return processed_batch
 
-    p = ip.Pipeline( [ip.blocks.Color2Gray(),AddOneBlock()] )
+    p = ip.Pipeline( [ip.blocks.Color2Gray(),ip.blocks.Resizer(512,512),AddOneBlock()] )
     std_images_plus_one = p.process( ip.standard_images() )
