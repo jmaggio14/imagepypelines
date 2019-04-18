@@ -179,8 +179,7 @@ Lets create a super simple example just to demonstrate how you can create a batc
 
     class AddOneBlock(ip.BatchBlock):
         def __init__(self):
-            io_map = {ip.RGB:ip.RGB,
-                          ip.GRAY:ip.GRAY}
+            io_map = {ip.GRAY:ip.GRAY}
             super(AddOneBlock,self).__init__(io_map)
         def batch_process(self,batch_data):
             """take in a list of datums and return a processed list of datums"""
@@ -191,5 +190,5 @@ Lets create a super simple example just to demonstrate how you can create a batc
             processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
             return processed_batch
 
-    p = ip.Pipeline( [AddOneBlock()] )
+    p = ip.Pipeline( [ip.blocks.Color2Gray(),AddOneBlock()] )
     std_images_plus_one = p.process( ip.standard_images() )
