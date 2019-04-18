@@ -172,23 +172,24 @@ Batch Processing blocks in ImagePypelines simply contain a processing function t
 
 Lets create a super simple example just to demonstrate how you can create a batch processing block in ImagePypelines.
 
-.. testcode:: python
+.. doctest:: python
 
-    import imagepypelines as ip
-    import numpy as np
-
-    class AddOneBlock(ip.BatchBlock):
-        def __init__(self):
-            io_map = {ip.GRAY:ip.GRAY}
-            super(AddOneBlock,self).__init__(io_map)
-        def batch_process(self,batch_data):
-            """take in a list of datums and return a processed list of datums"""
-            # turn this list of data into a single array
-            img_stack = np.stack(batch_data, axis=0) # [(N,M,3),(N,M,3)] --> (2,N,M,3)
-            img_stack = img_stack + 1 # add one to images
-            # (2,N,M,3) --> [(N,M,3),(N,M,3)]
-            processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
-            return processed_batch
-
-    p = ip.Pipeline( [ip.blocks.Color2Gray(),ip.blocks.Resizer(512,512),AddOneBlock()] )
-    std_images_plus_one = p.process( ip.standard_images() )
+    >>> import imagepypelines as ip
+    >>> import numpy as np
+    >>>
+    >>> class AddOneBlock(ip.BatchBlock):
+    ...     def __init__(self):
+    ...         io_map = {ip.GRAY:ip.GRAY}
+    ...         super(AddOneBlock,self).__init__(io_map)
+    ...     def batch_process(self,batch_data):
+    ...         """take in a list of datums and return a processed list of datums"""
+    ...         # turn this list of data into a single array
+    ...         img_stack = np.stack(batch_data, axis=0) # [(N,M,3),(N,M,3)] --> (2,N,M,3)
+    ...         img_stack = img_stack + 1 # add one to images
+    ...         # (2,N,M,3) --> [(N,M,3),(N,M,3)]
+    ...         processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
+    ...         return processed_batch
+    >>>
+    >>> p = ip.Pipeline( [ip.blocks.Color2Gray(),ip.blocks.Resizer(512,512),AddOneBlock()] )
+    >>> std_images_plus_one = p.process( ip.standard_images() ) # doctest: +ELLIPSIS
+    --ANY--
