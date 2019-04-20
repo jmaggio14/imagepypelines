@@ -34,6 +34,7 @@ before_install:
     # - sudo modprobe videodev
     # - sudo modprobe uvcvideo
     - sudo modprobe v4l2loopback
+    - dmesg # get error output
 
 install:
   # imagepypelines Requirements
