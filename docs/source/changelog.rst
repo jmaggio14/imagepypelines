@@ -22,6 +22,7 @@ Changed
 - Removes Python 2 Support
 - Updates Block IO to support arbitrarily shaped arrays
 - Significant improvements & reorganization of the website
+- Updates block IO to support axis shapes defined by mathematical expressions
 
 --------------------------------------------------------------------------------
 

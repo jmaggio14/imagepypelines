@@ -32,7 +32,7 @@ let's create an example fourier transform pipeline
     >>> filenames = ip.standard_image_filenames()
     >>> # process the data
     >>> ffts = fft_pipeline.process(filenames) # doctest: +ELLIPSIS
-    --ANY--
+    [--ANY--]
     >>>
 
 Simple Input Output Operations
@@ -62,7 +62,7 @@ and then save them to disk
     >>>
     >>> # get filenames of saved thresholded data
     >>> processed_filenames = pipeline.process( ip.standard_image_filenames() )  # doctest:+ELLIPSIS
-    --ANY--
+    [--ANY--]
 
 
 Pulling imagery off of a webcam and injecting it directly into a pipeline
@@ -87,7 +87,7 @@ A block with a single input can result in N outputs
     >>> # run capture 100 images in increments of 10
     >>> for i in range(10):
     ...     pipeline.process([10]) # doctest:+ELLIPSIS
-    --ANY--
+    [--ANY--]
 
 Machine Learning Applications
 -----------------------------
@@ -118,13 +118,13 @@ You can tweak this example with your own image data and hyperparameters to make 
     >>>
     >>> # -------------- train and predict the classifier ---------------
     >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
-    --ANY--
+    [--ANY--]
     >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
-    --ANY--
+    [--ANY--]
     >>> # print the accuracy
     >>> accuracy = ip.accuracy(predictions,ground_truth)
     >>> print('accuracy: {}%'.format(accuracy * 100) ) # doctest:+ELLIPSIS
-    accuracy: --ANY--%
+    accuracy: [--ANY--]%
 
 Classification using a Support Vector Machine
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -147,14 +147,14 @@ Classification using a Support Vector Machine
     >>>
     >>> # -------------- train and predict the classifier ---------------
     >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
-    --ANY--
+    [--ANY--]
     >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
-    --ANY--
+    [--ANY--]
     >>>
     >>> # print the accuracy
     >>> accuracy = ip.accuracy(predictions,ground_truth)
     >>> print('accuracy: {}%'.format(accuracy * 100) ) # doctest:+ELLIPSIS
-    accuracy: --ANY--%
+    accuracy: [--ANY--]%
 
 Creating your own block
 ***********************
@@ -192,4 +192,4 @@ Lets create a super simple example just to demonstrate how you can create a batc
     >>>
     >>> p = ip.Pipeline( [ip.blocks.Color2Gray(),ip.blocks.Resizer(512,512),AddOneBlock()] )
     >>> std_images_plus_one = p.process( ip.standard_images() ) # doctest: +ELLIPSIS
-    --ANY--
+    [--ANY--]
