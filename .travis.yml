@@ -88,8 +88,7 @@ before_install:
       -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
       -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
       ..
-     &> opencv_build.txt
-  - make -j4
+  - make -j4 &> opencv_build.txt
   - make install
   - cd $HOME
 
