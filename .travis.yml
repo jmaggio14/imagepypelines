@@ -51,6 +51,7 @@ before_script:
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
   # create a virtual webcam
+  - dmesg # see if we can see any errors in device logs
   - sudo modprobe v4l2loopback
   - gst-launch-1.0 videotestsrc pattern=smpte100 ! v4l2sink device=/dev/video0 &
   - export GSTREAMER_VIRTUAL_WEBCAM_PID=$!
