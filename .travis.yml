@@ -68,28 +68,27 @@ before_install:
     && mkdir opencv-${OPENCV_VERSION}/cmake_binary
     && cd opencv-${OPENCV_VERSION}/cmake_binary
   - echo "build opencv and saving output to opencv_build.txt"
-  - nohup
-      cmake
-        -DBUILD_TIFF=ON
-        -DBUILD_opencv_java=OFF
-        -DOPENCV_ENABLE_NONFREE=OFF
-        -DWITH_CUDA=OFF
-        -DWITH_OPENGL=OFF
-        -DWITH_GSTREAMER=ON
-        -DWITH_GSTREAMER_0_10=OFF
-        -DENABLE_FAST_MATH=OFF
-        -DCUDA_FAST_MATH=OFF
-        -DWITH_CUBLAS=OFF
-        -DWITH_OPENCL=OFF
-        -DBUILD_TESTS=OFF
-        -DBUILD_PERF_TESTS=OFF
-        -DCMAKE_BUILD_TYPE=RELEASE
-        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
-        -DPYTHON_EXECUTABLE=$(python -c "import sys; print(sys.executable)") \
-        -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
-        -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
-        ..
-      > opencv_build.txt
+  - cmake
+      -DBUILD_TIFF=ON
+      -DBUILD_opencv_java=OFF
+      -DOPENCV_ENABLE_NONFREE=OFF
+      -DWITH_CUDA=OFF
+      -DWITH_OPENGL=OFF
+      -DWITH_GSTREAMER=ON
+      -DWITH_GSTREAMER_0_10=OFF
+      -DENABLE_FAST_MATH=OFF
+      -DCUDA_FAST_MATH=OFF
+      -DWITH_CUBLAS=OFF
+      -DWITH_OPENCL=OFF
+      -DBUILD_TESTS=OFF
+      -DBUILD_PERF_TESTS=OFF
+      -DCMAKE_BUILD_TYPE=RELEASE
+      -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+      -DPYTHON_EXECUTABLE=$(python -c "import sys; print(sys.executable)") \
+      -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
+      -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+      ..
+     > opencv_build.txt
   - make -j4
   - make install
   - cd $HOME
@@ -129,6 +128,9 @@ after_success:
   # Building website
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
+
+after_failure:
+  - cat opencv_build.txt
 
 deploy:
   # Website Deployment
