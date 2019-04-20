@@ -56,11 +56,17 @@ addons:
       - graphviz
 
 before_install:
+  # prevent travis from timing out for slow processes
+  - chmod +x docs/prevent_travis_timeout.sh
+  - docs/prevent_travis_timeout.sh &
+  - export PREVENT_TRAVIS_TIMEOUT_PID=$!
+
+  # Install Opencv
   - pip install numpy
   - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
     && unzip ${OPENCV_VERSION}.zip
-    && mkdir /opencv-${OPENCV_VERSION}/cmake_binary
-    && cd /opencv-${OPENCV_VERSION}/cmake_binary
+    && mkdir opencv-${OPENCV_VERSION}/cmake_binary
+    && cd opencv-${OPENCV_VERSION}/cmake_binary
     && cmake
       -DBUILD_TIFF=ON
       -DBUILD_opencv_java=OFF
@@ -81,17 +87,15 @@ before_install:
       -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
       -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
       ..
-    && make -j4
-    && make install
-    && ldconfig
-    && rm /${OPENCV_VERSION}.zip
-    && rm -rf /opencv-${OPENCV_VERSION}
+  - make -j4
+  - make install
+  - ldconfig
 
 install:
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
-  - pip install tensorflow==1.13.1 
+  - pip install tensorflow==1.13.1
   - python -c "import cv2; print(cv2.getBuildInformation())"
   # codecov requirements
   - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
@@ -99,10 +103,6 @@ install:
   - pip install pytest pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
 
 before_script:
-  # prevent travis from timing out for slow processes
-  - chmod +x docs/prevent_travis_timeout.sh
-  - docs/prevent_travis_timeout.sh &
-  - export PREVENT_TRAVIS_TIMEOUT_PID=$!
   # create a virtual webcam
   - gst-launch-1.0 videotestsrc pattern=smpte100 ! v4l2sink device=/dev/video0 &
   - export GSTREAMER_VIRTUAL_WEBCAM_PID=$!
