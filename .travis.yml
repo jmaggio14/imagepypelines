@@ -33,7 +33,6 @@ before_install:
     - sudo depmod -a
     # - sudo modprobe videodev
     # - sudo modprobe uvcvideo
-    - sudo modprobe v4l2loopback
 
 
 install:
@@ -52,6 +51,7 @@ before_script:
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
   # create a virtual webcam
+  - sudo modprobe v4l2loopback
   - gst-launch-1.0 videotestsrc pattern=smpte100 ! v4l2sink device=/dev/video0 &
   - export GSTREAMER_VIRTUAL_WEBCAM_PID=$!
 
@@ -76,7 +76,7 @@ after_success:
   - cp CNAME docs/build/html/CNAME
 
 after_failure:
-  - dmesg # get error output
+  - dmesg # get error output - this doesn't work..
 
 
 deploy:
