@@ -92,6 +92,7 @@ before_install:
       > opencv_build.txt
   - make -j4
   - make install
+  - cd $HOME
 
 install:
   # imagepypelines Requirements
