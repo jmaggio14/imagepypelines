@@ -29,6 +29,7 @@ addons:
 
 before_install:
     # # install v4l2loopback and gstreamer to create a virtual webcam
+    - sudo apt-get install linux-headers-$(uname -r)
     - sudo depmod -a
     # - sudo modprobe videodev
     # - sudo modprobe uvcvideo
@@ -50,7 +51,6 @@ before_script:
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
   # create a virtual webcam
-  - sudo modprobe v4l2loopback
   - gst-launch-1.0 videotestsrc pattern=smpte100 ! v4l2sink device=/dev/video0 &
   - export GSTREAMER_VIRTUAL_WEBCAM_PID=$!
 
