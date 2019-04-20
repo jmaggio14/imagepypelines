@@ -23,32 +23,28 @@ addons:
       - linux-headers-$(uname -r)
       - v4l2loopback-dkms
       - libv4l-dev
-      - gstreamer1.0-\tools
+      - gstreamer1.0-tools
       - gstreamer1.0-libav
       - gstreamer1.0-plugins-good
       # for sphinx automodapi
       - graphviz
 
-before_install:
-    # prevent travis from timing out for slow processes
-    - chmod +x docs/prevent_travis_timeout.sh
-    - docs/prevent_travis_timeout.sh &
-    - export PREVENT_TRAVIS_TIMEOUT_PID=$!
-
-    # attempt to install v4l2 drivers to this kernel
-    - git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux_media
-    - cd linux_media
-    - git remote add linuxtv git://linuxtv.org/media_tree.git
-    - git remote update
-    - git checkout -b media-master remotes/linuxtv/master
-    - make olddefconfig
-    - make
-    - make modules_install install
-
-    # setup v4l2loopback
-    - sudo depmod -a
-    - sudo modprobe videodev
-    - sudo modprobe v4l2loopback
+# before_install:
+#     # attempt to install v4l2 drivers to this kernel
+#     - git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux_media
+#     - cd linux_media
+#     - git remote add linuxtv git://linuxtv.org/media_tree.git
+#     - git remote update
+#     - git checkout -b media-master remotes/linuxtv/master
+#     - make olddefconfig
+#     - make
+#     - make modules_install install
+#     - cd ..
+#
+#     # setup v4l2loopback
+#     - sudo depmod -a
+#     - sudo modprobe videodev
+#     - sudo modprobe v4l2loopback
 
 
 install:
@@ -56,12 +52,17 @@ install:
   - pip install -r requirements.txt
   - pip install .
   - pip install tensorflow==1.13.1 opencv-python
+  - python -c "import cv2; print(cv2.getBuildInformation())"
   # codecov requirements
-  - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi graphviz
+  - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
   # codecov requirements
   - pip install pytest pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
 
 before_script:
+  # prevent travis from timing out for slow processes
+  - chmod +x docs/prevent_travis_timeout.sh
+  - docs/prevent_travis_timeout.sh &
+  - export PREVENT_TRAVIS_TIMEOUT_PID=$!
   # create a virtual webcam
   - gst-launch-1.0 videotestsrc pattern=smpte100 ! v4l2sink device=/dev/video0 &
   - export GSTREAMER_VIRTUAL_WEBCAM_PID=$!
