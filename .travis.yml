@@ -21,6 +21,7 @@ addons:
     packages:
       - graphviz
       - v4l2loopback-dkms
+      - libv4l-dev
       - gstreamer1.0-tools
       - gstreamer1.0-libav
       - gstreamer1.0-plugins-good
@@ -52,6 +53,7 @@ before_script:
 
   # create a virtual webcam
   - dmesg # see if we can see any errors in device logs
+  - sudo modprobe videodev
   - sudo modprobe v4l2loopback
   - gst-launch-1.0 videotestsrc pattern=smpte100 ! v4l2sink device=/dev/video0 &
   - export GSTREAMER_VIRTUAL_WEBCAM_PID=$!
