@@ -64,10 +64,10 @@ before_install:
   # Install Opencv
   - pip install numpy
   - echo "build opencv and saving output to opencv_build.txt"
-  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
-    && unzip ${OPENCV_VERSION}.zip
-    && mkdir opencv-${OPENCV_VERSION}/cmake_binary
-    && cd opencv-${OPENCV_VERSION}/cmake_binary > opencv_build.txt
+  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > opencv_build.txt
+    && unzip ${OPENCV_VERSION}.zip >> opencv_build.txt
+    && mkdir opencv-${OPENCV_VERSION}/cmake_binary >> opencv_build.txt
+    && cd opencv-${OPENCV_VERSION}/cmake_binary >> opencv_build.txt
   - cmake
       -DBUILD_TIFF=ON
       -DWITH_GSTREAMER=ON
@@ -118,7 +118,7 @@ script:
 
 after_script:
   - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
-  - kill -9 &GSTREAMER_VIRTUAL_WEBCAM_PID
+  # - kill -9 &GSTREAMER_VIRTUAL_WEBCAM_PID
 
 after_success:
   # upload coverage report
