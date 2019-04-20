@@ -70,7 +70,7 @@ extensions = [
 doctest_global_setup = '''
 import imagepypelines as ip
 import doctest
-doctest.ELLIPSIS_MARKER = "--ANY--"
+doctest.ELLIPSIS_MARKER = "..."
 
 IP_DEVNULL = None
 
