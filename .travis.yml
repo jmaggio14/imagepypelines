@@ -34,7 +34,7 @@ before_install:
     # - sudo modprobe videodev
     # - sudo modprobe uvcvideo
     - sudo modprobe v4l2loopback
-    - dmesg # get error output
+
 
 install:
   # imagepypelines Requirements
@@ -74,6 +74,9 @@ after_success:
   # Building website
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
+
+after_failure:
+  - dmesg # get error output
 
 
 deploy:
