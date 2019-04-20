@@ -62,7 +62,7 @@ before_install:
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
   # Install Opencv
-  - pip install numpy distutils
+  - pip install numpy
   - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
     && unzip ${OPENCV_VERSION}.zip
     && mkdir opencv-${OPENCV_VERSION}/cmake_binary
