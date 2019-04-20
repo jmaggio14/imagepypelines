@@ -8,6 +8,9 @@ os:
   # - osx # Python not supported yet for travis osx builds 12/11/2018
 dist: xenial
 
+env:
+    - OPENCV_VERSION="4.0.1"
+
 python:
   - 3.4
   - 3.5
@@ -20,38 +23,75 @@ addons:
   apt:
     packages:
       # for virtual webcame via v4l2loopback
-      - linux-headers-$(uname -r)
-      - v4l2loopback-dkms
-      - libv4l-dev
-      - gstreamer1.0-tools
-      - gstreamer1.0-libav
+      - build-essential
+      - cmake
+      - git
+      - wget
+      - unzip
+      - yasm
+      - pkg-config
+      - libswscale-dev
+      - libtbb2
+      - libtbb-dev
+      - libjpeg-dev
+      - libpng-dev
+      - libtiff-dev
+      - libavformat-dev
+      - libpq-dev
+      - libgtk2.0-dev
+      - libavcodec-dev
+      - libdc1394-22-dev
+      - autotools-dev
+      - libgstreamer1.0-0
+      - gstreamer1.0-plugins-base
       - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-libav
+      - gstreamer1.0-doc
+      - gstreamer1.0-tools
+      - libgstreamer1.0-dev
+      - libgstreamer-plugins-base1.0-dev
       # for sphinx automodapi
       - graphviz
 
-# before_install:
-#     # attempt to install v4l2 drivers to this kernel
-#     - git clone --depth=1 git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux_media
-#     - cd linux_media
-#     - git remote add linuxtv git://linuxtv.org/media_tree.git
-#     - git remote update
-#     - git checkout -b media-master remotes/linuxtv/master
-#     - make olddefconfig
-#     - make
-#     - make modules_install install
-#     - cd ..
-#
-#     # setup v4l2loopback
-#     - sudo depmod -a
-#     - sudo modprobe videodev
-#     - sudo modprobe v4l2loopback
-
+before_install:
+  - pip install numpy
+  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
+    && unzip ${OPENCV_VERSION}.zip
+    && mkdir /opencv-${OPENCV_VERSION}/cmake_binary
+    && cd /opencv-${OPENCV_VERSION}/cmake_binary
+    && cmake
+      -DBUILD_TIFF=ON
+      -DBUILD_opencv_java=OFF
+      -DOPENCV_ENABLE_NONFREE=OFF
+      -DWITH_CUDA=OFF
+      -DWITH_OPENGL=OFF
+      -DWITH_GSTREAMER=ON
+      -DWITH_GSTREAMER_0_10=OFF
+      -DENABLE_FAST_MATH=OFF
+      -DCUDA_FAST_MATH=OFF
+      -DWITH_CUBLAS=OFF
+      -DWITH_OPENCL=OFF
+      -DBUILD_TESTS=OFF
+      -DBUILD_PERF_TESTS=OFF
+      -DCMAKE_BUILD_TYPE=RELEASE
+      -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+      -DPYTHON_EXECUTABLE=$(which python) \
+      -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
+      -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+      ..
+    && make -j4
+    && make install
+    && ldconfig
+    && rm /${OPENCV_VERSION}.zip
+    && rm -rf /opencv-${OPENCV_VERSION}
 
 install:
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
-  - pip install tensorflow==1.13.1 opencv-python
+  - pip install tensorflow==1.13.1 
   - python -c "import cv2; print(cv2.getBuildInformation())"
   # codecov requirements
   - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
