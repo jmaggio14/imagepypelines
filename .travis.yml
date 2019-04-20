@@ -27,7 +27,7 @@ before_install:
     # - sudo apt-get update --fix-missing
     - sudo apt-get install linux-headers-$(uname -r) build-essential gstreamer1.0-tools gstreamer1.0-libav gstreamer1.0-plugins-good
     - git clone https://github.com/umlaeute/v4l2loopback.git
-    - cd v4l2loopback && make && sudo make install && cd ..
+    - cd v4l2loopback && make && sudo make install && sudo depmod -a && cd ..
 
 install:
   # imagepypelines Requirements
