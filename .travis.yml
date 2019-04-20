@@ -29,7 +29,7 @@ install:
   # codecov requirements
   - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi graphviz
   # codecov requirements
-  - pip install pytest pytest-cov hypothesis coverage codecov --upgrade
+  - pip install pytest pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
 
 before_script:
   - chmod +x docs/prevent_travis_timeout.sh
@@ -42,7 +42,9 @@ script:
   # generate percent test coverage and a coverage report
   - py.test --cov=./imagepypelines tests/
   # running doctest on website examples & code snippets
-  - cd docs && make doctest && cd ..
+  - py.test --cov=./imagepypelines --cov-append --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
+  - py.test --cov=./imagepypelines --cov-append --doctest-glob="*.rst" --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
+  # - cd docs && make doctest && cd ..
 
 after_script:
   - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
