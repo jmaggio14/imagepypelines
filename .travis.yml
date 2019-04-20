@@ -76,10 +76,6 @@ after_success:
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
 
-after_failure:
-  - dmesg # get error output - this doesn't work..
-
-
 deploy:
   # Website Deployment
   - provider: pages
