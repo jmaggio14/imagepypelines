@@ -9,7 +9,7 @@ os:
 dist: xenial
 
 env:
-    - OPENCV_VERSION="4.0.1"
+  - OPENCV_VERSION="4.0.1"
 
 python:
   - 3.4
@@ -64,9 +64,9 @@ before_install:
   # Install Opencv
   - CURRENT_DIR=$(pwd)
   - pip install numpy
-  - echo "build opencv and saving output to opencv_build.txt"
-  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > opencv_build.txt
-    && unzip ${OPENCV_VERSION}.zip >> opencv_build.txt
+  - echo "build opencv and saving output to ~/opencv_build.txt"
+  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > ~/opencv_build.txt
+    && unzip ${OPENCV_VERSION}.zip >> ~/opencv_build.txt
     && mkdir opencv-${OPENCV_VERSION}/cmake_binary
     && cd opencv-${OPENCV_VERSION}/cmake_binary
   - cmake
@@ -87,8 +87,8 @@ before_install:
       -DBUILD_DOCS=OFF
       -DCMAKE_BUILD_TYPE=RELEASE
       -DCMAKE_INSTALL_PREFIX=/usr/local
-      .. | tee --append opencv_build.txt
-  - make -j4 >> opencv_build.txt
+      .. | tee --append ~/opencv_build.txt
+  - make -j4 >> ~/opencv_build.txt
   - make install
   - cd $CURRENT_DIR
 
@@ -121,6 +121,9 @@ after_success:
   # Building website
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
+
+after_failure:
+  - cat ~/opencv_build.txt
 
 deploy:
   # Website Deployment
