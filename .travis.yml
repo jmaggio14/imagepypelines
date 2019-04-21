@@ -62,6 +62,7 @@ before_install:
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
   # Install Opencv
+  - CURRENT_DIR=$(pwd)
   - pip install numpy
   - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
     && unzip ${OPENCV_VERSION}.zip >> opencv_build.txt
@@ -88,7 +89,7 @@ before_install:
       ..
   - make -j4 -s
   - make install
-  - cd $HOME
+  - cd $CURRENT_DIR
 
 install:
   # imagepypelines Requirements
