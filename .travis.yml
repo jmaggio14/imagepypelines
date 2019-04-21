@@ -63,11 +63,10 @@ before_install:
 
   # Install Opencv
   - pip install numpy
-  - echo "build opencv and saving output to opencv_build.txt"
-  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > opencv_build.txt
+  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
     && unzip ${OPENCV_VERSION}.zip >> opencv_build.txt
-    && mkdir opencv-${OPENCV_VERSION}/cmake_binary >> opencv_build.txt
-    && cd opencv-${OPENCV_VERSION}/cmake_binary >> opencv_build.txt
+    && mkdir opencv-${OPENCV_VERSION}/cmake_binary
+    && cd opencv-${OPENCV_VERSION}/cmake_binary
   - cmake
       -DBUILD_TIFF=ON
       -DWITH_GSTREAMER=ON
@@ -86,8 +85,8 @@ before_install:
       -DBUILD_DOCS=OFF
       -DCMAKE_BUILD_TYPE=RELEASE
       -DCMAKE_INSTALL_PREFIX=/usr/local \
-      .. | tee --append opencv_build.txt
-  - make -j4 >> opencv_build.txt
+      ..
+  - make -j4 -s
   - make install
   - cd $HOME
 
@@ -101,12 +100,6 @@ install:
   - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
   # codecov requirements
   - pip install pytest pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
-
-# before_script:
-#   # create a virtual webcam
-#   - gst-launch-1.0 videotestsrc pattern=smpte100 ! v4l2sink device=/dev/video0 &
-#   - export GSTREAMER_VIRTUAL_WEBCAM_PID=$!
-
 
 script:
   # license enforcer
@@ -126,9 +119,6 @@ after_success:
   # Building website
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
-
-after_failure:
-  - cat opencv_build.txt
 
 deploy:
   # Website Deployment
