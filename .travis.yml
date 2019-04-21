@@ -61,42 +61,42 @@ before_install:
   - docs/prevent_travis_timeout.sh &
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
-install:
-    # Install Opencv
-    - CURRENT_DIR=$(pwd)
-    - pip install numpy
-    - echo "build opencv and saving output to ~/opencv_build.txt"
-    - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > ~/opencv_build.txt
-      && unzip ${OPENCV_VERSION}.zip >> ~/opencv_build.txt
-      && mkdir opencv-${OPENCV_VERSION}/cmake_binary
-      && cd opencv-${OPENCV_VERSION}/cmake_binary
-    - cmake
-        -DBUILD_TIFF=ON
-        -DWITH_GSTREAMER=ON
-        -DBUILD_opencv_java=OFF
-        -DOPENCV_ENABLE_NONFREE=OFF
-        -DWITH_CUDA=OFF
-        -DWITH_OPENGL=OFF
-        -DWITH_GSTREAMER_0_10=OFF
-        -DENABLE_FAST_MATH=OFF
-        -DCUDA_FAST_MATH=OFF
-        -DWITH_CUBLAS=OFF
-        -DWITH_OPENCL=OFF
-        -DBUILD_TESTS=OFF
-        -DBUILD_PERF_TESTS=OFF
-        -DBUILD_opencv_apps=OFF
-        -DBUILD_DOCS=OFF
-        -DCMAKE_BUILD_TYPE=RELEASE
-        -DCMAKE_INSTALL_PREFIX=/usr/local
-        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
-        -DPYTHON_EXECUTABLE=$(python -c "import sys; print(sys.executable)") \
-        -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
-        -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
-        .. | tee --append ~/opencv_build.txt
-    - make -j4 >> ~/opencv_build.txt
-    - sudo make install
-    - cd $CURRENT_DIR
+  # Install Opencv
+  - CURRENT_DIR=$(pwd)
+  - pip install numpy
+  - echo "build opencv and saving output to ~/opencv_build.txt"
+  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > ~/opencv_build.txt
+    && unzip ${OPENCV_VERSION}.zip >> ~/opencv_build.txt
+    && mkdir opencv-${OPENCV_VERSION}/cmake_binary
+    && cd opencv-${OPENCV_VERSION}/cmake_binary
+  - cmake
+      -DBUILD_TIFF=ON
+      -DWITH_GSTREAMER=ON
+      -DBUILD_opencv_java=OFF
+      -DOPENCV_ENABLE_NONFREE=OFF
+      -DWITH_CUDA=OFF
+      -DWITH_OPENGL=OFF
+      -DWITH_GSTREAMER_0_10=OFF
+      -DENABLE_FAST_MATH=OFF
+      -DCUDA_FAST_MATH=OFF
+      -DWITH_CUBLAS=OFF
+      -DWITH_OPENCL=OFF
+      -DBUILD_TESTS=OFF
+      -DBUILD_PERF_TESTS=OFF
+      -DBUILD_opencv_apps=OFF
+      -DBUILD_DOCS=OFF
+      -DCMAKE_BUILD_TYPE=RELEASE
+      -DCMAKE_INSTALL_PREFIX=/usr/local
+      -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+      -DPYTHON_EXECUTABLE=$(python -c "import sys; print(sys.executable)") \
+      -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
+      -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
+      .. | tee --append ~/opencv_build.txt
+  - make -j4 >> ~/opencv_build.txt
+  - sudo make install
+  - cd $CURRENT_DIR
 
+install:
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
