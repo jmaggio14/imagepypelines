@@ -22,7 +22,7 @@ services:
 addons:
   apt:
     packages:
-      # for virtual webcame via v4l2loopback
+      # for opencv
       - build-essential
       - cmake
       - git
@@ -64,8 +64,9 @@ before_install:
   # Install Opencv
   - CURRENT_DIR=$(pwd)
   - pip install numpy
-  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip
-    && unzip ${OPENCV_VERSION}.zip
+  - echo "build opencv and saving output to opencv_build.txt"
+  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > opencv_build.txt
+    && unzip ${OPENCV_VERSION}.zip >> opencv_build.txt
     && mkdir opencv-${OPENCV_VERSION}/cmake_binary
     && cd opencv-${OPENCV_VERSION}/cmake_binary
   - cmake
@@ -85,9 +86,9 @@ before_install:
       -DBUILD_opencv_apps=OFF
       -DBUILD_DOCS=OFF
       -DCMAKE_BUILD_TYPE=RELEASE
-      -DCMAKE_INSTALL_PREFIX=/usr/local \
-      ..
-  - make -j4 -s
+      -DCMAKE_INSTALL_PREFIX=/usr/local
+      .. | tee --append opencv_build.txt
+  - make -j4 >> opencv_build.txt
   - make install
   - cd $CURRENT_DIR
 
