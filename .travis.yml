@@ -88,6 +88,10 @@ install:
         -DBUILD_DOCS=OFF
         -DCMAKE_BUILD_TYPE=RELEASE
         -DCMAKE_INSTALL_PREFIX=/usr/local
+        -DCMAKE_INSTALL_PREFIX=$(python -c "import sys; print(sys.prefix)") \
+        -DPYTHON_EXECUTABLE=$(python -c "import sys; print(sys.executable)") \
+        -DPYTHON_INCLUDE_DIR=$(python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())")
+        -DPYTHON_PACKAGES_PATH=$(python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())")
         .. | tee --append ~/opencv_build.txt
     - make -j4 >> ~/opencv_build.txt
     - sudo make install
