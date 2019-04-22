@@ -61,6 +61,8 @@ before_install:
   - docs/prevent_travis_timeout.sh &
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
+  - python --version
+
   # Install Opencv
   - CURRENT_DIR=$(pwd)
   - pip install numpy
