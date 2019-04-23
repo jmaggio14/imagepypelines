@@ -67,7 +67,7 @@ before_install:
 
   # Install Opencv
   # DEBUG
-  echo "$TRAVIS_PYTHON_VERSION"
+  - echo "$TRAVIS_PYTHON_VERSION"
   # END DEBUG
   - CURRENT_DIR=$(pwd)
   - CMAKE_INSTALL_PREFIX=/home/travis/virtualenv/python"$TRAVIS_PYTHON_VERSION"
