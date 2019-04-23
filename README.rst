@@ -128,7 +128,7 @@ Please credit us if you use `imagepypelines` in your research
   @misc{imagepypelines,
     title="imagepypelines - imaging science acceleration library",
     author="Hartzell, Dileas, Maggio",
-    YEAR="2018",
+    YEAR="2019",
     howpublished="\url{https://github.com/jmaggio14/imagepypelines}",
   }
 
