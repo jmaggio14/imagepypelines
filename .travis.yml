@@ -26,7 +26,7 @@ addons:
     packages:
       # for opencv
       - python3-dev
-      - python3-numpy
+      # - python3-numpy
       - gcc
       - gcc-c++
       - build-essential
