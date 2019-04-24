@@ -160,6 +160,8 @@ after_script:
   # - kill -9 &GSTREAMER_VIRTUAL_WEBCAM_PID
   # print out opencv build script for full traceability
   - cat ~/opencv_build.txt
+  - ls -R /home/travis/virtualenv/
+  - ls -R /opt/python/"$TRAVIS_PYTHON_VERSION".7/include
 
 after_success:
   # upload coverage report
