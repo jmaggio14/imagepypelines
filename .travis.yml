@@ -25,6 +25,10 @@ addons:
   apt:
     packages:
       # for opencv
+      - python3-dev
+      - python3-numpy
+      - gcc
+      - gcc-c++
       - build-essential
       - cmake
       - git
@@ -86,37 +90,38 @@ before_install:
   - echo $PYTHON_INCLUDE_DIR
   - echo $PYTHON_PACKAGES_PATH
   # END DEBUG
-  # - pip install numpy
-  # - echo "build opencv and saving output to ~/opencv_build.txt"
-  # - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > ~/opencv_build.txt
-  #   && unzip ${OPENCV_VERSION}.zip >> ~/opencv_build.txt
-  #   && mkdir opencv-${OPENCV_VERSION}/cmake_binary
-  #   && cd opencv-${OPENCV_VERSION}/cmake_binary
-  # - cmake
-  #     -DBUILD_TIFF=ON
-  #     -DWITH_GSTREAMER=ON
-  #     -DBUILD_opencv_java=OFF
-  #     -DOPENCV_ENABLE_NONFREE=OFF
-  #     -DWITH_CUDA=OFF
-  #     -DWITH_OPENGL=OFF
-  #     -DWITH_GSTREAMER_0_10=OFF
-  #     -DENABLE_FAST_MATH=OFF
-  #     -DCUDA_FAST_MATH=OFF
-  #     -DWITH_CUBLAS=OFF
-  #     -DWITH_OPENCL=OFF
-  #     -DBUILD_TESTS=OFF
-  #     -DBUILD_PERF_TESTS=OFF
-  #     -DBUILD_opencv_apps=OFF
-  #     -DBUILD_DOCS=OFF
-  #     -DCMAKE_BUILD_TYPE=RELEASE
-  #     -DCMAKE_INSTALL_PREFIX=$CMAKE_INSTALL_PREFIX
-  #     -DPYTHON_EXECUTABLE=$PYTHON_EXECUTABLE
-  #     -DPYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR
-  #     -DPYTHON_PACKAGES_PATH=$PYTHON_PACKAGES_PATH
-  #     .. | tee --append ~/opencv_build.txt
-  # - make -j4 >> ~/opencv_build.txt
-  # - sudo make install
-  # - cd $CURRENT_DIR
+
+  - pip install numpy
+  - echo "build opencv and saving output to ~/opencv_build.txt"
+  - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > ~/opencv_build.txt
+    && unzip ${OPENCV_VERSION}.zip >> ~/opencv_build.txt
+    && mkdir opencv-${OPENCV_VERSION}/cmake_binary
+    && cd opencv-${OPENCV_VERSION}/cmake_binary
+  - cmake
+      -DBUILD_TIFF=ON
+      -DWITH_GSTREAMER=ON
+      -DBUILD_opencv_java=OFF
+      -DOPENCV_ENABLE_NONFREE=OFF
+      -DWITH_CUDA=OFF
+      -DWITH_OPENGL=OFF
+      -DWITH_GSTREAMER_0_10=OFF
+      -DENABLE_FAST_MATH=OFF
+      -DCUDA_FAST_MATH=OFF
+      -DWITH_CUBLAS=OFF
+      -DWITH_OPENCL=OFF
+      -DBUILD_TESTS=OFF
+      -DBUILD_PERF_TESTS=OFF
+      -DBUILD_opencv_apps=OFF
+      -DBUILD_DOCS=OFF
+      -DCMAKE_BUILD_TYPE=RELEASE
+      -DCMAKE_INSTALL_PREFIX=$CMAKE_INSTALL_PREFIX
+      -DPYTHON3_EXECUTABLE=$PYTHON_EXECUTABLE
+      -DPYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR
+      -DPYTHON_PACKAGES_PATH=$PYTHON_PACKAGES_PATH
+      .. | tee --append ~/opencv_build.txt
+  - make -j4 >> ~/opencv_build.txt
+  - sudo make install
+  - cd $CURRENT_DIR
 
 install:
   - python -c "import sys; print(sys.prefix)"
@@ -128,7 +133,7 @@ install:
   - echo $PYTHON_EXECUTABLE
   - echo $PYTHON_INCLUDE_DIR
   - echo $PYTHON_PACKAGES_PATH
-  
+
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
