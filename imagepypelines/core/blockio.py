@@ -107,7 +107,7 @@ class AxisKernel(ABC):
         pass
 
 # ======================== Builtin IO Types ========================
-class ArrayType(object):
+class ArrayIn(object):
     def __init__(self,shape):
         # go through each element in the shape and evaluate it as a
         # string or 'constant' type
@@ -127,45 +127,42 @@ class ArrayType(object):
 
 
 # ======================== Builtin IO Output Classes ========================
-class ConstantOutput(Output):
-    def output(self,input_type):
-        return input_type
-
-class ArrayOutput(Output):
-    def __init__(self,
-                input_shape,
-                 output_shape
-                 ):
-
-        # generate axis variable names for each axis in the input shape
-        # inputs must be strings or integers
-        varnames = []
-        for i,axis in enumerate(input_shape):
-            # if our axis is an integer, we can just generate a variable name
-            # e.g. [10,20,'C'] --{make varnames}--> ['$AXIS1','$AXIS2','C']
-            if isinstance(axis,int):
-                varnames.append('$AXIS%s' % i)
-
-            # raise a ValueError if the input axis contains a banned character
-            elif isinstance(axis,str):
-                if not all(chr in INPUT_CHARS_ALLOWED for chr in axis):
-                    raise ValueError(
-                        "input axis can only contain {}"\
-                        .format(INPUT_CHARS_ALLOWED))
-                varnames.append(axis)
-
-            # if it's not a integer or string, then we have to raise a
-            # ValueError
-            else:
-                raise ValueError("only acceptable input types are int and str")
-
-
-        self.axis_kernels = ArrayType(output_shape)
-
-    def output(self, input_array):
-        axes = input_array.shape
-        out_shape = [ker.evaluate(axes,self.varnames) for ker in self.axis_kernels]
-        return ArrayType(out_shape)
+# class ConstantOutput(Output):
+#     def output(self,input_type):
+#         return input_type
+#
+# class ArrayOutput(Output):
+#     def __init__(self, shape):
+#
+#         # generate axis variable names for each axis in the input shape
+#         # inputs must be strings or integers
+#         varnames = []
+#         for i,axis in enumerate(shape):
+#             # if our axis is an integer, we can just generate a variable name
+#             # e.g. [10,20,'C'] --{make varnames}--> ['$AXIS1','$AXIS2','C']
+#             if isinstance(axis, int):
+#                 varnames.append('$AXIS%s' % i)
+#
+#             # raise a ValueError if the input axis contains a banned character
+#             elif isinstance(axis, str):
+#                 if not all(chr in INPUT_CHARS_ALLOWED for chr in axis):
+#                     raise ValueError(
+#                         "input axis can only contain {}"\
+#                         .format(INPUT_CHARS_ALLOWED))
+#                 varnames.append(axis)
+#
+#             # if it's not a integer or string, then we have to raise a
+#             # ValueError
+#             else:
+#                 raise ValueError("only acceptable input types are int and str")
+#
+#
+#         self.axis_kernels = ArrayType(output_shape)
+#
+#     def output(self, input_array):
+#         axes = input_array.shape
+#         out_shape = [ker.evaluate(axes,self.varnames) for ker in self.axis_kernels]
+#         return ArrayIn(out_shape)
 
 
 # ========================= Axis Length Evaluation =========================
@@ -244,7 +241,7 @@ class AxisExpression(AxisKernel):
     def evaluate(self,axes_vals):
         # NOTE: eval must not have access to module locals and globals
         # the only thing it should have access to the values in FUNCTIONS
-        if len(self.varnames) > 0:
+        if self.num_vars > 0:
             out = eval(self.sanitized.format(*axes_vals), {}, FUNCTIONS)
         else:
             out = eval(self.sanitized, {}, FUNCTIONS)
@@ -260,8 +257,43 @@ class AxisExpression(AxisKernel):
 
 # ============================== IoMap ==============================
 
-# class IoMap(object):
-#     def __init__(self, io_kernel):
+class IoMap(object):
+    """
+
+    IoMaps are now instantiated like this
+
+    io_kernel = [
+                [ArrayIn(['N','M']), ArrayOut(['N*M',1]), "optional description"],
+                ]
+    """
+    def __init__(self, io_kernel):
+        # check for the proper input
+        assert isinstance(io_kernel,(list,tuple)),\
+            "the io_kernel must a list of lists"
+        assert all(isinstance(io,(list,tuple)) for io in io_kernel), \
+            "the io_kernel must a list of lists"
+
+        self.inputs = []
+        self.outputs = []
+        self.descriptions = []
+        for io in io_kernel:
+            self.inputs.append(io[0])
+            self.outputs.append(io[1])
+
+            if len(io) == 2:
+                self.descriptions.append("No description provided")
+            else:
+                assert isinstance(io[2], str), "description must be string"
+                self.descriptions.append(io[2])
+
+    def output(self):
+        
+
+
+
+
+
+
 
 
 
@@ -290,6 +322,7 @@ if __name__ == "__main__":
     g = AxisExpression("sqrt(N) + pow(M,6)", ['N','M'])
     h = AxisExpression("10 >= N", ['N'])
     i = AxisExpression("A**2 + B**2 + C**2 + D**2 + E**2 + F**2" , ['A','B','C','D','E','F'])
+    j = AxisExpression("N" , ['N'])
 
     eval_axis(a, [10,15], 150)
     eval_axis(b, [2,3], 8)
@@ -300,6 +333,7 @@ if __name__ == "__main__":
     eval_axis(g, [16,2], 4+2**6)
     eval_axis(h, [9], 1)
     eval_axis(i, list( range(1,7) ), 91)
+    eval_axis(j, [1e3], 1e3)
 
 
 
