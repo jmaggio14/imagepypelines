@@ -513,9 +513,9 @@ class BaseBlock(object):
         # update the metadata
         self._metadata['num_in'] = len(data)
         self._metadata['num_out'] = len(processed)
-        self._metadata['processing_time'] = round(time.time() - start,3)
-        self._metadata['total_in'] += self._metadata['num_in']
-        self._metadata['total_out'] += self._metadata['num_out']
+        self._metadata['processing_time'] = round(time.time() - start,5)
+        self._metadata['total_in'] += len(data)
+        self._metadata['total_out'] += len(processed)
         return processed, labels
 
     @abstractmethod

@@ -227,7 +227,6 @@ class AxisExpression(AxisKernel):
 
 
             elif chop.replace(' ','') not in ALLOWED:
-                import pdb; pdb.set_trace()
                 # reject anything that's not in our criteria
                 raise ValueError(
                     "invalid variable, operator, or function {}".format(chop))
@@ -286,8 +285,18 @@ class IoMap(object):
                 assert isinstance(io[2], str), "description must be string"
                 self.descriptions.append(io[2])
 
-    def output(self):
-        
+    def output(self, input_):
+        if isinstance(input_, ArrayIn):
+            return self._array_in(input_)
+        elif isinstance(input_, Constant)
+
+    def _array_in(self, arr_in):
+        pass
+
+    def _constant_in(self, const_in):
+        pass
+
+
 
 
 
