@@ -12,29 +12,31 @@ __all__ = [
             'BlockViewer',           #2
             'CameraBlock',           #3
             'Color2Gray',            #4
-            'Divide',                #5
-            'FFT',                   #6
-            'Lowpass',               #7
-            'Highpass',              #8
-            'Flatten',               #9
-            'Gray2Color',            #10
-            'IFFT',                  #11
-            'ImageLoader',           #12
-            'MultilayerPerceptron',  #13
-            'Multiply',              #14
-            'Normalize',             #15
-            'Orb',                   #16
-            'PCA',                   #17
-            'PretrainedNetwork',     #18
-            'Resizer',               #19
-            'Subtract',              #20
-            'SupportVectorMachine',  #21
-            'LinearSvm',             #22
-            'RbfSvm',                #23
-            'PolySvm',               #24
-            'SigmoidSvm',            #25
-            'Otsu',                  #26
-            'WriterBlock',           #27        
+            'Img2Stream',           #5
+            'Divide',                #6
+            'FFT',                   #7
+            'Lowpass',               #8
+            'Highpass',              #9
+            'Flatten',               #10
+            'FTP',                   #11
+            'Gray2Color',            #12
+            'IFFT',                  #13
+            'ImageLoader',           #14
+            'MultilayerPerceptron',  #15
+            'Multiply',              #16
+            'Normalize',             #17
+            'Orb',                   #18
+            'PCA',                   #19
+            'PretrainedNetwork',     #20
+            'Resizer',               #20
+            'Subtract',              #21
+            'SupportVectorMachine',  #22
+            'LinearSvm',             #23
+            'RbfSvm',                #24
+            'PolySvm',               #25
+            'SigmoidSvm',            #26
+            'Otsu',                  #27
+            'WriterBlock',           #28
             ]
 # Add.py
 from .Add import Add
@@ -44,6 +46,8 @@ from .BlockViewer import BlockViewer
 from .CameraBlock import CameraBlock
 # Color2Gray.py
 from .Color2Gray import Color2Gray
+# Img2Stream.py
+from .Img2Stream import Img2Stream
 # Divide.py
 from .Divide import Divide
 # FFT.py
@@ -53,6 +57,8 @@ from .Filters import Lowpass
 from .Filters import Highpass
 # Flatten.py
 from .Flatten import Flatten
+# FTP.py
+from .FTP import FTP
 # Gray2Color.py
 from .Gray2Color import Gray2Color
 # IFFT.py

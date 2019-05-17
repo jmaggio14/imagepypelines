@@ -57,14 +57,6 @@ class CameraBlock(BatchBlock):
             the mode for this block to operate in, either 'count' mode or 'time'
             mode. default is 'count'
 
-        io_map(IoMap): object that maps inputs to this block to outputs
-        name(str): unique name for this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
-            registered to 'name'
     """
     def __init__(self,device=0,fourcc='MJPG',mode='count'):
         #JM: error checking for these values will occur in io.CameraCapture
