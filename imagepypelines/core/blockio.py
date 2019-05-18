@@ -31,6 +31,7 @@ TODO:
 
 import math
 import string
+import copy
 from abc import ABC, abstractmethod
 
 
@@ -108,7 +109,9 @@ class AxisKernel(ABC):
 
 # ======================== Builtin IO Types ========================
 class ArrayIn(object):
-    def __init__(self,shape):
+    def __init__(self,
+                shape="arbitrary",
+                all_axis_rule=None):
         # go through each element in the shape and evaluate it as a
         # string or 'constant' type
         self.shape = []
@@ -240,10 +243,12 @@ class AxisExpression(AxisKernel):
     def evaluate(self,axes_vals):
         # NOTE: eval must not have access to module locals and globals
         # the only thing it should have access to the values in FUNCTIONS
+        # FUNCTIONS is copied as part of sanitation precaution
+        namespace = copy.deepcopy(FUNCTIONS)
         if self.num_vars > 0:
-            out = eval(self.sanitized.format(*axes_vals), {}, FUNCTIONS)
+            out = eval(self.sanitized.format(*axes_vals), {}, namespace)
         else:
-            out = eval(self.sanitized, {}, FUNCTIONS)
+            out = eval(self.sanitized, {}, namespace)
         return int( out )
 
     def __str__(self):
@@ -288,13 +293,29 @@ class IoMap(object):
     def output(self, input_):
         if isinstance(input_, ArrayIn):
             return self._array_in(input_)
-        elif isinstance(input_, Constant)
+
+        elif isinstance(input_, Constant):
+            return self._constant_in(input_)
 
     def _array_in(self, arr_in):
-        pass
+        input_shape = arr_in.shape
 
-    def _constant_in(self, const_in):
-        pass
+        for ok_input in self.inputs:
+            # skip this iteration
+            if not isinstance(ok_input, ArrayIn):
+                continue
+
+            if ok_input == "arbitrary":
+                return
+
+
+
+
+        raise IncompatibleTypes("invalid input type, must be"\
+             + "({}) not {}".format(self.inputs, arr_in))
+
+    # def _constant_in(self, const_in):
+    #     pass
 
 
 

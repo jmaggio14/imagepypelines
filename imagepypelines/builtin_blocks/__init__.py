@@ -12,7 +12,7 @@ __all__ = [
             'BlockViewer',           #2
             'CameraBlock',           #3
             'Color2Gray',            #4
-            'Img2Stream',           #5
+            'Img2Stream',            #5
             'Divide',                #6
             'FFT',                   #7
             'Lowpass',               #8
