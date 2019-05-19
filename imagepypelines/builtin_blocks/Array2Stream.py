@@ -1,12 +1,11 @@
 import io
-from .. import SimpleBlock, RGB, GRAY
+from .. import SimpleBlock, RGB, GRAY, ArrayType
 
 
 
-class Img2Stream(SimpleBlock):
+class Array2Stream(SimpleBlock):
     def __init__(self):
-        io_kernel = {RGB : io.IOBase,
-                        GRAY : io.IOBase}
+        io_kernel = {ArrayType() : io.IOBase}
         super().__init__(io_kernel,
                             requires_labels=False,
                             requires_training=False)

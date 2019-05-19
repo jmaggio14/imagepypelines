@@ -5,13 +5,21 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
+# enable terminal colors if we are in an nt system
+import os
+if os.name == 'nt':
+    import colorama
+    colorama.init()
+    del colorama
+
+
+
 import pkg_resources
 # retrieve the source directory for our standard images
 STANDARD_IMAGE_DIRECTORY = pkg_resources.resource_filename(__name__,
                                                         'data/standard_images')
 
 # -------- setup a cache directory on the local machine -------
-import os
 CACHE = os.path.join(os.path.expanduser('~'),'.imagepypelines')
 
 # ---------- delete namespace pollutants ----------

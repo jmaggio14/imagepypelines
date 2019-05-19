@@ -90,7 +90,7 @@ class CameraBlock(BatchBlock):
             for i in range(num_images):
                 img = self.cap.retrieve()
                 images.append(img)
-                images_labels.append(lbl)
+                image_labels.append(lbl)
 
         elif self.mode == 'time':
             # JM: data in this case should be a 1 element list with the number

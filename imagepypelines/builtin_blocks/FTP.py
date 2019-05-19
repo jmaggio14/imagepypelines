@@ -1,21 +1,19 @@
 import ftplib
 import io
-from .. import BatchBlock
+from .. import SimpleBlock
 
 
-class FTP(BatchBlock):
+class FTP(SimpleBlock):
     def __init__(self, host, user, passwd, remote_cwd=None, tls=True, timeout=30):
         io_kernel = {io.IOBase : str}
 
         if tls:
             self.session = ftplib.FTP_TLS(host, user, passwd, timeout=30)
-            self.session.login()
             self.session.prot_p()
         else:
             self.session = ftplib.FTP(host, user, passwd, timeout=30)
-            self.session.login()
 
-        if not remote_cwd:
+        if remote_cwd is not None:
             self.session.cwd(remote_cwd)
 
 
@@ -27,7 +25,7 @@ class FTP(BatchBlock):
 
     def process(self, datum):
         try:
-            self.session.storbinary("STOR " + self.name, xdatum)
+            self.session.storbinary("STOR " + '3Dprinter.png', datum)
         except ftplib.all_errors:
             return False
 

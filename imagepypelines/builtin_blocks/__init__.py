@@ -9,10 +9,10 @@
 # add the name of any imports to this variable
 __all__ = [
             'Add',                   #1
-            'BlockViewer',           #2
-            'CameraBlock',           #3
-            'Color2Gray',            #4
-            'Img2Stream',            #5
+            'Array2Stream',          #2
+            'BlockViewer',           #3
+            'CameraBlock',           #4
+            'Color2Gray',            #5
             'Divide',                #6
             'FFT',                   #7
             'Lowpass',               #8
@@ -27,16 +27,17 @@ __all__ = [
             'Normalize',             #17
             'Orb',                   #18
             'PCA',                   #19
-            'PretrainedNetwork',     #20
-            'Resizer',               #20
-            'Subtract',              #21
-            'SupportVectorMachine',  #22
-            'LinearSvm',             #23
-            'RbfSvm',                #24
-            'PolySvm',               #25
-            'SigmoidSvm',            #26
-            'Otsu',                  #27
-            'WriterBlock',           #28
+            'PngCompress',           #20
+            'PretrainedNetwork',     #21
+            'Resizer',               #22
+            'Subtract',              #23
+            'SupportVectorMachine',  #24
+            'LinearSvm',             #25
+            'RbfSvm',                #26
+            'PolySvm',               #27
+            'SigmoidSvm',            #28
+            'Otsu',                  #29
+            'WriterBlock',           #30
             ]
 # Add.py
 from .Add import Add
@@ -46,8 +47,8 @@ from .BlockViewer import BlockViewer
 from .CameraBlock import CameraBlock
 # Color2Gray.py
 from .Color2Gray import Color2Gray
-# Img2Stream.py
-from .Img2Stream import Img2Stream
+# Array2Stream.py
+from .Array2Stream import Array2Stream
 # Divide.py
 from .Divide import Divide
 # FFT.py
@@ -75,6 +76,8 @@ from .Normalize import Normalize
 from .Orb import Orb
 # PCA.py
 from .PCA import PCA
+# PngCompress.py
+from .PngCompress import PngCompress
 # PretrainedNetwork.py
 from .PretrainedNetwork import PretrainedNetwork
 # Resizer.py
