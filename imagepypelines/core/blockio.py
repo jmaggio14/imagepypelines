@@ -105,10 +105,6 @@ def varname_check(var):
 ################################################################################
 #                            Builtin IO Types
 ################################################################################
-class AnyType:
-    pass
-
-
 class ArrayIn(object):
     def __init__(self, axes="arbitrary"):
 
@@ -155,6 +151,7 @@ class GenericIn(object):
         varname_check(varname)
         self.val = val
         self.varname = varname
+        self.axes = [self.val]
 
     def __str__(self):
         return self.__class__.__name__ + ('(%s)' % str(self.val))
@@ -162,18 +159,20 @@ class GenericIn(object):
     def __repr__(self):
         return str(self)
 
-class ConstantIn(GenericIn):
-    pass
-
 class IntIn(GenericIn):
     pass
 
 class FloatIn(GenericIn):
     pass
 
+class StrIn(GenericIn):
+    pass
+
+class NoneIn(GenericIn):
+    pass
 
 
-
+### OUTPUT
 class ArrayOut(object):
     def __init__(self,
                 rules="arbitrary",
@@ -212,15 +211,19 @@ class ArrayOut(object):
                     raise ValueError(
                         "Array Axes can only be defined as strings or numbers")
 
-    def output(self, array_in):
+    def output(self, val_in):
         if self.shape == "arbitrary":
             return ArrayIn("arbitrary")
 
         elif self.shape == "input_shape":
-            return array_in
+            if isinstance(val_in, ArrayIn):
+                return val_in
+            else:
+                raise RuntimeError("Array Output with same shape is input is" \
+                                + "undefined since input is %s" % type(val_in))
 
         else:
-            return ArrayIn( [ax.evaluate(array_in.axes) for ax in self.shape] )
+            return ArrayIn( [ax.evaluate(val_in.axes) for ax in self.shape] )
 
 
     def __str__(self):
@@ -230,12 +233,6 @@ class ArrayOut(object):
 
     def __repr__(self):
         return str(self)
-
-
-
-
-
-
 
 
 
@@ -344,6 +341,15 @@ class AxisExpression(AxisKernel):
 
 
 # ============================== IoMap ==============================
+IN_CAST_MAP = {
+            int : IntIn(),
+            float : FloatIn(),
+            str : StrIn(),
+            None : NoneIn(),
+            }
+
+KNOWNS_INS = (ArrayIn, IntIn, FloatIn, StrIn, NoneIn, GenericIn)
+
 
 class IoMap(object):
     """
@@ -365,13 +371,20 @@ class IoMap(object):
         self.outputs = []
         self.descriptions = []
         for io in io_kernel:
+            # check and cast inputs to the appropriate type
+            if io[0] in IN_CAST_MAP:
+                io[0] = IN_CAST_MAP[ io[0] ]
+            elif not isinstance(io[0], KNOWNS_INS):
+                io[0] = GenericIn( io[0] )
+
+            # check and cast inputs to the appropriate type
+
             # Special Case for Array Inputs and Outputs
             if isinstance(io[1], ArrayOut) and isinstance(io[0], ArrayIn):
                 io[1].init( io[0].varnames )
 
-
-            self.inputs.append(io[0])
-            self.outputs.append(io[1])
+            self.inputs.append( io[0] )
+            self.outputs.append( io[1] )
 
             if len(io) == 2:
                 self.descriptions.append("No description provided")
@@ -383,8 +396,12 @@ class IoMap(object):
         if isinstance(input_, ArrayIn):
             out = self._array_in(input_)
 
+        elif isinstance(input_, GenericIn):
+            out = self._generic_in(input_)
+
         else:
             raise RuntimeError("non array inputs not yet supported")
+            
 
         if len(out) == 0:
             raise IncompatibleTypes("invalid input type, must be"\
@@ -410,6 +427,10 @@ class IoMap(object):
                 out.add( corresponding_out.output(arr_in) )
 
         return out
+
+    # def _generic_in(self, generic_in):
+
+
 
     def __str__(self):
         io_strs = []
