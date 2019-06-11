@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
-from .. import ArrayType
+from .. import ArrayIn, ArrayOut
 import numpy as np
 from ..core import import_opencv
 cv2 = import_opencv()
@@ -26,10 +26,15 @@ class FFT(SimpleBlock):
 
     """
     def __init__(self):
-        io_map = {ArrayType([None,None]):ArrayType([None,None]),
-                    ArrayType([None,None,None]):ArrayType([None,None,None]),
-                    }
-        super(FFT,self).__init__(io_map, requires_training=False)
+        io_kernel = [
+                    [ArrayIn(['N','M']),
+                        ArrayOut('input_shape'),
+                        "calculate an FFT bandwise on the image"],
+                    [ArrayIn(['N','M',3]),
+                        ArrayOut('input_shape'),
+                        "calculate an FFT bandwise on the image"],
+                ]
+        super(FFT,self).__init__(io_kernel, requires_training=False)
 
     def process(self,datum):
         """calculates a fast-fourier transform on an input image

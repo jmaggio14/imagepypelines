@@ -6,10 +6,9 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import util
 from .. import BatchBlock
-from .. import ArrayType
+from .. import ArrayIn, ArrayOut
 from random import shuffle
 import numpy as np
-import zlib
 # JM:  keras is imported in the __keras_importer function
 
 
@@ -129,23 +128,27 @@ class MultilayerPerceptron(BatchBlock):
         self.num_epochs = int(num_epochs)
 
         if self.label_type == 'integer':
-            io_map = {ArrayType([1, None]): int}
+            io_kernel = [[ArrayIn([1, 'N']),
+                        int,
+                        "predict the integer label based off a feature vector"]]
         else:
-            io_map = {ArrayType([1, None]): ArrayType([None], dtypes=np.int32)}
+            io_kernel = [[ArrayIn([1, 'N']),
+                        ArrayOut(['N']),
+                        "predict the categorical one-hot label based off a feature vector"]]
 
-        super(MultilayerPerceptron, self).__init__(io_map,
+        super(MultilayerPerceptron, self).__init__(io_kernel,
                                                     requires_training=True,
                                                     requires_labels=True)
 
     def train(self, data, labels):
         # checking that labels are in the correct format for the type
-        if self.label_type == 'integer' and isinstance(labels[0],np.ndarray):
+        if self.label_type == 'integer' and isinstance(labels[0], np.ndarray):
             msg = "'integer' label_type specified, but numpy arrays passed in"\
                     + "-- reseting label_type as 'categorical'!"
             self.printer.warning(msg)
             self.label_type = 'categorical'
 
-        elif self.label_type == 'categorical' and isinstance(labels[0],int):
+        elif self.label_type == 'categorical' and isinstance(labels[0], int):
             msg = "'categorical' label_type specified, but integers passed in"\
                     + "-- reseting label_type as 'integer'!"
             self.printer.warning(msg)

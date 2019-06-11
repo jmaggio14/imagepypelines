@@ -11,7 +11,7 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
-from .. import ArrayType
+from .. import ArrayOut
 from ..core import import_opencv
 cv2 = import_opencv()
 
@@ -35,9 +35,14 @@ class ImageLoader(SimpleBlock):
             registered to 'name'
     """
     def __init__(self):
-        io_map = {str:ArrayType([None,None],[None,None,3])}
+        io_kernel = [[str,
+                    ArrayOut(['N', 'M'],
+                     "loads in a grayscale image from a filename"],
+                [str,
+                    ArrayOut(['N', 'M', 3],
+                     "loads in a color image from a filename"],]
         notes = "loads images from disk given an input filename"
-        super(ImageLoader,self).__init__(io_map,
+        super(ImageLoader,self).__init__(io_kernel,
                                         notes=notes,
                                         requires_training=False)
 

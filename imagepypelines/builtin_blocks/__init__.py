@@ -15,8 +15,8 @@ __all__ = [
             'Color2Gray',            #5
             'Divide',                #6
             'FFT',                   #7
-            'Lowpass',               #8
-            'Highpass',              #9
+            # 'Lowpass',               #8
+            # 'Highpass',              #9
             'Flatten',               #10
             'FTP',                   #11
             'Gray2Color',            #12
@@ -54,8 +54,8 @@ from .Divide import Divide
 # FFT.py
 from .FFT import FFT
 # Filters.py
-from .Filters import Lowpass
-from .Filters import Highpass
+# from .Filters import Lowpass
+# from .Filters import Highpass
 # Flatten.py
 from .Flatten import Flatten
 # FTP.py

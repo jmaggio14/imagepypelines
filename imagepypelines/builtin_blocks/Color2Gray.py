@@ -44,10 +44,10 @@ class Color2Gray(SimpleBlock):
 
         io_kernel = [
                     [ArrayIn(['N','M']),
-                        ArrayIn(['N','M']),
+                        ArrayOut("input_shape"),
                         "perform no operation on grayscale images"],
                     [ArrayIn(['N','M',3]),
-                        ArrayIn(['N','M']),
+                        ArrayOut(['N','M']),
                         "convert color images to grayscale"],
                     ]
 

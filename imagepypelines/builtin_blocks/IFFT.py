@@ -31,10 +31,16 @@ class IFFT(SimpleBlock):
     """
     def __init__(self, discard_imaginary=True):
         self.discard_imaginary = discard_imaginary
-        io_map = {ArrayType([None,None]):ArrayType([None,None]),
-                    ArrayType([None,None,None]):ArrayType([None,None,None]),
-                    }
-        super(IFFT,self).__init__(io_map, requires_training=False)
+
+        io_kernel = [
+                    [ArrayIn(['N','M']),
+                        ArrayOut('input_shape'),
+                        "calculate an IFFT bandwise on the image"],
+                    [ArrayIn(['N','M',3]),
+                        ArrayOut('input_shape'),
+                        "calculate an IFFT bandwise on the image"],
+                ]
+        super(IFFT,self).__init__(io_kernel, requires_training=False)
 
     def process(self,datum):
         """calculates a fast-fourier transform on an input image

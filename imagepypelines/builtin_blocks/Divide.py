@@ -13,7 +13,7 @@ class Divide(SimpleBlock):
     def __init__(self,divisor):
         assert isinstance(divisor,(int,float,np.ndarray))
         self.divisor = divisor
-        io_kernel= = {
+        io_kernel = {
                     [ArrayIn('arbitrary'),
                         ArrayOut('input_shape'),
                         "divide the input by the divisor"],
@@ -24,7 +24,7 @@ class Divide(SimpleBlock):
                         float,
                         "divide the input by the divisor"],
                     }
-        super(Divide,self).__init__(io_kernel=)
+        super(Divide,self).__init__(io_kernel)
 
     def process(self, datum):
         return datum / self.divisor

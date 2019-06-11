@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
-from .. import ArrayType
+from .. import ArrayIn, ArrayOut
 from ..core import import_opencv
 cv2 = import_opencv()
 import numpy as np
@@ -19,16 +19,6 @@ class Orb(SimpleBlock):
     Attributes:
         n_keypoints(int): maximum number of keypoints to detect
         orb(cv2.ORB): orb computation object from opencv
-
-        io_map(IoMap): object that maps inputs to this block to outputs
-        name(str): unique name for this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
-            registered to 'name'
-
     """
     def __init__(self,n_keypoints=100):
         if not isinstance(n_keypoints,(int,float)):
@@ -39,8 +29,10 @@ class Orb(SimpleBlock):
         self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
 
-        io_map = {ArrayType([None,None]):ArrayType([None,32])}
-        super(Orb,self).__init__(io_map, requires_training=False)
+        io_kernel =[ [ArrayType(['N','M']),
+                    ArrayType([self.n_keypoints,32]),
+                    "calculates 32 bit binary descriptors on grayscale images. shape = (n_keypoints,32)"]]
+        super(Orb,self).__init__(io_kernel, requires_training=False)
 
     def process(self,datum):
         """calculates descriptors on a 4D img_stack (n_img,height,width,bands)

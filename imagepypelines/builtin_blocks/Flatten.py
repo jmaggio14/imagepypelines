@@ -13,7 +13,7 @@ import numpy as np
 class Flatten(SimpleBlock):
     def __init__(self):
         self.term = term
-        io_map = {ArrayType():ArrayType([None])}
+        io_map = {ArrayType():ArrayType([])}
         super(Flatten,self).__init__(io_map)
 
     def process(self, datum):

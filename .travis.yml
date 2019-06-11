@@ -139,15 +139,14 @@ install:
   - pip install .
   - pip install tensorflow==1.13.1
 
-  # print out the opencv info for debugging if necessary
-  - python -c "import cv2; print(cv2.getBuildInformation())"
-
   # codecov requirements
   - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
   # codecov requirements
   - pip install pytest pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
 
 script:
+  # print out the opencv info for debugging if necessary
+  - python -c "import cv2; print(cv2.getBuildInformation())"
   # license enforcer
   - python enforcer.py
   # generate percent test coverage and a coverage report

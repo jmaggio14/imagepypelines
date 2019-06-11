@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
-from .. import ArrayType
+from .. import ArrayIn, ArrayOut
 from .. import dimensions
 from ..core import import_opencv
 cv2 = import_opencv()
@@ -28,15 +28,16 @@ class Gray2Color(SimpleBlock):
             registered to 'name'
     """
     def __init__(self):
-        io_map = {
-                    ArrayType([None,None],[None,None,3]):
-                                        ArrayType([None,None,3]),
-                    # ArrayType([None,None],[None,None,3]):
-                    #                     ArrayType([None,None,3]),
-                    # ArrayType([None,None],[None,None,3]):
-                    #                     ArrayType([None,None,3])
-                }
-        super(Gray2Color,self).__init__(io_map,requires_training=False)
+        io_kernel = [
+                    [ArrayIn(['N','M']),
+                        ArrayOut(['N','M',3]),
+                        "convert grayscale images to color"],
+                    [ArrayIn(['N','M',3]),
+                        ArrayOut("input_shape"),
+                        "perform no operation on color images"],
+                    ]
+
+        super(Gray2Color,self).__init__(io_kernel,requires_training=False)
 
     def process(self,datum):
         """converts grayscale to color image
