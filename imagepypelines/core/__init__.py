@@ -9,16 +9,18 @@
 from .constants import *
 
 # BaseBlock.py
-from .BaseBlock import ArrayType
-from .BaseBlock import Same
-from .BaseBlock import Incompatible
-from .BaseBlock import IoMap
 from .BaseBlock import BaseBlock
 
 # block_subclasses.py
 from .block_subclasses import SimpleBlock
 from .block_subclasses import BatchBlock
 from .block_subclasses import TfBlock
+
+# blockio.py
+from .blockio import ArrayIn, GenericIn, IntIn, FloatIn, StrIn, NoneIn
+from .blockio import ArrayOut, GenericOut, IntOut, FloatOut, StrOut, NoneOut
+from .blockio import Incompatible
+from .blockio import IoMap
 
 # caching.py
 from .caching import make_cache

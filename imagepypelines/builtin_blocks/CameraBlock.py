@@ -4,9 +4,9 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .. import util
+from .. import Timer
 from .. import BatchBlock
-from .. import ArrayType
+from .. import ArrayOut
 from .. import io
 
 
@@ -66,13 +66,24 @@ class CameraBlock(BatchBlock):
         assert mode in ['count','time'], "mode must set to 'time' or 'count'"
         self.mode = mode
 
-        io_map = {int:ArrayType([None,None],[None,None,3]),
-                    float:ArrayType([None,None],[None,None,3]),
-                    }
+        if self.mode == 'count':
+            io_kernel = [
+                        [int, ArrayOut(['N','M']), "outputs the number of images specified in the input"],
+                        [float, ArrayOut(['N','M']), "outputs the number of images specified in the input"],
+                        [int, ArrayOut(['N','M',3]), "outputs the number of images specified in the input"],
+                        [float, ArrayOut(['N','M',3]), "outputs the number of images specified in the input"],
+                        ]
+        else:
+            io_kernel = [
+                        [int, ArrayOut(['N','M']), "captures images for the specified number of seconds"],
+                        [float, ArrayOut(['N','M']), "captures images for the specified number of seconds"],
+                        [int, ArrayOut(['N','M',3]), "captures images for the specified number of seconds"],
+                        [float, ArrayOut(['N','M',3]), "captures images for the specified number of seconds"],
+                        ]
 
 
         self.cap = io.CameraCapture(self.device,self.fourcc)
-        super(CameraBlock,self).__init__(io_map, requires_training=False)
+        super(CameraBlock,self).__init__(io_kernel, requires_training=False)
 
     def before_process(self,data,labels=None):
         images = []
@@ -98,7 +109,7 @@ class CameraBlock(BatchBlock):
             num_seconds = float(data[0])
             lbl = labels[0]
             # JM: make timer to set a countdown until capture should stop
-            t = util.Timer()
+            t = Timer()
             t.countdown = num_seconds
             # JM: retrieve images until countdown hits zero
             while t.countdown:

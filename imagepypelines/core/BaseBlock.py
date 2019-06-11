@@ -17,240 +17,6 @@ import time
 import uuid
 from abc import ABCMeta, abstractmethod
 
-class ArrayType(object):
-    """Object to describe the shapes of Arrays for Block inputs or outputs
-
-    Object that contains the shapes and datatypes of an input or output
-    for a BaseBlock
-
-    Args:
-        *array_shapes(vargs of array shapes): acceptable shapes. Arbitrary
-            length axes can be represented by None.
-            example: [None,None,3] (for rgb image)
-    """
-    def __init__(self, *array_shapes):
-        if len(array_shapes) > 0:
-            # -------------------- error-checking ---------------------
-            if not all(isinstance(shape, (tuple, list)) for shape in array_shapes):
-                raise TypeError("all array shapes must be tuples or lists")
-
-            # ensure that every element is a positive integer or NoneType
-            shapes = list(list(shp) for shp in array_shapes)
-            for shp in shapes:
-                for i in range( len(shp) ):
-                    if isinstance(shp[i],(float,int)):
-                        assert shp[i] > 0, "elements of shape must be > 0 or None"
-                        shp[i] = int(shp[i])
-
-                    elif not (shp[i] is None):
-                        error_msg = "all elements must be positive integers or None"
-                        raise ValueError(error_msg)
-
-            # -------------------- create instance variables ---------------------
-            self.shapes = tuple(tuple(shp) for shp in shapes)
-
-        else:
-            self.shapes = ()
-
-        self.arbitrary = not bool( len(self.shapes) )
-
-    def __str__(self):
-        if len(self.shapes) == 0:
-            return "ArrayType(<arbitrary shape>)"
-        else:
-            return "ArrayType({})".format(', '.join(str(s) for s in self.shapes))
-
-    def __repr__(self):
-        return str(self)
-#
-    def __eq__(self,other):
-        if isinstance(other,ArrayType):
-            return hash(self) == hash(other)
-        return False
-#
-    def __hash__(self):
-        # NOTE(Jeff Maggio) - possible issue here because tuples aren't sorted
-        clean = lambda shp : tuple((-1 if ele is None else ele) for ele in shp)
-        sortable = (clean(shp) for shp in self.shapes)
-        return hash( tuple(sorted(sortable)) )
-
-
-
-class Same(object):
-    """class meant to be the output in an IoMap.
-    Indicates that the output is the same as the input is returned"""
-    pass
-
-class Incompatible(object):
-    def __str__(self):
-        return "No known outputs due to incompatible Inputs"
-    def __repr__(self):
-        return str(self)
-
-class IoMap(tuple):
-    """mapping object to determine the output of block
-    IoMaps are used to predict the output of a block given a certain type of
-    input. Every block contains an IoMap located under block.io_map
-    Args:
-        io_map(dict,IoMap): dictionary that describes the input outputs of the
-            block. Of the form: io_map[input_type] = output_type
-    Attributes:
-        non_arrays(tuple): mapping of non-array input-outputs for this io_map
-        arrays(tuple): mapping of array input-outputs for this io_map
-        inputs(tuple): tuple of inputs for this io map
-        outputs(tuple): tuple of outputs for this io map
-    """
-    def __new__(cls, io_map):
-        # -------------- ERROR CHECKING -----------------------
-        if isinstance(io_map, IoMap):
-            return io_map
-        elif not isinstance(io_map, dict):
-            raise TypeError(
-                "IoMap must be instantiated with a dictionary, not %s" \
-                % type(io_map))
-
-        # ---------------- Breaking dictionary up into a mapping --------------
-        # {key1:val1,key2:val2} --> ( (key1,val1),(key2,val2) )
-        io_map = io_map.items()
-        # splitting apart all Array Types with multiple shapes
-        # ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
-        # going through inputs first
-        reduced_io_map = []
-        for i, o in io_map:
-            reduced_io_map.extend(cls.reduce(i, o))
-
-        # return the new reduced mapping
-        return super(IoMap, cls).__new__(cls, tuple(set(reduced_io_map)))
-
-    def __init__(self, io_map):
-        self.non_arrays = tuple((i, o) for i, o in self if (not isinstance(i, ArrayType)))
-        self.arrays = tuple((i, o) for i, o in self if isinstance(i, ArrayType))
-
-        self.inputs = tuple(i for i, o in self)
-        self.outputs = tuple(o for i, o in self)
-
-    @staticmethod
-    def reduce(i, o):
-        """reduces ArrayTypes with multiple shapes to multiple single
-        shape ArrayTypes
-        ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
-        Args:
-            i (ArrayType): block input
-            o (ArrayType): block output
-        Returns:
-            tuple: mapping of reduced types ((i1,o1),(i2,o2)...)
-        """
-        if not isinstance(i,ArrayType):
-            reduced_i = ((i, o), )
-        else:
-            if i.arbitrary:
-                split = (ArrayType(),)
-            else:
-                split = tuple(ArrayType(shp) for shp in i.shapes)
-            reduced_i = zip(split, (o,)*len(split))
-
-        reduced = []
-        for i, o in reduced_i:
-            if not isinstance(o,ArrayType):
-                reduced.append((i, o))
-            else:
-                if o.arbitrary:
-                    split = (ArrayType(),)
-                else:
-                    split = tuple(ArrayType(shp) for shp in o.shapes)
-                reduced.extend(zip((i,)*len(split), split))
-
-        return tuple( reduced )
-
-    @staticmethod
-    def shape_comparison(input_array, acceptable_array):
-        """compares ArrayType shapes and returns a boolean to indicate
-        compatability
-        Args:
-            input_array(tuple): input ArrayType
-            acceptable_array(tuple): acceptable ArrayTypes
-        Returns:
-            compatible(bool): whether or the input shape is compatible with
-                this block
-        """
-        # if the acceptable array has an arbitrary shape, then it's compatible
-        # no matter what
-        if acceptable_array.arbitrary:
-            return True
-
-        input_shape = input_array.shapes[0]
-        acceptable_shape = acceptable_array.shapes[0]
-
-        # if they have a different number of axis, they aren't compatible
-        if len(input_shape) != len(acceptable_shape):
-            return False
-
-        # compare every element
-        compatible_by_axis = []
-        for input_i, acceptable_i in zip(input_shape, acceptable_shape):
-            # if block element is None, then arbitrary length for this axis is accepted
-            # so no more comparisons are needed for this element
-            if (acceptable_i == None) or (input_i == acceptable_i):
-                compatible_by_axis.append(True)
-            else:
-                compatible_by_axis.append(False)
-
-        return all(compatible_by_axis)
-
-    def output(self, input_types):
-        """gets the given output(s) of this IoMap given a input type or types
-        Args:
-            input_types(tuple,set): tuple or set of input types
-        Returns:
-            outputs(set): tuple of output types this block produces given the
-                input_types
-        """
-        outputs = set()
-
-        for input_type in input_types:
-            # Quick Check for direct matches
-            if input_type in self.inputs:
-                indices = [idx for idx,it in enumerate(self.inputs) if (it==input_type)]
-                for idx in indices:
-                    out = self.outputs[idx]
-                    if isinstance(out,Same):
-                        outputs.add( self.inputs[idx] )
-                    else:
-                        outputs.add( out )
-
-            elif isinstance(input_type, ArrayType):
-                for arr_in,arr_out in self.arrays:
-                    if self.shape_comparison(input_type,arr_in):
-                        if isinstance(arr_out,Same):
-                            outputs.add(arr_in)
-                        else:
-                            outputs.add(arr_out)
-
-
-            else:
-                raise IncompatibleTypes("invalid input type, must be"\
-                     + "({}) not {}".format(self.inputs,input_type))
-
-
-            return tuple(outputs)
-
-    def __str__(self):
-        return repr(self)
-
-    def __repr__(self):
-        # create a 'readable' io map that simply replaces outputs defined as 'Same'
-        # with it's corresponding input
-        # (ArrayType((512,512)),Same)-->(ArrayType((512,512)),ArrayType((512,512)))
-        io = []
-        for i,o in self:
-            if isinstance(o,Same) and isinstance(i,ArrayType):
-                o = str(i) + " [same shape as input]"
-            io.append( (i,o) )
-
-        io_map_str = "\n".join("{} --> {}".format(i,o) for i,o in io)
-        return io_map_str
-
-
 def describe_block(block,notes):
     if notes is None:
         notes = "<no description provided by the author>"
@@ -277,8 +43,7 @@ class BaseBlock(object):
     functions for pipeline objects to call
 
     Args:
-        io_map(IoMap,dict): dictionary of input-output mappings for this
-            Block
+        io_kernel(list): list of lists containing the io_mapping for this block
         name(str): name for this block, it will be automatically created/modified
             to make sure it is unique
         notes(str): a short description of this block
@@ -307,7 +72,7 @@ class BaseBlock(object):
     __metaclass__ = ABCMeta
     EXTANT = {}
     def __init__(self,
-                 io_map,
+                 io_kernel,
                  name=None,
                  notes=None,
                  requires_training=False,
@@ -325,7 +90,7 @@ class BaseBlock(object):
         name = name + ':{}'.format( self.EXTANT[name] )
 
         # ------ setting up instance variables
-        self.io_map = IoMap(io_map)
+        self.io_map = IoMap(io_kernel)
         self.name = name
         self.requires_training = requires_training
         self.requires_labels = requires_labels

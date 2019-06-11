@@ -6,20 +6,25 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
-from .. import ArrayType
-from .. import Same
+from .. import ArrayIn, ArrayOut
 import numpy as np
 
 class Divide(SimpleBlock):
     def __init__(self,divisor):
         assert isinstance(divisor,(int,float,np.ndarray))
         self.divisor = divisor
-        io_map = {
-                    ArrayType():Same(),
-                    int:float,
-                    float:float
+        io_kernel= = {
+                    [ArrayIn('arbitrary'),
+                        ArrayOut('input_shape'),
+                        "divide the input by the divisor"],
+                    [int,
+                        float,
+                        "divide the input by the divisor"],
+                    [float,
+                        float,
+                        "divide the input by the divisor"],
                     }
-        super(Divide,self).__init__(io_map)
+        super(Divide,self).__init__(io_kernel=)
 
     def process(self, datum):
         return datum / self.divisor

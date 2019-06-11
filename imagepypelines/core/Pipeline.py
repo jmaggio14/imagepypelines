@@ -4,14 +4,11 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from __future__ import print_function
 from .Printer import get_printer
 from .Printer import set_global_printout_level
 from .BaseBlock import BaseBlock
-from .BaseBlock import ArrayType
-from .BaseBlock import Incompatible
-from .Exceptions import CrackedPipeline
-from .Exceptions import IncompatibleTypes
+from .blockio import ArrayIn, FloatIn, IntIn, StrIn, NoneIn, GenericIn
+from .blockio import Incompatible
 from .util import Timer
 
 
@@ -22,12 +19,10 @@ import numpy as np
 from termcolor import cprint
 
 PIPELINE_NAMES = {}
-INCOMPATIBLE = (Incompatible(),)
 
-def name_pipeline(name,obj):
-    """
 
-    """
+def name_pipeline(name, obj):
+    """Generates a unique name for the pipeline"""
     if name is None:
         name = obj.__class__.__name__
 
@@ -37,58 +32,73 @@ def name_pipeline(name,obj):
     else:
         PIPELINE_NAMES[name] = 1
 
-    return name + ':1'
+    return name + '-%s' % PIPELINE_NAMES[name]
+
 
 def get_types(data):
     """Retrieves the block data type of the input datum"""
     def _get_types():
+        # NOTE - it may be better practice to check in a list instead of
+        # individual if statements
         for datum in data:
-            if isinstance(datum,np.ndarray):
-                yield (ArrayType(datum.shape),)
+            if isinstance(datum, np.ndarray):
+                yield ArrayIn(datum.shape)
+
+            elif isinstance(datum, int):
+                yield IntIn(datum)
+
+            elif isinstance(datum, float):
+                yield FloatIn(datum)
+
+            elif isinstance(datum, str):
+                yield StrIn(datum)
+
+            elif datum is None:
+                yield NoneIn()
+
             else:
-                yield (type(datum),)
+                yield GenericIn(datum)
 
     return set( _get_types() )
 
+
 class Pipeline(object):
     """
-            Pipeline object to apply a sequence of algorithms to input data
+    Pipeline object to apply a sequence of algorithms to input data
 
-            Pipelines pass data between block objects and validate the integrity
-            of a data processing pipeline. It is intended to be a quick, flexible, and
-            modular approach to creating a processing graph. It also contains helper
-            functions for documentation and saving these pipelines for use by other
-            researchers/users.
+    Pipelines pass data between block objects and validate the integrity
+    of a data processing pipeline. It is intended to be a quick, flexible, and
+    modular approach to creating a processing graph. It also contains helper
+    functions for documentation and saving these pipelines for use by other
+    researchers/users.
 
-            Args:
-                name(str): name for this pipeline that will be enumerated to be unique,
-                    defaults to the name of the subclass<index>
-                blocks(list): list of blocks to instantiate this pipeline with, shortcut
-                    to the 'add' function. defaults to []
-                verbose(bool): whether or not to enable printouts for this pipeline,
-                    defaults to True
-                enable_text_graph(bool): whether or not to print out a graph of
-                    pipeline blocks and outputs
-
-            Attributes:
-                name(str): unique name for this pipeline
-                blocks(list): list of block objects being used by this pipeline,
-                    in order of their processing sequence
-                verbose(bool): whether or not this pipeline with print
-                    out its status
-                enable_text_graph(bool): whether or not to print out a graph of
-                    pipeline blocks and outputs
-                printer(ip.Printer): printer object for this pipeline,
-                    registered with 'name'
+    Args:
+        name(str): name for this pipeline that will be enumerated to be unique,
+            defaults to the name of the subclass<index>
+        blocks(list): list of blocks to instantiate this pipeline with, shortcut
+            to the 'add' function. defaults to []
+        NEED_TO_DO_THIS
+        
+    Attributes:
+        name(str): unique name for this pipeline
+        blocks(list): list of block objects being used by this pipeline,
+            in order of their processing sequence
+        verbose(bool): whether or not this pipeline with print
+            out its status
+        enable_text_graph(bool): whether or not to print out a graph of
+            pipeline blocks and outputs
+        printer(ip.Printer): printer object for this pipeline,
+            registered with 'name'
     """
-    def __init__(self,
-                    blocks=[],
-                    name=None,
-                    skip_validation=False,
-                    track_types=True,
-                    debug=False):
 
-        self.name = name_pipeline(name,self)
+    def __init__(self,
+                 blocks=[],
+                 name=None,
+                 skip_validation=False,
+                 track_types=True,
+                 debug=False):
+
+        self.name = name_pipeline(name, self)
         self.skip_validation = skip_validation
         self.track_types = track_types
         self._debug = debug
@@ -97,14 +107,14 @@ class Pipeline(object):
         self.blocks = []
         self.step_types = []
 
-        if isinstance(blocks, (list,tuple)):
+        if isinstance(blocks, (list, tuple)):
             for b in blocks:
                 self.add(b)
         else:
-            raise TypeError("'blocks' must be a list")
+            raise TypeError("'blocks' must be a list or tuple")
 
     # ================== validation / debugging functions ==================
-    def validate(self,data):
+    def validate(self, data):
         """validates the integrity of the pipeline
 
         verifies all input-output shapes are compatible with each other
@@ -123,13 +133,13 @@ class Pipeline(object):
                 subclasses
         """
         # assert that every element in the blocks list is a BaseBlock subclass
-        if not all(isinstance(b,BaseBlock) for b in self.blocks):
+        if not all(isinstance(b, BaseBlock) for b in self.blocks):
             error_msg = \
-               "All elements of the pipeline must be subclasses of ip.BaseBlock"
+                "All elements of the pipeline must be subclasses of ip.BaseBlock"
             raise RuntimeError(error_msg)
 
         # make sure data is a list
-        if not isinstance(data,list):
+        if not isinstance(data, list):
             raise TypeError("'data' must be list")
 
         # make sure every block has a unique name
@@ -142,23 +152,23 @@ class Pipeline(object):
         # print incompatability warnings
         for pred_chain in predicted_type_chains:
             vals = tuple(pred_chain.values())
-            if INCOMPATIBLE in vals:
-                idx = vals.index(INCOMPATIBLE) - 1
+            if Incompatible() in vals:
+                idx = vals.index( Incompatible() ) - 1
                 block1 = self.blocks[idx-1]
                 block2 = self.blocks[idx]
 
                 msg = "pipeline_input={}: predicted incompatability between {}(output={})-->{}(inputs={})"
                 msg = msg.format(pred_chain['pipeline_input'],
-                                    block1.name,
-                                    pred_chain[block1.name],
-                                    block2.name,
-                                    block2.io_map.inputs)
+                                 block1.name,
+                                 pred_chain[block1.name],
+                                 block2.name,
+                                 block2.io_map.inputs)
                 self.printer.warning(msg)
 
         if self.debug:
             self._text_graph(predicted_type_chains)
 
-    def predict_type_chain(self,data):
+    def predict_type_chain(self, data):
         """Predict the types at each stage of the pipeline
         """
         data_types = get_types(data)
@@ -168,13 +178,12 @@ class Pipeline(object):
             predicted_chain = collections.OrderedDict(pipeline_input=input_type)
 
             for block in self.blocks:
-                if input_type == INCOMPATIBLE:
-                    output_types = INCOMPATIBLE
+                if input_type == Incompatible():
+                    output_types = Incompatible()
                 else:
-                    try:
-                        output_types = block.io_map.output( input_type )
-                    except IncompatibleTypes as e:
-                        output_types = INCOMPATIBLE
+                    output_types = block.io_map.output(input_type)
+                    if len(output_types) == 0:
+                        output_types.add( Incompatible() )
 
                 predicted_chain[str(block)] = output_types
                 input_type = output_types
@@ -184,12 +193,12 @@ class Pipeline(object):
 
         return all_predicted_chains
 
-    def _text_graph(self,type_chains):
-        for i,chain in enumerate(type_chains):
+    def _text_graph(self, type_chains):
+        for i, chain in enumerate(type_chains):
             print("-----------------| type-chain%s |-----------------" % i)
             buf = ' ' * 6
-            for b,output in chain.items():
-                color = 'red' if output == INCOMPATIBLE else None
+            for b, output in chain.items():
+                color = 'red' if output == Incompatible() else None
                 output = ',  '.join(str(s) for s in output)
                 out_str = '  {buf}|\n  {buf}|{out}\n  {buf}|'
                 out_str = out_str.format(buf=' ' * 6, out=output)
@@ -227,34 +236,35 @@ class Pipeline(object):
                     block.io_map.output(step_type)
             except IncompatibleTypes as e:
                 msg = "not all {} outputs ({}) compatible with {}'s IoMap inputs({}). attempting to compute regardless..."
-                msg = msg.format(self.blocks[self.step_index-1], step_types, block, block.io_map.inputs )
+                msg = msg.format(self.blocks[self.step_index-1],
+                                 step_types, block, block.io_map.inputs)
                 self.printer.warning(msg)
 
-        self.step_data,self.step_labels = self._run_block(block,
-                                                            self.step_data,
-                                                            self.step_labels)
+        self.step_data, self.step_labels = self._run_block(block,
+                                                           self.step_data,
+                                                           self.step_labels)
 
         self.step_index += 1
-        return self.step_data,self.step_labels
+        return self.step_data, self.step_labels
 
-    def _run_block(self,block,data,labels=None):
+    def _run_block(self, block, data, labels=None):
         t = Timer()
 
         # processing data using the block
-        processed,labels = block._pipeline_process(data,labels)
+        processed, labels = block._pipeline_process(data, labels)
 
         # printing out process time to the terminal
-        b_time = t.lap() # processing time for this block
+        b_time = t.lap()  # processing time for this block
         datum_time_ms = round(1000 * b_time / len(data), 3)
         debug_msg = "{}: processed {}datums in {} seconds".format(block.name,
-                                                                    len(data),
-                                                                    b_time)
+                                                                  len(data),
+                                                                  b_time)
         datum_msg = " (approx {}ms per datum)".format(datum_time_ms)
         self.printer.debug(debug_msg, datum_msg)
-        return processed,labels
+        return processed, labels
 
     # ================== processing functions
-    def _before_process(self,data,labels=None):
+    def _before_process(self, data, labels=None):
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
@@ -274,29 +284,29 @@ class Pipeline(object):
         self.step_labels = labels
         self.step_types = []
 
-    def _process(self,data):
+    def _process(self, data):
         # step through each block
-        for i in range( len(self.blocks) ):
+        for i in range(len(self.blocks)):
             self._step()
 
     def _after_process(self):
         # remove step data and labels memory footprint
         if self.track_types:
             # append the pipeline output to the type chain
-            self.step_types.append( get_types(self.step_data) )
+            self.step_types.append(get_types(self.step_data))
 
         self.step_data = None
         self.step_labels = None
 
-    def process(self,data):
-        self._before_process(data,None)
+    def process(self, data):
+        self._before_process(data, None)
         self._process(data)
         processed = self.step_data
         self._after_process()
         return processed
 
     # ================== training functions
-    def _before_train(self,data,labels=None):
+    def _before_train(self, data, labels=None):
         if not self.skip_validation:
             # validate pipeline integrity
             self.validate(data)
@@ -307,29 +317,29 @@ class Pipeline(object):
         self.step_labels = labels
         self.step_types = []
 
-    def _train(self,data,labels=None):
+    def _train(self, data, labels=None):
         # TODO Add a check to see throw an error if self.requires_labels == True
         # and no labels are passed into this function
         t = Timer()
         for b in self.blocks:
             self.printer.debug("training {}...".format(b.name))
-            b._pipeline_train(self.step_data,self.step_labels)
-            self._step() #step the block processing forward
+            b._pipeline_train(self.step_data, self.step_labels)
+            self._step()  # step the block processing forward
 
-            self.printer.info("{}: trained in {} sec".format(b.name,t.lap()))
+            self.printer.info("{}: trained in {} sec".format(b.name, t.lap()))
 
         self.printer.info("Pipeline trained in {}seconds".format(t.time()))
 
     def _after_train(self):
         self._after_process()
 
-    def train(self,data,labels=None):
-        self._before_train(data,labels)
-        self._train(data,labels)
+    def train(self, data, labels=None):
+        self._before_train(data, labels)
+        self._train(data, labels)
 
-        processed,labels = self.step_data,self.step_labels
+        processed, labels = self.step_data, self.step_labels
         self._after_train()
-        return processed,labels
+        return processed, labels
 
     # ================== utility functions / properties ==================
     def save(self, filename=None):
@@ -344,15 +354,15 @@ class Pipeline(object):
         if filename is None:
             filename = self.name + '.pck'
 
-        self.printer.info("saving {} to {}".format(self,filename))
+        self.printer.info("saving {} to {}".format(self, filename))
         with open(filename, 'wb') as f:
             pickle.dump(self, f)
 
         return filename
 
-    def rename(self,name):
-        assert isinstance(name,str),"name must be a string"
-        self.name = name_pipeline(name,self)
+    def rename(self, name):
+        assert isinstance(name, str), "name must be a string"
+        self.name = name_pipeline(name, self)
         self.printer = get_printer(self.name)
         return self
 
@@ -372,8 +382,8 @@ class Pipeline(object):
         return any(b.requires_labels for b in self.blocks)
 
     def __str__(self):
-        out = "<{}>: '{}'  ".format(self.__class__.__name__,self.name) \
-                + '(' + "->".join(b.name for b in self.blocks) + ')'
+        out = "<{}>: '{}'  ".format(self.__class__.__name__, self.name) \
+            + '(' + "->".join(b.name for b in self.blocks) + ')'
         return out
 
     def __repr__(self):
@@ -435,7 +445,8 @@ class Pipeline(object):
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 
-        self.printer.info("inserting block {0} into pipeline at index {1}".format(block.name, index))
+        self.printer.info(
+            "inserting block {0} into pipeline at index {1}".format(block.name, index))
 
         self.blocks.insert(index, block)
 
@@ -504,7 +515,7 @@ class Pipeline(object):
 
         self.blocks = []
 
-    def join(self,pipeline):
+    def join(self, pipeline):
         """Adds the blocks from an input pipeline to the current pipeline
 
         Args:
@@ -530,16 +541,16 @@ class Pipeline(object):
 
         del self.blocks[i]
 
-    def __getitem__(self,index):
+    def __getitem__(self, index):
         return self.blocks[index]
 
-    def __setitem__(self,index,block):
+    def __setitem__(self, index, block):
         if not isinstance(block, BaseBlock):
             error_msg = "'block' must be a subclass of ip.BaseBlock"
             self.printer.error(error_msg)
             raise TypeError(error_msg)
 
-        self.printer.info("{} replaced with {}".format(self.blocks[index],block.name))
+        self.printer.info("{} replaced with {}".format(self.blocks[index], block.name))
         self.blocks[index] = block
 
     def __iter__(self):

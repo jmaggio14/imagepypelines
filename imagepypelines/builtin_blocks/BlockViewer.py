@@ -4,9 +4,8 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .. import SimpleBlock, ArrayType
+from .. import SimpleBlock, ArrayIn, ArrayOut
 from .. import Viewer
-from .. import GRAY, RGB
 import time
 
 
@@ -42,9 +41,11 @@ class BlockViewer(SimpleBlock):
                  normalize=False,
                  enable_frame_counter=True):
         self.pause_time = pause_time
-        io_map = {GRAY : GRAY,
-                  RGB : RGB}
-        super(BlockViewer, self).__init__(io_map,
+        io_kernel = [
+                [ArrayIn['N','M'], ArrayOut['N','M'], "leave images unchanged"],
+                [ArrayIn['N','M','3'], ArrayOut['N','M','3'], "leave images unchanged"],
+                ]
+        super(BlockViewer, self).__init__(io_kernel=,
                                           requires_training=False)
         self.viewer = Viewer(self.name, FFT=FFT, normalize=normalize)
 

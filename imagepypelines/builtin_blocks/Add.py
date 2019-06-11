@@ -7,7 +7,7 @@
 #
 from .. import SimpleBlock
 from .. import ArrayType
-from .. import ARRAY_ND, SAME
+from .. import ArrayIn, ArrayOut
 import numpy as np
 
 class Add(SimpleBlock):
@@ -19,13 +19,16 @@ class Add(SimpleBlock):
             term = float(term)
         self.term = term
 
-        io_map = {
-                    ARRAY_ND:SAME,
-                    int:float,
-                    float:float
-                    }
+        io_kernel = [
+                        [ArrayIn("arbitrary"),
+                            ArrayOut("input_shape"),
+                            "adds the value to the array, leaving it's shape unchanged"],
+                        [float, float],
+                        [int, float],
+                ]
+
         notes = "adds a user-defined term to a numerical input"
-        super(Add,self).__init__(io_map,notes=notes)
+        super(Add,self).__init__(io_kernel,notes=notes)
 
     def process(self, datum):
         return datum + self.term
