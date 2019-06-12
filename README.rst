@@ -290,43 +290,43 @@ There are two ways to create a block
 for operations that can be completed in a single function that
 accepts one datum, you can create a block with a single line.
 
-.. doctest:: python
-
-  import imagepypelines as ip
-
-  # create the function we use to process images
-  def normalize_image(img):
-  	return img / img.max()
-
-  # set up the block to work with grayscale and color imagery
-  io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  			ip.ArrayType([None,None,3]):ipimagepypelines.ArrayType([None,None,3])}
-
-
-  block = ip.quick_block(normalize_image, io_map)
+.. .. doctest:: python
+..
+..   import imagepypelines as ip
+..
+..   # create the function we use to process images
+..   def normalize_image(img):
+..   	return img / img.max()
+..
+..   # set up the block to work with grayscale and color imagery
+..   io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+..   			ip.ArrayType([None,None,3]):ipimagepypelines.ArrayType([None,None,3])}
+..
+..
+..   block = ip.quick_block(normalize_image, io_map)
 
 
 2) object inheritance
 ^^^^^^^^^^^^^^^^^^^^^
 *this is covered in more detail on our tutorial pages. this example will not cover training or label handling*
 
-.. doctest:: python
-
-  import imagepypelines as ip
-
-  class NormalizeBlock(ip.SimpleBlock):
-  	"""normalize block between 0 and max_count, inclusive"""
-  	def __init__(self,max_count=1):
-  		self.max_count = max_count
-  		# set up the block to work with grayscale and color imagery
-  		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
-
-  		super(NormalizeBlock,self).__init__(io_map)
-
-  	def process(self,img):
-  		"""overload the processing function for this block"""
-  		return img.astype(np.float32) / img.max() * self.max_count
+.. .. doctest:: python
+..
+..   import imagepypelines as ip
+..
+..   class NormalizeBlock(ip.SimpleBlock):
+..   	"""normalize block between 0 and max_count, inclusive"""
+..   	def __init__(self,max_count=1):
+..   		self.max_count = max_count
+..   		# set up the block to work with grayscale and color imagery
+..   		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+..   					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+..
+..   		super(NormalizeBlock,self).__init__(io_map)
+..
+..   	def process(self,img):
+..   		"""overload the processing function for this block"""
+..   		return img.astype(np.float32) / img.max() * self.max_count
 
 *************************************
 Imaging Science Convenience Functions

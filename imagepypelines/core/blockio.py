@@ -376,7 +376,7 @@ class AxisExpression(AxisKernel):
             elif chop.replace(' ', '') not in ALLOWED:
                 # reject anything that's not in our criteria
                 raise ValueError(
-                    "invalid variable, operator, or function {}".format(chop))
+                    "invalid variable, operator, or function '{}'".format(chop))
 
         self.sanitized = ''.join(chopped)
         self.varnames = varnames

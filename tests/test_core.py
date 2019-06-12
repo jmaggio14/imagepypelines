@@ -15,128 +15,128 @@ numpy_types = [np.uint8,
                 np.complex128]
 
 # test function for ArrayType
-@given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))) )
-def test_ArrayType(shape):
-    """test ArrayType instantiation of multiple shapes and dtypes"""
-    import imagepypelines as ip
-    ip.ArrayType(shape)
+# @given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))) )
+# def test_ArrayType(shape):
+#     """test ArrayType instantiation of multiple shapes and dtypes"""
+#     import imagepypelines as ip
+#     ip.ArrayType(shape)
 
 # ------------- IoMap -------------
-class TestIoMap(object):
-    def test_reduction(self):
-        """
-        create an ArrayType with multiple shapes and see if the IoMap performs
-        a proper breakdown
-        ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
-        """
-        import imagepypelines as ip
-        # create an Array Type with multiple shapes
-        a = ip.ArrayType([None,None,None],[None,None],[None])
-        b = ip.ArrayType([None,None,None,None],[None,None])
-        io_map = ip.IoMap( {a:b} )
-        assert len(io_map.inputs) == len(io_map.outputs) == 6
-
-    def test_output(self):
-        """
-        check that the block io mapping system is operating correctly
-        """
-        import imagepypelines as ip
-
-        a = ip.ArrayType([None,None,None],[None,None],[None])
-        b = ip.ArrayType([None],[None,None])
-        io_map = ip.IoMap( {a:b} )
-
-        desired_output = ip.ArrayType([None]), ip.ArrayType([None,None])
-        given_output = io_map.output( (ip.ArrayType([None]),) )
-
-        assert set(desired_output) == set(given_output)
-
-    # JM: TODO: add dtype checking
+# class TestIoMap(object):
+#     def test_reduction(self):
+#         """
+#         create an ArrayType with multiple shapes and see if the IoMap performs
+#         a proper breakdown
+#         ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
+#         """
+#         import imagepypelines as ip
+#         # create an Array Type with multiple shapes
+#         a = ip.ArrayType([None,None,None],[None,None],[None])
+#         b = ip.ArrayType([None,None,None,None],[None,None])
+#         io_map = ip.IoMap( {a:b} )
+#         assert len(io_map.inputs) == len(io_map.outputs) == 6
+#
+#     def test_output(self):
+#         """
+#         check that the block io mapping system is operating correctly
+#         """
+#         import imagepypelines as ip
+#
+#         a = ip.ArrayType([None,None,None],[None,None],[None])
+#         b = ip.ArrayType([None],[None,None])
+#         io_map = ip.IoMap( {a:b} )
+#
+#         desired_output = ip.ArrayType([None]), ip.ArrayType([None,None])
+#         given_output = io_map.output( (ip.ArrayType([None]),) )
+#
+#         assert set(desired_output) == set(given_output)
+#
+#     # JM: TODO: add dtype checking
 
 # =================== block_subclasses.py ===================
-class TestSimpleBlock(object):
-    """
-    Create a test SimpleBlock and run some data through it
-    """
-    def test_block_creation_and_processing(self):
-        import imagepypelines as ip
-        # create a test block via object inheritance
-        class AddOne(ip.SimpleBlock):
-            def __init__(self):
-                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
-                super(AddOne,self).__init__(io_map)
+# class TestSimpleBlock(object):
+#     """
+#     Create a test SimpleBlock and run some data through it
+#     """
+#     def test_block_creation_and_processing(self):
+#         import imagepypelines as ip
+#         # create a test block via object inheritance
+#         class AddOne(ip.SimpleBlock):
+#             def __init__(self):
+#                 io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+#                 super(AddOne,self).__init__(io_map)
+#
+#             def process(self, datum):
+#                 return datum + 1
+#
+#         block = AddOne()
+#         input_datum = np.zeros( (512,) )
+#
+#         processed = block._pipeline_process([input_datum])
+#
+#         assert np.all( np.around(processed[0],1) == 1.0 )
+#
+#
+# class TestBatchBlock(object):
+#     """
+#     Create a test BatchBlock and run some data through it
+#     """
+#     def test_block_creation_and_processing(self):
+#         import imagepypelines as ip
+#         # create a test block via object inheritance
+#         class AddOne(ip.BatchBlock):
+#             def __init__(self):
+#                 io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+#                 super(AddOne,self).__init__(io_map)
+#
+#             def batch_process(self, data):
+#                 for i in range( len(data) ):
+#                     data[i] = data[i] + 1
+#                 return data
+#
+#         block = AddOne()
+#         input_datum = np.zeros( (512,) )
+#         (proc1,proc2),_ = block._pipeline_process([input_datum,input_datum])
+#
+#         assert np.all( np.around(proc1,1) == 1.0 )
+#         assert np.all( np.around(proc2,1) == 1.0 )
 
-            def process(self, datum):
-                return datum + 1
 
-        block = AddOne()
-        input_datum = np.zeros( (512,) )
-
-        processed = block._pipeline_process([input_datum])
-
-        assert np.all( np.around(processed[0],1) == 1.0 )
-
-
-class TestBatchBlock(object):
-    """
-    Create a test BatchBlock and run some data through it
-    """
-    def test_block_creation_and_processing(self):
-        import imagepypelines as ip
-        # create a test block via object inheritance
-        class AddOne(ip.BatchBlock):
-            def __init__(self):
-                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
-                super(AddOne,self).__init__(io_map)
-
-            def batch_process(self, data):
-                for i in range( len(data) ):
-                    data[i] = data[i] + 1
-                return data
-
-        block = AddOne()
-        input_datum = np.zeros( (512,) )
-        (proc1,proc2),_ = block._pipeline_process([input_datum,input_datum])
-
-        assert np.all( np.around(proc1,1) == 1.0 )
-        assert np.all( np.around(proc2,1) == 1.0 )
-
-
-class TestTfBlock(object):
-    """
-    Create a test TfBlock and run some data through it
-    """
-    def test_block_creation_and_processing(self):
-        import imagepypelines as ip
-        import tensorflow as tf
-        # create a test block via object inheritance
-        class AddOne(ip.TfBlock):
-            def __init__(self):
-                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
-                super(AddOne,self).__init__(io_map)
-
-            def setup_graph(self,data_placeholder,label_placeholder):
-                one = tf.constant(1.0,tf.float32)
-                processed = tf.math.add(data_placeholder,one,name='processed')
-                return processed.name
-
-        block = AddOne()
-        input_datum = np.zeros( (512,) )
-        data = [input_datum,input_datum]
-        labels = [0,1]
-        (proc1,proc2),lbls = block._pipeline_process(data,labels)
-
-        assert labels == lbls, "label fetching failed"
-        assert np.all( np.around(proc1,1) == 1.0 )
-        assert np.all( np.around(proc2,1) == 1.0 )
-
-        # TEMP COMMENT 12/11/18 uncomment ASAP
-        # try to save and restore the pipeline
-        # pipeline = ip.Pipeline([block])
-        # pipeline_hash = hash(pipeline)
-        #
-        # restored_pipeline = ip.restore_from_file( pipeline.save() )
-        # assert hash(restored_pipeline) == pipeline_hash
+# class TestTfBlock(object):
+#     """
+#     Create a test TfBlock and run some data through it
+#     """
+#     def test_block_creation_and_processing(self):
+#         import imagepypelines as ip
+#         import tensorflow as tf
+#         # create a test block via object inheritance
+#         class AddOne(ip.TfBlock):
+#             def __init__(self):
+#                 io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+#                 super(AddOne,self).__init__(io_map)
+#
+#             def setup_graph(self,data_placeholder,label_placeholder):
+#                 one = tf.constant(1.0,tf.float32)
+#                 processed = tf.math.add(data_placeholder,one,name='processed')
+#                 return processed.name
+#
+#         block = AddOne()
+#         input_datum = np.zeros( (512,) )
+#         data = [input_datum,input_datum]
+#         labels = [0,1]
+#         (proc1,proc2),lbls = block._pipeline_process(data,labels)
+#
+#         assert labels == lbls, "label fetching failed"
+#         assert np.all( np.around(proc1,1) == 1.0 )
+#         assert np.all( np.around(proc2,1) == 1.0 )
+#
+#         # TEMP COMMENT 12/11/18 uncomment ASAP
+#         # try to save and restore the pipeline
+#         # pipeline = ip.Pipeline([block])
+#         # pipeline_hash = hash(pipeline)
+#         #
+#         # restored_pipeline = ip.restore_from_file( pipeline.save() )
+#         # assert hash(restored_pipeline) == pipeline_hash
 
 
 # =================== caching.py ===================
@@ -288,33 +288,33 @@ def test_xysample():
 
 
 # =================== pipeline_tools.py ===================
-def test_quick_block():
-    import imagepypelines as ip
-    import numpy as np
-
-    io_map = {ip.GRAY:ip.GRAY}
-    process_fn = lambda x : x+1
-    name = "this is a test"
-
-    # try a block with a custom name
-    plus_one_block = ip.quick_block(process_fn,io_map,name)
-
-    assert isinstance(plus_one_block,ip.BaseBlock)
-    assert plus_one_block.name == name + ':1'
-
-    pipeline = ip.Pipeline([plus_one_block])
-    processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
-    assert np.all(np.around(processed,3) == 1)
-
-    # try a block with a generated name
-    plus_one_block = ip.quick_block(process_fn,io_map)
-
-    assert isinstance(plus_one_block,ip.BaseBlock)
-    assert plus_one_block.name == '<lambda>' + ':1'
-
-    pipeline = ip.Pipeline([plus_one_block])
-    processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
-    assert np.all(np.around(processed,3) == 1)
+# def test_quick_block():
+#     import imagepypelines as ip
+#     import numpy as np
+#
+#     io_map = {ip.GRAY:ip.GRAY}
+#     process_fn = lambda x : x+1
+#     name = "this is a test"
+#
+#     # try a block with a custom name
+#     plus_one_block = ip.quick_block(process_fn,io_map,name)
+#
+#     assert isinstance(plus_one_block,ip.BaseBlock)
+#     assert plus_one_block.name == name + ':1'
+#
+#     pipeline = ip.Pipeline([plus_one_block])
+#     processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
+#     assert np.all(np.around(processed,3) == 1)
+#
+#     # try a block with a generated name
+#     plus_one_block = ip.quick_block(process_fn,io_map)
+#
+#     assert isinstance(plus_one_block,ip.BaseBlock)
+#     assert plus_one_block.name == '<lambda>' + ':1'
+#
+#     pipeline = ip.Pipeline([plus_one_block])
+#     processed = pipeline.process([np.zeros((512,512),dtype=np.uint8)])
+#     assert np.all(np.around(processed,3) == 1)
 
 
 
@@ -377,12 +377,12 @@ def test_quick_block():
 # TODO - JM
 
 # =================== quick_types.py ===================
-def test_quick_types():
-    import imagepypelines as ip
-    assert hasattr(ip,'GRAY')
-    assert hasattr(ip,'RGB')
-    assert ip.GRAY == ip.ArrayType([None,None])
-    assert ip.RGB == ip.ArrayType([None,None,3])
+# def test_quick_types():
+#     import imagepypelines as ip
+#     assert hasattr(ip,'GRAY')
+#     assert hasattr(ip,'RGB')
+#     assert ip.GRAY == ip.ArrayType([None,None])
+#     assert ip.RGB == ip.ArrayType([None,None,3])
 
 # =================== standard_image.py ===================
 # a lot of tests simplY run the function to verify there are no errors

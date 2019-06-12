@@ -33,7 +33,7 @@ let's create an example fourier transform pipeline
     >>> # process the data
     >>> ffts = fft_pipeline.process(filenames) # doctest: +ELLIPSIS
     [...]
-    >>>
+    
 
 Simple Input Output Operations
 ------------------------------

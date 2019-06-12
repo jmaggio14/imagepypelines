@@ -36,8 +36,8 @@ class ImageLoader(SimpleBlock):
     """
     def __init__(self):
         io_kernel = [
-                    [str, ArrayOut(['N', 'M']), "loads in a grayscale image from a filename"],
-                    [str, ArrayOut(['N', 'M', 3]), "loads in a color image from a filename"],
+                    [str, ArrayOut([None, None]), "loads in a grayscale image from a filename"],
+                    [str, ArrayOut([None, None, 3]), "loads in a color image from a filename"],
                     ]
 
 
