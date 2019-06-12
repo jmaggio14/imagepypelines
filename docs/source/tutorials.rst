@@ -70,24 +70,24 @@ Pulling imagery off of a webcam and injecting it directly into a pipeline
 This is also a good example of how blocks can inject data into a pipeline.
 A block with a single input can result in N outputs
 
-.. doctest:: python
-    :skipif: IP_NO_CAMERA
-
-    >>> import imagepypelines as ip
-    >>>
-    >>> # let's make a pipeline to talk to a webcam and save them to disk
-    >>> camera = ip.blocks.CameraBlock(device='/dev/video0')
-    >>> rgb2gray = ip.blocks.Color2Gray()
-    >>> otsu = ip.blocks.Otsu()
-    >>> writer = ip.blocks.WriterBlock(output_dir='./output_dir')
-    >>>
-    >>> # pipeline construction
-    >>> pipeline = ip.Pipeline(blocks=[camera,otsu,writer])
-    >>>
-    >>> # run capture 100 images in increments of 10
-    >>> for i in range(10):
-    ...     pipeline.process([10]) # doctest:+ELLIPSIS
-    [...]
+.. .. doctest:: python
+..     :skipif: IP_NO_CAMERA
+..
+..     >>> import imagepypelines as ip
+..     >>>
+..     >>> # let's make a pipeline to talk to a webcam and save them to disk
+..     >>> camera = ip.blocks.CameraBlock(device='/dev/video0')
+..     >>> rgb2gray = ip.blocks.Color2Gray()
+..     >>> otsu = ip.blocks.Otsu()
+..     >>> writer = ip.blocks.WriterBlock(output_dir='./output_dir')
+..     >>>
+..     >>> # pipeline construction
+..     >>> pipeline = ip.Pipeline(blocks=[camera,otsu,writer])
+..     >>>
+..     >>> # run capture 100 images in increments of 10
+..     >>> for i in range(10):
+..     ...     pipeline.process([10]) # doctest:+ELLIPSIS
+..     [...]
 
 Machine Learning Applications
 -----------------------------
