@@ -8,7 +8,7 @@
 from importlib import import_module
 import numpy as np
 from .. import BatchBlock
-from .. import ArrayType
+from .. import ArrayIn, ArrayOut
 from .. import dimensions
 from ..core import import_opencv
 cv2 = import_opencv()
@@ -94,17 +94,6 @@ class PretrainedNetwork(BatchBlock):
             Default is 'avg'
         model_fn(callable): function to generate features on an image stack
         preprocess_fn(callable): function to preprocess an image stack
-
-        io_map(IoMap): object that maps inputs to this block to outputs
-        name(str): unique name for this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
-            registered to 'name'
-
-
     """
     def __init__(self,network='densenet121',pooling_type='avg'):
         self.network = network
@@ -114,14 +103,22 @@ class PretrainedNetwork(BatchBlock):
         self.model_fn, self.preprocess_fn, self.min_input_size, output_shape\
             = self._keras_importer(network,pooling_type)
 
-        io_map = {ArrayType([None,None],[None,None,3]):
-                                ArrayType([1,output_shape])}
+        io_kernel = [
+                    [ArrayIn(['N','M']),
+                        ArrayOut([1,output_shape]),
+                        "calculate a feature vector on an input image (auto converts to color internally)"],
+                    [ArrayIn(['N','M',3]),
+                        ArrayOut([1,output_shape]),
+                        "calculate a feature vector on an input image"]
+                    ]
+
+
         name = "Pretrained" + self.network[0].upper() + self.network[1:]
-        super(PretrainedNetwork,self).__init__(io_map,
+        super(PretrainedNetwork,self).__init__(io_kernel,
                                                 name=name,
                                                 requires_training=False)
 
-    def batch_process(self,batch_data,batch_labels=None):
+    def batch_process(self, batch_data, batch_labels=None):
         # verify that all images are the same size
         if not all(batch_data[0].shape == d.shape for d in batch_data):
             error_msg = "all input images must be the same shape!"

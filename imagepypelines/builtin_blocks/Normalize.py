@@ -7,7 +7,6 @@
 #
 from .. import SimpleBlock
 from .. import ArrayIn, ArrayOut
-from .. import Same
 from .. import norm_ab
 import numpy as np
 

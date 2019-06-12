@@ -16,6 +16,7 @@ import copy
 import time
 import uuid
 from abc import ABCMeta, abstractmethod
+from .blockio import IoMap
 
 def describe_block(block,notes):
     if notes is None:

@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
-from .. import ArrayType
+from .. import ArrayIn, ArrayOut
 from .. import io
 from .. import import_opencv
 cv2 = import_opencv()
@@ -55,10 +55,26 @@ class WriterBlock(SimpleBlock):
         self.batch_dirs = []
         self.batch_index = 0
 
-        io_map = {ArrayType([None,None,3]):ArrayType([None,None,3]),
-                    ArrayType([None,None]):ArrayType([None,None])}
+        if return_type == "filename":
+            io_kernel = [
+                            [ArrayIn(['N','M',3]),
+                                str,
+                                "Save image and return the saved filename"],
+                            [ArrayIn(['N','M']),
+                                str,
+                                "Save image and return the saved filename"],
+                        ]
+        elif return_type == "datum":
+            io_kernel = [
+                            [ArrayIn(['N','M',3]),
+                                ArrayOut(['N','M',3]),
+                                "Save, but perform no operation on images"],
+                            [ArrayIn(['N','M']),
+                                ArrayOut(['N','M']),
+                                "Save, but perform no operation on images"],
+                        ]
 
-        super(WriterBlock,self).__init__(io_map,
+        super(WriterBlock,self).__init__(io_kernel,
                                             requires_training=False,
                                             requires_labels=False)
 

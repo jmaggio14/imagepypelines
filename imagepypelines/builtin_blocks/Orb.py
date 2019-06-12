@@ -29,9 +29,9 @@ class Orb(SimpleBlock):
         self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
 
-        io_kernel =[ [ArrayType(['N','M']),
-                    ArrayType([self.n_keypoints,32]),
-                    "calculates 32 bit binary descriptors on grayscale images. shape = (n_keypoints,32)"]]
+        io_kernel =[ [ArrayIn(['N','M']),
+                        ArrayOut([self.n_keypoints,32]),
+                        "calculates 32 bit binary descriptors on grayscale images. shape = (n_keypoints,32)"]]
         super(Orb,self).__init__(io_kernel, requires_training=False)
 
     def process(self,datum):

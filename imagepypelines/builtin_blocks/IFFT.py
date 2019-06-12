@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
-from .. import ArrayType
+from .. import ArrayIn, ArrayOut
 import numpy as np
 
 class IFFT(SimpleBlock):

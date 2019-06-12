@@ -35,12 +35,12 @@ class ImageLoader(SimpleBlock):
             registered to 'name'
     """
     def __init__(self):
-        io_kernel = [[str,
-                    ArrayOut(['N', 'M'],
-                     "loads in a grayscale image from a filename"],
-                [str,
-                    ArrayOut(['N', 'M', 3],
-                     "loads in a color image from a filename"],]
+        io_kernel = [
+                    [str, ArrayOut(['N', 'M']), "loads in a grayscale image from a filename"],
+                    [str, ArrayOut(['N', 'M', 3]), "loads in a color image from a filename"],
+                    ]
+
+
         notes = "loads images from disk given an input filename"
         super(ImageLoader,self).__init__(io_kernel,
                                         notes=notes,

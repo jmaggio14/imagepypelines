@@ -17,7 +17,7 @@ __all__ = [
             'FFT',                   #7
             # 'Lowpass',               #8
             # 'Highpass',              #9
-            'Flatten',               #10
+            # 'Flatten',               #10
             'FTP',                   #11
             'Gray2Color',            #12
             'IFFT',                  #13
@@ -57,7 +57,7 @@ from .FFT import FFT
 # from .Filters import Lowpass
 # from .Filters import Highpass
 # Flatten.py
-from .Flatten import Flatten
+# from .Flatten import Flatten
 # FTP.py
 from .FTP import FTP
 # Gray2Color.py

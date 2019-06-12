@@ -6,13 +6,12 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
-from .. import ArrayType
 from .. import ArrayIn, ArrayOut
 import numpy as np
 
 class Add(SimpleBlock):
     def __init__(self,term):
-        assert isinstance(term,(int,float,np.ndarray))
+        assert isinstance(term, (int,float,np.ndarray))
         # forceably convert term to a float so integer datum
         # will consistently be a float
         if isinstance(term,int):

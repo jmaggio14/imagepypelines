@@ -1,3 +1,4 @@
+
 # @Email: jmaggio14@gmail.com
 # @Website: https://www.imagepypelines.org/
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
@@ -98,9 +99,13 @@ INPUT_CHARS_ALLOWED = list(string.ascii_letters + '_0123456789')
 
 
 def varname_check(var):
+    if var in FUNCTIONS:
+        raise ValueError("please rename varname, '%s' is reserved" % var)
+
     if not all((v in INPUT_CHARS_ALLOWED) for v in tuple(var)):
         raise ValueError("variable names can only be ascii letters, numbers"
                          + " or '_'. '%s' contains banned chars" % var)
+
 
 
 ################################################################################
@@ -133,7 +138,8 @@ class ArrayIn(object):
                     varname_check(var)
 
                     if var[0].isdigit():
-                        raise ValueError("variable names cannot begin with a number")
+                        raise ValueError(
+                            "variable names cannot begin with a number")
 
                     self.axes.append(var)
                     self.varnames.append(var)
@@ -204,7 +210,7 @@ class ArrayOut(object):
 
         if isinstance(self.rules, str):
             ok = ("arbitrary", "input_shape")
-            assert shape in ok, "shape must axial expressions or one of %s" % ok
+            assert self.rules in ok, "shape must axial expressions or one of {}, not {}".format(ok, self.rules)
             self.shape = []
 
         else:

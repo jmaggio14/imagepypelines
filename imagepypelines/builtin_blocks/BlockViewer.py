@@ -45,7 +45,7 @@ class BlockViewer(SimpleBlock):
                 [ArrayIn['N','M'], ArrayOut['N','M'], "leave images unchanged"],
                 [ArrayIn['N','M','3'], ArrayOut['N','M','3'], "leave images unchanged"],
                 ]
-        super(BlockViewer, self).__init__(io_kernel=,
+        super(BlockViewer, self).__init__(io_kernel,
                                           requires_training=False)
         self.viewer = Viewer(self.name, FFT=FFT, normalize=normalize)
 

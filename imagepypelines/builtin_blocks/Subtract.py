@@ -6,8 +6,7 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
-from .. import ArrayType
-from .. import Same
+from .. import ArrayIn, ArrayOut
 import numpy as np
 
 class Subtract(SimpleBlock):
@@ -18,12 +17,14 @@ class Subtract(SimpleBlock):
         if isinstance(term,int):
             term = float(term)
         self.term = term
-        io_map = {
-                    ArrayType():Same(),
-                    int:float,
-                    float:float
-                    }
-        super(Subtract,self).__init__(io_map)
+        io_kernel = [
+                        [ArrayIn("arbitrary"),
+                            ArrayOut("input_shape"),
+                            "adds the value to the array, leaving it's shape unchanged"],
+                        [float, float],
+                        [int, float],
+                    ]
+        super(Subtract, self).__init__(io_kernel)
 
     def process(self, datum):
         return datum - self.term

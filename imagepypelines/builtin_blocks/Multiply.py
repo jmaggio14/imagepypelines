@@ -7,7 +7,6 @@
 #
 from .. import SimpleBlock
 from .. import ArrayIn, ArrayOut
-from .. import Same
 import numpy as np
 
 class Multiply(SimpleBlock):
