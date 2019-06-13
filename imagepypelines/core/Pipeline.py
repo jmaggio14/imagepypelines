@@ -11,6 +11,8 @@ from .blockio import ArrayIn, FloatIn, IntIn, StrIn, NoneIn, GenericIn
 from .blockio import Incompatible
 from .util import Timer
 
+INCOMPATIBLE = { Incompatible }
+
 
 import collections
 import pickle
@@ -78,7 +80,7 @@ class Pipeline(object):
         blocks(list): list of blocks to instantiate this pipeline with, shortcut
             to the 'add' function. defaults to []
         NEED_TO_DO_THIS
-        
+
     Attributes:
         name(str): unique name for this pipeline
         blocks(list): list of block objects being used by this pipeline,
@@ -174,19 +176,25 @@ class Pipeline(object):
         data_types = get_types(data)
 
         all_predicted_chains = []
-        for input_type in data_types:
-            predicted_chain = collections.OrderedDict(pipeline_input=input_type)
+        for input_ in data_types:
+            predicted_chain = collections.OrderedDict(pipeline_input=input_)
 
             for block in self.blocks:
-                if input_type == Incompatible():
-                    output_types = Incompatible()
-                else:
-                    output_types = block.io_map.output(input_type)
-                    if len(output_types) == 0:
-                        output_types.add( Incompatible() )
+                if not isinstance(input_, set):
+                    input_ = {input_}
 
-                predicted_chain[str(block)] = output_types
-                input_type = output_types
+                if input_ == INCOMPATIBLE:
+                    output_ = INCOMPATIBLE
+                else:
+                    output_ = set()
+                    for it in input_:
+                        output_ = output_ | block.io_map.output(it)
+
+                    if len(output_) == 0:
+                        output_ = INCOMPATIBLE
+
+                predicted_chain[str(block)] = output_
+                input_ = output_
 
             predicted_chain['pipeline_output'] = ''
             all_predicted_chains.append(predicted_chain)
@@ -194,19 +202,20 @@ class Pipeline(object):
         return all_predicted_chains
 
     def _text_graph(self, type_chains):
-        for i, chain in enumerate(type_chains):
-            print("-----------------| type-chain%s |-----------------" % i)
-            buf = ' ' * 6
-            for b, output in chain.items():
-                color = 'red' if output == Incompatible() else None
-                output = ',  '.join(str(s) for s in output)
-                out_str = '  {buf}|\n  {buf}|{out}\n  {buf}|'
-                out_str = out_str.format(buf=' ' * 6, out=output)
-
-                cprint('  {}'.format(b), color)
-                if b == 'pipeline_output':
-                    break
-                cprint(out_str, color)
+        print("RYAN make graphs work!")
+        # for i, chain in enumerate(type_chains):
+        #     print("-----------------| type-chain%s |-----------------" % i)
+        #     buf = ' ' * 6
+        #     for b, output in chain.items():
+        #         color = 'red' if output == Incompatible() else None
+        #         output = ',  '.join(str(s) for s in output)
+        #         out_str = '  {buf}|\n  {buf}|{out}\n  {buf}|'
+        #         out_str = out_str.format(buf=' ' * 6, out=output)
+        #
+        #         cprint('  {}'.format(b), color)
+        #         if b == 'pipeline_output':
+        #             break
+        #         cprint(out_str, color)
 
     def debug(self):
         """Enables debug mode which turns on all printouts for this pipeline

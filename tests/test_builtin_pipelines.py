@@ -18,10 +18,10 @@ def test_SimpleImageClassifier():
     x_test, ground_truth = ip.xysample(x_test_base, ground_truth_base,.01)
 
     classifier = ip.pipelines.SimpleImageClassifier().debug()
-    classifier.train(x_train,y_train)
+    classifier.train(x_train, y_train)
 
     predicted = classifier.process(x_test)
-    accuracy = ip.accuracy(predicted,ground_truth)
+    accuracy = ip.accuracy(predicted, ground_truth)
 
 
 

@@ -151,7 +151,7 @@ class ArrayIn(object):
             yield ax
 
     def __str__(self):
-        return "ArrayIn%s" % self.axes
+        return "ArrayIn(%s)" % self.axes
 
     def __repr__(self):
         return str(self)
