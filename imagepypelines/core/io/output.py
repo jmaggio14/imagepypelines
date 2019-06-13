@@ -125,6 +125,9 @@ def convert_to(fname, format, output_dir=None, no_overwrite=False):
     # eg convert .PNG --> png if required
     format = format.lower().replace('.','')
 
+    if format not in IMAGE_EXTENSIONS:
+        raise TypeError("format must be one of {}".format(IMAGE_EXTENSIONS))
+
     file_path, ext = os.path.splitext(fname)
     if output_dir is None:
         out_name = file_path + '.' + format
@@ -133,8 +136,7 @@ def convert_to(fname, format, output_dir=None, no_overwrite=False):
         out_name = os.path.join(output_dir, basename + '.' + format)
 
 
-    if format not in IMAGE_EXTENSIONS:
-        raise TypeError("format must be one of {}".format(IMAGE_EXTENSIONS))
+
 
 
     if no_overwrite:
