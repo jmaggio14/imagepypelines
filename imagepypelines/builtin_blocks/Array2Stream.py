@@ -6,16 +6,13 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 import io
-from .. import SimpleBlock, ArrayIn
+from .. import SimpleBlock, RGB, GRAY, ArrayType
 
 
 
 class Array2Stream(SimpleBlock):
     def __init__(self):
-        io_kernel = [[ArrayIn("arbitrary"),
-                            io.IOBase,
-                            "convert array to file stream"],
-                            ]
+        io_kernel = {ArrayType() : io.IOBase}
         super().__init__(io_kernel,
                             requires_labels=False,
                             requires_training=False)
