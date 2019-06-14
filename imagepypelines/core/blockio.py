@@ -11,10 +11,10 @@
 goal is to enable this functionality
 
 1) specify an axis length by equation
-    ArrayType(['N','M']) : ArrayType(['N*M','1'])
+    ArrayIn(['N','M']) : ArrayType(['N*M','1'])
 
 2) be able to apply a rule to an unknown number of axis
-    ArrayType(all_axis="5*N")
+    ArrayOut(all_axis_rule="5*N")
 
 3) be able to pass in your own function to generate an output
     FuncType(func) where func takes in input_type
@@ -95,39 +95,197 @@ FUNCTIONS = {
 ALLOWED = CHOP_CHARS + list(FUNCTIONS.keys())
 
 
-INPUT_CHARS_ALLOWED = list(string.ascii_letters + '_')
-# ============================ Base Class(es) ============================
-class Output(ABC):
-    @abstractmethod
-    def output(self,input_type):
-        pass
+INPUT_CHARS_ALLOWED = list(string.ascii_letters + '_0123456789')
 
 
-class AxisKernel(ABC):
-    @abstractmethod
-    def evaluate(self):
-        pass
+def varname_check(var):
+    if var in FUNCTIONS:
+        raise ValueError("please rename varname, '%s' is reserved" % var)
 
-# ======================== Builtin IO Types ========================
+    if not all((v in INPUT_CHARS_ALLOWED) for v in tuple(var)):
+        raise ValueError("variable names can only be ascii letters, numbers"
+                         + " or '_'. '%s' contains banned chars" % var)
+
+
+
+################################################################################
+#                            Builtin IO Types
+################################################################################
 class ArrayIn(object):
+    def __init__(self, axes="arbitrary"):
+
+        if axes == "arbitrary":
+            # the input array could be any shape, thus we can't define the names
+            self.axes = "arbitrary"
+            self.varnames = None
+            self.naxes = None
+
+        else:
+            self.axes = []
+            self.varnames = []
+            for i, var in enumerate(axes):
+                # if the axis is an integer or None, we have to create our own varnames
+                if isinstance(var, (float, int)):
+                    self.axes.append(int(var))
+                    self.varnames.append('$' + str(i))
+
+                elif var is None:
+                    var = '$' + str(i)
+                    self.axes.append(var)
+                    self.varnames.append(var)
+
+                else:
+                    varname_check(var)
+
+                    if var[0].isdigit():
+                        raise ValueError(
+                            "variable names cannot begin with a number")
+
+                    self.axes.append(var)
+                    self.varnames.append(var)
+
+            self.naxes = len(self.axes)
+
+    def __iter__(self):
+        for ax in self.axes:
+            yield ax
+
+    def __str__(self):
+        return "ArrayIn(%s)" % self.axes
+
+    def __repr__(self):
+        return str(self)
+
+
+class GenericIn(object):
+    def __init__(self, val=None, varname='X'):
+        varname_check(varname)
+        self.val = val
+        self.varnames = [varname]
+        self.axes = [self.val]
+
+    def __str__(self):
+        return self.__class__.__name__ + ('(%s)' % str(self.val))
+
+    def __repr__(self):
+        return str(self)
+
+
+class IntIn(GenericIn):
+    pass
+
+
+class FloatIn(GenericIn):
+    pass
+
+
+class StrIn(GenericIn):
+    pass
+
+
+class NoneIn(GenericIn):
+    def __init__(self, varname='X'):
+        super().__init__(None, varname)
+
+    def __str__(self):
+        return "NoneIn"
+
+
+# OUTPUT
+class ArrayOut(object):
     def __init__(self,
-                shape="arbitrary",
-                all_axis_rule=None):
-        # go through each element in the shape and evaluate it as a
-        # string or 'constant' type
-        self.shape = []
-        for axis in out_shape:
-            # keep numbers the same, but as AxisExpressions
-            if isinstance(axis,(float,int)):
-                self.shape.append( AxisInteger(axis) )
+                 rules="arbitrary",
+                 all_axis_rule=None):
 
-            # turn strings into Expressions
-            elif isinstance(axis, str):
-                self.shape.append( AxisExpression(axis) )
+        self.rules = rules
+        self.all_axis_rule = all_axis_rule
+        self.shape = None
 
+    def init(self, varnames):
+
+        ### ERROR CHECK ###
+        if self.all_axis_rule:
+            self.shape = []
+            self.rules = [self.all_axis_rule] * len(varnames)
+
+        if isinstance(self.rules, str):
+            ok = ("arbitrary", "input_shape")
+            assert self.rules in ok, "shape must axial expressions or one of {}, not {}".format(ok, self.rules)
+            self.shape = []
+
+        else:
+            # go through each element in the shape and evaluate it as a
+            # string or 'constant' type
+            self.shape = []
+            for axis in self.rules:
+                # keep numbers the same, but as AxisExpressions
+                if isinstance(axis, (float, int)):
+                    self.shape.append(AxisInteger(axis))
+
+                # turn strings into Expressions
+                elif isinstance(axis, str):
+                    self.shape.append(AxisExpression(axis, varnames))
+
+                else:
+                    raise ValueError(
+                        "Array Axes can only be defined as strings or numbers")
+
+    def output(self, val_in):
+        if self.shape == "arbitrary":
+            return ArrayIn("arbitrary")
+
+        elif self.shape == "input_shape":
+            if isinstance(val_in, ArrayIn):
+                return val_in
             else:
-                raise ValueError(
-                    "Array Axes can only be defined as strings or numbers")
+                raise RuntimeError("Array Output with same shape is input is"
+                                   + "undefined since input is %s" % type(val_in))
+
+        else:
+            return ArrayIn([ax.evaluate(val_in.axes) for ax in self.shape])
+
+    def __str__(self):
+        return 'ArrayOut[' + ', '.join(repr(ax) for ax in self.shape) + ']'
+
+    def __repr__(self):
+        return str(self)
+
+
+class GenericOut(object):
+    def __init__(self, val=None):
+        self.val = val
+
+    def output(self, val_in):
+        return GenericIn(self.val)
+
+    def __str__(self):
+        return self.__class__.__name__ + ('(%s)' % str(self.val))
+
+    def __repr__(self):
+        return str(self)
+
+
+class IntOut(GenericOut):
+    def output(self, val_in):
+        return IntIn(self.val)
+
+
+class FloatOut(GenericOut):
+    def output(self, val_in):
+        return FloatIn(self.val)
+
+
+class StrOut(GenericOut):
+    def output(self, val_in):
+        return StrIn(self.val)
+
+
+class NoneOut(GenericOut):
+    def __init__(self):
+        super().__init__(None)
+
+    def output(self):
+        return NoneIn()
 
     def __str__(self):
         return 'NoneOut'
@@ -142,55 +300,31 @@ class Incompatible(object):
     def __repr__(self):
         return str(self)
 
-# ======================== Builtin IO Output Classes ========================
-# class ConstantOutput(Output):
-#     def output(self,input_type):
-#         return input_type
-#
-# class ArrayOutput(Output):
-#     def __init__(self, shape):
-#
-#         # generate axis variable names for each axis in the input shape
-#         # inputs must be strings or integers
-#         varnames = []
-#         for i,axis in enumerate(shape):
-#             # if our axis is an integer, we can just generate a variable name
-#             # e.g. [10,20,'C'] --{make varnames}--> ['$AXIS1','$AXIS2','C']
-#             if isinstance(axis, int):
-#                 varnames.append('$AXIS%s' % i)
-#
-#             # raise a ValueError if the input axis contains a banned character
-#             elif isinstance(axis, str):
-#                 if not all(chr in INPUT_CHARS_ALLOWED for chr in axis):
-#                     raise ValueError(
-#                         "input axis can only contain {}"\
-#                         .format(INPUT_CHARS_ALLOWED))
-#                 varnames.append(axis)
-#
-#             # if it's not a integer or string, then we have to raise a
-#             # ValueError
-#             else:
-#                 raise ValueError("only acceptable input types are int and str")
-#
-#
-#         self.axis_kernels = ArrayType(output_shape)
-#
-#     def output(self, input_array):
-#         axes = input_array.shape
-#         out_shape = [ker.evaluate(axes,self.varnames) for ker in self.axis_kernels]
-#         return ArrayIn(out_shape)
+
+################################################################################
+#                          Axis Length Evaluation
+################################################################################
+class AxisKernel(ABC):
+    @abstractmethod
+    def evaluate(self, axes_vals):
+        pass
 
 
-# ========================= Axis Length Evaluation =========================
 class AxisInteger(AxisKernel):
     def __init__(self, val):
         self.val = int(val)
 
-    def evaluate(self,varnames=None):
+    def evaluate(self, axes_vals=None):
         return self.val
 
     def __get__(self):
         return self.val
+
+    def __str__(self):
+        return str(self.val)
+
+    def __repr__(self):
+        return str(self)
 
 
 class AxisExpression(AxisKernel):
@@ -249,8 +383,7 @@ class AxisExpression(AxisKernel):
         self.readable = self.sanitized.format(*self.varnames)
         self.num_vars = len(varnames)
 
-
-    def evaluate(self,axes_vals):
+    def evaluate(self, axes_vals):
         # NOTE: eval must not have access to module locals and globals
         # the only thing it should have access to the values in FUNCTIONS
         # FUNCTIONS is copied as part of sanitation precaution
@@ -308,6 +441,22 @@ class IoMap(object):
         self.outputs = []
         self.descriptions = []
         for io in io_kernel:
+            # check and cast inputs to the appropriate type
+            if io[0] in IN_CAST_MAP:
+                io[0] = IN_CAST_MAP[io[0]]
+            elif not isinstance(io[0], KNOWN_INS):
+                io[0] = GenericIn(io[0])
+
+            # check and cast inputs to the appropriate type
+            if io[1] in OUT_CAST_MAP:
+                io[1] = OUT_CAST_MAP[io[1]]
+            elif not isinstance(io[1], KNOWN_OUTS):
+                io[1] = GenericOut(io[1])
+
+            # Special Case for Array Inputs and Outputs
+            if isinstance(io[1], ArrayOut):
+                io[1].init(io[0].varnames)
+
             self.inputs.append(io[0])
             self.outputs.append(io[1])
 
@@ -319,37 +468,61 @@ class IoMap(object):
 
     def output(self, input_):
         if isinstance(input_, ArrayIn):
-            return self._array_in(input_)
+            out = self._array_in(input_)
 
-        elif isinstance(input_, Constant):
-            return self._constant_in(input_)
+        elif isinstance(input_, GenericIn):
+            out = self._generic_in(input_)
+
+        else:
+            raise RuntimeError("unrecognized input subclass %s" % type(input_))
+
+        if len(out) == 0:
+            raise RuntimeError("invalid input type, must be"
+                               + "({}) not {}".format(self.inputs, input_))
+
+        return out
 
     def _array_in(self, arr_in):
-        input_shape = arr_in.shape
+        out = set()
 
-        for ok_input in self.inputs:
-            # skip this iteration
-            if not isinstance(ok_input, ArrayIn):
+        for ok_array_in, corresponding_out in zip(self.inputs, self.outputs):
+            # skip this iteration if ok_input isn't an array
+            if not isinstance(ok_array_in, ArrayIn):
                 continue
 
-            if ok_input == "arbitrary":
-                return
+            if ok_array_in.axes == 'arbitrary':
+                # this io map input can accept any shaped ArrayIn
+                out.add(arr_in)
 
+            elif len(ok_array_in.axes) == len(arr_in.axes):
+                out.add(corresponding_out.output(arr_in))
 
+        return out
 
+    def _generic_in(self, generic_in):
+        out = set()
 
-        raise IncompatibleTypes("invalid input type, must be"\
-             + "({}) not {}".format(self.inputs, arr_in))
+        for ok_in, corresponding_out in zip(self.inputs, self.outputs):
+            # skip iteration if ok_in is an array type
+            if isinstance(ok_in, ArrayIn):
+                continue
 
-    # def _constant_in(self, const_in):
-    #     pass
+            if type(generic_in) is type(ok_in):
+                out.add(corresponding_out.output(generic_in))
 
+        return out
 
+    def __str__(self):
+        io_strs = []
+        for i, o, d in zip(self.inputs, self.outputs, self.descriptions):
+            io_strs.append('{} --> {}'.format(i, o))
+            if not d is None:
+                io_strs[-1] += "   ( %s )" % d
 
+        return '\n'.join(io_strs)
 
-
-
-
+    def __repr__(self):
+        return str(self)
 
 
 if __name__ == "__main__":
@@ -386,10 +559,50 @@ if __name__ == "__main__":
     eval_axis(i, list(range(1, 7)), 91)
     eval_axis(j, [1e3], 1e3)
 
+    # testing IoMap
+    # testing arrays
+    import numpy as np
+    test_arr1 = np.random.rand(512, 512, 3)
+    test_arr2 = np.random.rand(512, 512)
+    io_kernel1 = [
+        [ArrayIn(['N', 'M', 3]),
+         ArrayOut(['N', 'M']),
+         "convert RGB input to Grayscale"],
+        [ArrayIn(['N', 'M']),
+         ArrayOut(['N', 'M']),
+         "perform no operation on Grayscale images "],
+        [ArrayIn(['N', 'M']),
+         ArrayOut(['2*N', '3*M']),
+         "upsample random Grayscale images "],
+        [ArrayIn(['A', 'D', 'P']),
+         ArrayOut(all_axis_rule="10*A"),
+         "this is a test so I'm not going to bother with a description"],
+    ]
+
+    io_map1 = IoMap(io_kernel1)
+    output1_1 = io_map1.output(ArrayIn(test_arr1.shape))
+    output1_2 = io_map1.output(ArrayIn(test_arr2.shape))
+
+    # testing mixed array and non-arrays
+    io_kernel2 = [
+        [ArrayIn(['N', 'M', 3]),
+         int,
+         "return True if we get a color image"],
+        [ArrayIn(['N', 'M']),
+         int,
+         "return False if we get a grayscale image"],
+        [IntIn(),
+         float],
+        [float,
+         IntOut()],
+    ]
+    io_map2 = IoMap(io_kernel2)
+    output2_1 = io_map2.output(ArrayIn(test_arr1.shape))
+    output2_2 = io_map2.output(ArrayIn(test_arr2.shape))
+    output2_3 = io_map2.output(IntIn(10))
+
+    import pdb
+    pdb.set_trace()
 
 
-
-
-
-
-#END
+# END
