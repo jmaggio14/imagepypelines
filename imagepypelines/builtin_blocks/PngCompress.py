@@ -6,20 +6,15 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 import cv2
-from .. import SimpleBlock, ArrayIn, ArrayOut
+from .. import SimpleBlock, RGB, GRAY, ArrayType
 
 
 
 class PngCompress(SimpleBlock):
     def __init__(self):
-        io_kernel = [
-                        [ArrayIn(['N','M',3]),
-                            ArrayOut(['N',1]),
-                            "Compress color image to a png vector"],
-                        [ArrayIn(['N','M']),
-                            ArrayOut(['N',1]),
-                            "Compress grayscale image to a png vector"]
-                    ]
+        io_kernel = {RGB : ArrayType([None,1]),
+                    GRAY : ArrayType([None,1]),}
+
         super().__init__(io_kernel)
 
     def process(self, datum):

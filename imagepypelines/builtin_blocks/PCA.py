@@ -7,26 +7,23 @@
 
 from sklearn.decomposition import PCA as sklearn_PCA
 from .. import BatchBlock
-from .. import ArrayIn, ArrayOut
+from .. import ArrayType
 import numpy as np
 
 
 class PCA(BatchBlock):
-    def __init__(self, n_components, random_state=None):
+    def __init__(self,n_components,random_state=None):
         assert isinstance(n_components,(int,float)),\
             "n_components must be an integer"
         self.n_components = int(n_components)
         self.random_state = random_state
 
-        io_kernel = [[ArrayIn([1, 'N']),
-                    ArrayOut([1, self.n_components]),
-                    "apply dimensionality reduction and n_columns to %s" % self.n_components,]
-                    ]
-        super(PCA,self).__init__(io_kernel,
+        io_map = {ArrayType([1,None]):ArrayType([1,self.n_components])}
+        super(PCA,self).__init__(io_map,
                                     requires_training=True,
                                     requires_labels=False,)
 
-    def train(self, data, labels=None):
+    def train(self,data,labels=None):
         # stacking input data
         data = np.vstack(data)
         # checking to make sure that enough components are specified

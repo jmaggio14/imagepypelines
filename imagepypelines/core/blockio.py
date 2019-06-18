@@ -101,7 +101,6 @@ def varname_check(var):
         raise ValueError("variable names can only be ascii letters, numbers"
             + " or '_'. '%s' contains banned chars" % var)
 
-
 ################################################################################
 #                            Builtin IO Types
 ################################################################################
@@ -401,7 +400,7 @@ class IoMap(object):
 
         else:
             raise RuntimeError("non array inputs not yet supported")
-            
+
 
         if len(out) == 0:
             raise IncompatibleTypes("invalid input type, must be"\

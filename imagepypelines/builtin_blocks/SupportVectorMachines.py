@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import BatchBlock
-from .. import ArrayIn
+from .. import ArrayType
 from sklearn import svm
 import numpy as np
 
@@ -19,10 +19,8 @@ class SupportVectorMachine(BatchBlock):
 
         self.kernel = kernel
         self.C = float(C)
-        io_kernel = [[ArrayType([1,'N']),
-                    int,
-                    'predicts the classification label of the image based off of a feature vector']]
-        super(SupportVectorMachine,self).__init__(io_kernel,
+        io_map = {ArrayType([1,None]):int}
+        super(SupportVectorMachine,self).__init__(io_map,
                                                     requires_training=True,
                                                     requires_labels=True)
 

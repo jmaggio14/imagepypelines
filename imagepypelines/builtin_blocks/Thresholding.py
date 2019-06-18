@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .. import SimpleBlock, ArrayIn, ArrayOut
+from .. import SimpleBlock, ArrayType
 from ..core import import_opencv
 cv2 = import_opencv()
 import numpy as np
@@ -17,16 +17,17 @@ class Otsu(SimpleBlock):
         self.min = min
         self.max = max
 
-        io_kernel = [
-                    [ArrayIn(['M','M']),
-                        ArrayOut(['N','M']),
-                        "Threshold an input grayscale image using Otsu's method",]
-                    ]
-        super(Otsu,self).__init__(io_kernel,
+        io_map = {
+                    # ArrayType([None,None]):ArrayType([None,None]),
+                    # ArrayType([None,None,3]):ArrayType([None,None,3]),
+                    ArrayType([None,None]):ArrayType([None,None]),
+                    ArrayType([None,None,3]):ArrayType([None,None,3]),
+                    }
+        super(Otsu,self).__init__(io_map,
                                     requires_training=False)
 
     def process(self,datum):
-        _, otsu = cv2.threshold(datum.astype(np.uint8),
+        _,otsu = cv2.threshold(datum.astype(np.uint8),
                                     self.min,
                                     self.max,
                                     cv2.THRESH_BINARY+cv2.THRESH_OTSU)

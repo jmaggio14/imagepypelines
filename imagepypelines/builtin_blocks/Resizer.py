@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import SimpleBlock
-from .. import ArrayIn, ArrayOut
+from .. import ArrayType
 from ..core import import_opencv
 cv2 = import_opencv()
 
@@ -18,18 +18,10 @@ class Resizer(SimpleBlock):
         self.to_width = to_width
         self.interpolation = interpolation
 
-        to_shape2D = [self.to_height, self.to_width]
-        to_shape3D = [self.to_height, self.to_width, 3]
-        io_kernel = [
-                    [ArrayIn(['N','M']),
-                        ArrayOut(to_shape2D),
-                        'Resizes a grayscale image to %s' % to_shape2D],
-                    [ArrayType(['N','M',3]),
-                        ArrayType(to_shape3D),
-                        'Resizes a color image to %s' % to_shape3D],
-                 ]
+        io_map = {ArrayType([None,None]):ArrayType([self.to_height,self.to_width]),
+                    ArrayType([None,None,3]):ArrayType([self.to_height,self.to_width,3])}
 
-        super(Resizer,self).__init__(io_kernel, requires_training=False)
+        super(Resizer,self).__init__(io_map,requires_training=False)
 
     def process(self,datum):
         resized = cv2.resize(datum,

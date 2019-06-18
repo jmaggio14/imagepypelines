@@ -57,7 +57,7 @@ from .FFT import FFT
 from .Filters import Lowpass
 from .Filters import Highpass
 # Flatten.py
-# from .Flatten import Flatten
+from .Flatten import Flatten
 # FTP.py
 from .FTP import FTP
 # Gray2Color.py
