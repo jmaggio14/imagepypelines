@@ -170,13 +170,13 @@ class Pipeline(object):
             predicted_chain = collections.OrderedDict(pipeline_input=input_)
 
             for block in self.blocks:
-                if input_type == INCOMPATIBLE:
-                    output_types = INCOMPATIBLE
+                if input_ == INCOMPATIBLE:
+                    output_ = INCOMPATIBLE
                 else:
                     try:
-                        output_types = block.io_map.output( input_type )
+                        output_ = block.io_map.output( input_ )
                     except IncompatibleTypes as e:
-                        output_types = INCOMPATIBLE
+                        output_ = INCOMPATIBLE
 
                 predicted_chain[str(block)] = output_
                 input_ = output_
