@@ -128,7 +128,7 @@ Please credit us if you use `imagepypelines` in your research
   @misc{imagepypelines,
     title="imagepypelines - imaging science acceleration library",
     author="Hartzell, Dileas, Maggio",
-    YEAR="2018",
+    YEAR="2019",
     howpublished="\url{https://github.com/jmaggio14/imagepypelines}",
   }
 
@@ -178,7 +178,7 @@ building a pipeline is super easy
 Image Display Pipeline
 """"""""""""""""""""""
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 
@@ -195,7 +195,7 @@ We just made a processing pipeline that can read in images, resize them and disp
 Lowpass Filter Pipeline
 """""""""""""""""""""""
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 
@@ -222,7 +222,7 @@ we can easily tailor a pipeline to perform image classification
 
 this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as `ip.SimpleImageClassifier`
 
-.. code-block:: python
+.. doctest:: python
 
 
   import imagepypelines as ip
@@ -290,43 +290,43 @@ There are two ways to create a block
 for operations that can be completed in a single function that
 accepts one datum, you can create a block with a single line.
 
-.. code-block:: python
-
-  import imagepypelines as ip
-
-  # create the function we use to process images
-  def normalize_image(img):
-  	return img / img.max()
-
-  # set up the block to work with grayscale and color imagery
-  io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  			ip.ArrayType([None,None,3]):ipimagepypelines.ArrayType([None,None,3])}
-
-
-  block = ip.quick_block(normalize_image, io_map)
+.. .. doctest:: python
+..
+..   import imagepypelines as ip
+..
+..   # create the function we use to process images
+..   def normalize_image(img):
+..   	return img / img.max()
+..
+..   # set up the block to work with grayscale and color imagery
+..   io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+..   			ip.ArrayType([None,None,3]):ipimagepypelines.ArrayType([None,None,3])}
+..
+..
+..   block = ip.quick_block(normalize_image, io_map)
 
 
 2) object inheritance
 ^^^^^^^^^^^^^^^^^^^^^
 *this is covered in more detail on our tutorial pages. this example will not cover training or label handling*
 
-.. code-block:: python
-
-  import imagepypelines as ip
-
-  class NormalizeBlock(ip.SimpleBlock):
-  	"""normalize block between 0 and max_count, inclusive"""
-  	def __init__(self,max_count=1):
-  		self.max_count = max_count
-  		# set up the block to work with grayscale and color imagery
-  		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
-
-  		super(NormalizeBlock,self).__init__(io_map)
-
-  	def process(self,img):
-  		"""overload the processing function for this block"""
-  		return img.astype(np.float32) / img.max() * self.max_count
+.. .. doctest:: python
+..
+..   import imagepypelines as ip
+..
+..   class NormalizeBlock(ip.SimpleBlock):
+..   	"""normalize block between 0 and max_count, inclusive"""
+..   	def __init__(self,max_count=1):
+..   		self.max_count = max_count
+..   		# set up the block to work with grayscale and color imagery
+..   		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+..   					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+..
+..   		super(NormalizeBlock,self).__init__(io_map)
+..
+..   	def process(self,img):
+..   		"""overload the processing function for this block"""
+..   		return img.astype(np.float32) / img.max() * self.max_count
 
 *************************************
 Imaging Science Convenience Functions
@@ -341,7 +341,7 @@ Getting Standard Test Imagery
 Imagepypelines_ contains helper functions to quickly retrieve imagery that
 are frequently used as benchmarks in the Imaging Science community
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   lenna = ip.lenna()
@@ -352,7 +352,7 @@ A full list of standard images can be retrieved with `ip.list_standard_images()`
 for those of you in the Imaging Science program at RIT, there are a
 couple easter eggs for ya ;)
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   ip.quick_image_view( ip.carlenna() )
@@ -371,7 +371,7 @@ quick image viewer:
 when you want to quickly display an image without any bells and whistles,
 you can use the `quick_image_view` function
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   lenna = ip.lenna()
@@ -380,7 +380,7 @@ you can use the `quick_image_view` function
   ip.quick_image_view( lenna )
 
   # display lenna normalized to 255
-  ip.quick_image_view(lenna, normalize_and_bin=True)
+  ip.quick_image_view(lenna, display_safe=True)
 
 Robust Image Viewer:
 ^^^^^^^^^^^^^^^^^^^^
@@ -388,7 +388,7 @@ Robust Image Viewer:
 When you want a tool that can display multiple images at once, resize
 images when desired and an optional frame_counter, you can use the `Viewer` object
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   import time
@@ -411,13 +411,13 @@ Normalizing and binning an image
 forgetting to do this gets ya more often than you might think when displaying
 an image
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   import numpy as np
   random_pattern = np.random.rand(512,512).astype(np.float32)
 
-  display_safe = ip.normalize_and_bin(random_pattern)
+  display_safe = ip.display_safe(random_pattern)
   ip.Viewer().view(display_safe)
 
 Array Summarization
@@ -427,12 +427,12 @@ can be counter productive. Imaging scientists frequently default
 to printing out the shape or size of the data. Imagepypelines_ contains
 a helper class to quickly summarize an image in a formatted string
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   lenna = ip.lenna()
 
-  summary = ip.Summarizer(lenna)
+  summary = ip.arrsummary(lenna)
   print(summary)
 
 produces the following
@@ -447,7 +447,7 @@ helper functions to get image coordinates quickly, useful if your
 applications involve a mix of color and grayscale images.
 Mostly useful to clean up code and avoid silly mistakes
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   lenna = ip.lenna()
@@ -459,7 +459,7 @@ Mostly useful to clean up code and avoid silly mistakes
   rows, cols = ip.frame_size(lenna)
 
   # shape and dtype
-  rows, cols, bands, dtype = ip.dimensions(lenna)
+  rows, cols, bands = ip.dimensions(lenna)
 
 Timing
 ^^^^^^
@@ -474,7 +474,7 @@ or code block
 absolute timing
 """"""""""""""""
 
-.. code-block:: python
+.. doctest:: python
 
   from imagepypelines.util import Timer
   import time
@@ -487,7 +487,7 @@ absolute timing
 lap timing
 """"""""""
 
-.. code-block:: python
+.. doctest:: python
 
   from imagepypelines.util import Timer
   import time
@@ -500,7 +500,7 @@ lap timing
 perform operation for N seconds
 """""""""""""""""""""""""""""""
 
-.. code-block:: python
+.. doctest:: python
 
   from imagepypelines.util import Timer
   import time
@@ -522,7 +522,7 @@ let's say we have a function that we think may be slowing down our pipeline.
 We can add `@function_timer` on the line above the function
 and see it automatically print how long the function took to run
 
-.. code-block:: python
+.. doctest:: python
 
   from imagepypelines.util import function_timer
   from imagepypelines.util import function_timer_ms
@@ -567,7 +567,7 @@ making printers
 ---------------
 printers can be created or retrieved using the `get_printer` function
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   printer = ip.get_printer('name your printer here')
@@ -577,7 +577,7 @@ printer levels
 --------------
 printer messages can be filtered be priority so that only desired messages can be seen. In Imagepypelines_, printer levels are also color coded so they can be read easily in a console
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 
@@ -593,14 +593,14 @@ Any level that is less than the current `GLOBAL_LOG_LEVEL` will **NOT** be print
 
 this value can be set with the `set_global_printout_level` function
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   ip.set_global_printout_level('warning') # debug and info statements will not print now
 
 local printer levels can be set with `Printer.set_log_level`
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
   printer = ip.get_printer('Example Printer')
@@ -618,7 +618,7 @@ default printer
 ^^^^^^^^^^^^^^^
 
 there's a default printer in `imagepypelines` which is accessible through functions in the main module
-.. code-block:: python
+.. doctest:: python
 
   ip.debug('debug message') # level=10 --> (    imagepypelines    )[    DEBUG    ] debug message
   ip.info('info message') # level=20 --> (    imagepypelines    )[    INFO    ] debug message
@@ -631,7 +631,7 @@ class printers
 --------------
 a good strategy to encourage traceability is to create a printer object as a class instance attribute
 
-.. code-block:: python
+.. doctest:: python
 
   import imagepypelines as ip
 

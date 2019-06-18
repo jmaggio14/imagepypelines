@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 
 language: python
 
@@ -7,36 +7,169 @@ os:
   - linux
   # - osx # Python not supported yet for travis osx builds 12/11/2018
 
+# ubuntu xenial is required for xvfb (virtual graphics)
+dist: xenial
+
+env:
+  - OPENCV_VERSION="4.1.0"
+
 python:
   - 3.4
   - 3.5
   - 3.6
 
+services:
+  - xvfb
+
+addons:
+  apt:
+    packages:
+      # for opencv
+      # - python3-dev
+      # - python3-numpy
+      # - gcc
+      # - g++
+      # - build-essential
+      # - cmake
+      # - git
+      # - wget
+      # - unzip
+      # - yasm
+      # - pkg-config
+      # - libswscale-dev
+      # - libtbb2
+      # - libtbb-dev
+      # - libjpeg-dev
+      # - libpng-dev
+      # - libtiff-dev
+      # - libavformat-dev
+      # - libpq-dev
+      # - libgtk2.0-dev
+      # - libavcodec-dev
+      # - libdc1394-22-dev
+      # - autotools-dev
+      # - libgstreamer1.0-0
+      # - gstreamer1.0-plugins-base
+      # - gstreamer1.0-plugins-good
+      # - gstreamer1.0-plugins-bad
+      # - gstreamer1.0-plugins-ugly
+      # - gstreamer1.0-libav
+      # - gstreamer1.0-doc
+      # - gstreamer1.0-tools
+      # - libgstreamer1.0-dev
+      # - libgstreamer-plugins-base1.0-dev
+      # for sphinx automodapi
+      - graphviz
+
+before_install:
+  # prevent travis from timing out for slow processes
+  - chmod +x docs/prevent_travis_timeout.sh
+  - docs/prevent_travis_timeout.sh &
+  - export PREVENT_TRAVIS_TIMEOUT_PID=$!
+
+  # - python --version
+  #
+  # # Install Opencv
+  # # DEBUG
+  # - echo "$TRAVIS_PYTHON_VERSION"
+  # # END DEBUG
+  # - CURRENT_DIR=$(pwd)
+  # - CMAKE_INSTALL_PREFIX=/home/travis/virtualenv/python"$TRAVIS_PYTHON_VERSION".7
+  # - PYTHON_EXECUTABLE=/home/travis/virtualenv/python"$TRAVIS_PYTHON_VERSION".7/bin/python
+  # - PYTHON_INCLUDE_DIR=/opt/python/"$TRAVIS_PYTHON_VERSION".7/include/python"$TRAVIS_PYTHON_VERSION"m
+  # - PYTHON_PACKAGES_PATH=/home/travis/virtualenv/python"$TRAVIS_PYTHON_VERSION".7/lib/python$TRAVIS_PYTHON_VERSION/site-packages
+  #
+  # - python -c "import sys; print(sys.prefix)"
+  # - which python
+  # - python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"
+  # - python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+  #
+  # # DEBUG
+  # - echo $CMAKE_INSTALL_PREFIX
+  # - echo $PYTHON_EXECUTABLE
+  # - echo $PYTHON_INCLUDE_DIR
+  # - echo $PYTHON_PACKAGES_PATH
+  # # END DEBUG
+  #
+  # - pip install numpy
+  # - echo "build opencv and saving output to ~/opencv_build.txt"
+  # - wget https://github.com/opencv/opencv/archive/${OPENCV_VERSION}.zip > ~/opencv_build.txt
+  #   && unzip ${OPENCV_VERSION}.zip >> ~/opencv_build.txt
+  #   && mkdir opencv-${OPENCV_VERSION}/cmake_binary
+  #   && cd opencv-${OPENCV_VERSION}/cmake_binary
+  # - cmake
+  #     -DBUILD_TIFF=ON
+  #     -DWITH_GSTREAMER=ON
+  #     -DBUILD_opencv_java=OFF
+  #     -DOPENCV_ENABLE_NONFREE=OFF
+  #     -DWITH_CUDA=OFF
+  #     -DWITH_OPENGL=OFF
+  #     -DWITH_GSTREAMER_0_10=OFF
+  #     -DENABLE_FAST_MATH=OFF
+  #     -DCUDA_FAST_MATH=OFF
+  #     -DWITH_CUBLAS=OFF
+  #     -DWITH_OPENCL=OFF
+  #     -DBUILD_TESTS=OFF
+  #     -DBUILD_PERF_TESTS=OFF
+  #     -DBUILD_opencv_apps=OFF
+  #     -DBUILD_DOCS=OFF
+  #     -DCMAKE_BUILD_TYPE=RELEASE
+  #     -DCMAKE_INSTALL_PREFIX=$CMAKE_INSTALL_PREFIX
+  #     -DPYTHON_EXECUTABLE=$PYTHON_EXECUTABLE
+  #     -DPYTHON_INCLUDE_DIR=$PYTHON_INCLUDE_DIR
+  #     -DPYTHON_PACKAGES_PATH=$PYTHON_PACKAGES_PATH
+  #     .. | tee --append ~/opencv_build.txt
+  # - make -j4 >> ~/opencv_build.txt
+  # - sudo make install
+  # - cd $CURRENT_DIR
+
 install:
+  # - python -c "import sys; print(sys.prefix)"
+  # - which python
+  # - python -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"
+  # - python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+  #
+  # - echo $CMAKE_INSTALL_PREFIX
+  # - echo $PYTHON_EXECUTABLE
+  # - echo $PYTHON_INCLUDE_DIR
+  # - echo $PYTHON_PACKAGES_PATH
+
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
-  - pip install tensorflow opencv-python
+  - pip install tensorflow==1.13.1
+
+  # Sphinx requirements
+  - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
   # codecov requirements
-  - pip install Sphinx sphinx_bootstrap_theme m2r sphinx-copybutton
-  # codecov requirements
-  - pip install pytest pytest-cov hypothesis coverage codecov --upgrade
+  - pip install pytest pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
+  # opencv
+  - pip install opencv-python
 
 script:
+  # print out the opencv info for debugging if necessary
+  # - python -c "import cv2; print(cv2.getBuildInformation())"
   # license enforcer
   - python enforcer.py
-  # running tests and code coverage report
-  - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
-  # - py.test --doctest-glob='*.rst'
+  # generate percent test coverage and a coverage report
   - py.test --cov=./imagepypelines tests/
-  # Building documentation
-  - sphinx-apidoc -o docs/source imagepypelines
-  - cd docs && make html
-  - cd ..
-  - cp CNAME docs/build/html/CNAME
+  # running doctest on website examples & code snippets
+  - py.test --cov=./imagepypelines --cov-append --doctest-glob="*.rst" --ignore=setup.py --ignore=tests/ --ignore=imagepypelies_gui/
+
+after_script:
+  - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
+  # - kill -9 &GSTREAMER_VIRTUAL_WEBCAM_PID
+  # print out opencv build script for full traceability
+  # - cat ~/opencv_build.txt
+  # - ls -R /home/travis/virtualenv/
+  # - ls -R /opt/python/"$TRAVIS_PYTHON_VERSION".7/include
 
 after_success:
+  # upload coverage report
   - codecov
+  # Building website
+  - cd docs && make html && cd ..
+  - cp CNAME docs/build/html/CNAME
 
 deploy:
   # Website Deployment
@@ -47,4 +180,11 @@ deploy:
     local-dir: docs/build/html
     on:
       python: '3.6'
-      branch: blockIO
+      branch: master
+
+  - provider: pypi
+    user: jmaggio14
+    password: $PYPI_PASS
+    on:
+      branch: master
+      tags: true

@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 # ConfigFactory.py
 from .ConfigFactory import ConfigFactory
@@ -16,6 +16,3 @@ from .datasets import Mnist
 from .datasets import MnistFashion
 from .datasets import Cifar10
 from .datasets import Cifar100
-
-# VBOW.py
-from .VBOW import VBOW

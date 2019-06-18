@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import os
 import glob
 import sys
@@ -56,7 +56,8 @@ def get_standard_image(img_name):
         ValueError: if invalid img_name is provided
 
     Example:
-        >>> lenna = get_standard_image('lenna')
+        >>> import imagepypelines as ip
+        >>> lenna = ip.get_standard_image('lenna')
     """
     if img_name in STANDARD_IMAGES:
         img = cv2.imread(STANDARD_IMAGES[img_name], cv2.IMREAD_UNCHANGED)

@@ -3,19 +3,21 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from __future__ import print_function
 from .Printer import get_printer
 from .Printer import set_global_printout_level
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .BaseBlock import Incompatible
-
-
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
+from .util import Timer
+
+INCOMPATIBLE = { Incompatible }
+
+
 import collections
-from .util.timing import Timer
 import pickle
 import copy
 import numpy as np
@@ -164,20 +166,20 @@ class Pipeline(object):
         data_types = get_types(data)
 
         all_predicted_chains = []
-        for input_type in data_types:
-            predicted_chain = collections.OrderedDict(pipeline_input=input_type)
+        for input_ in data_types:
+            predicted_chain = collections.OrderedDict(pipeline_input=input_)
 
             for block in self.blocks:
-                if input_type == INCOMPATIBLE:
-                    output_types = INCOMPATIBLE
+                if input_ == INCOMPATIBLE:
+                    output_ = INCOMPATIBLE
                 else:
                     try:
-                        output_types = block.io_map.output( input_type )
+                        output_ = block.io_map.output( input_ )
                     except IncompatibleTypes as e:
-                        output_types = INCOMPATIBLE
+                        output_ = INCOMPATIBLE
 
-                predicted_chain[str(block)] = output_types
-                input_type = output_types
+                predicted_chain[str(block)] = output_
+                input_ = output_
 
             predicted_chain['pipeline_output'] = ''
             all_predicted_chains.append(predicted_chain)

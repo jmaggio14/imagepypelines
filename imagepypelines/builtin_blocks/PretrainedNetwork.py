@@ -4,7 +4,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from importlib import import_module
 import numpy as np
 from .. import BatchBlock
@@ -129,7 +129,7 @@ class PretrainedNetwork(BatchBlock):
             raise ValueError(error_msg)
 
         # reshape all images to a 4D array for keras standard
-        r,c,b,_ = dimensions( batch_data[0] )
+        r,c,b = dimensions( batch_data[0] )
         if (r < self.min_input_size[0]) or (c < self.min_input_size[1]):
             error_msg = "minimum acceptable image size is {}"\
                 .format(self.min_input_size)

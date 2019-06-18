@@ -3,38 +3,41 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
 
 # add the name of any imports to this variable
 __all__ = [
             'Add',                   #1
-            'BlockViewer',           #2
-            'CameraBlock',           #3
-            'Color2Gray',            #4
-            'Divide',                #5
-            'FFT',                   #6
-            'Lowpass',               #7
-            'Highpass',              #8
-            'Flatten',               #9
-            'Gray2Color',            #10
-            'IFFT',                  #11
-            'ImageLoader',           #12
-            'MultilayerPerceptron',  #13
-            'Multiply',              #14
-            'Normalize',             #15
-            'Orb',                   #16
-            'PCA',                   #17
-            'PretrainedNetwork',     #18
-            'Resizer',               #19
-            'Subtract',              #20
-            'SupportVectorMachine',  #21
-            'LinearSvm',             #22
-            'RbfSvm',                #23
-            'PolySvm',               #24
-            'SigmoidSvm',            #25
-            'Otsu',                  #26
-            'WriterBlock',           #27        
+            'Array2Stream',          #2
+            'BlockViewer',           #3
+            'CameraBlock',           #4
+            'Color2Gray',            #5
+            'Divide',                #6
+            'FFT',                   #7
+            'Lowpass',               #8
+            'Highpass',              #9
+            'Flatten',               #10
+            'FTP',                   #11
+            'Gray2Color',            #12
+            'IFFT',                  #13
+            'ImageLoader',           #14
+            'MultilayerPerceptron',  #15
+            'Multiply',              #16
+            'Normalize',             #17
+            'Orb',                   #18
+            'PCA',                   #19
+            'PngCompress',           #20
+            'PretrainedNetwork',     #21
+            'Resizer',               #22
+            'Subtract',              #23
+            'SupportVectorMachine',  #24
+            'LinearSvm',             #25
+            'RbfSvm',                #26
+            'PolySvm',               #27
+            'SigmoidSvm',            #28
+            'Otsu',                  #29
+            'WriterBlock',           #30
             ]
 # Add.py
 from .Add import Add
@@ -44,6 +47,8 @@ from .BlockViewer import BlockViewer
 from .CameraBlock import CameraBlock
 # Color2Gray.py
 from .Color2Gray import Color2Gray
+# Array2Stream.py
+from .Array2Stream import Array2Stream
 # Divide.py
 from .Divide import Divide
 # FFT.py
@@ -53,6 +58,8 @@ from .Filters import Lowpass
 from .Filters import Highpass
 # Flatten.py
 from .Flatten import Flatten
+# FTP.py
+from .FTP import FTP
 # Gray2Color.py
 from .Gray2Color import Gray2Color
 # IFFT.py
@@ -69,6 +76,8 @@ from .Normalize import Normalize
 from .Orb import Orb
 # PCA.py
 from .PCA import PCA
+# PngCompress.py
+from .PngCompress import PngCompress
 # PretrainedNetwork.py
 from .PretrainedNetwork import PretrainedNetwork
 # Resizer.py

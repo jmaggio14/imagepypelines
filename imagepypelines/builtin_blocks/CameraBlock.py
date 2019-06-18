@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .. import util
 from .. import BatchBlock
 from .. import ArrayType
@@ -57,14 +57,6 @@ class CameraBlock(BatchBlock):
             the mode for this block to operate in, either 'count' mode or 'time'
             mode. default is 'count'
 
-        io_map(IoMap): object that maps inputs to this block to outputs
-        name(str): unique name for this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
-            registered to 'name'
     """
     def __init__(self,device=0,fourcc='MJPG',mode='count'):
         #JM: error checking for these values will occur in io.CameraCapture
@@ -98,7 +90,7 @@ class CameraBlock(BatchBlock):
             for i in range(num_images):
                 img = self.cap.retrieve()
                 images.append(img)
-                images_labels.append(lbl)
+                image_labels.append(lbl)
 
         elif self.mode == 'time':
             # JM: data in this case should be a 1 element list with the number

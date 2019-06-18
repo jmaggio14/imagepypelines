@@ -48,6 +48,13 @@ release = version_info["__version__"]
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
+
+def setup(app):
+    app.add_javascript('js/copybutton.js')
+
+# JM idk what this does but the automodapi docs say you should do this
+numpydoc_show_class_members = False
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
@@ -55,8 +62,52 @@ extensions = [
     'm2r',   # ND: add support for MarkDown, to allow readme importing,
     'sphinx.ext.githubpages', # JM add .nojekyll creation for github
     'sphinx.ext.doctest', # JM: adds doctest directives
-    'sphinx_copybutton', # adds a copy button to our code blocks
+    'sphinx_automodapi.automodapi', # hopefully should make separate pages for every object
+    # 'sphinx_automodapi.smart_resolver'
 ]
+
+# doctest config
+doctest_global_setup = '''
+import imagepypelines as ip
+import doctest
+doctest.ELLIPSIS_MARKER = "..."
+
+IP_DEVNULL = None
+
+def IP_SILENCE_STDOUT_STDERR():
+    import sys, os
+    # silence all standard output for global setup
+    global IP_DEVNULL
+    IP_DEVNULL = open(os.devnull, 'w')
+    sys.stdout = IP_DEVNULL
+    sys.stderr = IP_DEVNULL
+
+def IP_RESET_STDOUT_STDERR():
+    import sys
+    global IP_DEVNULL
+    if IP_DEVNULL is not None:
+        IP_DEVNULL.close()
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        IP_DEVNULL = None
+
+# check if this computer has a webcam
+IP_SILENCE_STDOUT_STDERR()
+try:
+    camera = ip.blocks.CameraBlock(device=0)
+    ip.Pipeline([camera]).process([1])
+    IP_NO_CAMERA = False
+except ip.CameraReadError:
+    IP_NO_CAMERA = True
+IP_RESET_STDOUT_STDERR()
+
+# cleanup environment and reset stdout
+del ip
+'''
+
+
+# JM - show inherited class attributes in automodapi
+automodsumm_inherited_members = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -126,7 +177,7 @@ html_theme_options = {
                      ("Tutorials", 'tutorials.html', True),
                      ("Examples", 'examples.html', True),
                      ("Installation", 'installation.html', True),
-                     ("Documentation", 'imagepypelines.html',True),
+                     ("Documentation", 'docs/index.html',True),
                      ("Github",'https://github.com/jmaggio14/imagepypelines',True),
                      ],
 

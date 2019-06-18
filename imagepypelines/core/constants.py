@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
 from .imports import import_opencv
 cv2 = import_opencv()
@@ -41,21 +41,21 @@ CV2_INTERPOLATION_TYPES = (cv2.INTER_NEAREST,
 
 
 
-IMAGE_EXTENSIONS = ['.png',
-                    '.jpg',
-                    '.tiff',
-                    '.tif',
-                    '.bmp',
-                    '.dib',
-                    '.jp2',
-                    '.jpe',
-                    '.jpeg',
-                    '.webp',
-                    '.pbm',
-                    '.pgm',
-                    '.ppm',
-                    '.sr',
-                    '.ras']
+IMAGE_EXTENSIONS = ['png',
+                    'jpg',
+                    'tiff',
+                    'tif',
+                    'bmp',
+                    'dib',
+                    'jp2',
+                    'jpe',
+                    'jpeg',
+                    'webp',
+                    'pbm',
+                    'pgm',
+                    'ppm',
+                    'sr',
+                    'ras']
 """module variable which contains all image extensions openable by opencv's imread"""
 
 

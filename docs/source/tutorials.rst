@@ -18,20 +18,22 @@ interface to control and apply processing algorithms for your workflows.
 let's create an example fourier transform pipeline
 --------------------------------------------------
 
-.. code-block:: python
+.. doctest:: python
 
-    import imagepypelines as ip
-
-    loader = ip.blocks.ImageLoader() # load in image filenames
-    grayscale = ip.blocks.Color2Gray() # convert images to grayscale
-    fft = ip.blocks.FFT() # create an fft
-
-    fft_pipeline = ip.Pipeline([loader,grayscale,fft])
-
-    # load in a list of example image filenames
-    filenames = ip.standard_image_filenames()
-    # process the data
-    ffts = fft_pipeline.process(filenames)
+    >>> import imagepypelines as ip
+    >>>
+    >>> loader = ip.blocks.ImageLoader() # load in image filenames
+    >>> grayscale = ip.blocks.Color2Gray() # convert images to grayscale
+    >>> fft = ip.blocks.FFT() # create an fft
+    >>>
+    >>> fft_pipeline = ip.Pipeline([loader,grayscale,fft])
+    >>>
+    >>> # load in a list of example image filenames
+    >>> filenames = ip.standard_image_filenames()
+    >>> # process the data
+    >>> ffts = fft_pipeline.process(filenames) # doctest: +ELLIPSIS
+    [...]
+    
 
 Simple Input Output Operations
 ------------------------------
@@ -45,22 +47,22 @@ Thresholding pipeline, read images off of the disk, perform otsu thresholding,
 and then save them to disk
 
 
-.. code-block:: python
+.. doctest:: python
 
-    import imagepypelines as ip
-
-    standard_image_filenames = ip.standard_image_filenames()
-
-    # build blocks for this pipeline
-    loader = ip.blocks.ImageLoader()
-    otsu = ip.blocks.Otsu()
-    writer = ip.blocks.WriterBlock('./output_dir',return_type='filename')
-
-    # pipeline construction
-    pipeline = ip.Pipeline([loader,otsu,writer])
-
-    # get filenames of saved thresholded data
-    processed_filenames = pipeline.process(standard_image_filenames)
+    >>> import imagepypelines as ip
+    >>>
+    >>> # build blocks for this pipeline
+    >>> loader = ip.blocks.ImageLoader()
+    >>> rgb2gray = ip.blocks.Color2Gray()
+    >>> otsu = ip.blocks.Otsu()
+    >>> writer = ip.blocks.WriterBlock('./output_dir',return_type='filename')
+    >>>
+    >>> # pipeline construction
+    >>> pipeline = ip.Pipeline([loader,rgb2gray,otsu,writer])
+    >>>
+    >>> # get filenames of saved thresholded data
+    >>> processed_filenames = pipeline.process( ip.standard_image_filenames() )  # doctest:+ELLIPSIS
+    [...]
 
 
 Pulling imagery off of a webcam and injecting it directly into a pipeline
@@ -68,25 +70,28 @@ Pulling imagery off of a webcam and injecting it directly into a pipeline
 This is also a good example of how blocks can inject data into a pipeline.
 A block with a single input can result in N outputs
 
-.. code-block:: python
-
-    import imagepypelines as ip
-
-    # let's make a pipeline to talk to a webcam and save them to disk
-    camera = ip.blocks.CameraBlock(device='/dev/video0')
-    otsu = ip.blocks.Otsu()
-    writer = ip.blocks.WriterBlock(output_dir='./output_dir')
-
-    # pipeline construction
-    pipeline = ip.Pipeline(blocks=[camera,otsu,writer])
-
-    # run loop until there's a keyboard interrupt
-    while True:
-        pipeline.process([10]) # capture 10 images and save them to disk
+.. .. doctest:: python
+..     :skipif: IP_NO_CAMERA
+..
+..     >>> import imagepypelines as ip
+..     >>>
+..     >>> # let's make a pipeline to talk to a webcam and save them to disk
+..     >>> camera = ip.blocks.CameraBlock(device='/dev/video0')
+..     >>> rgb2gray = ip.blocks.Color2Gray()
+..     >>> otsu = ip.blocks.Otsu()
+..     >>> writer = ip.blocks.WriterBlock(output_dir='./output_dir')
+..     >>>
+..     >>> # pipeline construction
+..     >>> pipeline = ip.Pipeline(blocks=[camera,otsu,writer])
+..     >>>
+..     >>> # run capture 100 images in increments of 10
+..     >>> for i in range(10):
+..     ...     pipeline.process([10]) # doctest:+ELLIPSIS
+..     [...]
 
 Machine Learning Applications
 -----------------------------
-One of the more powerful applications of ImagePypelines is it's ease of use in
+One of the more powerful applications of ImagePypelines is its ease of use in
 *machine learning* and *feature engineering* applications. We can easily build
 a simple image classifier that is tailored to your purposes
 
@@ -95,94 +100,96 @@ Classification using a neural network
 You can tweak this example with your own image data and hyperparameters to make a classifier for your own applications.
 *this classifier is available as a builtin Pipeline with fully tweakable hyperparameters as ip.SimpleImageClassifier*
 
-.. code-block:: python
+.. doctest:: python
 
-    import imagepypelines as ip
-
-    # ----------------- loading example data ---------------
-    cifar10 = ip.Cifar10()
-    train_data, train_labels = cifar10.get_train()
-    test_data, ground_truth = cifar10.get_test()
-
-    # --------------- now we'll build the pipeline ----------------
-    features = ip.blocks.PretrainedNetwork() # image feature block
-    pca = ip.blocks.PCA(256) # principle component analysis block
-    neural_network = ip.blocks.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
-
-    classifier = ip.Pipeline([features,pca,neural_network])
-
-    # -------------- train and predict the classifier ---------------
-    classifier.train(train_data,train_labels) # train the classifier
-    predictions = classifier.process(test_data) # test the classifier
-
-    # print the accuracy
-    accuracy = ip.accuracy(predictions,ground_truth)
-    print('accuracy: {}%'.format(accuracy * 100) )
+    >>> import imagepypelines as ip
+    >>>
+    >>> # ----------------- loading example data ---------------
+    >>> cifar10 = ip.ml.Cifar10(fraction=.01)
+    >>> train_data, train_labels = cifar10.get_train()
+    >>> test_data, ground_truth = cifar10.get_test()
+    >>>
+    >>> # --------------- now we'll build the pipeline ----------------
+    >>> features = ip.blocks.PretrainedNetwork() # image feature block
+    >>> pca = ip.blocks.PCA(256) # principle component analysis block
+    >>> neural_network = ip.blocks.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
+    >>>
+    >>> classifier = ip.Pipeline([features,pca,neural_network])
+    >>>
+    >>> # -------------- train and predict the classifier ---------------
+    >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
+    [...]
+    >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
+    [...]
+    >>> # print the accuracy
+    >>> accuracy = ip.accuracy(predictions,ground_truth)
+    >>> print('accuracy: {}%'.format(accuracy * 100) ) # doctest:+ELLIPSIS
+    accuracy: [...]%
 
 Classification using a Support Vector Machine
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. code-block:: python
+.. doctest:: python
 
-    import imagepypelines as ip
-
-    # ----------------- loading example data ---------------
-    cifar10 = ip.Cifar10()
-    train_data, train_labels = cifar10.get_train()
-    test_data, ground_truth = cifar10.get_test()
-
-    # --------------- now we'll build the pipeline ----------------
-    features = ip.blocks.PretrainedNetwork() # image feature block
-    pca = ip.blocks.PCA(256) # principle component analysis block
-    neural_network = ip.blocks.LinearSvm() # support vector machine block
-    # SVMs for linear, rbf, polynomial, and sigmoid kernels are all available
-
-    classifier = ip.Pipeline([features,pca,neural_network])
-
-    # -------------- train and predict the classifier ---------------
-    classifier.train(train_data,train_labels) # train the classifier
-    predictions = classifier.process(test_data) # test the classifier
-
-    # print the accuracy
-    accuracy = ip.accuracy(predictions,ground_truth)
-    print('accuracy: {}%'.format(accuracy * 100) )
+    >>> import imagepypelines as ip
+    >>>
+    >>> # ----------------- loading example data ---------------
+    >>> cifar10 = ip.ml.Cifar10(fraction=.01)
+    >>> train_data, train_labels = cifar10.get_train()
+    >>> test_data, ground_truth = cifar10.get_test()
+    >>>
+    >>> # --------------- now we'll build the pipeline ----------------
+    >>> features = ip.blocks.PretrainedNetwork() # image feature block
+    >>> pca = ip.blocks.PCA(256) # principle component analysis block
+    >>> neural_network = ip.blocks.LinearSvm() # support vector machine block
+    >>> # SVMs for linear, rbf, polynomial, and sigmoid kernels are all available
+    >>>
+    >>> classifier = ip.Pipeline([features,pca,neural_network])
+    >>>
+    >>> # -------------- train and predict the classifier ---------------
+    >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
+    [...]
+    >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
+    [...]
+    >>>
+    >>> # print the accuracy
+    >>> accuracy = ip.accuracy(predictions,ground_truth)
+    >>> print('accuracy: {}%'.format(accuracy * 100) ) # doctest:+ELLIPSIS
+    accuracy: [...]%
 
 Creating your own block
 ***********************
 There are two types of blocks in ImagePypelines: **Simple Blocks** - blocks that process one piece of data at a time, and **Batch Blocks** - blocks that process multiple pieces of data at a time.
 
-In practical terms, this merely manifests itself as a function that takes a list of data _(batch blocks)_ or a function that takes in a single datum _(simple blocks)_
+In practical terms, this merely manifests itself as a function that takes a list of data *(batch blocks)* or a function that takes in a single datum *(simple blocks)*
 
 Batch Blocks
 ------------
-Batch processing _(the act of processing multiple pieces of data at the same time)_ is typically used when you are utilizing GPUs or other types of hardware acceleration in your processing pipeline.
+Batch processing *(the act of processing multiple pieces of data at the same time)* is typically used when you are utilizing GPUs or other types of hardware acceleration in your processing pipeline.
 
-They can make your pipelines **much** more efficient, this is typically because sending data between the _CPU_ & _GPU_ is slow process. Sending 100 images separately is slower than sending 100 images at once. Practically, all this really means is that having a system capable of processing multiple pieces of data can optimize your pipeline.
+They can make your pipelines **much** more efficient, this is typically because sending data between the *CPU* & *GPU* is slow process. Sending 100 images separately is slower than sending 100 images at once. Practically, all this really means is that having a system capable of processing multiple pieces of data can optimize your pipeline.
 
 Batch Processing blocks in ImagePypelines simply contain a processing function that takes in a list of data and returns a list of data.
 
 Lets create a super simple example just to demonstrate how you can create a batch processing block in ImagePypelines.
 
-.. code-block:: python
+.. doctest:: python
 
-    import imagepypelines as ip
-
-    class AddOneBlock(ip.BatchBlock):
-        def __init__(self):
-            io_map = {ip.RgbImage():ip.RgbImage()}
-            super(AddOneBlock,self).__init__(io_map)
-
-        def batch_process(self,batch_data):
-            """take in a list of datums and return a processed list of datums"""
-            # turn this list of data into a single array
-            img_stack = np.stack(batch_data, axis=0) # [(N,M,3),(N,M,3)] --> (2,N,M,3)
-            img_stack = img_stack + 1 # add one to images
-            # (2,N,M,3) --> [(N,M,3),(N,M,3)]
-            processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
-            return processed_batch
-
-
-Simple Blocks
--------------
-Simple Blocks on the other hand simply process one piece of data at a time
-=======
-.. mdinclude:: ../../TUTORIALS.md
+    >>> import imagepypelines as ip
+    >>> import numpy as np
+    >>>
+    >>> class AddOneBlock(ip.BatchBlock):
+    ...     def __init__(self):
+    ...         io_map = {ip.GRAY:ip.GRAY}
+    ...         super(AddOneBlock,self).__init__(io_map)
+    ...     def batch_process(self,batch_data):
+    ...         """take in a list of datums and return a processed list of datums"""
+    ...         # turn this list of data into a single array
+    ...         img_stack = np.stack(batch_data, axis=0) # [(N,M,3),(N,M,3)] --> (2,N,M,3)
+    ...         img_stack = img_stack + 1 # add one to images
+    ...         # (2,N,M,3) --> [(N,M,3),(N,M,3)]
+    ...         processed_batch = [img_stack[i] for i in range(img_stack.shape[0])]
+    ...         return processed_batch
+    >>>
+    >>> p = ip.Pipeline( [ip.blocks.Color2Gray(),ip.blocks.Resizer(512,512),AddOneBlock()] )
+    >>> std_images_plus_one = p.process( ip.standard_images() ) # doctest: +ELLIPSIS
+    [...]

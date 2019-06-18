@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
 # constants.py
 from .constants import *
@@ -34,12 +34,6 @@ make_cache('datasets',
 		'Persistent Cache intended exclusively to store datasets downloaded'\
 		 + ' using a webcrawler')
 
-# error_checking.py
-from .error_checking import interpolation_type_check
-from .error_checking import dtype_type_check
-from .error_checking import is_numpy_array
-from .error_checking import is_iterable
-
 # Exceptions.py
 from .Exceptions import CameraReadError
 from .Exceptions import InvalidInterpolationType
@@ -53,12 +47,8 @@ from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
 
-# filters.py
-from .filters import low_pass
-from .filters import high_pass
-
 # img_tools.py
-from .img_tools import normalize_and_bin
+from .img_tools import display_safe
 from .img_tools import quick_image_view
 from .img_tools import number_image
 from .img_tools import centroid
@@ -67,6 +57,8 @@ from .img_tools import dimensions
 from .img_tools import norm_01
 from .img_tools import norm_ab
 from .img_tools import norm_dtype
+from .img_tools import low_pass
+from .img_tools import high_pass
 
 # imports.py
 from .imports import import_tensorflow
@@ -131,10 +123,18 @@ for img_name in STANDARD_IMAGES.keys():
 # ND 9/7/18 - delete these so that the imagepypelines namespace is not polluted
 del sys, curr_module, funcs, STANDARD_IMAGES
 
+# util.py
+from .util import interpolation_type_check
+from .util import dtype_type_check
+from .util import print_args
+from .util import arrsummary
+from .util import function_timer
+from .util import function_timer_ms
+from .util import Timer
+
 # Viewer.py
 from .Viewer import Viewer
 
 # import submodules
-from . import util
 from . import io
 from . import ml

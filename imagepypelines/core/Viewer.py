@@ -3,14 +3,14 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from .imports import import_opencv
 cv2 = import_opencv()
 import numpy as np
 from datetime import datetime
 
 from .img_tools import number_image, norm_dtype
-from .error_checking import interpolation_type_check
+from .util import interpolation_type_check
 
 class Viewer(object):
     """

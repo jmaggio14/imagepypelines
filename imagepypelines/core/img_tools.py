@@ -3,14 +3,14 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
 from PIL import Image
-from .error_checking import dtype_type_check
+from .util import dtype_type_check
 from .imports import import_opencv
 cv2 = import_opencv()
 
-def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
+def display_safe(src, max_count=255, cast_type=np.uint8):
     """normalizes and bins an image
 
     normalizes and bins the bins the input image to a given bit depth
@@ -33,14 +33,14 @@ def normalize_and_bin(src, max_count=255, cast_type=np.uint8):
     return img
 
 
-def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
+def quick_image_view(img, display_safe=False, title="quick view image"):
     """
     quickly displays the image using a PIL Image Viewer
     (which uses ImageMagick over X11 -- this will work over ssh)
 
     Args:
         img (np.ndarray): input image you want to view
-        normalize_and_bin (bool, optional): Defaults to False
+        display_safe (bool, optional): Defaults to False
             boolean value indicating whether or not to normalize
             and bin the image
         title (str, optional): title for the image window.
@@ -50,10 +50,10 @@ def quick_image_view(img, normalize_and_bin=False, title="quick view image"):
         None
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
-    assert isinstance(normalize_and_bin, int), "'normalize_and_bin' must be int"
+    assert isinstance(display_safe, int), "'display_safe' must be int"
     assert isinstance(title, str), "'title' must be a string"
 
-    if normalize_and_bin:
+    if display_safe:
         img = norm_ab(img, 0, 255)
 
     if len(img.shape) > 2:
@@ -74,7 +74,7 @@ def number_image(img, num):
     Returns:
         np.ndarray: numbered image
     """
-    r,c,b,_ = dimensions(img)
+    r,c,b = dimensions(img)
     loc = int( min(r,c) * .95 )
     color = (255,255,255)
     if np.mean(img[int(.9*r):r,int(.9*c):c]) > 128:
@@ -102,7 +102,7 @@ def centroid(img):
 
     Example:
         >>> import imagepypelines as ip
-        >>> lenna_centroid = centroid( ip.lenna() )
+        >>> lenna_centroid = ip.centroid( ip.lenna() )
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
@@ -121,7 +121,7 @@ def frame_size(img):
 
     Example:
         >>> import imagepypelines as ip
-        >>> lenna_framesize = frame_size( ip.lenna() )
+        >>> height, width = ip.frame_size( ip.lenna() )
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
@@ -129,21 +129,19 @@ def frame_size(img):
     return frame_size
 
 
-def dimensions(img, return_as_dict=False):
+def dimensions(img):
     """
     function which returns the dimensions and data_type of a given image
 
     Args:
         img (np.ndarray): input image
-        return_as_dict (bool): whether or not to return a dictionary.
-            Default is False
 
     Returns:
-        tuple: dimensions of the form (rows, cols, bands, dtype)
+        tuple: dimensions of the form (rows, cols, bands)
 
     Example:
         >>> import imagepypelines as ip
-        >>> dims = dimensions( ip.lenna() )
+        >>> rows, cols, bands = ip.dimensions( ip.lenna() )
     """
     assert isinstance(img, np.ndarray), "'img' must be a np array or subclass"
 
@@ -153,12 +151,8 @@ def dimensions(img, return_as_dict=False):
         bands = img.shape[2]
     else:
         bands = 1
-    dims = (rows, cols, bands, img.dtype)
 
-    if return_as_dict:
-        dims = dict(zip(('rows','cols','bands','dtype'), dims))
-
-    return dims
+    return (rows, cols, bands)
 
 def norm_01(img):
     """ Normalize img to the range [0, 1], inclusive.
@@ -217,3 +211,59 @@ def norm_dtype(img, dtype=np.uint8):
     dtype_info = np.iinfo(dtype)
 
     return norm_ab(img, dtype_info.min, dtype_info.max).astype(dtype)
+
+
+
+def low_pass(img,cut_off,filter_type='ideal',butterworth_order=1):
+    """calculates a lowpass filter for an input image
+
+    Args:
+        img(np.ndarray): image to calculate filter for
+        cut_off (float): cutoff frequency for this filter. units in #TODO
+        filter_type (str): the type of filter to apply, 'ideal','gaussian',
+            'butterworth'
+        butterworth_order(float): butterworth order if butterworth filter is
+            being used
+
+    Returns:
+        filter(np.ndarray) 2D filter
+    """
+    r,c,b = dimensions(img)
+    u = np.arange(r)
+    v = np.arange(c)
+    u, v = np.meshgrid(u, v)
+    low_pass = np.sqrt( (u-r/2)**2 + (v-c/2)**2 )
+
+    if filter_type == 'ideal':
+        low_pass[low_pass <= cut_off] = 1
+        low_pass[low_pass >= cut_off] = 0
+
+    elif filter_type == 'gaussian':
+        xp = -1*(low_pass**2) / (2* cut_off**2)
+        low_pass = np.exp( xp )
+        low_pass = np.clip(low_pass,0,1)
+
+    elif filter_type == 'butterworth':
+        denom = 1.0 + (low_pass / cut_off)**(2 * order)
+        low_pass = 1.0 / denom
+
+
+    return low_pass
+
+
+
+def high_pass(img,cut_off,filter_type='ideal',butterworth_order=1):
+    """calculates a highpass filter for an input image
+
+    Args:
+        img(np.ndarray): image to calculate filter for
+        cut_off (float): cutoff frequency for this filter. units in #TODO
+        filter_type (str): the type of filter to apply, 'ideal','gaussian',
+            'butterworth'
+        butterworth_order(float): butterworth order if butterworth filter is
+            being used
+
+    Returns:
+        filter(np.ndarray) 2D filter
+    """
+    return 1 - low_pass(img,cut_off,filter_type='ideal',butterworth_order=1)
