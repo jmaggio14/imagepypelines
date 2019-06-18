@@ -12,7 +12,7 @@ from .. import SimpleBlock
 
 class FTP(SimpleBlock):
     def __init__(self, host, user, passwd, remote_cwd=None, tls=True, timeout=30):
-        io_kernel = [ [io.IOBase, int, "returns one if successful, 0 if unsuccessful"] ]
+        io_kernel = {io.IOBase : str}
 
         if tls:
             self.session = ftplib.FTP_TLS(host, user, passwd, timeout=30)

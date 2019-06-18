@@ -6,7 +6,8 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
-from .. import ArrayIn, ArrayOut
+from .. import ArrayType
+from .. import Same
 import numpy as np
 
 class Multiply(SimpleBlock):
@@ -14,14 +15,14 @@ class Multiply(SimpleBlock):
         assert isinstance(term,(int,float,np.ndarray))
         # forceably convert term to a float so integer datum
         # will consistently be a float
-        if isinstance(term, int):
+        if isinstance(term,int):
             term = float(term)
         self.term = term
-        io_map = [
-                    [ArrayIn('arbitrary'), ArrayOut('input_shape')],
-                    [int, float],
-                    [float, float]
-                    ]
+        io_map = {
+                    ArrayType():Same(),
+                    int:float,
+                    float:float
+                    }
         super(Multiply,self).__init__(io_map)
 
     def process(self, datum):

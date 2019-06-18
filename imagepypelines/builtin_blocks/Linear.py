@@ -6,20 +6,19 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 from .. import SimpleBlock
-from .. import ArrayIn, ArrayOut
+from .. import ArrayType
+from .. import ARRAY_ND, SAME
 import numpy as np
 
 class Linear(SimpleBlock):
     def __init__(self,m,b):
         self.m = m
-        if isinstance(b, (float,int)):
-            b = float(b)
         self.b = b
-        io_map = [
-                    [ArrayIn("arbitrary"), ArrayOut("input_shape")]
-                    [int, float]
-                    [float, float]
-                    ]
+        io_map = {
+                    ARRAY_ND:SAME,
+                    int:float,
+                    float:float
+                    }
         super(Linear,self).__init__(io_map)
 
     def process(self, x):
