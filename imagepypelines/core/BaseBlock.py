@@ -16,7 +16,6 @@ import copy
 import time
 import uuid
 from abc import ABCMeta, abstractmethod
-from .blockio import IoMap
 
 class ArrayType(object):
     """Object to describe the shapes of Arrays for Block inputs or outputs
