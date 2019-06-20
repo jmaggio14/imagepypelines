@@ -349,8 +349,8 @@ class BaseBlock(object):
         # setup initial tags
         self.tags = set()
 
-        # setup absolutely unique 8 char hash id for this block
-        self.uuid = uuid.uuid4().hex[:8]
+        # setup absolutely unique hash id for this block
+        self.uuid = uuid.uuid4().hex
 
         super(BaseBlock,self).__init__()
 

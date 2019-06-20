@@ -22,6 +22,7 @@ import pickle
 import copy
 import numpy as np
 from termcolor import cprint
+from uuid import uuid4
 
 PIPELINE_NAMES = {}
 INCOMPATIBLE = (Incompatible(),)
@@ -104,6 +105,8 @@ class Pipeline(object):
                 self.add(b)
         else:
             raise TypeError("'blocks' must be a list")
+
+        self.uuid = uuid4().hex
 
     # ================== validation / debugging functions ==================
     def validate(self,data):
