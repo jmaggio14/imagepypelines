@@ -83,6 +83,7 @@ class Pipeline(object):
                     pipeline blocks and outputs
                 printer(ip.Printer): printer object for this pipeline,
                     registered with 'name'
+                uuid(str): universally unique hex id for this pipeline
     """
     def __init__(self,
                     blocks=[],
@@ -344,14 +345,19 @@ class Pipeline(object):
 
         Args:
             filename (string): filename to save pipeline to, defaults to
-                pipeline.name + '.pck'
+                saving the pipeline to the ip.cache
+
+        Returns:
+            str: the filename the pipeline was saved to
         """
         if filename is None:
-            filename = self.name + '.pck'
+            self.printer.info("saving {} to {}".format(self, self.name))
+            ip.cache[self.name] = self
+            filename = ip.cache.filename(self.name)
 
-        self.printer.info("saving {} to {}".format(self,filename))
-        with open(filename, 'wb') as f:
-            pickle.dump(self, f)
+        else:
+            with open(filename, 'wb') as f:
+                pickle.dump(self, f)
 
         return filename
 
@@ -522,7 +528,6 @@ class Pipeline(object):
             None
 
         """
-
         for b in pipeline.blocks:
             self.add(b)
 
