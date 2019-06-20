@@ -141,8 +141,8 @@ install:
 
   # Sphinx requirements
   - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
-  # codecov requirements
-  - pip install pytest pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
+  # codecov and auto-testing requirements
+  - pip install pytest sybil pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
   # opencv
   - pip install opencv-python
 
@@ -151,10 +151,10 @@ script:
   # - python -c "import cv2; print(cv2.getBuildInformation())"
   # license enforcer
   - python enforcer.py
-  # generate percent test coverage and a coverage report
-  - py.test --cov=./imagepypelines  tests/
+  # generate percent test coverage and a coverage report - this now includes website examples
+  - py.test --cov=./imagepypelines tests/ --ignore=setup.py --ignore=imagepypelies_gui/
   # running doctest on website examples & code snippets
-  - py.test --cov=./imagepypelines --cov-append --doctest-continue-on-failure --doctest-glob="*.rst" --ignore=setup.py --ignore=tests/ --ignore=imagepypelies_gui/
+  # - py.test --cov=./imagepypelines --cov-append --doctest-glob="*.rst" --ignore=setup.py --ignore=tests/ --ignore=imagepypelies_gui/
 
 after_script:
   - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
