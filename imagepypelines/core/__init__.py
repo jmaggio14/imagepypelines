@@ -23,16 +23,8 @@ from .block_subclasses import TfBlock
 # caching.py
 from .caching import make_cache
 from .caching import Cache
-# JM: create builtin caches
-make_cache('tmp',
-		'Temporary Cache intended for short-term temporary use'\
-		+ ' (memory management)')
-make_cache('metadata',
-		'Persistent Cache intended for use by data in use between'\
-		 + ' imagepypelines sessions')
-make_cache('datasets',
-		'Persistent Cache intended exclusively to store datasets downloaded'\
-		 + ' using a webcrawler')
+cache = Cache() # instantiate the cache
+del Cache
 
 # Exceptions.py
 from .Exceptions import CameraReadError
