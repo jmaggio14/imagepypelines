@@ -21,7 +21,6 @@ from .block_subclasses import BatchBlock
 from .block_subclasses import TfBlock
 
 # caching.py
-from .caching import make_cache
 from .caching import Cache
 cache = Cache() # instantiate the cache
 del Cache
