@@ -154,7 +154,7 @@ script:
   # running doctest on website examples & code snippets
   - py.test --cov=./imagepypelines --doctest-glob="*.rst" --ignore=setup.py --ignore=tests/ --ignore=imagepypelies_gui/
   # generate percent test coverage and a coverage report
-  - py.test --cov-append tests/
+  - py.test --cov=./imagepypelines --cov-append tests/
 
 after_script:
   - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
