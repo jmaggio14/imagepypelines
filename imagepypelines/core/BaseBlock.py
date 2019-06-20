@@ -551,11 +551,4 @@ class BaseBlock(object):
     def __repr__(self):
         return self.description
 
-    def prep_for_serialization(self):
-        pass
-
-    def restore_from_serialization(self):
-        pass
-
-
 # END

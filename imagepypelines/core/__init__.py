@@ -18,7 +18,7 @@ from .BaseBlock import BaseBlock
 # block_subclasses.py
 from .block_subclasses import SimpleBlock
 from .block_subclasses import BatchBlock
-from .block_subclasses import TfBlock
+# from .block_subclasses import TfBlock
 
 # caching.py
 from .caching import Cache
