@@ -7,10 +7,7 @@
 import os
 import glob
 import sys
-from types import FunctionType
-
-# JM: replaced SimpleNamespace import with this for python2 compatability
-SimpleNamespace = type('SimpleNamespace', (object,), {})
+from types import FunctionType, SimpleNamespace
 
 from .imports import import_opencv
 cv2 = import_opencv()
