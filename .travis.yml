@@ -152,8 +152,9 @@ script:
   # license enforcer
   - python enforcer.py
   # generate percent test coverage and a coverage report
+  - py.test --cov=./imagepypelines tests/
   # running doctest on website examples & code snippets
-  - py.test --cov=./imagepypelines tests/ --doctest-glob="*.rst" --ignore=setup.py --ignore=imagepypelies_gui/
+  - py.test --cov-append --doctest-glob="*.rst" --ignore=setup.py --ignore=tests/ --ignore=imagepypelies_gui/
 
 after_script:
   - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
