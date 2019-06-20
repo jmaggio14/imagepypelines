@@ -39,11 +39,11 @@ class Orb(SimpleBlock):
         self.n_keypoints = int(n_keypoints)
         self.orb = cv2.ORB_create(self.n_keypoints)
 
-        io_map = {ArrayType([None,None]):ArrayType([None,32])}
+        io_map = {ArrayType([None,None]) : ArrayType([self.n_keypoints,32])}
         super(Orb,self).__init__(io_map, requires_training=False)
 
     def process(self,datum):
-        """calculates descriptors on a 4D img_stack (n_img,height,width,bands)
+        """calculates descriptors on a single grascale image (height,width)
 
         If there are not enough keypoints calculated to populate the output
         array, the descriptor vectors will be replaced with zeros
@@ -83,8 +83,10 @@ class Orb(SimpleBlock):
         # END DEBUG, END TEMP
         return des
 
-    def prep_for_serialization(self):
-        del self.orb
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state['orb']
+        return state
 
-    def restore_from_serialization(self):
+    def __setstate__(self, state):
         self.orb = cv2.ORB_create(self.n_keypoints)

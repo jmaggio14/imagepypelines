@@ -236,29 +236,27 @@ class MultilayerPerceptron(BatchBlock):
         return Sequential, Dense, Dropout, SGD
 
 
-    def prep_for_serialization(self):
+    def __getstate__(self):
         """deletes references to gpu bound or multithreaded memory so the
         block can be serialized, saves pertinent info as instance
         variables so the block can be restored in restore_from_serialization
         """
         # JM: caching model architecture and weights so the model can be
         # restored after serialization
-        self.model_architecture = self.model.to_json()
-        self.weights = self.model.get_weights()
+        state = self.__dict__.copy()
+        self['model_architecture'] = self.model.to_json()
+        self['weights'] = self.model.get_weights()
         # JM: deleting references to gpu bound memory so that this object
         # is now serializable
-        delattr(self,'model')
+        del state['model']
 
-    def restore_from_serialization(self):
+    def __setstate__(self, state):
         """restores this block from a pickled state
         """
         from keras.models import model_from_json
         # JM: restore model from cached architecture and weights
-        self.model = model_from_json(self.model_architecture)
-        self.model.set_weights(self.weights)
-        # JM: delete cache to reduce memory footprint
-        delattr(self,'model_architecture')
-        delattr(self,'weights')
+        self.model = model_from_json(state['model_architecture'])
+        self.model.set_weights(state['weights'])
 
 
 
