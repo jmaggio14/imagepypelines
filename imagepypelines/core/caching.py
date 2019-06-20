@@ -91,10 +91,10 @@ class Cache(object):
         """deletes the key specified data from the cache"""
         fname = self.filename(key)
 
-        if os.isfile(fname):
+        if os.path.isfile(fname):
             os.remove(fname)
 
-        elif os.isdir(fname):
+        elif os.path.isdir(fname):
             shutil.rmtree(fname, ignore_errors=True)
 
     def save(self, key, obj, protocol=pickle.HIGHEST_PROTOCOL):
