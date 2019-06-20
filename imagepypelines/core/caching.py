@@ -97,7 +97,7 @@ class Cache(object):
         elif os.isdir(fname):
             shutil.rmtree(fname, ignore_errors=True)
 
-    def save(self, key, obj, protocol=pickle.DEFAULT_PROTOCOL):
+    def save(self, key, obj, protocol=pickle.HIGHEST_PROTOCOL):
         """saves 'obj' to a file within the Caches directory
 
         Args:
@@ -105,8 +105,9 @@ class Cache(object):
                 this will also be the name of the file in the cache directory
             obj(object): the python object to save
             protocol(int): the pickle protocol used to save the data,
-                it is pickle.DEFAULT_PROTOCOL by default. You may try
-                pickle.HIGHEST_PROTOCOL for better performance.
+                it is pickle.HIGHEST_PROTOCOL for compatability with large
+                objects. You may try pickle.DEFAULT_PROTOCOL for better 
+                compatability
 
         Return:
             fname(str): the file path where the object has been cached
