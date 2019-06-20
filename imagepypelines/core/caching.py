@@ -79,7 +79,7 @@ class Cache(object):
 
     def list_keys(self):
         """list the cache keys of all data in the cache"""
-        return sorted( os.listdir( os.path.join(self.subdir,'*') ) )
+        return sorted( os.listdir( self.subdir ) )
 
     def purge(self):
         """delete all items in the cache"""
@@ -106,7 +106,7 @@ class Cache(object):
             obj(object): the python object to save
             protocol(int): the pickle protocol used to save the data,
                 it is pickle.HIGHEST_PROTOCOL for compatability with large
-                objects. You may try pickle.DEFAULT_PROTOCOL for better 
+                objects. You may try pickle.DEFAULT_PROTOCOL for better
                 compatability
 
         Return:
