@@ -152,7 +152,7 @@ script:
   # license enforcer
   - python enforcer.py
   # generate percent test coverage and a coverage report - this now includes website examples
-  - py.test --cov=./imagepypelines tests/ --ignore=setup.py --ignore=imagepypelies_gui/
+  - py.test --cov=./imagepypelines --ignore=setup.py --ignore=imagepypelies_gui/
   # running doctest on website examples & code snippets
   # - py.test --cov=./imagepypelines --cov-append --doctest-glob="*.rst" --ignore=setup.py --ignore=tests/ --ignore=imagepypelies_gui/
 
