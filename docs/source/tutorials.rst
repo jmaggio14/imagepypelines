@@ -33,7 +33,7 @@ let's create an example fourier transform pipeline
     >>> # process the data
     >>> ffts = fft_pipeline.process(filenames) # doctest: +ELLIPSIS
     [...]
-    
+
 
 Simple Input Output Operations
 ------------------------------
@@ -108,7 +108,7 @@ You can tweak this example with your own image data and hyperparameters to make 
     >>> cifar10 = ip.ml.Cifar10(fraction=.01)
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
-    >>>
+    [...]
     >>> # --------------- now we'll build the pipeline ----------------
     >>> features = ip.blocks.PretrainedNetwork() # image feature block
     >>> pca = ip.blocks.PCA(256) # principle component analysis block

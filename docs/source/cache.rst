@@ -2,9 +2,6 @@
 Caching
 =======
 
-Caching
--------
-
 Saving and retrieving data to disk to the cache
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
