@@ -40,7 +40,7 @@ def name_pipeline(name,obj):
     else:
         PIPELINE_NAMES[name] = 1
 
-    return name + ':1'
+    return name + ('-%s' % PIPELINE_NAMES[name])
 
 def get_types(data):
     """Retrieves the block data type of the input datum"""
@@ -55,35 +55,32 @@ def get_types(data):
 
 class Pipeline(object):
     """
-            Pipeline object to apply a sequence of algorithms to input data
+        Pipeline object to apply a sequence of algorithms to input data
 
-            Pipelines pass data between block objects and validate the integrity
-            of a data processing pipeline. It is intended to be a quick, flexible, and
-            modular approach to creating a processing graph. It also contains helper
-            functions for documentation and saving these pipelines for use by other
-            researchers/users.
+        Pipelines pass data between block objects and validate the integrity
+        of a data processing pipeline. It is intended to be a quick, flexible,
+        and modular approach to creating a processing graph. It also contains
+        helper functions for documentation and saving these pipelines for use by
+        other researchers/users.
 
-            Args:
-                name(str): name for this pipeline that will be enumerated to be unique,
-                    defaults to the name of the subclass<index>
-                blocks(list): list of blocks to instantiate this pipeline with, shortcut
-                    to the 'add' function. defaults to []
-                verbose(bool): whether or not to enable printouts for this pipeline,
-                    defaults to True
-                enable_text_graph(bool): whether or not to print out a graph of
-                    pipeline blocks and outputs
+        Args:
+            blocks(list): list of blocks to instantiate this pipeline with,
+                shortcut to the 'add' function. defaults to []
+            name(str): name for this pipeline that will be enumerated to be
+                unique, defaults to the name of the Pipeline-<index>
 
-            Attributes:
-                name(str): unique name for this pipeline
-                blocks(list): list of block objects being used by this pipeline,
-                    in order of their processing sequence
-                verbose(bool): whether or not this pipeline with print
-                    out its status
-                enable_text_graph(bool): whether or not to print out a graph of
-                    pipeline blocks and outputs
-                printer(ip.Printer): printer object for this pipeline,
-                    registered with 'name'
-                uuid(str): universally unique hex id for this pipeline
+
+        Attributes:
+            name(str): unique name for this pipeline
+            blocks(list): list of block objects being used by this pipeline,
+                in order of their processing sequence
+            verbose(bool): whether or not this pipeline with print
+                out its status
+            enable_text_graph(bool): whether or not to print out a graph of
+                pipeline blocks and outputs
+            printer(ip.Printer): printer object for this pipeline,
+                registered with 'name'
+            uuid(str): universally unique hex id for this pipeline
     """
     def __init__(self,
                     blocks=[],
