@@ -13,164 +13,155 @@ import shutil
 import sys
 
 from .. import CACHE
-from .Printer import get_default_printer
+from .Printer import debug as ipdebug, info as ipinfo
 from .Pipeline import Pipeline
 from .BaseBlock import BaseBlock
 
-
-def make_cache(cache_name,description=""):
-    """make a new cache and add it to the imagepypelines namespace"""
-    new_doc = Cache.__doc__.format(doc=description,name=cache_name)
-    # create a new cache class using metaclassing
-    # we use metaclassing so we can update the docstring easily
-    NewCache = type(cache_name,(Cache,),{'__doc__':new_doc})
-    imagepypelines_module = sys.modules['imagepypelines']
-    setattr(imagepypelines_module, cache_name, NewCache(cache_name))
-
+ILLEGAL_CHARS = ['NUL',r'\',''//',':','*','"','<','>','|']
 
 class Cache(object):
     """
-    {doc}
-
     Object designed to store data on local storage for the purposes of object
     persistence between imagepypelines sessions or memory management.
 
     Args:
         None
 
+    Attributes:
+        subdir(str): the full path to the cache directory
+
     Example:
-        Save and Restore a Pyton Object
-        >>>
-        >>> # save a pythonic object
-        >>> #obj = "this is an example object"
-        >>> #fname = tmp.save(obj)
-        >>>
-        >>> # restore the object
-        >>> # obj = tmp.restore(fname)
+        >>> # let's save Lenna to our cache
+        >>> import imagepypelines as ip
+        >>> ip.cache['lenna'] = ip.lenna()
+        >>> # retrieve lenna from cache
+        >>> lenna = ip.cache['lenna']
 
+        >>> import imagepypelines as ip
+        >>> # delete everything in the cache
+        >>> ip.cache.purge()
 
-        Get a tmp filename and save the data yourself
-        >>> # import numpy as np
-        >>> # import cv2
+        >>> import imagepypelines as ip
         >>>
-        >>> # random_img = np.random.rand(512,512,3)
-        >>> # fname = tmp.filename('optional-prefix')
-        >>> # cv2.imwrite(fname, random_img)
     """
-    def __init__(self,cache_name):
-            self.subdir = os.path.join(CACHE,cache_name)
-            self.printer = get_default_printer()
+    def __init__(self):
+            self.subdir = os.path.join(CACHE,'cache')
             if not os.path.exists(self.subdir):
+                ipinfo("creating imagepypelines cache: ", self.subdir,'...')
                 os.makedirs(self.subdir)
-                self.printer.info("creating Cache for: ",self.subdir)
 
 
-    def filename(self,basename="no-key"):
-        """creates or retrieves the filename for the specified on the local machine
+    def filename(self, key):
+        """retrieves the full filename for the specified key on the local
+        machine
 
         Args:
-            basename(str): optional prefix for the unique cache filename
-                that will be created. OR the basename of a file that already
-                exists to retrieve the full cache path of
+            key(str): key used to cache the object
 
-        Example:
-            Create new cache filename
-            # replace tmp with the name of your cache
-            >>> # import imagepypelines as ip
-            >>> # fname = ip.tmp.filename("optional-prefix")
-
-            Retrieve the full filename given just the basename
-            # replace tmp with the name of your cache
-            >>> # import imagepypelines as ip
-            >>> # fname = ip.tmp.filename(basename)
+        Returns:
+            str: full filename to the cached object
         """
-        basename = os.path.basename(basename)
+        # ERROR CHECKING
+        if not isinstance(key,str):
+            raise TypeError("cache key must be a sting")
 
-        if basename in (os.path.basename(f) for f in self.listcache()):
-            return os.path.join(self.subdir,basename)
-        else:
-            base,ext = os.path.splitext(basename)
-            basename = "{}-{}{}".format(base, uuid4().hex[:8], ext)
+        if any( (ic in key) for ic in ILLEGAL_CHARS):
+            return ValueError(
+                "cache keys cannot contain illegal characters %s" % ILLEGAL_CHARS)
 
-            return os.path.join(self.subdir,basename)
+        # code begins here
+        return os.path.join(self.subdir, key)
 
 
-    def listcache(self):
-        """list the full filenames of all data in the cache"""
-        return glob.glob( os.path.join(self.subdir,'*') )
+    def list_filenames(self):
+        """list the sorted full filenames of all data in the cache"""
+        return sorted( glob.glob( os.path.join(self.subdir,'*') ) )
+
+    def list_keys(self):
+        """list the cache keys of all data in the cache"""
+        return sorted( os.listdir( self.subdir ) )
 
     def purge(self):
         """delete all items in the cache"""
-        for fname in self.listcache():
+        ipinfo("purging the cache...")
+        for fname in self.list_filenames():
             self.remove(fname)
 
-    def remove(self,fname):
-        """deletes the specified file"""
-        if os.isfile(fname):
+    def remove(self, key):
+        """deletes the key specified data from the cache"""
+        fname = self.filename(key)
+
+        if os.path.isfile(fname):
             os.remove(fname)
 
-        elif os.isdir(fname):
-            shutil.rmtree(fname,ignore_errors=True)
+        elif os.path.isdir(fname):
+            shutil.rmtree(fname, ignore_errors=True)
 
-    def save(self,obj):
+    def save(self, key, obj, protocol=pickle.HIGHEST_PROTOCOL):
         """saves 'obj' to a file within the Caches directory
 
         Args:
+            key(str): key index reference for the value to be saved,
+                this will also be the name of the file in the cache directory
             obj(object): the python object to save
+            protocol(int): the pickle protocol used to save the data,
+                it is pickle.HIGHEST_PROTOCOL for compatability with large
+                objects. You may try pickle.DEFAULT_PROTOCOL for better
+                compatability
 
         Return:
             fname(str): the file path where the object has been cached
         """
-        # if it's a block, we can run it's prep_for_serialization
-        # function to ensure serialization compatability
-        if isinstance(obj,BaseBlock):
-            obj.prep_for_serialization()
-            fname = self.filename( str(obj) + '.pck' )
-            self.printer.info("saving {} to {}".format(obj,fname))
-            with open(fname,'wb') as f:
-                pickle.dump(obj,f)
+        fname = self.filename(key)
+        ipdebug("saving {} to {}".format(obj, fname))
+        with open(fname,'wb') as f:
+            pickle.dump(obj, f, protocol=protocol)
 
-        # if it's a pipeline, we can use the pipeline's own save
-        # function
-        elif isinstance(obj,Pipeline):
-            fname = self.filename( str(obj) + '.pck' )
-            obj.save(fname)
+        return fname
 
-        # otherwise if it's a generic object, we can save it
-        else:
-            fname = self.filename(obj.__class__.__name__ + '.pck')
-            self.printer.info("saving {} to {}".format(obj,fname))
-            with open(fname,'wb') as f:
-                pickle.dump(obj,f)
-
-        return os.path.basename(fname)
-
-    def restore(self,fname):
-        """restores the object saved to 'fname'
+    def load(self, key):
+        """retrieves the key specified value from the cache
 
         Args:
-            fname(str): full file path to the object to restore
+            key(str): the key reference index for the value to be retrieved
 
         Returns:
-            obj(object): the restored (unpickled) object
+            object: the unpickled cache object
         """
-        fname = self.filename(fname)
-        with open(fname,'rb') as f:
-            raw = f.read()
-        obj = pickle.loads(raw)
+        ipdebug("loading {} from the cache".format(key))
+        try:
+            with open( self.filename(key), 'rb') as f:
+                return pickle.load(f)
+        except FileNotFoundError:
+            pass
 
-        if isinstance(obj,BaseBlock):
-            obj.prep_for_serialization()
-            return obj
+        raise KeyError("no cache item with key %s" % key)
 
-        elif isinstance(obj,Pipeline):
-            return restore_from_pickle(obj)
 
-        return obj
+    def __getitem__(self, key):
+        return self.load(key)
+
+    def __setitem__(self, key, obj):
+        self.save(key, obj)
+
+    def __delitem__(self, key):
+        self.remove(key)
+
+    def __contains__(self,key):
+        if key in self.list_keys():
+            return True
+        else:
+            return False
+
+    def __iter__(self):
+        return (key for key in self.list_keys())
+
+    def __len__(self,key):
+        return len( self.list_keys() )
 
     def __str__(self):
         return "Cache at {} (contains {} items)".format(self.subdir,
-                                                        len(self.listcache()))
+                                                        len(self.list_keys()))
 
     def __repr__(self):
         return str(self)

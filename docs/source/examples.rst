@@ -9,3 +9,6 @@ Examples
 
 .. toctree:: pipelines.rst
   :maxdepth: 2
+
+.. toctree:: cache.rst
+  :maxdepth: 2

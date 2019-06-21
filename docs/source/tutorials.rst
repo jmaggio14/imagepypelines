@@ -33,7 +33,7 @@ let's create an example fourier transform pipeline
     >>> # process the data
     >>> ffts = fft_pipeline.process(filenames) # doctest: +ELLIPSIS
     [...]
-    
+
 
 Simple Input Output Operations
 ------------------------------
@@ -105,19 +105,20 @@ You can tweak this example with your own image data and hyperparameters to make 
     >>> import imagepypelines as ip
     >>>
     >>> # ----------------- loading example data ---------------
-    >>> cifar10 = ip.ml.Cifar10(fraction=.01)
+    >>> cifar10 = ip.ml.Cifar10(fraction=.01) # doctest:+ELLIPSIS
+    [...]
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
-    >>>
     >>> # --------------- now we'll build the pipeline ----------------
-    >>> features = ip.blocks.PretrainedNetwork() # image feature block
+    >>> features = ip.blocks.PretrainedNetwork() # doctest:+ELLIPSIS
+    [...]
     >>> pca = ip.blocks.PCA(256) # principle component analysis block
     >>> neural_network = ip.blocks.MultilayerPerceptron(neurons=512, num_hidden=2) # neural network block
-    >>>
+    >>> #
     >>> classifier = ip.Pipeline([features,pca,neural_network])
-    >>>
+    >>> #
     >>> # -------------- train and predict the classifier ---------------
-    >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
+    >>> classifier.train(train_data,train_labels) # train the classifier # doctest:+ELLIPSIS
     [...]
     >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
     [...]
@@ -131,26 +132,21 @@ Classification using a Support Vector Machine
 .. doctest:: python
 
     >>> import imagepypelines as ip
-    >>>
     >>> # ----------------- loading example data ---------------
     >>> cifar10 = ip.ml.Cifar10(fraction=.01)
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
-    >>>
     >>> # --------------- now we'll build the pipeline ----------------
     >>> features = ip.blocks.PretrainedNetwork() # image feature block
     >>> pca = ip.blocks.PCA(256) # principle component analysis block
     >>> neural_network = ip.blocks.LinearSvm() # support vector machine block
     >>> # SVMs for linear, rbf, polynomial, and sigmoid kernels are all available
-    >>>
     >>> classifier = ip.Pipeline([features,pca,neural_network])
-    >>>
     >>> # -------------- train and predict the classifier ---------------
     >>> classifier.train(train_data,train_labels) # train the classifier #doctest:+ELLIPSIS
     [...]
     >>> predictions = classifier.process(test_data) # doctest:+ELLIPSIS
     [...]
-    >>>
     >>> # print the accuracy
     >>> accuracy = ip.accuracy(predictions,ground_truth)
     >>> print('accuracy: {}%'.format(accuracy * 100) ) # doctest:+ELLIPSIS
@@ -176,7 +172,6 @@ Lets create a super simple example just to demonstrate how you can create a batc
 
     >>> import imagepypelines as ip
     >>> import numpy as np
-    >>>
     >>> class AddOneBlock(ip.BatchBlock):
     ...     def __init__(self):
     ...         io_map = {ip.GRAY:ip.GRAY}
