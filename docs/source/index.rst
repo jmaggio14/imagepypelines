@@ -176,20 +176,20 @@ Another method is to set up your block by object inheritance, also known as a su
 
   # Note that we inherit from ip.SimpleBlock
   class NormalizeBlock(ip.SimpleBlock):
-  	"""Normalize block between 0 and max_count, inclusive"""
+    """Normalize block between 0 and max_count, inclusive"""
 
     def __init__(self, max_count=1):
 
       self.max_count = max_count
 
-  		# set up the block to work with grayscale and color imagery
-  		io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
-  					ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
+        # set up the block to work with grayscale and color imagery
+        io_map = {ip.ArrayType([None,None]):ip.ArrayType([None,None]),
+                    ip.ArrayType([None,None,3]):ip.ArrayType([None,None,3])}
 
-  		super(NormalizeBlock,self).__init__(io_map)
+        super(NormalizeBlock,self).__init__(io_map)
 
-  	def process(self,img):
-  		"""Overload the processing function for this block"""
+    def process(self,img):
+        """Overload the processing function for this block"""
 
       return img.astype(np.float32) / img.max() * self.max_count
 

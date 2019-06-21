@@ -349,8 +349,8 @@ class BaseBlock(object):
         # setup initial tags
         self.tags = set()
 
-        # setup absolutely unique 8 char hash id for this block
-        self.uuid = uuid.uuid4().hex[:8]
+        # setup absolutely unique hash id for this block
+        self.uuid = uuid.uuid4().hex
 
         super(BaseBlock,self).__init__()
 
@@ -550,12 +550,5 @@ class BaseBlock(object):
 
     def __repr__(self):
         return self.description
-
-    def prep_for_serialization(self):
-        pass
-
-    def restore_from_serialization(self):
-        pass
-
 
 # END

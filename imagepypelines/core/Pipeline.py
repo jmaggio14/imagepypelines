@@ -22,6 +22,7 @@ import pickle
 import copy
 import numpy as np
 from termcolor import cprint
+from uuid import uuid4
 
 PIPELINE_NAMES = {}
 INCOMPATIBLE = (Incompatible(),)
@@ -39,7 +40,7 @@ def name_pipeline(name,obj):
     else:
         PIPELINE_NAMES[name] = 1
 
-    return name + ':1'
+    return name + ('-%s' % PIPELINE_NAMES[name])
 
 def get_types(data):
     """Retrieves the block data type of the input datum"""
@@ -54,34 +55,32 @@ def get_types(data):
 
 class Pipeline(object):
     """
-            Pipeline object to apply a sequence of algorithms to input data
+        Pipeline object to apply a sequence of algorithms to input data
 
-            Pipelines pass data between block objects and validate the integrity
-            of a data processing pipeline. It is intended to be a quick, flexible, and
-            modular approach to creating a processing graph. It also contains helper
-            functions for documentation and saving these pipelines for use by other
-            researchers/users.
+        Pipelines pass data between block objects and validate the integrity
+        of a data processing pipeline. It is intended to be a quick, flexible,
+        and modular approach to creating a processing graph. It also contains
+        helper functions for documentation and saving these pipelines for use by
+        other researchers/users.
 
-            Args:
-                name(str): name for this pipeline that will be enumerated to be unique,
-                    defaults to the name of the subclass<index>
-                blocks(list): list of blocks to instantiate this pipeline with, shortcut
-                    to the 'add' function. defaults to []
-                verbose(bool): whether or not to enable printouts for this pipeline,
-                    defaults to True
-                enable_text_graph(bool): whether or not to print out a graph of
-                    pipeline blocks and outputs
+        Args:
+            blocks(list): list of blocks to instantiate this pipeline with,
+                shortcut to the 'add' function. defaults to []
+            name(str): name for this pipeline that will be enumerated to be
+                unique, defaults to the name of the Pipeline-<index>
 
-            Attributes:
-                name(str): unique name for this pipeline
-                blocks(list): list of block objects being used by this pipeline,
-                    in order of their processing sequence
-                verbose(bool): whether or not this pipeline with print
-                    out its status
-                enable_text_graph(bool): whether or not to print out a graph of
-                    pipeline blocks and outputs
-                printer(ip.Printer): printer object for this pipeline,
-                    registered with 'name'
+
+        Attributes:
+            name(str): unique name for this pipeline
+            blocks(list): list of block objects being used by this pipeline,
+                in order of their processing sequence
+            verbose(bool): whether or not this pipeline with print
+                out its status
+            enable_text_graph(bool): whether or not to print out a graph of
+                pipeline blocks and outputs
+            printer(ip.Printer): printer object for this pipeline,
+                registered with 'name'
+            uuid(str): universally unique hex id for this pipeline
     """
     def __init__(self,
                     blocks=[],
@@ -104,6 +103,8 @@ class Pipeline(object):
                 self.add(b)
         else:
             raise TypeError("'blocks' must be a list")
+
+        self.uuid = uuid4().hex
 
     # ================== validation / debugging functions ==================
     def validate(self,data):
@@ -341,14 +342,19 @@ class Pipeline(object):
 
         Args:
             filename (string): filename to save pipeline to, defaults to
-                pipeline.name + '.pck'
+                saving the pipeline to the ip.cache
+
+        Returns:
+            str: the filename the pipeline was saved to
         """
         if filename is None:
-            filename = self.name + '.pck'
+            self.printer.info("saving {} to {}".format(self, self.name))
+            ip.cache[self.name] = self
+            filename = ip.cache.filename(self.name)
 
-        self.printer.info("saving {} to {}".format(self,filename))
-        with open(filename, 'wb') as f:
-            pickle.dump(self, f)
+        else:
+            with open(filename, 'wb') as f:
+                pickle.dump(self, f)
 
         return filename
 
@@ -519,7 +525,6 @@ class Pipeline(object):
             None
 
         """
-
         for b in pipeline.blocks:
             self.add(b)
 
