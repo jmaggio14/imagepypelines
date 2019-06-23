@@ -143,7 +143,6 @@ class TestBatchBlock(object):
 # JM: @Ryan, I'm leaving this blank for you to populate
 # def test_cache_encryption():
 
-# test
 def test_list_cache_filenames():
     import imagepypelines as ip
     if not ip.cache.enabled():
@@ -151,6 +150,92 @@ def test_list_cache_filenames():
 
     fnames = ip.cache.list_filenames()
 
+class TestCacheErrorss():
+    # test illegal chars
+    def test_illegal_chars(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable()
+
+        fail = True
+        try:
+            ip.cache['this/is/illegal'] = "this is illegal"
+        except ValueError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
+
+    def test_nonstring(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable()
+
+        fail = True
+        try:
+            ip.cache[5324] = "this is illegal"
+        except TypeError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
+
+    def test_nokey(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable()
+
+        fail = True
+        try:
+            a = ip.cache['this is not a key']
+        except TypeError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
+
+    def test_wrong_pass(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable('sdadafdas')
+
+        ip.cache['key'] =1
+
+        fail = True
+        try:
+            ip.load('key', passwd="NOT RIGHT")
+        except CachingError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
+
+
+def test_cache_dir_deletion():
+    import imagepypelines as ip
+    if not ip.cache.enabled():
+        ip.cache.secure_enable()
+
+    os.makedirs( ip.cache.subdir, 'testdir')
+    ip.cache.purge()
+
+def test_cache_iter():
+    import imagepypelines as ip
+    if not ip.cache.enabled():
+        ip.cache.secure_enable()
+
+    ip.cache.purge()
+    ip.cache['test1'] = 'test1'
+    ip.cache['test2'] = 'test2'
+    ip.cache['test3'] = 'test3'
+
+    items = list(x for x in ip.cache)
+    assert sorted(items) == sorted(['test1','test2','test3'])
+    ip.cache.purge()
+
+
+def test_cache_repr():
+    repr(ip.cache)
 
 # =================== constants.py ===================
 def test_constants():

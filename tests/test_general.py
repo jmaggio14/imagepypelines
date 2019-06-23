@@ -10,7 +10,8 @@ def test_serialization_and_caching():
 
     def serialize_blocks_and_pipelines(mod):
         for varname, var in vars(mod).items():
-            print(var)
+            repr(var)
+            str(var)
             if isinstance(var, (ip.Pipeline,ip.BaseBlock) ):
                 print('serializing %s...' % varname)
                 ip.cache[varname] = var
@@ -19,6 +20,7 @@ def test_serialization_and_caching():
     serialize_blocks_and_pipelines(ip.blocks)
     serialize_blocks_and_pipelines(ip.pipelines)
     serialize_blocks_and_pipelines(ip)
+
 
 if __name__ == "__main__":
     test_serialization_and_caching()
