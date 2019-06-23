@@ -13,8 +13,8 @@ a secure random passkey.
 
 IMPORTANT!
 ----------
-*secure_enable is not only important to safeguard your data, but to safeguard
-your app!*
+**secure_enable is not only important to safeguard your data, but to safeguard
+your app!**
 The ImagePypelines cache uses the pickle library internally for serialization.
 This means non-encrypted cached objects can be replaced with malicious code that
 make you susceptible to man-in-the-middle attacks.
@@ -33,7 +33,7 @@ When in doubt, don't use the cache and save your data using other secure methods
     >>> lenna = ip.cache['lenna']
 
 
-Save Data to the cache _without_ encryption (not recommended)
+Save Data to the cache *without* encryption (not recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. doctest:: python

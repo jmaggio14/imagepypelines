@@ -11,7 +11,7 @@ import glob
 import pickle
 import shutil
 import sys
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 import base64
 import os
 from cryptography.hazmat.backends import default_backend
@@ -24,9 +24,18 @@ from .. import CACHE
 from .Printer import debug as ipdebug, info as ipinfo
 from .Pipeline import Pipeline
 from .BaseBlock import BaseBlock
+from .Exceptions import CachingError
 
 
-ILLEGAL_CHARS = ['NUL',r'\',''//',':','*','"','<','>','|']
+ILLEGAL_CHARS = ['NUL',
+                '\\',
+                '/',
+                ':',
+                '*',
+                '"',
+                '<',
+                '>',
+                '|']
 
 class Cache(object):
     """
@@ -77,7 +86,7 @@ class Cache(object):
             raise TypeError("cache key must be a sting")
 
         if any( (ic in key) for ic in ILLEGAL_CHARS):
-            return ValueError(
+            raise ValueError(
                 "cache keys cannot contain illegal characters %s" % ILLEGAL_CHARS)
 
         # code begins here
@@ -183,7 +192,7 @@ class Cache(object):
         error = True
         try:
             decoded = fernet.decrypt(raw_bytes)
-        except InvalidSignature:
+        except (InvalidSignature, InvalidToken):
             error = False
 
         if not error:
@@ -219,9 +228,9 @@ class Cache(object):
                 this will also be the name of the file in the cache directory
             obj(object): the python object to save
             passwd(str,None): the encryption key for this object, defaults to
-                the cache password set by ip.cache.passwd(). If no password
-                is provided and none is set prior using ip.cache.passwd, then
-                no encryption will be used.
+                the cache password set by ip.cache.secure_enable().
+                If no password is provided and none is set prior using
+                ip.cache.secure_enable(), then no encryption will be used.
             protocol(int): the pickle protocol used to save the data,
                 it is pickle.HIGHEST_PROTOCOL for compatability with large
                 objects. You may try pickle.DEFAULT_PROTOCOL for better
@@ -256,9 +265,9 @@ class Cache(object):
         Args:
             key(str): the key reference index for the value to be retrieved
             passwd(str,None): the encryption key for this object, defaults to
-                the cache password set by ip.cache.passwd(). If no password
-                is provided and none is set prior using ip.cache.passwd, then
-                no encryption is assumed.
+                the cache password set by ip.cache.secure_enable().
+                If no password is provided and none is set prior using
+                ip.cache.secure_enable(), then no encryption is assumed.
 
         Returns:
             object: the unpickled cache object

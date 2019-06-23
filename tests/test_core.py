@@ -188,7 +188,7 @@ class TestCacheErrorss():
         fail = True
         try:
             a = ip.cache['this is not a key']
-        except TypeError:
+        except KeyError:
             fail = False
 
         if fail:
@@ -203,8 +203,8 @@ class TestCacheErrorss():
 
         fail = True
         try:
-            ip.load('key', passwd="NOT RIGHT")
-        except CachingError:
+            ip.cache.load('key', passwd="NOT RIGHT")
+        except ip.Exceptions.CachingError:
             fail = False
 
         if fail:
@@ -213,10 +213,11 @@ class TestCacheErrorss():
 
 def test_cache_dir_deletion():
     import imagepypelines as ip
+    import os
     if not ip.cache.enabled():
         ip.cache.secure_enable()
 
-    os.makedirs( ip.cache.subdir, 'testdir')
+    os.makedirs( os.path.join(ip.cache.subdir, 'testdir') )
     ip.cache.purge()
 
 def test_cache_iter():
@@ -235,6 +236,7 @@ def test_cache_iter():
 
 
 def test_cache_repr():
+    import imagepypelines as ip
     repr(ip.cache)
 
 # =================== constants.py ===================
