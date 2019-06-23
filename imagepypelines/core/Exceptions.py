@@ -104,3 +104,6 @@ class DataLabelMismatch(TypeError):
 
 class CachingError(RuntimeError):
     pass
+
+class ChecksumError(RuntimeError):
+    pass

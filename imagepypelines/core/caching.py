@@ -18,13 +18,14 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.exceptions import InvalidSignature
+import hashlib
 
 
 from .. import CACHE
 from .Printer import debug as ipdebug, info as ipinfo
 from .Pipeline import Pipeline
 from .BaseBlock import BaseBlock
-from .Exceptions import CachingError
+from .Exceptions import CachingError, ChecksumError
 
 
 ILLEGAL_CHARS = ['NUL',
@@ -133,6 +134,41 @@ class Cache(object):
         return uuid4().hex
 
     @staticmethod
+    def checksum(key):
+        """returns a sha256 hash of the file contents
+        Args:
+            key(str): key for the object in the cache
+
+        Returns:
+            str: sha256 checksum as hex string
+        """
+        fname = self.filename(key)
+        # load the raw bytes from disk
+        raise_keyerror = False
+        try:
+            with open(fname, 'rb') as f:
+                raw_bytes = f.read()
+        except FileNotFoundError:
+            raise_keyerror = True
+
+        # raise a key error if we can't load or otherwise find the file
+        if raise_keyerror:
+            raise KeyError("no cache item with key %s" % key)
+
+        return __checksum_bytes(raw_bytes)
+
+    @staticmethod
+    def __checksum_bytes(raw_bytes):
+        """returns a sha256 hash of the file contents
+        Args:
+            raw_bytes(bytes): the file contents as a bytes objects
+
+        Returns:
+            str: sha256 checksum as hex string
+        """
+        return hashlib.sha256(raw_bytes).hexdigest()
+
+    @staticmethod
     def passgen(passwd=None, salt=''):
         """generate a hashed key from a password, will generate something
         entirely random by default
@@ -159,7 +195,7 @@ class Cache(object):
             iterations=100000,
             backend=default_backend()
         )
-        return base64.urlsafe_b64encode( kdf.derive(passwd.encode()) )
+        return base64.urlsafe_b64encode( kdf.derive( passwd.encode() ) )
 
     @staticmethod
     def encrypt(raw_bytes, passwd):
@@ -237,7 +273,7 @@ class Cache(object):
                 compatability
 
         Return:
-            fname(str): the file path where the object has been cached
+            str: sha256 checksum of the file contents
         """
         self.__check_if_enabled()
         fname = self.filename(key)
@@ -253,13 +289,15 @@ class Cache(object):
         else:
             encoded = self.encrypt(raw_bytes, passwd)
 
-        ipdebug("saving {} to {}".format(obj, fname))
+        checksum = self.__checksum_bytes(encoded)
+
+        ipdebug("saving {} to {}. checksum: {}".format(obj, fname, checksum))
         with open(fname,'wb') as f:
             f.write(encoded)
 
-        return fname
+        return checksum
 
-    def load(self, key, passwd=None):
+    def load(self, key, passwd=None, checksum=None):
         """retrieves the key specified value from the cache
 
         Args:
@@ -268,9 +306,16 @@ class Cache(object):
                 the cache password set by ip.cache.secure_enable().
                 If no password is provided and none is set prior using
                 ip.cache.secure_enable(), then no encryption is assumed.
+            checksum(str): checksum to check file contents against before
+                unpickling
 
         Returns:
             object: the unpickled cache object
+
+        Raises:
+            KeyError: if no key associated with the cache item was found
+            CachingError: if unable to unpickle the data
+            ChecksumError: if the given checksum doesn't match the checksum read
         """
         self.__check_if_enabled()
         ipdebug("loading {} from the cache...".format(key))
@@ -288,6 +333,14 @@ class Cache(object):
         if raise_keyerror:
             raise KeyError("no cache item with key %s" % key)
 
+        # perform a checksum check on the raw bytes if a checksum is provided
+        if checksum:
+            assert isinstance(checksum, str),"checksum must be a hex string"
+            file_checksum = self.__checksum_bytes(raw_bytes)
+            if file_checksum != checksum:
+                raise ChecksumError("file checksum {} doesn't match given"\
+                        + " checksum {} ".format(file_checksum, checksum) )
+
         # decrypt the data if necessary
         if passwd is None:
             # if there is no global passwd, then don't decrypt the pickled obj
@@ -304,7 +357,7 @@ class Cache(object):
         try:
             obj = pickle.loads( decoded )
         except pickle.UnpicklingError:
-            raise_cacheerror = False
+            no_error = False
 
         if not no_error:
             raise CachingError("Unable to unpickle data. Is it corrupt?")

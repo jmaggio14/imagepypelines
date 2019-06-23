@@ -38,6 +38,7 @@ from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
 from .Exceptions import CachingError
+from .Exceptions import ChecksumError
 
 # img_tools.py
 from .img_tools import display_safe

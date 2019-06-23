@@ -239,6 +239,10 @@ def test_cache_repr():
     import imagepypelines as ip
     repr(ip.cache)
 
+def test_cache_passgen():
+    import imagepypelines as ip
+    ip.cache.passgen()
+    
 # =================== constants.py ===================
 def test_constants():
     import imagepypelines as ip
