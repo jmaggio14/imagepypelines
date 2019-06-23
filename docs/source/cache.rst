@@ -59,9 +59,9 @@ this is still secure even though a global cache password isn't set
     >>> # enable imagepypelines cache WITHOUT a password
     >>> ip.cache.insecure_enable()
     >>> # save data to the cache
-    >>> fname = ip.cache.save('lenna', obj, PASSWORD)
+    >>> fname = ip.cache.save('giza', obj, PASSWORD)
     >>> # retrieve the data
-    >>> lenna = ip.cache.load('lenna', PASSWORD)
+    >>> lenna = ip.cache.load('giza', PASSWORD)
 
 
 Deleting a file in the cache

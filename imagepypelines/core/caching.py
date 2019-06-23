@@ -94,7 +94,7 @@ class Cache(object):
     def purge(self):
         """delete all items in the cache"""
         ipinfo("purging the cache...")
-        for fname in self.list_filenames():
+        for fname in self.list_keys():
             self.remove(fname)
 
     def secure_enable(self, passwd=None):
@@ -107,7 +107,7 @@ class Cache(object):
             None
         """
         if passwd is None:
-            passwd = self.passgen()
+            passwd = uuid4().hex
 
         assert isinstance(passwd, str),"passwd must a string"
         self.__passwd = passwd
@@ -133,7 +133,7 @@ class Cache(object):
             bytes: hashed passkey safe string
         """
         if passwd is None:
-            passwd = str( uuid4().hex )
+            passwd = uuid4().hex
 
         assert isinstance(passwd, str), "passwd must a string"
         assert isinstance(salt, str), "salt must be a string"
@@ -198,8 +198,7 @@ class Cache(object):
                 fernet = Fernet( self.passgen(self.__passwd) )
                 encoded = fernet.encrypt(raw_bytes)
         else:
-            assert isinstance(passwd, str),"passwd must be a string"
-            fernet = Fernet( self.passgen(self.__passwd) )
+            fernet = Fernet( self.passgen(passwd) )
             encoded = fernet.encrypt(raw_bytes)
 
         ipdebug("saving {} to {}".format(obj, fname))
@@ -248,7 +247,6 @@ class Cache(object):
                 decoded = fernet.decrypt(raw_bytes)
 
         else:
-            assert isinstance(passwd, str),"passwd must be a string"
             fernet = Fernet( self.passgen(passwd) )
             decoded = fernet.decrypt(raw_bytes)
 
