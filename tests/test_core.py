@@ -143,6 +143,13 @@ class TestBatchBlock(object):
 # JM: @Ryan, I'm leaving this blank for you to populate
 # def test_cache_encryption():
 
+# test
+def test_list_cache_filenames():
+    import imagepypelines as ip
+    if not ip.cache.enabled():
+        ip.cache.secure_enable()
+
+    fnames = ip.cache.list_filenames()
 
 
 # =================== constants.py ===================

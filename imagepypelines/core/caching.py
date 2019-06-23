@@ -282,7 +282,7 @@ class Cache(object):
     def __iter__(self):
         return (key for key in self.list_keys())
 
-    def __len__(self,key):
+    def __len__(self):
         return len( self.list_keys() )
 
     def __str__(self):
