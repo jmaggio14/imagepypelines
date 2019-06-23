@@ -263,6 +263,9 @@ class Cache(object):
 
         Returns:
             bool: whether or not the object was successfully deleted
+
+        Raises:
+            KeyError: if no key associated with the cache item was found
         """
         fname = self.filename(key)
 
@@ -271,6 +274,9 @@ class Cache(object):
 
         elif os.path.isdir(fname):
             shutil.rmtree(fname, ignore_errors=True)
+
+        else:
+            raise KeyError("no cache item with key %s" % key)
 
         return (not os.path.exists(fname))
 
