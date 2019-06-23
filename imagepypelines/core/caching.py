@@ -37,6 +37,7 @@ ILLEGAL_CHARS = ['NUL',
                 '<',
                 '>',
                 '|']
+"""illegal characters for cache keys to ensure that they don't raise OS errors"""
 
 class Cache(object):
     """
@@ -50,18 +51,24 @@ class Cache(object):
         subdir(str): the full path to the cache directory
 
     Example:
-        >>> # let's save Lenna to our cache
         >>> import imagepypelines as ip
+        >>> # enable imagepypelines cache with a password
+        >>> ip.cache.secure_enable("don't use this password")
+        >>> # save data to the cache
         >>> ip.cache['lenna'] = ip.lenna()
-        >>> # retrieve lenna from cache
+        >>> # retrieve the data
         >>> lenna = ip.cache['lenna']
 
-        >>> import imagepypelines as ip
-        >>> # delete everything in the cache
-        >>> ip.cache.purge()
 
         >>> import imagepypelines as ip
-        >>>
+        >>> PASSWORD = "don't use this password"
+        >>> obj = ip.giza()
+        >>> # enable imagepypelines cache WITHOUT a password
+        >>> ip.cache.insecure_enable()
+        >>> # save data to the cache
+        >>> checksum = ip.cache.save('giza', obj, PASSWORD)
+        >>> # retrieve the data
+        >>> lenna = ip.cache.load('giza', PASSWORD, checksum)
     """
     def __init__(self):
             self.subdir = os.path.join(CACHE,'cache')
@@ -81,6 +88,10 @@ class Cache(object):
 
         Returns:
             str: full filename to the cached object
+
+        Raises:
+            TypeError: if cache key is not a string
+            ValueError: if cache key contains illegal characters
         """
         # ERROR CHECKING
         if not isinstance(key,str):
@@ -141,6 +152,9 @@ class Cache(object):
 
         Returns:
             str: sha256 checksum as hex string
+
+        Raises:
+            KeyError: if no associated key is found
         """
         fname = self.filename(key)
         # load the raw bytes from disk
@@ -183,7 +197,7 @@ class Cache(object):
             bytes: hashed passkey safe string
         """
         if passwd is None:
-            passwd = self.random_password()
+            passwd = Cache.random_password()
 
         assert isinstance(passwd, str), "passwd must a string"
         assert isinstance(salt, str), "salt must be a string"
@@ -207,6 +221,7 @@ class Cache(object):
 
         Returns:
             bytes: encrypted object
+
         """
         fernet = Fernet( Cache.passgen(passwd) )
         encoded = fernet.encrypt(raw_bytes)
@@ -222,6 +237,9 @@ class Cache(object):
 
         Returns:
             bytes: decrypted object
+
+        Raises:
+            CachingError: if data decryption failed
         """
         fernet = Fernet( Cache.passgen(passwd) )
 
@@ -272,8 +290,11 @@ class Cache(object):
                 objects. You may try pickle.DEFAULT_PROTOCOL for better
                 compatability
 
-        Return:
+        Returns:
             str: sha256 checksum of the file contents
+
+        TODO:
+            automatically compress data before encryption
         """
         self.__check_if_enabled()
         fname = self.filename(key)
