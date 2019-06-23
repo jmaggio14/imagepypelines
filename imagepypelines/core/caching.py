@@ -17,6 +17,7 @@ import os
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.exceptions import InvalidSignature
 
 
 from .. import CACHE
@@ -107,7 +108,7 @@ class Cache(object):
             None
         """
         if passwd is None:
-            passwd = uuid4().hex
+            passwd = self.random_password()
 
         assert isinstance(passwd, str),"passwd must a string"
         self.__passwd = passwd
@@ -117,6 +118,10 @@ class Cache(object):
     def insecure_enable(self):
         self.__passwd = None
         self.__enabled = True
+
+    @staticmethod
+    def random_password():
+        return uuid4().hex
 
     @staticmethod
     def passgen(passwd=None, salt=''):
@@ -133,7 +138,7 @@ class Cache(object):
             bytes: hashed passkey safe string
         """
         if passwd is None:
-            passwd = uuid4().hex
+            passwd = self.random_password()
 
         assert isinstance(passwd, str), "passwd must a string"
         assert isinstance(salt, str), "salt must be a string"
@@ -146,6 +151,46 @@ class Cache(object):
             backend=default_backend()
         )
         return base64.urlsafe_b64encode( kdf.derive(passwd.encode()) )
+
+    @staticmethod
+    def encrypt(raw_bytes, passwd):
+        """encrypts the given object using fernet symmetrical encryption
+
+        Args:
+            raw_bytes(bytes): raw bytes to encrypt into an picklable form
+            passwd(str): string password as to hash into the encryption key
+
+        Returns:
+            bytes: encrypted object
+        """
+        fernet = Fernet( Cache.passgen(passwd) )
+        encoded = fernet.encrypt(raw_bytes)
+        return encoded
+
+    @staticmethod
+    def decrypt(raw_bytes, passwd):
+        """decrypts the given object using fernet symmetrical encryption
+
+        Args:
+            raw_bytes(bytes): raw bytes to decrypt into an unpicklable form
+            passwd(str): string password as to hash into the encryption key
+
+        Returns:
+            bytes: decrypted object
+        """
+        fernet = Fernet( Cache.passgen(passwd) )
+
+        error = True
+        try:
+            decoded = fernet.decrypt(raw_bytes)
+        except InvalidSignature:
+            error = False
+
+        if not error:
+            raise CachingError(
+                "unable to decrypt data. Is the password correct?")
+
+        return decoded
 
     def remove(self, key):
         """deletes the key specified data from the cache
@@ -195,11 +240,9 @@ class Cache(object):
                 encoded = raw_bytes
             # default to the global cache password if it has been set
             else:
-                fernet = Fernet( self.passgen(self.__passwd) )
-                encoded = fernet.encrypt(raw_bytes)
+                encoded = self.encrypt(raw_bytes, self.__passwd)
         else:
-            fernet = Fernet( self.passgen(passwd) )
-            encoded = fernet.encrypt(raw_bytes)
+            encoded = self.encrypt(raw_bytes, passwd)
 
         ipdebug("saving {} to {}".format(obj, fname))
         with open(fname,'wb') as f:
@@ -243,12 +286,9 @@ class Cache(object):
                 decoded = raw_bytes
             # default to the global cache password if it has been set
             else:
-                fernet = Fernet( self.passgen(self.__passwd) )
-                decoded = fernet.decrypt(raw_bytes)
-
+                decoded = self.decrypt(raw_bytes, self.__passwd)
         else:
-            fernet = Fernet( self.passgen(passwd) )
-            decoded = fernet.decrypt(raw_bytes)
+            decoded = self.decrypt(raw_bytes, passwd)
 
         # unpickle the object
         no_error = True
@@ -258,9 +298,7 @@ class Cache(object):
             raise_cacheerror = False
 
         if not no_error:
-            raise CachingError(
-                "unable to load data from cache. Was it encrypted" \
-                + " with a different password?")
+            raise CachingError("Unable to unpickle data. Is it corrupt?")
 
         return obj
 
