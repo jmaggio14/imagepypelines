@@ -75,7 +75,7 @@ class MultilayerPerceptron(BatchBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.IpLogger): logger for this block,
             registered to 'name'
         num_epochs(int): the number of epochs to train this model for (the number
             of times the model is trained on the training data). higher usually
@@ -142,13 +142,13 @@ class MultilayerPerceptron(BatchBlock):
         if self.label_type == 'integer' and isinstance(labels[0],np.ndarray):
             msg = "'integer' label_type specified, but numpy arrays passed in"\
                     + "-- reseting label_type as 'categorical'!"
-            self.printer.warning(msg)
+            self.logger.warning(msg)
             self.label_type = 'categorical'
 
         elif self.label_type == 'categorical' and isinstance(labels[0],int):
             msg = "'categorical' label_type specified, but integers passed in"\
                     + "-- reseting label_type as 'integer'!"
-            self.printer.warning(msg)
+            self.logger.warning(msg)
             self.label_type = 'integer'
 
         from keras.utils import to_categorical

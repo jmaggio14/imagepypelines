@@ -32,7 +32,7 @@ class FTP(SimpleBlock):
 
     def process(self, datum):
         try:
-            self.session.storbinary("STOR " + '3Dprinter.png', datum)
+            self.session.storbinary("STOR " + '3Dlogger.png', datum)
         except ftplib.all_errors:
             return False
 

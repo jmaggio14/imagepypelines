@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .Printer import get_printer
+import logging
 from .Exceptions import InvalidBlockInputData
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
@@ -273,7 +273,7 @@ class BaseBlock(object):
     This is the building block (pun intended) for the entire imagepypelines
     pipelining system. All blocks, both SimpleBlocks and BatchBlocks, will
     inherit from this object. Which contains base functionality to setup a
-    block's printers, unique name, standard input/output_shapes and special
+    block's loggers, unique name, standard input/output_shapes and special
     functions for pipeline objects to call
 
     Args:
@@ -299,7 +299,7 @@ class BaseBlock(object):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.IpLogger): logger for this block,
             registered to 'name'
         description(str): a readable description of this block that includes
             user defined notes and a summary of inputs and outputs
@@ -332,7 +332,7 @@ class BaseBlock(object):
 
         self.trained = False if self.requires_training else True
 
-        self.printer = get_printer(self.name)
+        self.logger = logging.getLogger(self.name)
 
         # create a block description
         self.description = describe_block(self,notes)
@@ -371,7 +371,7 @@ class BaseBlock(object):
         """
         assert isinstance(name,str),"name must be a string"
         self.name = name
-        self.printer = get_printer(self.name)
+        self.logger = logging.getLogger(self.name)
         return self
 
     def train(self, data, labels=None):
@@ -392,7 +392,7 @@ class BaseBlock(object):
         if self.requires_training:
             msg = "{}.train must be overloaded if the " \
                         + "'requires_training' is set to True".format(self.name)
-            self.printer.critical(msg)
+            self.logger.critical(msg)
             raise NotImplementedError(msg)
 
     def before_process(self, data, labels=None):

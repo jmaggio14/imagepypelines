@@ -11,7 +11,7 @@ import itertools
 import collections
 import numpy as np
 import imagepypelines as ip
-from ..Printer import get_printer
+import logging
 import fnmatch
 from itertools import islice, chain
 
@@ -45,7 +45,7 @@ class DatasetManager(object):
             key is the integer label, value is the the class name
         data_chunks(deque): deque containing all the chunks for the data
         label_chunks(deque): deque containing all the chunks for the labels
-        printer(ip.Printer): printer for this class, registered to
+        logger(ip.Logger): logger for this class, registered to
             'DatasetManager'
         remaining_folds(int): number of remaining folds
     """
@@ -76,7 +76,7 @@ class DatasetManager(object):
         self.class_names = {}
         self.data_chunks = collections.deque()
         self.label_chunks = collections.deque()
-        self.printer = core.get_printer(self.__class__.__name__)
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     def rotate(self):
         """rotate the data chunks so the next dataset fold is available"""
@@ -85,7 +85,7 @@ class DatasetManager(object):
         self.label_chunks.rotate()
         if self.fold_index > self.k_folds:
             warning_msg = "data has been rotated more than the number of folds"
-            self.printer.warning(warning_msg)
+            self.logger.warning(warning_msg)
 
         return self
 
@@ -182,7 +182,7 @@ class DatasetManager(object):
         # warning that the fold index has been reset
         if self.fold_index > 1:
             warning_msg = "fold index has been reset because new data was added"
-            self.printer.warning(warning_msg)
+            self.logger.warning(warning_msg)
             self.fold_index = 1
 
         return self
@@ -219,7 +219,7 @@ class DatasetManager(object):
         # warning that the fold index has been reset
         if self.fold_index:
             warning_msg = "fold index has been reset because new data was added"
-            self.printer.warning(warning_msg)
+            self.logger.warning(warning_msg)
             self.fold_index = 1
 
         return self

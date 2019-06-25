@@ -101,7 +101,7 @@ class PretrainedNetwork(BatchBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.IpLogger): logger for this block,
             registered to 'name'
 
 
@@ -125,7 +125,7 @@ class PretrainedNetwork(BatchBlock):
         # verify that all images are the same size
         if not all(batch_data[0].shape == d.shape for d in batch_data):
             error_msg = "all input images must be the same shape!"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise ValueError(error_msg)
 
         # reshape all images to a 4D array for keras standard
@@ -133,7 +133,7 @@ class PretrainedNetwork(BatchBlock):
         if (r < self.min_input_size[0]) or (c < self.min_input_size[1]):
             error_msg = "minimum acceptable image size is {}"\
                 .format(self.min_input_size)
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise ValueError(error_msg)
 
         if b == 1:

@@ -40,7 +40,7 @@ class SimpleBlock(BaseBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.IpLogger): logger for this block,
             registered to 'name'
 
     """
@@ -100,7 +100,7 @@ class BatchBlock(BaseBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.IpLogger): logger for this block,
             registered to 'name'
 
     """
@@ -169,7 +169,7 @@ class BatchBlock(BaseBlock):
 #             training
 #         trained(bool): whether or not this block has been trained, True
 #             by default if requires_training = False
-#         printer(ip.Printer): printer object for this block,
+#         logger(ip.IpLogger): logger for this block,
 #             registered to 'name'
 #     """
 #     def __init__(self,*args,**kwargs):
@@ -333,7 +333,7 @@ class BatchBlock(BaseBlock):
 #                 + "if you are transferring this pipeline to a different machine"\
 #                     .format(self.sess_filename)
 #
-#             self.printer.warning(msg)
+#             self.logger.warning(msg)
 #             saver.save(sess, self.sess_filename)
 #
 #         # delete GPU bound objects

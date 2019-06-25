@@ -36,6 +36,8 @@ Added
 - more unit tests
 - tools to sample datasets, calculate model accuracy & confidence, etc
 - Pipeline list functionality, insert blocks arbitrarily, delitem, etc
+- Robust and secure caching system
+- Custom Loggers
 
 
 Changed
@@ -44,3 +46,4 @@ Changed
 - Minor bug fixes, Typos
 - made opencv and tensorflow imports inside of separate functions
 - Printer printouts are now sent to stderr, not stdout
+- Removed Printer Class in favor of traditional python logging

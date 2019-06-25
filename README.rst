@@ -553,106 +553,13 @@ Development Tools in Imagepypelines
 ************************************
 *This section is for developers of imagepypelines or people who want imagepypelines` closely integrated with their projects*
 
-Printers
+Loggers
 ========
 
 Are you a scientist???
 If so, then you probably use millions of print statements to debug your code. (don't worry, we are all guilty of it)
 
-Imagepypelines_ encourages code traceability through the use of an object known as a **Printer**. Printers are objects that simply print out what's happening in a manner that's easy to read, color coded, and traceable to the object that is performing the current action. *Printers are extremely low overhead and will not affect the speed of your code more than a print statement.*
-
-The functionality is similar to python's logging_ module
-
-making printers
----------------
-printers can be created or retrieved using the `get_printer` function
-
-.. doctest:: python
-
-  import imagepypelines as ip
-  printer = ip.get_printer('name your printer here')
-
-
-printer levels
---------------
-printer messages can be filtered be priority so that only desired messages can be seen. In Imagepypelines_, printer levels are also color coded so they can be read easily in a console
-
-.. doctest:: python
-
-  import imagepypelines as ip
-
-  example_printer = ip.get_printer('example!')
-  example_printer.debug('message') # prints 'message' at level 10 - blue text
-  example_printer.info('message') # prints 'message' at level 20 - white text
-  example_printer.warning('message') # prints 'message' at level 30 - yellow text
-  example_printer.comment('message') # prints 'message' at level 30 - green text
-  example_printer.error('message') # prints 'message' at level 40 - red text
-  example_printer.critical('message') # prints 'message' at level 50 - bold red text
-
-Any level that is less than the current `GLOBAL_LOG_LEVEL` will **NOT** be printed. This makes it easy to filter out statements which may be erroneous or too numerous to make sense of.
-
-this value can be set with the `set_global_printout_level` function
-
-.. doctest:: python
-
-  import imagepypelines as ip
-  ip.set_global_printout_level('warning') # debug and info statements will not print now
-
-local printer levels can be set with `Printer.set_log_level`
-
-.. doctest:: python
-
-  import imagepypelines as ip
-  printer = ip.get_printer('Example Printer')
-  printer.set_log_level('error') # only error and critical functions will print
-
-(this system is exactly the same as log_levels in python's logging_ module )
-
-disable or enabling certain printers
-------------------------------------
-
-Sometimes you may only want to see printouts from a specific class or function. you can do this
-with the `whitelist_printer`, `blacklist_printer`, or `disable_all_printers` functions
-
-default printer
-^^^^^^^^^^^^^^^
-
-there's a default printer in `imagepypelines` which is accessible through functions in the main module
-.. doctest:: python
-
-  ip.debug('debug message') # level=10 --> (    imagepypelines    )[    DEBUG    ] debug message
-  ip.info('info message') # level=20 --> (    imagepypelines    )[    INFO    ] debug message
-  ip.warning('warning message') # level=30 --> (    imagepypelines    )[    WARNING    ] warning message
-  ip.error('error message') # level=40 --> (    imagepypelines    )[    ERROR    ] error message
-  ip.critical('critical message') # level=50 --> (    imagepypelines    )[    CRITICAL    ] critical message
-  ip.comment('comment message') # level=30 --> (    imagepypelines    )[    COMMENT    ] comment message
-
-class printers
---------------
-a good strategy to encourage traceability is to create a printer object as a class instance attribute
-
-.. doctest:: python
-
-  import imagepypelines as ip
-
-  class ExampleClass(object):
-  	def __init__(self,*args,**kwargs):
-  		name_of_class = self.__class__.__name__
-  		self.printer = ip.get_printer(name_of_class)
-  		self.printer.info("object instantiated!")
-
-  		self.do_something()
-
-  	def do_something(self):
-  		self.printer.warning("did something!")
-
-  ExampleClass()
-
-produces the following
-
-.. code-block:: text
-
-  (   ExampleClass   )[    INFO    ] object instantiated!
-  (   ExampleClass   )[   WARNING  ] did something!
-
-This way it's easy track what stage of the pipeline your code is in, because each object will have it's own printer and be distinguishable in the terminal!
+Imagepypelines_ encourages code traceability through the use of an object in
+every Block and Pipeline as a **Loggers**. Loggerss are objects that simply
+print out what's happening in a manner that's easy to read, color coded, and
+traceable to the object that is performing the current action.

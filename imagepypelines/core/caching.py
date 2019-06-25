@@ -22,7 +22,7 @@ import hashlib
 
 
 from .. import CACHE
-from .Printer import debug as ipdebug, info as ipinfo
+from .. import debug as ipdebug, info as ipinfo
 from .Pipeline import Pipeline
 from .BaseBlock import BaseBlock
 from .Exceptions import CachingError, ChecksumError
