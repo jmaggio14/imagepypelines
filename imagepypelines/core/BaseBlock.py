@@ -518,6 +518,9 @@ class BaseBlock(object):
         self._metadata['total_out'] += len(processed)
         return processed, labels
 
+
+    # def _pipeline_pair(self, )
+
     @abstractmethod
     def process_strategy(self, data):
         """overarching processing management function for this block
@@ -550,5 +553,14 @@ class BaseBlock(object):
 
     def __repr__(self):
         return self.description
+
+    def __getstate__(self):
+        return self.__dict__.copy()
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        # create a new uuid for this instance, since it's technically a
+        # different object
+        self.uuid = uuid4().hex
 
 # END

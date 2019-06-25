@@ -90,13 +90,14 @@ logging.setLoggerClass(IpLogger)
 # create our ImagePypelines master logger
 ch = logging.StreamHandler()
 formatter = logging.Formatter(
-                        '%(asctime)s | %(name)s [ %(levelname)8s ] | %(message)s')
+                    '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
 ch.setFormatter(formatter)
 
 MASTER_LOGGER = logging.getLogger('ImagePypelines')
 MASTER_LOGGER.addHandler(ch)
 MASTER_LOGGER.setLevel(logging.DEBUG)
 
+# quick calls to the ImagePypelines master logger
 def debug(*messages):
     """logs a 'debug' level message to the imagepypelines root logger"""
     MASTER_LOGGER.debug(*messages)
@@ -116,3 +117,8 @@ def error(*messages):
 def critical(*messages):
     """logs a 'critical' level message to the imagepypelines root logger"""
     MASTER_LOGGER.critical(*messages)
+
+
+# function to create a new ImagePypelines Logger
+def get_logger(name):
+    return MASTER_LOGGER.getChild(name)

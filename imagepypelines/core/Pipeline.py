@@ -421,14 +421,14 @@ class Pipeline(object):
 
         Args:
             index (int): index at which block object is to be inserted
-
             block (ip.BaseBlock): block object to add to this pipeline
 
         Returns:
             None
 
-        Raise:
-            TypeError: if 'block' is not a subclass of BaseBlock, or 'index' is not instance of int
+        Raises:
+            TypeError: if 'block' is not a subclass of BaseBlock, or 'index'
+                is not instance of int
         """
         # checking to make sure block is a real block
         if (not isinstance(block, BaseBlock)):
@@ -442,8 +442,8 @@ class Pipeline(object):
             self.logger.error(error_msg)
             raise TypeError(error_msg)
 
-        self.logger.info("inserting block {0} into pipeline at index {1}".format(block.name, index))
-
+        self.logger.info("inserting block {0} into pipeline at index {1}"\
+                                    .format(block.name, index))
         self.blocks.insert(index, block)
 
     def remove(self, block_name):
