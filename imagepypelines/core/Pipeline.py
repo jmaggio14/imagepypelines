@@ -5,14 +5,13 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
+from ..Logger import IpLogger
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .BaseBlock import Incompatible
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
 from .util import Timer
-
-INCOMPATIBLE = { Incompatible }
 
 
 import collections
@@ -212,6 +211,13 @@ class Pipeline(object):
         pass
 
     # ================== pipeline processing functions ==================
+    def _pair_blocks(self):
+        """
+        pairs every block with this pipeline in preparation for processing
+        """
+        for b in self.blocks:
+            b._pipeline_pair(self)
+
     def _step(self):
         """
         """
@@ -256,6 +262,7 @@ class Pipeline(object):
 
     # ================== processing functions
     def _before_process(self,data,labels=None):
+        self._pair_blocks()
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
@@ -298,6 +305,7 @@ class Pipeline(object):
 
     # ================== training functions
     def _before_train(self,data,labels=None):
+        self._pair_blocks()
         if not self.skip_validation:
             # validate pipeline integrity
             self.validate(data)
@@ -340,7 +348,8 @@ class Pipeline(object):
 
         Args:
             filename (string): filename to save pipeline to, defaults to
-                saving the pipeline to the ip.cache
+                saving the pipeline to the ip.cache with the key being the
+                pipeline name
 
         Returns:
             str: the filename the pipeline was saved to
@@ -358,7 +367,7 @@ class Pipeline(object):
 
     def rename(self,name):
         assert isinstance(name,str),"name must be a string"
-        self.name = name_pipeline(name,self)
+        self.name = name
         self.logger = get_logger(self.name)
         return self
 
@@ -411,7 +420,6 @@ class Pipeline(object):
             self.logger.error(error_msg)
             raise TypeError(error_msg)
 
-        # appends to instance block list
         self.logger.info("adding block {} to the pipeline".format(block.name))
         self.blocks.append(block)
 
@@ -430,14 +438,14 @@ class Pipeline(object):
                 is not instance of int
         """
         # checking to make sure block is a real block
-        if (not isinstance(block, BaseBlock)):
+        if not isinstance(block, BaseBlock):
             error_msg = "'block' must be a subclass of ip.BaseBlock"
             self.logger.error(error_msg)
             raise TypeError(error_msg)
 
         # checking to make sure index is integer
-        if (isinstance(index, int)):
-            error_msg = "'index' must be int"
+        if not isinstance(index, int):
+            error_msg = "can't add block to pipeline -'index' must be an int"
             self.logger.error(error_msg)
             raise TypeError(error_msg)
 
@@ -456,7 +464,6 @@ class Pipeline(object):
 
         Raise:
             TypeError: if 'block_name' is not an instance of str
-
             ValueError: if 'block_name' is not member of list self.names
         """
         # checking to make sure block_name is string
@@ -555,3 +562,30 @@ class Pipeline(object):
         """yields next item of self.blocks via generator"""
         for b in self.blocks:
             yield b
+
+    def __getstate__(self):
+        """pickle state retrieval function, its most important use is to
+        delete the copied uuid to prevent potential issues from improper
+        restoration
+
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via _super().__getstate__(state)_, or otherwise return
+            a state dictionary without a uuid
+        """
+        state = self.__dict__.copy()
+        del state['uuid']
+
+    def __setstate__(self, state):
+        """pickle restoration function, its most important use is to generate
+        a new uuid for the copied or deserialized object
+
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via _super().__setstate__(state)_, or otherwise create a
+            new unique uuid for the restored Pipeline _self.uuid = uuid4().hex_
+        """
+        self.__dict__.update(state)
+        # create a new uuid for this instance, since it's technically a
+        # different object
+        self.uuid = uuid4().hex
