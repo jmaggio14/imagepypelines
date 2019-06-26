@@ -5,7 +5,6 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
-from ..Logger import IpLogger
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .BaseBlock import Incompatible

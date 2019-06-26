@@ -116,5 +116,23 @@ def critical(*messages):
 
 
 # function to create a new ImagePypelines Logger
-def get_logger(name):
-    return MASTER_LOGGER.getChild(name)
+def get_logger(name, log_level=logging.INFO):
+    """Creates a new child logger of the ImagePypelines master logger, by
+    default the new child logger has a log level of logging.INFO.
+
+    Args:
+        name(str): the name of the new child logger
+        log_level(int): the log level of the new logger, see python's logging
+            module for more information
+
+    Returns:
+        logging.Logger: a new child logger object from the ImagePypelines master
+            logger
+    """
+    child = MASTER_LOGGER.getChild(name)
+    child.setLevel(log_level)
+    return child
+
+
+
+# END
