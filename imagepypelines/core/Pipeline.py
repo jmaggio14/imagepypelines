@@ -4,8 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from __future__ import print_function
-import logging
+from ..Logger import get_logger
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .BaseBlock import Incompatible
@@ -93,7 +92,7 @@ class Pipeline(object):
         self.track_types = track_types
         self._debug = debug
 
-        self.logger = logging.getLogger(self.name)
+        self.logger = get_logger(self.name)
         self.blocks = []
         self.step_types = []
 
@@ -360,7 +359,7 @@ class Pipeline(object):
     def rename(self,name):
         assert isinstance(name,str),"name must be a string"
         self.name = name_pipeline(name,self)
-        self.logger = logging.getLogger(self.name)
+        self.logger = get_logger(self.name)
         return self
 
     @property

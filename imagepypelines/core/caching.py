@@ -73,7 +73,7 @@ class Cache(object):
     def __init__(self):
             self.subdir = os.path.join(CACHE,'cache')
             if not os.path.exists(self.subdir):
-                ipinfo("creating imagepypelines cache: ", self.subdir,'...')
+                ipinfo("creating imagepypelines cache: " + self.subdir +'...')
                 os.makedirs(self.subdir)
 
             self.__passwd = None

@@ -160,7 +160,7 @@ def main():
                         size=(512,512),
                         enable_frame_counter=True)
     for img,name in zip(img_gen,ip.list_standard_images()):
-        ip.info("displaying ",name)
+        ip.info("displaying " + name)
         v.view(img)
         time.sleep(1)
 

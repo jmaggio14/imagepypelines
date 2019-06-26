@@ -83,17 +83,13 @@ class IpLogger( logging.getLoggerClass() ):
         return getLogger, (self.name,)
 
 
-# set our new logging class as the logging superclass so it can be accessed
-# via logging.getLogger
-logging.setLoggerClass(IpLogger)
-
 # create our ImagePypelines master logger
 ch = logging.StreamHandler()
 formatter = logging.Formatter(
                     '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
 ch.setFormatter(formatter)
 
-MASTER_LOGGER = logging.getLogger('ImagePypelines')
+MASTER_LOGGER = IpLogger('ImagePypelines')
 MASTER_LOGGER.addHandler(ch)
 MASTER_LOGGER.setLevel(logging.DEBUG)
 

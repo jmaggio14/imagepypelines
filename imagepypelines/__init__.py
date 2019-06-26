@@ -30,7 +30,7 @@ del pkg_resources, os, uuid4, time
 # ----------- Setup the Root ImagePypelines Logger ---------------
 # constants our users can modify to change color behavior
 # import the master logger
-from .Logger import MASTER_LOGGER, IpLogger
+from .Logger import MASTER_LOGGER, get_logger
 # import master logger convienence function
 from .Logger import debug, info, warning, error, critical
 

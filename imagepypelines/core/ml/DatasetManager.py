@@ -11,7 +11,7 @@ import itertools
 import collections
 import numpy as np
 import imagepypelines as ip
-import logging
+from ... import get_logger
 import fnmatch
 from itertools import islice, chain
 
@@ -76,7 +76,7 @@ class DatasetManager(object):
         self.class_names = {}
         self.data_chunks = collections.deque()
         self.label_chunks = collections.deque()
-        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger = get_logger(self.__class__.__name__)
 
     def rotate(self):
         """rotate the data chunks so the next dataset fold is available"""

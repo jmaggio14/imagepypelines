@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-import logging
+from ..Logger import get_logger
 from .constants import CV2_INTERPOLATION_TYPES
 from .constants import NUMPY_TYPES
 from .Exceptions import InvalidInterpolationType
@@ -13,7 +13,7 @@ import inspect
 import collections
 import time
 
-TIMER_PRINTER = logging.getLogger('TIMER')
+TIMER_LOGGER = get_logger('TIMER')
 
 ################################################################################
 #                                 Error Checking
@@ -69,7 +69,7 @@ def print_args(func):
         VARPOSITIONAL = 'var-positional|'
         VARKEYWORD    = 'var-keyword   |'
         DEFAULT       = 'default       |'
-        PRINTER = logging.getLogger(func.__name__)
+        PRINTER = get_logger(func.__name__)
 
         arg_dict = collections.OrderedDict()
         vtypes = {}
@@ -275,7 +275,7 @@ def function_timer(func):
         run_time = round(time.time() - start,3)
         msg = "ran function '{name}' in {t}sec".format(name=func.__name__,
                                                             t=run_time)
-        TIMER_PRINTER.info(msg)
+        TIMER_LOGGER.info(msg)
 
         return ret
 
@@ -304,7 +304,7 @@ def function_timer_ms(func):
         run_time = round((time.time() - start) * 1000,3)
         msg = "ran function '{name}' in {t}ms".format(name=func.__name__,
                                                             t=run_time)
-        TIMER_PRINTER.info(msg)
+        TIMER_LOGGER.info(msg)
 
         return ret
 

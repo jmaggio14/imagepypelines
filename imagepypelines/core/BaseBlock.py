@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-import logging
+from ..Logger import get_logger
 from .Exceptions import InvalidBlockInputData
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
@@ -12,6 +12,7 @@ from .Exceptions import DataLabelMismatch
 from .Exceptions import BlockRequiresLabels
 from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES
+
 import copy
 import time
 import uuid
@@ -332,7 +333,7 @@ class BaseBlock(object):
 
         self.trained = False if self.requires_training else True
 
-        self.logger = logging.getLogger(self.name)
+        self.logger = get_logger(self.name)
 
         # create a block description
         self.description = describe_block(self,notes)
@@ -371,7 +372,7 @@ class BaseBlock(object):
         """
         assert isinstance(name,str),"name must be a string"
         self.name = name
-        self.logger = logging.getLogger(self.name)
+        self.logger = get_logger(self.name)
         return self
 
     def train(self, data, labels=None):
