@@ -347,25 +347,20 @@ class Pipeline(object):
 
         Args:
             filename (string): filename to save pipeline to, defaults to
-                saving the pipeline to the ip.cache with the key being the
-                pipeline name
-
+                saving the pipeline to the current directory
         Returns:
             str: the filename the pipeline was saved to
         """
         if filename is None:
-            self.logger.info("saving {} to {}".format(self, self.name))
-            ip.cache[self.name] = self
-            filename = ip.cache.filename(self.name)
+            filename = os.path.join( os.getcwd(), self.name + '.pck' )
 
-        else:
-            with open(filename, 'wb') as f:
-                pickle.dump(self, f)
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
 
         return filename
 
-    def rename(self,name):
-        assert isinstance(name,str),"name must be a string"
+    def rename(self, name):
+        assert isinstance(name, str), "name must be a string"
         self.name = name
         self.logger = get_logger(self.name)
         return self
