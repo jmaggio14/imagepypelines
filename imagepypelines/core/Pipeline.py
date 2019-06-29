@@ -564,7 +564,7 @@ class Pipeline(object):
 
         Note:
             If you overload this function, it's imperative that you call this
-            function via _super().__getstate__(state)_, or otherwise return
+            function via super().__getstate__(state), or otherwise return
             a state dictionary without a uuid
         """
         state = self.__dict__.copy()
@@ -576,8 +576,8 @@ class Pipeline(object):
 
         Note:
             If you overload this function, it's imperative that you call this
-            function via _super().__setstate__(state)_, or otherwise create a
-            new unique uuid for the restored Pipeline _self.uuid = uuid4().hex_
+            function via super().__setstate__(state), or otherwise create a
+            new unique uuid for the restored Pipeline _self.uuid = uuid4().hex
         """
         self.__dict__.update(state)
         # create a new uuid for this instance, since it's technically a

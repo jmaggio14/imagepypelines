@@ -75,7 +75,7 @@ class MultilayerPerceptron(BatchBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        logger(ip.IpLogger): logger for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
         num_epochs(int): the number of epochs to train this model for (the number
             of times the model is trained on the training data). higher usually

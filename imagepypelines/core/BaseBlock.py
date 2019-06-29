@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
-from ..Logger import IpLogger
+from ..Logger import ImagepypelinesLogger
 from .Exceptions import InvalidBlockInputData
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
@@ -299,7 +299,7 @@ class BaseBlock(object):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        logger(ip.IpLogger): logger for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
         description(str): a readable description of this block that includes
             user defined notes and a summary of inputs and outputs

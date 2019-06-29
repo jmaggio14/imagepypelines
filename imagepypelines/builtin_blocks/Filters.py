@@ -33,7 +33,7 @@ class Highpass(SimpleBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        logger(ip.IpLogger): logger for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
     """
     def __init__(self,cut_off,filter_type='ideal',butterworth_order=1):
@@ -82,7 +82,7 @@ class Lowpass(SimpleBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        logger(ip.IpLogger): logger for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
     """
     def __init__(self,cut_off,filter_type='ideal',butterworth_order=1):

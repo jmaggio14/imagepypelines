@@ -318,7 +318,7 @@ class Cache(object):
 
         checksum = self.__checksum_bytes(encoded)
 
-        ipdebug("saving {} to {}. checksum: {}".format(obj, fname, checksum))
+        ipdebug("saving {} to \"{}\" sha256: {}".format(obj, fname, checksum))
         with open(fname,'wb') as f:
             f.write(encoded)
 

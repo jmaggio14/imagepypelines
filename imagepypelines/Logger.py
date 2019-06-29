@@ -42,9 +42,14 @@ ENABLE_LOG_COLOR = True
 """Module variable controlling whether or not to markup log output with ANSI
 color codes, True by default"""
 
+
+MASTER_LOGGER = None
+"""logging.Logger subclass that is the root of all loggers instantiated in
+ImagePypelines"""
+
 # Define our new special Logger class that can be pickled
 # (like the loggers of python 3.7)
-class IpLogger( logging.getLoggerClass() ):
+class ImagepypelinesLogger( logging.getLoggerClass() ):
     """subclass of logging.Logger that can be pickled, also adds colored logging
     outputs if desired. the color, functionality and text attributes can be
     controlled by setting the module variables imagepypelines.LOG_COLORS,
@@ -77,21 +82,31 @@ class IpLogger( logging.getLoggerClass() ):
 
     # JEFF: modified from here https://github.com/python/cpython/blob/ca7b504a4d4c3a5fde1ee4607b9501c2bab6e743/Lib/logging/__init__.py
     def __reduce__(self):
-        if logging.getLogger(self.name) is not self:
-            import pickle
-            raise pickle.PicklingError('logger cannot be pickled')
-        return getLogger, (self.name,)
+        if self.name == 'ImagePypelines':
+            return make_master, (self.level,)
+        return logging.getLogger, (self.name,)
 
 
-# create our ImagePypelines master logger
-ch = logging.StreamHandler()
-formatter = logging.Formatter(
-                    '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
-ch.setFormatter(formatter)
 
-MASTER_LOGGER = IpLogger('ImagePypelines')
-MASTER_LOGGER.addHandler(ch)
-MASTER_LOGGER.setLevel(logging.DEBUG)
+def make_master(level=logging.DEBUG):
+    if MASTER_LOGGER:
+        return MASTER_LOGGER
+
+    # create our ImagePypelines master logger
+    ch = logging.StreamHandler()
+    formatter = logging.Formatter(
+                        '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
+    ch.setFormatter(formatter)
+
+    master = ImagepypelinesLogger('ImagePypelines')
+    master.addHandler(ch)
+    master.setLevel(level)
+
+    # set our subclass as the root of all child loggers
+    master.manager.setLoggerClass(ImagepypelinesLogger)
+    return master
+
+MASTER_LOGGER = make_master()
 
 # quick calls to the ImagePypelines master logger
 def debug(*messages):
@@ -118,7 +133,7 @@ def critical(*messages):
 # function to create a new ImagePypelines Logger
 def get_logger(name, log_level=logging.INFO):
     """Creates a new child logger of the ImagePypelines master logger, by
-    default the new child logger has a log level of logging.INFO.
+    default the new child logger has a log level of logging.INFO
 
     Args:
         name(str): the name of the new child logger
