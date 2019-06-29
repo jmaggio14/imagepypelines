@@ -4,7 +4,8 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from .Printer import get_printer
+from ..Logger import get_logger
+from ..Logger import ImagepypelinesLogger
 from .Exceptions import InvalidBlockInputData
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
@@ -12,6 +13,7 @@ from .Exceptions import DataLabelMismatch
 from .Exceptions import BlockRequiresLabels
 from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES
+
 import copy
 import time
 import uuid
@@ -62,12 +64,12 @@ class ArrayType(object):
 
     def __repr__(self):
         return str(self)
-#
+
     def __eq__(self,other):
         if isinstance(other,ArrayType):
             return hash(self) == hash(other)
         return False
-#
+
     def __hash__(self):
         # NOTE(Jeff Maggio) - possible issue here because tuples aren't sorted
         clean = lambda shp : tuple((-1 if ele is None else ele) for ele in shp)
@@ -226,11 +228,9 @@ class IoMap(tuple):
                         else:
                             outputs.add(arr_out)
 
-
             else:
                 raise IncompatibleTypes("invalid input type, must be"\
                      + "({}) not {}".format(self.inputs,input_type))
-
 
             return tuple(outputs)
 
@@ -273,7 +273,7 @@ class BaseBlock(object):
     This is the building block (pun intended) for the entire imagepypelines
     pipelining system. All blocks, both SimpleBlocks and BatchBlocks, will
     inherit from this object. Which contains base functionality to setup a
-    block's printers, unique name, standard input/output_shapes and special
+    block's loggers, unique name, standard input/output_shapes and special
     functions for pipeline objects to call
 
     Args:
@@ -299,7 +299,7 @@ class BaseBlock(object):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
         description(str): a readable description of this block that includes
             user defined notes and a summary of inputs and outputs
@@ -329,10 +329,12 @@ class BaseBlock(object):
         self.name = name
         self.requires_training = requires_training
         self.requires_labels = requires_labels
-
         self.trained = False if self.requires_training else True
 
-        self.printer = get_printer(self.name)
+        # this will be defined in _pipeline_pair
+        self.logger = None
+        self.pipeline_uuid = None
+        self.pipeline_name = None
 
         # create a block description
         self.description = describe_block(self,notes)
@@ -371,7 +373,7 @@ class BaseBlock(object):
         """
         assert isinstance(name,str),"name must be a string"
         self.name = name
-        self.printer = get_printer(self.name)
+        self.logger = get_logger(self.name)
         return self
 
     def train(self, data, labels=None):
@@ -392,7 +394,7 @@ class BaseBlock(object):
         if self.requires_training:
             msg = "{}.train must be overloaded if the " \
                         + "'requires_training' is set to True".format(self.name)
-            self.printer.critical(msg)
+            self.logger.critical(msg)
             raise NotImplementedError(msg)
 
     def before_process(self, data, labels=None):
@@ -518,6 +520,20 @@ class BaseBlock(object):
         self._metadata['total_out'] += len(processed)
         return processed, labels
 
+
+    def _pipeline_pair(self, pipeline):
+        """pairs this block for use with the pipeline passed in
+
+        Args:
+            pipeline (ip.Pipeline): the pipeline to pair with this block
+
+        Returns:
+            None
+        """
+        self.logger = pipeline.logger.getChild( self.name )
+        self.pipeline_name = pipeline.name
+        self.pipeline_uuid = pipeline.uuid
+
     @abstractmethod
     def process_strategy(self, data):
         """overarching processing management function for this block
@@ -550,5 +566,32 @@ class BaseBlock(object):
 
     def __repr__(self):
         return self.description
+
+    def __getstate__(self):
+        """pickle state retrieval function, its most important use is to
+        delete the copied uuid to prevent potential issues from improper
+        restoration
+
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via _super().__getstate__(state)_, or otherwise return
+            a state dictionary without a uuid
+        """
+        state = self.__dict__.copy()
+        del state['uuid']
+
+    def __setstate__(self, state):
+        """pickle restoration function, its most important use is to generate
+        a new uuid for the copied or deserialized object
+
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via _super().__setstate__(state)_, or otherwise create a
+            new unique uuid for the restored Block _self.uuid = uuid4().hex_
+        """
+        self.__dict__.update(state)
+        # create a new uuid for this instance, since it's technically a
+        # different object
+        self.uuid = uuid4().hex
 
 # END

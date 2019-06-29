@@ -26,14 +26,14 @@ class Orb(SimpleBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
 
     """
     def __init__(self,n_keypoints=100):
         if not isinstance(n_keypoints,(int,float)):
             error_msg = "'n_keypoints' must be int"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise TypeError(error_msg)
 
         self.n_keypoints = int(n_keypoints)

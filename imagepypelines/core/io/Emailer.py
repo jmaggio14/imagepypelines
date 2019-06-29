@@ -6,7 +6,7 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import smtplib
 import getpass
-from ..Printer import error as iperror
+from ... import error as iperror
 
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage

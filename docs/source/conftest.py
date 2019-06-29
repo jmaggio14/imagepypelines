@@ -10,6 +10,7 @@ import doctest
 
 doctest.ELLIPSIS_MARKER = '[...]'
 
+# run all code samples in the website blocks
 pytest_collect_file = Sybil(
     parsers=[
         DocTestParser(optionflags=ELLIPSIS),

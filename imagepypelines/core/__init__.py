@@ -37,6 +37,8 @@ from .Exceptions import InvalidBlockInputLabels
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
+from .Exceptions import CachingError
+from .Exceptions import ChecksumError
 
 # img_tools.py
 from .img_tools import display_safe
@@ -72,25 +74,6 @@ from .pipeline_tools import quick_block
 
 # Pipeline.py
 from .Pipeline import Pipeline
-
-# Printer.py
-from .Printer import get_printer
-from .Printer import disable_all_printers
-from .Printer import whitelist_printer
-from .Printer import blacklist_printer
-from .Printer import reset_printer_lists
-from .Printer import disable_printout_colors
-from .Printer import enable_printout_colors
-from .Printer import get_active_printers
-from .Printer import set_global_printout_level
-from .Printer import get_default_printer
-from .Printer import debug
-from .Printer import info
-from .Printer import warning
-from .Printer import error
-from .Printer import critical
-from .Printer import comment
-from .Printer import Printer
 
 # quick_types.py
 from .quick_types import *

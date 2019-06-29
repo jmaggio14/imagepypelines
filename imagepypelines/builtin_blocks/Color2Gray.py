@@ -29,7 +29,7 @@ class Color2Gray(SimpleBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
     """
     def __init__(self, order='rgb'):

@@ -15,91 +15,91 @@ numpy_types = [np.uint8,
                 np.complex128]
 
 # test function for ArrayType
-# @given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))) )
-# def test_ArrayType(shape):
-#     """test ArrayType instantiation of multiple shapes and dtypes"""
-#     import imagepypelines as ip
-#     ip.ArrayType(shape)
+@given( shape=st.lists(((st.integers(min_value=1, max_value=1000)))) )
+def test_ArrayType(shape):
+    """test ArrayType instantiation of multiple shapes and dtypes"""
+    import imagepypelines as ip
+    ip.ArrayType(shape)
 
 # ------------- IoMap -------------
-# class TestIoMap(object):
-#     def test_reduction(self):
-#         """
-#         create an ArrayType with multiple shapes and see if the IoMap performs
-#         a proper breakdown
-#         ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
-#         """
-#         import imagepypelines as ip
-#         # create an Array Type with multiple shapes
-#         a = ip.ArrayType([None,None,None],[None,None],[None])
-#         b = ip.ArrayType([None,None,None,None],[None,None])
-#         io_map = ip.IoMap( {a:b} )
-#         assert len(io_map.inputs) == len(io_map.outputs) == 6
-#
-#     def test_output(self):
-#         """
-#         check that the block io mapping system is operating correctly
-#         """
-#         import imagepypelines as ip
-#
-#         a = ip.ArrayType([None,None,None],[None,None],[None])
-#         b = ip.ArrayType([None],[None,None])
-#         io_map = ip.IoMap( {a:b} )
-#
-#         desired_output = ip.ArrayType([None]), ip.ArrayType([None,None])
-#         given_output = io_map.output( (ip.ArrayType([None]),) )
-#
-#         assert set(desired_output) == set(given_output)
-#
-#     # JM: TODO: add dtype checking
+class TestIoMap(object):
+    def test_reduction(self):
+        """
+        create an ArrayType with multiple shapes and see if the IoMap performs
+        a proper breakdown
+        ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
+        """
+        import imagepypelines as ip
+        # create an Array Type with multiple shapes
+        a = ip.ArrayType([None,None,None],[None,None],[None])
+        b = ip.ArrayType([None,None,None,None],[None,None])
+        io_map = ip.IoMap( {a:b} )
+        assert len(io_map.inputs) == len(io_map.outputs) == 6
+
+    def test_output(self):
+        """
+        check that the block io mapping system is operating correctly
+        """
+        import imagepypelines as ip
+
+        a = ip.ArrayType([None,None,None],[None,None],[None])
+        b = ip.ArrayType([None],[None,None])
+        io_map = ip.IoMap( {a:b} )
+
+        desired_output = ip.ArrayType([None]), ip.ArrayType([None,None])
+        given_output = io_map.output( (ip.ArrayType([None]),) )
+
+        assert set(desired_output) == set(given_output)
+
+    # JM: TODO: add dtype checking
 
 # =================== block_subclasses.py ===================
-# class TestSimpleBlock(object):
-#     """
-#     Create a test SimpleBlock and run some data through it
-#     """
-#     def test_block_creation_and_processing(self):
-#         import imagepypelines as ip
-#         # create a test block via object inheritance
-#         class AddOne(ip.SimpleBlock):
-#             def __init__(self):
-#                 io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
-#                 super(AddOne,self).__init__(io_map)
-#
-#             def process(self, datum):
-#                 return datum + 1
-#
-#         block = AddOne()
-#         input_datum = np.zeros( (512,) )
-#
-#         processed = block._pipeline_process([input_datum])
-#
-#         assert np.all( np.around(processed[0],1) == 1.0 )
-#
-#
-# class TestBatchBlock(object):
-#     """
-#     Create a test BatchBlock and run some data through it
-#     """
-#     def test_block_creation_and_processing(self):
-#         import imagepypelines as ip
-#         # create a test block via object inheritance
-#         class AddOne(ip.BatchBlock):
-#             def __init__(self):
-#                 io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
-#                 super(AddOne,self).__init__(io_map)
-#
-#             def batch_process(self, data):
-#                 for i in range( len(data) ):
-#                     data[i] = data[i] + 1
-#                 return data
-#
-#         block = AddOne()
-#         input_datum = np.zeros( (512,) )
-#         (proc1,proc2),_ = block._pipeline_process([input_datum,input_datum])
-#
-#         assert np.all( np.around(proc1,1) == 1.0 )
-#         assert np.all( np.around(proc2,1) == 1.0 )
+class TestSimpleBlock(object):
+    """
+    Create a test SimpleBlock and run some data through it
+    """
+    def test_block_creation_and_processing(self):
+        import imagepypelines as ip
+        # create a test block via object inheritance
+        class AddOne(ip.SimpleBlock):
+            def __init__(self):
+                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+                super(AddOne,self).__init__(io_map)
+
+            def process(self, datum):
+                return datum + 1
+
+        block = AddOne()
+        input_datum = np.zeros( (512,) )
+
+        processed = block._pipeline_process([input_datum])
+
+        assert np.all( np.around(processed[0],1) == 1.0 )
+
+
+class TestBatchBlock(object):
+    """
+    Create a test BatchBlock and run some data through it
+    """
+    def test_block_creation_and_processing(self):
+        import imagepypelines as ip
+        # create a test block via object inheritance
+        class AddOne(ip.BatchBlock):
+            def __init__(self):
+                io_map = {ip.ArrayType([None]):ip.ArrayType([None])}
+                super(AddOne,self).__init__(io_map)
+
+            def batch_process(self, data):
+                for i in range( len(data) ):
+                    data[i] = data[i] + 1
+                return data
+
+        block = AddOne()
+        input_datum = np.zeros( (512,) )
+        (proc1,proc2),_ = block._pipeline_process([input_datum,input_datum])
+
+        assert np.all( np.around(proc1,1) == 1.0 )
+        assert np.all( np.around(proc2,1) == 1.0 )
 
 
 # class TestTfBlock(object):
@@ -141,9 +141,108 @@ numpy_types = [np.uint8,
 
 # =================== caching.py ===================
 # JM: @Ryan, I'm leaving this blank for you to populate
+# def test_cache_encryption():
+
+def test_list_cache_filenames():
+    import imagepypelines as ip
+    if not ip.cache.enabled():
+        ip.cache.secure_enable()
+
+    fnames = ip.cache.list_filenames()
+
+class TestCacheErrorss():
+    # test illegal chars
+    def test_illegal_chars(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable()
+
+        fail = True
+        try:
+            ip.cache['this/is/illegal'] = "this is illegal"
+        except ValueError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
+
+    def test_nonstring(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable()
+
+        fail = True
+        try:
+            ip.cache[5324] = "this is illegal"
+        except TypeError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
+
+    def test_nokey(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable()
+
+        fail = True
+        try:
+            a = ip.cache['this is not a key']
+        except KeyError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
+
+    def test_wrong_pass(self):
+        import imagepypelines as ip
+        if not ip.cache.enabled():
+            ip.cache.secure_enable('sdadafdas')
+
+        ip.cache['key'] =1
+
+        fail = True
+        try:
+            ip.cache.load('key', passwd="NOT RIGHT")
+        except ip.Exceptions.CachingError:
+            fail = False
+
+        if fail:
+            raise RuntimeError
 
 
+def test_cache_dir_deletion():
+    import imagepypelines as ip
+    import os
+    if not ip.cache.enabled():
+        ip.cache.secure_enable()
 
+    os.makedirs( os.path.join(ip.cache.subdir, 'testdir') )
+    ip.cache.purge()
+
+def test_cache_iter():
+    import imagepypelines as ip
+    if not ip.cache.enabled():
+        ip.cache.secure_enable()
+
+    ip.cache.purge()
+    ip.cache['test1'] = 'test1'
+    ip.cache['test2'] = 'test2'
+    ip.cache['test3'] = 'test3'
+
+    items = list(x for x in ip.cache)
+    assert sorted(items) == sorted(['test1','test2','test3'])
+    ip.cache.purge()
+
+
+def test_cache_repr():
+    import imagepypelines as ip
+    repr(ip.cache)
+
+def test_cache_passgen():
+    import imagepypelines as ip
+    ip.cache.passgen()
+    
 # =================== constants.py ===================
 def test_constants():
     import imagepypelines as ip
@@ -373,7 +472,7 @@ def test_xysample():
 #
 #         del P_copy
 
-# =================== Printer.py ===================
+# =================== Logger.py ===================
 # TODO - JM
 
 # =================== quick_types.py ===================

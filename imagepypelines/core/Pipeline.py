@@ -4,17 +4,13 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from __future__ import print_function
-from .Printer import get_printer
-from .Printer import set_global_printout_level
+from ..Logger import get_logger
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .BaseBlock import Incompatible
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
 from .util import Timer
-
-INCOMPATIBLE = { Incompatible }
 
 
 import collections
@@ -78,7 +74,7 @@ class Pipeline(object):
                 out its status
             enable_text_graph(bool): whether or not to print out a graph of
                 pipeline blocks and outputs
-            printer(ip.Printer): printer object for this pipeline,
+            logger(ip.Logger): logger object for this pipeline,
                 registered with 'name'
             uuid(str): universally unique hex id for this pipeline
     """
@@ -94,7 +90,7 @@ class Pipeline(object):
         self.track_types = track_types
         self._debug = debug
 
-        self.printer = get_printer(self.name)
+        self.logger = get_logger(self.name)
         self.blocks = []
         self.step_types = []
 
@@ -156,7 +152,7 @@ class Pipeline(object):
                                     pred_chain[block1.name],
                                     block2.name,
                                     block2.io_map.inputs)
-                self.printer.warning(msg)
+                self.logger.warning(msg)
 
         if self.debug:
             self._text_graph(predicted_type_chains)
@@ -214,6 +210,13 @@ class Pipeline(object):
         pass
 
     # ================== pipeline processing functions ==================
+    def _pair_blocks(self):
+        """
+        pairs every block with this pipeline in preparation for processing
+        """
+        for b in self.blocks:
+            b._pipeline_pair(self)
+
     def _step(self):
         """
         """
@@ -231,7 +234,7 @@ class Pipeline(object):
             except IncompatibleTypes as e:
                 msg = "not all {} outputs ({}) compatible with {}'s IoMap inputs({}). attempting to compute regardless..."
                 msg = msg.format(self.blocks[self.step_index-1], step_types, block, block.io_map.inputs )
-                self.printer.warning(msg)
+                self.logger.warning(msg)
 
         self.step_data,self.step_labels = self._run_block(block,
                                                             self.step_data,
@@ -253,17 +256,18 @@ class Pipeline(object):
                                                                     len(data),
                                                                     b_time)
         datum_msg = " (approx {}ms per datum)".format(datum_time_ms)
-        self.printer.debug(debug_msg, datum_msg)
+        self.logger.debug(debug_msg, datum_msg)
         return processed,labels
 
     # ================== processing functions
     def _before_process(self,data,labels=None):
+        self._pair_blocks()
         # check to make sure all blocks have been trained if required
         if not self.trained:
             for b in self.blocks:
                 if not b.trained:
                     err_msg = "requires training, but hasn't yet been trained"
-                    self.printer.error("{}: ".format(b.name), err_msg)
+                    self.logger.error("{}: ".format(b.name), err_msg)
 
             raise RuntimeError("you must run Pipeline.train before processing")
 
@@ -300,6 +304,7 @@ class Pipeline(object):
 
     # ================== training functions
     def _before_train(self,data,labels=None):
+        self._pair_blocks()
         if not self.skip_validation:
             # validate pipeline integrity
             self.validate(data)
@@ -315,13 +320,13 @@ class Pipeline(object):
         # and no labels are passed into this function
         t = Timer()
         for b in self.blocks:
-            self.printer.debug("training {}...".format(b.name))
+            self.logger.debug("training {}...".format(b.name))
             b._pipeline_train(self.step_data,self.step_labels)
             self._step() #step the block processing forward
 
-            self.printer.info("{}: trained in {} sec".format(b.name,t.lap()))
+            self.logger.info("{}: trained in {} sec".format(b.name,t.lap()))
 
-        self.printer.info("Pipeline trained in {}seconds".format(t.time()))
+        self.logger.info("Pipeline trained in {}seconds".format(t.time()))
 
     def _after_train(self):
         self._after_process()
@@ -342,26 +347,22 @@ class Pipeline(object):
 
         Args:
             filename (string): filename to save pipeline to, defaults to
-                saving the pipeline to the ip.cache
-
+                saving the pipeline to the current directory
         Returns:
             str: the filename the pipeline was saved to
         """
         if filename is None:
-            self.printer.info("saving {} to {}".format(self, self.name))
-            ip.cache[self.name] = self
-            filename = ip.cache.filename(self.name)
+            filename = os.path.join( os.getcwd(), self.name + '.pck' )
 
-        else:
-            with open(filename, 'wb') as f:
-                pickle.dump(self, f)
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
 
         return filename
 
-    def rename(self,name):
-        assert isinstance(name,str),"name must be a string"
-        self.name = name_pipeline(name,self)
-        self.printer = get_printer(self.name)
+    def rename(self, name):
+        assert isinstance(name, str), "name must be a string"
+        self.name = name
+        self.logger = get_logger(self.name)
         return self
 
     @property
@@ -410,11 +411,10 @@ class Pipeline(object):
         # checking to make sure block is a real block
         if not isinstance(block, BaseBlock):
             error_msg = "'block' must be a subclass of ip.BaseBlock"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise TypeError(error_msg)
 
-        # appends to instance block list
-        self.printer.info("adding block {} to the pipeline".format(block.name))
+        self.logger.info("adding block {} to the pipeline".format(block.name))
         self.blocks.append(block)
 
     def insert(self, index, block):
@@ -422,29 +422,29 @@ class Pipeline(object):
 
         Args:
             index (int): index at which block object is to be inserted
-
             block (ip.BaseBlock): block object to add to this pipeline
 
         Returns:
             None
 
-        Raise:
-            TypeError: if 'block' is not a subclass of BaseBlock, or 'index' is not instance of int
+        Raises:
+            TypeError: if 'block' is not a subclass of BaseBlock, or 'index'
+                is not instance of int
         """
         # checking to make sure block is a real block
-        if (not isinstance(block, BaseBlock)):
+        if not isinstance(block, BaseBlock):
             error_msg = "'block' must be a subclass of ip.BaseBlock"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise TypeError(error_msg)
 
         # checking to make sure index is integer
-        if (isinstance(index, int)):
-            error_msg = "'index' must be int"
-            self.printer.error(error_msg)
+        if not isinstance(index, int):
+            error_msg = "can't add block to pipeline -'index' must be an int"
+            self.logger.error(error_msg)
             raise TypeError(error_msg)
 
-        self.printer.info("inserting block {0} into pipeline at index {1}".format(block.name, index))
-
+        self.logger.info("inserting block {0} into pipeline at index {1}"\
+                                    .format(block.name, index))
         self.blocks.insert(index, block)
 
     def remove(self, block_name):
@@ -458,22 +458,21 @@ class Pipeline(object):
 
         Raise:
             TypeError: if 'block_name' is not an instance of str
-
             ValueError: if 'block_name' is not member of list self.names
         """
         # checking to make sure block_name is string
         if (not isinstance(block_name, str)):
             error_msg = "'block_name' must be a string"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise TypeError(error_msg)
 
         # checking to make sure block_name is member of self.names
         if (block_name in self.names):
             error_msg = "'block_name' must be member of list self.names"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise ValueError(error_msg)
 
-        self.printer.info("removing block {} from the pipeline".format(block_name))
+        self.logger.info("removing block {} from the pipeline".format(block_name))
 
         # get index from block name and delete corresponding item from self.blocks
         i = self.names.index(block_name)
@@ -532,7 +531,7 @@ class Pipeline(object):
         # Method for cleaning up file io and multiprocessing with caching revamp
         if not isinstance(i, int):
             error_msg = "'i' must be an int"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise TypeError(error_msg)
 
         del self.blocks[i]
@@ -543,10 +542,10 @@ class Pipeline(object):
     def __setitem__(self,index,block):
         if not isinstance(block, BaseBlock):
             error_msg = "'block' must be a subclass of ip.BaseBlock"
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise TypeError(error_msg)
 
-        self.printer.info("{} replaced with {}".format(self.blocks[index],block.name))
+        self.logger.info("{} replaced with {}".format(self.blocks[index],block.name))
         self.blocks[index] = block
 
     def __iter__(self):
@@ -557,3 +556,30 @@ class Pipeline(object):
         """yields next item of self.blocks via generator"""
         for b in self.blocks:
             yield b
+
+    def __getstate__(self):
+        """pickle state retrieval function, its most important use is to
+        delete the copied uuid to prevent potential issues from improper
+        restoration
+
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via super().__getstate__(state), or otherwise return
+            a state dictionary without a uuid
+        """
+        state = self.__dict__.copy()
+        del state['uuid']
+
+    def __setstate__(self, state):
+        """pickle restoration function, its most important use is to generate
+        a new uuid for the copied or deserialized object
+
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via super().__setstate__(state), or otherwise create a
+            new unique uuid for the restored Pipeline _self.uuid = uuid4().hex
+        """
+        self.__dict__.update(state)
+        # create a new uuid for this instance, since it's technically a
+        # different object
+        self.uuid = uuid4().hex

@@ -31,7 +31,7 @@ class ImageLoader(SimpleBlock):
             training
         trained(bool): whether or not this block has been trained, True
             by default if requires_training = False
-        printer(ip.Printer): printer object for this block,
+        logger(ip.ImagepypelinesLogger): logger for this block,
             registered to 'name'
     """
     def __init__(self):
@@ -55,7 +55,7 @@ class ImageLoader(SimpleBlock):
         # throws error if unable to read img
         if img is None:
             error_msg = "unable to load {}".format(datum)
-            self.printer.error(error_msg)
+            self.logger.error(error_msg)
             raise FileNotFoundError(error_msg)
 
         return img

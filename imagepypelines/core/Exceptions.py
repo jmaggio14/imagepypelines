@@ -100,3 +100,10 @@ class DataLabelMismatch(TypeError):
             len(labels)
             )
         super(DataLabelMismatch,self).__init__(error_msg)
+
+
+class CachingError(RuntimeError):
+    pass
+
+class ChecksumError(RuntimeError):
+    pass

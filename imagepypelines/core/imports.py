@@ -6,7 +6,7 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 import sys
-from .Printer import error as iperror
+from .. import error as iperror
 
 
 def import_tensorflow():
