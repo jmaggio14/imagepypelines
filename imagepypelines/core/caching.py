@@ -243,13 +243,13 @@ class Cache(object):
         """
         fernet = Fernet( Cache.passgen(passwd) )
 
-        error = True
+        no_error = True
         try:
             decoded = fernet.decrypt(raw_bytes)
         except (InvalidSignature, InvalidToken):
-            error = False
+            no_error = False
 
-        if not error:
+        if not no_error:
             raise CachingError(
                 "unable to decrypt data. Is the password correct?")
 
