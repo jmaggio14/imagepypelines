@@ -39,5 +39,45 @@ def test_logger_serialization():
     assert master ==  ip.MASTER_LOGGER
     assert child == ip.get_logger('testChild')
 
+
+
+def test_new_uuid_upon_copy_or_serialization():
+    import imagepypelines as ip
+    from copy import deepcopy
+    import pickle
+
+    if not ip.cache.enabled():
+        ip.cache.secure_enable()
+
+
+    # make a pipeline
+    pipeline = ip.pipelines.LinearTransform(10,5)
+    pipeline.logger.setLevel(0)
+    pipeline.logger.warning("I'm about to rename this pipeline... It's ids shouldn't change")
+    pipeline.rename("original")
+
+
+    copied = deepcopy(pipeline)
+    copied.rename("deepcopy")
+
+    serialized = pickle.loads( pickle.dumps(pipeline) )
+    serialized.rename("serialized")
+
+    # sibling id should be the same among all of them
+    assert pipeline.sibling_id == copied.sibling_id
+    assert pipeline.sibling_id == serialized.sibling_id
+
+    # these should be different
+    assert pipeline.uuid != copied.uuid
+    assert pipeline.uuid != serialized.uuid
+    assert copied.uuid != serialized.uuid
+
+
+    pipeline.logger.info("I'm the original!")
+    copied.logger.info("I'm the deep copy!")
+    serialized.logger.info("I'm the unpickled one!")
+
+
 if __name__ == "__main__":
     test_logger_serialization()
+    test_new_uuid_upon_copy_or_serialization()

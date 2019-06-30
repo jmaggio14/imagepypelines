@@ -16,8 +16,9 @@ from .constants import NUMPY_TYPES
 
 import copy
 import time
-import uuid
+from uuid import uuid4
 from abc import ABCMeta, abstractmethod
+
 
 class ArrayType(object):
     """Object to describe the shapes of Arrays for Block inputs or outputs
@@ -30,6 +31,7 @@ class ArrayType(object):
             length axes can be represented by None.
             example: [None,None,3] (for rgb image)
     """
+
     def __init__(self, *array_shapes):
         if len(array_shapes) > 0:
             # -------------------- error-checking ---------------------
@@ -39,8 +41,8 @@ class ArrayType(object):
             # ensure that every element is a positive integer or NoneType
             shapes = list(list(shp) for shp in array_shapes)
             for shp in shapes:
-                for i in range( len(shp) ):
-                    if isinstance(shp[i],(float,int)):
+                for i in range(len(shp)):
+                    if isinstance(shp[i], (float, int)):
                         assert shp[i] > 0, "elements of shape must be > 0 or None"
                         shp[i] = int(shp[i])
 
@@ -54,7 +56,7 @@ class ArrayType(object):
         else:
             self.shapes = ()
 
-        self.arbitrary = not bool( len(self.shapes) )
+        self.arbitrary = not bool(len(self.shapes))
 
     def __str__(self):
         if len(self.shapes) == 0:
@@ -65,17 +67,16 @@ class ArrayType(object):
     def __repr__(self):
         return str(self)
 
-    def __eq__(self,other):
-        if isinstance(other,ArrayType):
+    def __eq__(self, other):
+        if isinstance(other, ArrayType):
             return hash(self) == hash(other)
         return False
 
     def __hash__(self):
         # NOTE(Jeff Maggio) - possible issue here because tuples aren't sorted
-        clean = lambda shp : tuple((-1 if ele is None else ele) for ele in shp)
+        clean = lambda shp: tuple((-1 if ele is None else ele) for ele in shp)
         sortable = (clean(shp) for shp in self.shapes)
-        return hash( tuple(sorted(sortable)) )
-
+        return hash(tuple(sorted(sortable)))
 
 
 class Same(object):
@@ -83,11 +84,14 @@ class Same(object):
     Indicates that the output is the same as the input is returned"""
     pass
 
+
 class Incompatible(object):
     def __str__(self):
         return "No known outputs due to incompatible Inputs"
+
     def __repr__(self):
         return str(self)
+
 
 class IoMap(tuple):
     """mapping object to determine the output of block
@@ -106,14 +110,15 @@ class IoMap(tuple):
         # -------------- ERROR CHECKING -----------------------
         if isinstance(io_map, IoMap):
             return io_map
-        elif not isinstance(io_map, dict):
+        elif isinstance(io_map, dict):
+            io_map = io_map.items()
+        elif not isinstance(io_map, tuple):
             raise TypeError(
-                "IoMap must be instantiated with a dictionary, not %s" \
+                "IoMap must be instantiated with a dictionary, tuple, or other IoMap, not %s"
                 % type(io_map))
 
         # ---------------- Breaking dictionary up into a mapping --------------
         # {key1:val1,key2:val2} --> ( (key1,val1),(key2,val2) )
-        io_map = io_map.items()
         # splitting apart all Array Types with multiple shapes
         # ArrayType(shape1,shape2) --> ArrayType(shape1), ArrayType(shape2)
         # going through inputs first
@@ -142,7 +147,7 @@ class IoMap(tuple):
         Returns:
             tuple: mapping of reduced types ((i1,o1),(i2,o2)...)
         """
-        if not isinstance(i,ArrayType):
+        if not isinstance(i, ArrayType):
             reduced_i = ((i, o), )
         else:
             if i.arbitrary:
@@ -153,7 +158,7 @@ class IoMap(tuple):
 
         reduced = []
         for i, o in reduced_i:
-            if not isinstance(o,ArrayType):
+            if not isinstance(o, ArrayType):
                 reduced.append((i, o))
             else:
                 if o.arbitrary:
@@ -162,7 +167,7 @@ class IoMap(tuple):
                     split = tuple(ArrayType(shp) for shp in o.shapes)
                 reduced.extend(zip((i,)*len(split), split))
 
-        return tuple( reduced )
+        return tuple(reduced)
 
     @staticmethod
     def shape_comparison(input_array, acceptable_array):
@@ -212,25 +217,25 @@ class IoMap(tuple):
         for input_type in input_types:
             # Quick Check for direct matches
             if input_type in self.inputs:
-                indices = [idx for idx,it in enumerate(self.inputs) if (it==input_type)]
+                indices = [idx for idx, it in enumerate(self.inputs) if (it == input_type)]
                 for idx in indices:
                     out = self.outputs[idx]
-                    if isinstance(out,Same):
-                        outputs.add( self.inputs[idx] )
+                    if isinstance(out, Same):
+                        outputs.add(self.inputs[idx])
                     else:
-                        outputs.add( out )
+                        outputs.add(out)
 
             elif isinstance(input_type, ArrayType):
-                for arr_in,arr_out in self.arrays:
-                    if self.shape_comparison(input_type,arr_in):
-                        if isinstance(arr_out,Same):
+                for arr_in, arr_out in self.arrays:
+                    if self.shape_comparison(input_type, arr_in):
+                        if isinstance(arr_out, Same):
                             outputs.add(arr_in)
                         else:
                             outputs.add(arr_out)
 
             else:
-                raise IncompatibleTypes("invalid input type, must be"\
-                     + "({}) not {}".format(self.inputs,input_type))
+                raise IncompatibleTypes("invalid input type, must be"
+                     + "({}) not {}".format(self.inputs, input_type))
 
             return tuple(outputs)
 
@@ -242,16 +247,22 @@ class IoMap(tuple):
         # with it's corresponding input
         # (ArrayType((512,512)),Same)-->(ArrayType((512,512)),ArrayType((512,512)))
         io = []
-        for i,o in self:
-            if isinstance(o,Same) and isinstance(i,ArrayType):
+        for i, o in self:
+            if isinstance(o, Same) and isinstance(i, ArrayType):
                 o = str(i) + " [same shape as input]"
-            io.append( (i,o) )
+            io.append((i, o))
 
-        io_map_str = "\n".join("{} --> {}".format(i,o) for i,o in io)
+        io_map_str = "\n".join("{} --> {}".format(i, o) for i, o in io)
         return io_map_str
 
+    # def __reduce__(self):
+    #     """make io maps copyable and serializable"""
+    #     constructor = IoMap
+    #     args = tuple( (i,o) for i,o in self )
+    #     return constructor, args
 
-def describe_block(block,notes):
+
+def describe_block(block, notes):
     if notes is None:
         notes = "<no description provided by the author>"
 
@@ -262,9 +273,10 @@ def describe_block(block,notes):
 {notes}
 
 io mapping:
-{io_map}""".format(name=block.name,notes=notes,io_map=io_map_str)
+{io_map}""".format(name=block.name, notes=notes, io_map=io_map_str)
 
     return description
+
 
 class BaseBlock(object):
     """BaseBlock object which is the root class for SimpleBlock and BatchBlock
@@ -288,13 +300,12 @@ class BaseBlock(object):
             labels during training
 
     Attributes:
-        io_map(IoMap): object that maps inputs to this block to outputs
+        io_map(IoMap): object that maps inputs to this block to it's outputs.
             subclass of tuple where I/O is stored as:
             ( (input1,output1),(input2,output2)... )
         name(str): unique name for this block
         notes(str): a short description of this block, what operations it
             performs, etc. This will be included in the blocks 'description'
-            variance
         requires_training(bool): whether or not this block will require
             training
         trained(bool): whether or not this block has been trained, True
@@ -305,7 +316,6 @@ class BaseBlock(object):
             user defined notes and a summary of inputs and outputs
     """
     __metaclass__ = ABCMeta
-    EXTANT = {}
     def __init__(self,
                  io_map,
                  name=None,
@@ -313,20 +323,26 @@ class BaseBlock(object):
                  requires_training=False,
                  requires_labels=False,
                  ):
+         # this uuid will not change with copying or serialization
+         # as such it can be used to id which blocks are copies or unpickled
+         # versions of the original - it's metaphorical siblings
+        self.sibling_id = uuid4().hex
+        # setup absolutely unique id for this block
+        # this will change even if the block is copied or pickled
+        self.uuid = uuid4().hex
         # ----------- building a unique name for this block ------------
+        # logger_name is set up as follows
+        # <readable_name>-<sibling_id>-<uuid>
         if name is None:
             name = self.__class__.__name__
-
-        # JM: keeping track of names in base class variable
-        if name in self.EXTANT:
-            self.EXTANT[name] += 1
-        else:
-            self.EXTANT[name] = 1
-        name = name + ':{}'.format( self.EXTANT[name] )
+        logger_name = self.__get_logger_name(name,
+                                                self.sibling_id,
+                                                self.uuid)
 
         # ------ setting up instance variables
         self.io_map = IoMap(io_map)
         self.name = name
+        self.logger_name = logger_name
         self.requires_training = requires_training
         self.requires_labels = requires_labels
         self.trained = False if self.requires_training else True
@@ -351,8 +367,6 @@ class BaseBlock(object):
         # setup initial tags
         self.tags = set()
 
-        # setup absolutely unique hash id for this block
-        self.uuid = uuid.uuid4().hex
 
         super(BaseBlock,self).__init__()
 
@@ -373,7 +387,9 @@ class BaseBlock(object):
         """
         assert isinstance(name,str),"name must be a string"
         self.name = name
-        self.logger = get_logger(self.name)
+        self.logger_name = self.__get_logger_name(self.name,
+                                                    self.sibling_id,
+                                                    self.uuid)
         return self
 
     def train(self, data, labels=None):
@@ -530,7 +546,7 @@ class BaseBlock(object):
         Returns:
             None
         """
-        self.logger = pipeline.logger.getChild( self.name )
+        self.logger = pipeline.logger.getChild( self.logger_name )
         self.pipeline_name = pipeline.name
         self.pipeline_uuid = pipeline.uuid
 
@@ -579,6 +595,7 @@ class BaseBlock(object):
         """
         state = self.__dict__.copy()
         del state['uuid']
+        return state
 
     def __setstate__(self, state):
         """pickle restoration function, its most important use is to generate
@@ -593,5 +610,27 @@ class BaseBlock(object):
         # create a new uuid for this instance, since it's technically a
         # different object
         self.uuid = uuid4().hex
+        # update the name to correspond with the new uuid
+        logger_name = self.__get_logger_name(self.name,
+                                                self.sibling_id,
+                                                self.uuid)
+
+
+
+    @staticmethod
+    def __get_logger_name(basename, sibling_id, uuid):
+        """generates a unique logger name that contains both a sibling id
+        (a random string that will be persistent across all copies and unpickled
+        versions of this object) and a uuid (which is unique to this exact
+        object instance)
+        (only the last six chars of each hash is used, so it's technically possible
+        for this name to not be unique) - if you need a truly unique ID, then
+        use obj.uuid
+        """
+        return "{basename} #{sibling_id}-{uuid}".format(basename=basename,
+                                                sibling_id=sibling_id[-5:],
+                                                uuid=uuid[-5:])
+
+
 
 # END

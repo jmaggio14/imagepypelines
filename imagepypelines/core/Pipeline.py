@@ -20,23 +20,8 @@ import numpy as np
 from termcolor import cprint
 from uuid import uuid4
 
-PIPELINE_NAMES = {}
 INCOMPATIBLE = (Incompatible(),)
 
-def name_pipeline(name,obj):
-    """
-
-    """
-    if name is None:
-        name = obj.__class__.__name__
-
-    global PIPELINE_NAMES
-    if name in PIPELINE_NAMES:
-        PIPELINE_NAMES[name] += 1
-    else:
-        PIPELINE_NAMES[name] = 1
-
-    return name + ('-%s' % PIPELINE_NAMES[name])
 
 def get_types(data):
     """Retrieves the block data type of the input datum"""
@@ -82,15 +67,30 @@ class Pipeline(object):
                     blocks=[],
                     name=None,
                     skip_validation=False,
-                    track_types=True,
-                    debug=False):
+                    track_types=True):
 
-        self.name = name_pipeline(name,self)
+         # this uuid will not change with copying or serialization
+         # as such it can be used to id which blocks are copies or unpickled
+         # versions of the original - it's metaphorical siblings
+        self.sibling_id = uuid4().hex
+        # setup absolutely unique id for this block
+        # this will change even if the block is copied or pickled
+        self.uuid = uuid4().hex
+        # ----------- building a unique name for this block ------------
+        # name is set up as follows
+        # <readable_name>-<sibling_id>-<uuid>
+        if name is None:
+            name = self.__class__.__name__
+        logger_name = self.__get_logger_name(name,
+                                                self.sibling_id,
+                                                self.uuid)
+
+        self.name = name
+        self.logger_name = logger_name
         self.skip_validation = skip_validation
         self.track_types = track_types
-        self._debug = debug
 
-        self.logger = get_logger(self.name)
+        self.logger = get_logger(self.logger_name)
         self.blocks = []
         self.step_types = []
 
@@ -100,10 +100,9 @@ class Pipeline(object):
         else:
             raise TypeError("'blocks' must be a list")
 
-        self.uuid = uuid4().hex
-
     # ================== validation / debugging functions ==================
     def validate(self,data):
+        pass
         """validates the integrity of the pipeline
 
         verifies all input-output shapes are compatible with each other
@@ -199,11 +198,12 @@ class Pipeline(object):
                 cprint(out_str, color)
 
     def debug(self):
-        """Enables debug mode which turns on all printouts for this pipeline
-        to aide in debugging
-        """
-        self._debug = True
         return self
+    #     """Enables debug mode which turns on all printouts for this pipeline
+    #     to aide in debugging
+    #     """
+    #     self._debug = True
+    #     return self
 
     def graph(self):
         """TODO: Placeholder function for @Ryan to create"""
@@ -362,7 +362,10 @@ class Pipeline(object):
     def rename(self, name):
         assert isinstance(name, str), "name must be a string"
         self.name = name
-        self.logger = get_logger(self.name)
+        self.logger_name = self.__get_logger_name(self.name,
+                                                    self.sibling_id,
+                                                    self.uuid)
+        self.logger = get_logger(self.logger_name)
         return self
 
     @property
@@ -387,13 +390,6 @@ class Pipeline(object):
 
     def __repr__(self):
         return str(self)
-
-    def __del__(self):
-        for b in self.blocks:
-            del b
-
-        del self.blocks
-        del self
 
     # ======== block list manipulation / List functionality functions ========
     def add(self, block):
@@ -569,6 +565,7 @@ class Pipeline(object):
         """
         state = self.__dict__.copy()
         del state['uuid']
+        return state
 
     def __setstate__(self, state):
         """pickle restoration function, its most important use is to generate
@@ -583,3 +580,24 @@ class Pipeline(object):
         # create a new uuid for this instance, since it's technically a
         # different object
         self.uuid = uuid4().hex
+        # update the name to correspond with the new uuid
+        logger_name = self.__get_logger_name(self.name,
+                                                self.sibling_id,
+                                                self.uuid)
+        self.logger = get_logger(logger_name)
+
+
+
+    @staticmethod
+    def __get_logger_name(basename, sibling_id, uuid):
+        """generates a unique logger name that contains both a sibling id
+        (a random string that will be persistent across all copies and unpickled
+        versions of this object) and a uuid (which is unique to this exact
+        object instance)
+        (only the last six chars of each hash is used, so it's technically possible
+        for this name to not be unique) - if you need a truly unique ID, then
+        use obj.uuid
+        """
+        return "{basename} #{sibling_id}-{uuid}".format(basename=basename,
+                                                sibling_id=sibling_id[-5:],
+                                                uuid=uuid[-5:])

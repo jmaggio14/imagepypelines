@@ -80,6 +80,17 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
         msg = self._color_msg(msg, 'critical', logging.CRITICAL)
         return super().critical(msg, *args, **kwargs)
 
+    def getChild(self,*args,**kwargs):
+        # make a formatter for the child logger
+        ch = logging.StreamHandler()
+        formatter = logging.Formatter(
+                            '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
+        ch.setFormatter(formatter)
+
+        child = super().getChild(*args,**kwargs)
+        child.addHandler(ch)
+        return child
+
     # JEFF: modified from here https://github.com/python/cpython/blob/ca7b504a4d4c3a5fde1ee4607b9501c2bab6e743/Lib/logging/__init__.py
     def __reduce__(self):
         if self.name == 'ImagePypelines':
