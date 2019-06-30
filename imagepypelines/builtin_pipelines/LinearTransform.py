@@ -13,5 +13,5 @@ def LinearTransform(m,b):
     mult = blocks.Multiply(m)
     add = blocks.Add(b)
 
-    pipeline = Pipeline([mult,add],name="LinearTransform")
+    pipeline = Pipeline([mult,add],name=None)
     return pipeline
