@@ -101,59 +101,60 @@ class Pipeline(object):
             raise TypeError("'blocks' must be a list")
 
     # ================== validation / debugging functions ==================
-    # def validate(self,data):
-    #     """validates the integrity of the pipeline
-    #
-    #     verifies all input-output shapes are compatible with each other
-    #
-    #     Developer Note:
-    #         this function could use a full refactor, especially with regards
-    #         to printouts when an error is raised - Jeff
-    #
-    #         Type comparison between Blocks is complicated and I suspect more
-    #         bugs are still yet to be discovered.
-    #
-    #     Raises:
-    #         TypeError: if 'data' isn't a list or tuple
-    #         RuntimeError: if more than one block in the pipeline has the same
-    #             name, or not all objects in the block list are BaseBlock
-    #             subclasses
-    #     """
-    #     # assert that every element in the blocks list is a BaseBlock subclass
-    #     if not all(isinstance(b,BaseBlock) for b in self.blocks):
-    #         error_msg = \
-    #            "All elements of the pipeline must be subclasses of ip.BaseBlock"
-    #         raise RuntimeError(error_msg)
-    #
-    #     # make sure data is a list
-    #     if not isinstance(data,list):
-    #         raise TypeError("'data' must be list")
-    #
-    #     # make sure every block has a unique name
-    #     if len(set(self.names)) != len(self.names):
-    #         error_msg = "every block in the pipeline must have a different name"
-    #         raise RuntimeError(error_msg)
-    #
-    #     predicted_type_chains = self.predict_type_chain(data)
-    #
-    #     # print incompatability warnings
-    #     for pred_chain in predicted_type_chains:
-    #         vals = tuple(pred_chain.values())
-    #         if INCOMPATIBLE in vals:
-    #             idx = vals.index(INCOMPATIBLE) - 1
-    #             block1 = self.blocks[idx-1]
-    #             block2 = self.blocks[idx]
-    #
-    #             msg = "pipeline_input={}: predicted incompatability between {}(output={})-->{}(inputs={})"
-    #             msg = msg.format(pred_chain['pipeline_input'],
-    #                                 block1.name,
-    #                                 pred_chain[block1.name],
-    #                                 block2.name,
-    #                                 block2.io_map.inputs)
-    #             self.logger.warning(msg)
-    #
-    #     if self.debug:
-    #         self._text_graph(predicted_type_chains)
+    def validate(self,data):
+        pass
+        """validates the integrity of the pipeline
+
+        verifies all input-output shapes are compatible with each other
+
+        Developer Note:
+            this function could use a full refactor, especially with regards
+            to printouts when an error is raised - Jeff
+
+            Type comparison between Blocks is complicated and I suspect more
+            bugs are still yet to be discovered.
+
+        Raises:
+            TypeError: if 'data' isn't a list or tuple
+            RuntimeError: if more than one block in the pipeline has the same
+                name, or not all objects in the block list are BaseBlock
+                subclasses
+        """
+        # assert that every element in the blocks list is a BaseBlock subclass
+        if not all(isinstance(b,BaseBlock) for b in self.blocks):
+            error_msg = \
+               "All elements of the pipeline must be subclasses of ip.BaseBlock"
+            raise RuntimeError(error_msg)
+
+        # make sure data is a list
+        if not isinstance(data,list):
+            raise TypeError("'data' must be list")
+
+        # make sure every block has a unique name
+        if len(set(self.names)) != len(self.names):
+            error_msg = "every block in the pipeline must have a different name"
+            raise RuntimeError(error_msg)
+
+        predicted_type_chains = self.predict_type_chain(data)
+
+        # print incompatability warnings
+        for pred_chain in predicted_type_chains:
+            vals = tuple(pred_chain.values())
+            if INCOMPATIBLE in vals:
+                idx = vals.index(INCOMPATIBLE) - 1
+                block1 = self.blocks[idx-1]
+                block2 = self.blocks[idx]
+
+                msg = "pipeline_input={}: predicted incompatability between {}(output={})-->{}(inputs={})"
+                msg = msg.format(pred_chain['pipeline_input'],
+                                    block1.name,
+                                    pred_chain[block1.name],
+                                    block2.name,
+                                    block2.io_map.inputs)
+                self.logger.warning(msg)
+
+        if self.debug:
+            self._text_graph(predicted_type_chains)
 
     def predict_type_chain(self,data):
         """Predict the types at each stage of the pipeline
@@ -196,7 +197,8 @@ class Pipeline(object):
                     break
                 cprint(out_str, color)
 
-    # def debug(self):
+    def debug(self):
+        return self
     #     """Enables debug mode which turns on all printouts for this pipeline
     #     to aide in debugging
     #     """
@@ -269,9 +271,9 @@ class Pipeline(object):
 
             raise RuntimeError("you must run Pipeline.train before processing")
 
-        # if not self.skip_validation:
-        #     # validate pipeline integrity
-        #     self.validate(data)
+        if not self.skip_validation:
+            # validate pipeline integrity
+            self.validate(data)
 
         # set initial conditions for the _step function
         self.step_index = 0
