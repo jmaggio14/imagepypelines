@@ -37,6 +37,7 @@ from .Exceptions import InvalidBlockInputLabels
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
+from .Exceptions import PluginError
 from .Exceptions import CachingError
 from .Exceptions import ChecksumError
 
