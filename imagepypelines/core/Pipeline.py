@@ -64,7 +64,7 @@ class Pipeline(object):
             uuid(str): universally unique hex id for this pipeline
     """
     def __init__(self,
-                    blocks=[],
+                    graph=[],
                     name=None,
                     skip_validation=False,
                     track_types=True):
@@ -91,111 +91,95 @@ class Pipeline(object):
         self.track_types = track_types
 
         self.logger = get_logger(self.logger_name)
-        self.blocks = []
         self.step_types = []
 
-        if isinstance(blocks, (list,tuple)):
-            for b in blocks:
-                self.add(b)
+        # Setup standard node/edge attribute dict - THIS WILL BE SETUP ELSEWHERE AND BE MORE COMPREHENSIVE!!!
+        self.std_node_attrs = {"Node Type": None,
+                              "Object": None
+                             }
+
+        self.std_edge_attrs = {"data_name": "default"}
+
+        # The reason we use add_nodes_from here is to cannibalize nodes on init
+        if isinstance(graph, (list,tuple)):
+
+            # must compute edges and add those!!!
+            self.graph = nx.MultiDiGraph()
+            # this works because the block's repr is used as hashable key!!! (but object is still directly accessible!!!!!!)
+            self.graph.add_edges_from(nx.path_graph(graph).edges)
+
+            # for loops to edit node and edge standard attribute dicts
+            for n in self.graph.nodes:
+
+                # n.update(self.std_node_attrs)
+
+                # THIS IS TO ILLUSTRATE THE BEHAVIOR I EXPLAINED - EACH NODE IS A BLOCK/PIPELINE OBJECT!!!!!!
+                print(n)
+
+                if isinstance(n, (ip.BaseBlock)):
+
+                    pass
+
+
+            # at this point we have a linear pipeline connected with single
+            #   edges, but we want the following representation:
+
+            # output = (a, b)  ---> edge1(a), edge2(b)
+
+        elif isinstance(graph, (Pipeline)):
+
+            # do Pipeline specific handling here (access graph and just use that)
+
+            self.graph = nx.MultiDiGraph()
+            self.graph.add_edges_from(graph.graph.edges)
+
+            # for loop to add node and edge standard attribute dicts
+
+        elif isinstance(graph, (nx.DiGraph, nx.MultiDiGraph)):
+
+            # just add this in like above, but more directly
+
+            self.graph = nx.MultiDiGraph()
+            self.graph.add_edges_from(graph.edges)
+
+            # for loop to add node and edge standard attribute dicts
+
+        elif isinstance(graph, (dict)):
+
+            # I forget how this differs but may be directly addable as well?
+            pass
+
         else:
-            raise TypeError("'blocks' must be a list")
+            raise TypeError("'graph' must be an iterable")
 
-    # ================== validation / debugging functions ==================
-    def validate(self,data):
-        pass
-        """validates the integrity of the pipeline
+    #     # RUN BELOW FUNCS AFTER DOING TOPOLOGICAL ORDERING FIRST!!!
 
-        verifies all input-output shapes are compatible with each other
-
-        Developer Note:
-            this function could use a full refactor, especially with regards
-            to printouts when an error is raised - Jeff
-
-            Type comparison between Blocks is complicated and I suspect more
-            bugs are still yet to be discovered.
-
-        Raises:
-            TypeError: if 'data' isn't a list or tuple
-            RuntimeError: if more than one block in the pipeline has the same
-                name, or not all objects in the block list are BaseBlock
-                subclasses
-        """
-        # assert that every element in the blocks list is a BaseBlock subclass
-        if not all(isinstance(b,BaseBlock) for b in self.blocks):
-            error_msg = \
-               "All elements of the pipeline must be subclasses of ip.BaseBlock"
-            raise RuntimeError(error_msg)
-
-        # make sure data is a list
-        if not isinstance(data,list):
-            raise TypeError("'data' must be list")
-
-        # make sure every block has a unique name
-        if len(set(self.names)) != len(self.names):
-            error_msg = "every block in the pipeline must have a different name"
-            raise RuntimeError(error_msg)
-
-        predicted_type_chains = self.predict_type_chain(data)
-
-        # print incompatability warnings
-        for pred_chain in predicted_type_chains:
-            vals = tuple(pred_chain.values())
-            if INCOMPATIBLE in vals:
-                idx = vals.index(INCOMPATIBLE) - 1
-                block1 = self.blocks[idx-1]
-                block2 = self.blocks[idx]
-
-                msg = "pipeline_input={}: predicted incompatability between {}(output={})-->{}(inputs={})"
-                msg = msg.format(pred_chain['pipeline_input'],
-                                    block1.name,
-                                    pred_chain[block1.name],
-                                    block2.name,
-                                    block2.io_map.inputs)
-                self.logger.warning(msg)
-
-        if self.debug:
-            self._text_graph(predicted_type_chains)
-
-    def predict_type_chain(self,data):
-        """Predict the types at each stage of the pipeline
-        """
-        data_types = get_types(data)
-
-        all_predicted_chains = []
-        for input_ in data_types:
-            predicted_chain = collections.OrderedDict(pipeline_input=input_)
-
-            for block in self.blocks:
-                if input_ == INCOMPATIBLE:
-                    output_ = INCOMPATIBLE
-                else:
-                    try:
-                        output_ = block.io_map.output( input_ )
-                    except IncompatibleTypes as e:
-                        output_ = INCOMPATIBLE
-
-                predicted_chain[str(block)] = output_
-                input_ = output_
-
-            predicted_chain['pipeline_output'] = ''
-            all_predicted_chains.append(predicted_chain)
-
-        return all_predicted_chains
-
-    def _text_graph(self,type_chains):
-        for i,chain in enumerate(type_chains):
-            print("-----------------| type-chain%s |-----------------" % i)
-            buf = ' ' * 6
-            for b,output in chain.items():
-                color = 'red' if output == INCOMPATIBLE else None
-                output = ',  '.join(str(s) for s in output)
-                out_str = '  {buf}|\n  {buf}|{out}\n  {buf}|'
-                out_str = out_str.format(buf=' ' * 6, out=output)
-
-                cprint('  {}'.format(b), color)
-                if b == 'pipeline_output':
-                    break
-                cprint(out_str, color)
+    #     # Tentative objects for managing explicitly named input and output data
+    #     self._inputs = {}
+    #     self._outputs ={}
+    #     self._n_inputs = len(self.inputs.keys())
+    #     self._n_outputs = len(self.outputs.keys())
+    #
+    # @property
+    # def inputs(self):
+    #     # should return **kwargs input which was passed as data to first block?
+    #     self._inputs =
+    #     return self._inputs
+    #
+    # @property
+    # def outputs(self):
+    #     self._outputs =
+    #     return self._inputs
+    #
+    # @property
+    # def n_inputs(self):
+    #     self._n_inputs = len(self.inputs.keys())
+    #     return self._n_inputs
+    #
+    # @property
+    # def n_outputs(self):
+    #     self._n_outputs = len(self.outputs.keys())
+    #     return self._n_outputs
 
     def debug(self):
         return self
@@ -205,9 +189,16 @@ class Pipeline(object):
     #     self._debug = True
     #     return self
 
-    def graph(self):
+
+
+
+    # ================== Rudimentary graph framework ====================
+    def draw(self):
         """TODO: Placeholder function for @Ryan to create"""
         pass
+
+
+
 
     # ================== pipeline processing functions ==================
     def _pair_blocks(self):
@@ -338,6 +329,7 @@ class Pipeline(object):
         processed,labels = self.step_data,self.step_labels
         self._after_train()
         return processed,labels
+
 
     # ================== utility functions / properties ==================
     def save(self, filename=None):

@@ -304,6 +304,10 @@ class BaseBlock(object):
             subclass of tuple where I/O is stored as:
             ( (input1,output1),(input2,output2)... )
         name(str): unique name for this block
+        n_inputs(int): number of data inputs to block (len of data input INCLUDING TRAIN DATA ***TENTATIVE CHANGE USING **kwargs DICT IN PROCESS AND TRAIN AS A INSTANCE VARIABLE!!!: RYAN)
+        n_outputs(int): number of data outputs to block (len of data output)
+        inputs(dict): key names of input data corresponding to each index in data
+        outputs(dict): key names of output data corresponding to each index in return tuple
         notes(str): a short description of this block, what operations it
             performs, etc. This will be included in the blocks 'description'
         requires_training(bool): whether or not this block will require
