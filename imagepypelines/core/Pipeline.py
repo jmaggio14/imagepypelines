@@ -197,7 +197,25 @@ class Pipeline(object):
         """TODO: Placeholder function for @Ryan to create"""
         pass
 
+    def connect(self):
+        pass
 
+    def disconnect(self):
+        pass
+
+    def remove(self):
+        pass
+
+    def clear(self):
+        pass
+
+    def _get_topology(self):
+        """TODO: Sets up a priority/order of operations list for operations
+           on the graph sequentially from one point to another. Only operates on
+           THIS pipeline's highest level set of nodes. If a node is executed and
+           contains a pipeline, THAT pipeline will have its own order of
+           operations to follow for its own sub graph, and so on. RECURSIONNNN"""
+        pass
 
 
     # ================== pipeline processing functions ==================
