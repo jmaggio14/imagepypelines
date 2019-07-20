@@ -38,8 +38,6 @@ from .Logger import debug, info, warning, error, critical
 # ---------- import imagepypelines ----------
 from .version_info import *
 from .core import *
-from . import builtin_blocks as blocks
-from . import builtin_pipelines as pipelines
 
 # ---------- import plugins ----------
 from collections import OrderedDict
@@ -53,7 +51,7 @@ which they were loaded"""
 def load_plugins():
     """Load all installed plugins to the imagepypelines namespace"""
     # load in all installed python packages with our plugin entry_point
-    required_objects = ['help']
+    required_objects = []
     plugins = {
                 entry_point.name: entry_point.load()
                 for entry_point

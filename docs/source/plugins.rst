@@ -24,16 +24,6 @@ https://packaging.python.org/guides/creating-and-discovering-plugins/
 Requirements
 ============
 
-
-Plugin modules must meet the following requirements:
-----------------------------------------------------
-
-1) They must provide a module-level function 'help', which should return a string
-which would provide a naive user with a short description, links to
-documentation, and any other information the developer deems important
-
-
-
 Plugin Modules SHOULD meet the following requirements:
 ------------------------------------------------------
 
