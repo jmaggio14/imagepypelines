@@ -18,6 +18,7 @@ import copy
 import time
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
+import inspect
 
 
 class ArrayType(object):
@@ -632,8 +633,40 @@ class BaseBlock(object):
         use obj.uuid
         """
         return "{basename} #{sibling_id}-{uuid}".format(basename=basename,
-                                                sibling_id=sibling_id[-5:],
-                                                uuid=uuid[-5:])
+                                                sibling_id=sibling_id[-6:],
+                                                uuid=uuid[-6:])
+
+    @property
+    @abstractmethod
+    def inputs(self):
+        pass
+
+    @property
+    @abstractmethod
+    def outputs(self):
+        pass
+
+    @property
+    def get_default_node_attrs(self):
+        attrs = { 'name':self.name,
+                    'type':str( type(self) ),
+                    'n_inputs':self.n_inputs,
+                    'input_names':self.input_names,
+                    'obj':self,
+                    'status':None,
+                    'logger_name':self.logger_name,
+                    }
+        return attrs
+
+
+    @property
+    def get_input_edge_attrs(self, index):
+        attrs = { 'name':self.input_names[index],
+                    'index':index,
+                    }
+
+
+
 
 
 

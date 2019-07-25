@@ -106,7 +106,7 @@ class Pipeline(object):
             # must compute edges and add those!!!
             self.graph = nx.MultiDiGraph()
             # this works because the block's repr is used as hashable key!!! (but object is still directly accessible!!!!!!)
-            self.graph.add_edges_from(nx.path_graph(graph).edges)
+            self.graph.add_edges_from( nx.path_graph(graph).edges )
 
             # for loops to edit node and edge standard attribute dicts
             for n in self.graph.nodes:

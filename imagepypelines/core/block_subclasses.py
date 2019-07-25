@@ -69,6 +69,16 @@ class SimpleBlock(BaseBlock):
         """calls self.label for each datum and returns a list or Nonetype"""
         return [self.label(lbl) for lbl in labels]
 
+    @property
+    def n_inputs(self):
+        return len(self.input_names)
+
+    @property
+    def input_names(self):
+        spec = inspec.getfullargspec(self.process)
+        return ([] if spec.args is None else spec.args)
+
+
 
 class BatchBlock(BaseBlock):
     """Block subclass that processes datums as a batch
@@ -130,6 +140,15 @@ class BatchBlock(BaseBlock):
     def label_strategy(self, labels):
         """runs self.labels"""
         return self.labels(labels)
+
+    @property
+    def inputs(self):
+        spec = inspec.getfullargspec(self.process)
+        return ([] if spec.args is None else spec.args)
+
+    @property
+    def outputs(self):
+        return self._outputs
 
 #
 # class TfBlock(BatchBlock):
