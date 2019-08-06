@@ -12,13 +12,14 @@ from .Exceptions import InvalidNumpyType
 import inspect
 import collections
 import time
+from termcolor import colored
+import numpy as np
 
 TIMER_LOGGER = get_logger('TIMER')
 
 ################################################################################
 #                                 Error Checking
 ################################################################################
-
 """
 Helper functions that contain canned tests or checks that we will run
 frequently
@@ -59,7 +60,6 @@ def print_args(func):
     Args:
         func (callable): function or callable to print input arguments of
     """
-
     def _print_args(*args,**kwargs):
         """
         prints the arguments passed into the target
@@ -92,7 +92,7 @@ def print_args(func):
         # adding default positional args values to the dictionary
         for i,var_name in enumerate(specargs):
             if i < num_required:
-                var = color.red("No argument was passed in!",bold=True)
+                var = colored("No argument was passed in!",attrs=['bold'])
             else:
                 var = specdefaults[i - num_required]
 
@@ -141,7 +141,7 @@ def print_args(func):
     return _print_args
 
 
-import numpy as np
+
 
 ################################################################################
 #                                 SUMMARY

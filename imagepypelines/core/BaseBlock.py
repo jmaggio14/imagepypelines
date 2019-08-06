@@ -641,27 +641,26 @@ class BaseBlock(object):
     def inputs(self):
         pass
 
-    @property
     @abstractmethod
     def outputs(self):
         pass
 
-    @property
     def get_default_node_attrs(self):
         attrs = { 'name':self.name,
-                    'type':str( type(self) ),
-                    'n_inputs':self.n_inputs,
-                    'input_names':self.input_names,
-                    'obj':self,
-                    'status':None,
-                    'logger_name':self.logger_name,
+                    'type':type(self),
                     }
         return attrs
 
 
-    @property
     def get_input_edge_attrs(self, index):
-        attrs = { 'name':self.input_names[index],
+        attrs = { 'name':self.inputs[index],
+                    'index':index,
+                    }
+
+
+    @property
+    def get_output_edge_attrs(self, index):
+        attrs = { 'name':self.outputs[index],
                     'index':index,
                     }
 

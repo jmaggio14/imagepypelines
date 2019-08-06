@@ -45,3 +45,6 @@ ARRAY_ND = ArrayType()
 
 SAME = Same()
 """convienence variable to create an io_map ArrayType to return whatever type was passed in"""
+
+
+# --------------- Convienence Type Variables --------------------

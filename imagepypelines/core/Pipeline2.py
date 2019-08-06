@@ -8,6 +8,7 @@ from ..Logger import get_logger
 from .BaseBlock import BaseBlock
 from .BaseBlock import ArrayType
 from .BaseBlock import Incompatible
+from .block_subclasses import SimpleBlock, BatchBlock
 from .Exceptions import CrackedPipeline
 from .Exceptions import IncompatibleTypes
 from .util import Timer
@@ -18,6 +19,79 @@ import copy
 import numpy as np
 from termcolor import cprint
 from uuid import uuid4
+
+
+class FuncBlock(SimpleBlock):
+    def __init__(self,func,preset_kwargs):
+        self.func = func
+        self.preset_kwargs = preset_kwargs
+
+        # check if the function meets requirements
+        spec = inspect.getfullargspec(func)
+
+        # we can't allow varargs at all because a block must have a known
+        # number of inputs
+        if not (spec.varargs or spec.varkw):
+            raise TypeError("function cannot accept a variable number of args")
+
+        num_required = len(spec.args) - len(preset_kwargs)
+        self.required = spec.args[:num_required]
+
+        eval_string = \
+        """
+        def process(self,{required}):
+            return self.func({required},**self.preset_kwargs)
+        """.format(required = ', '.join(self.required))
+
+        self.process = eval(eval_string)
+        super().__init__()
+
+
+    def __call__(self,*args,**kwargs):
+        """returns the exact output of the user defined function without any
+        interference or interaction with the class
+        """
+        return self.func(*args,**kwargs)
+
+
+def blockify(**kwargs):
+    def decorator(func):
+        def _blockify():
+            return FuncBlock(func,kwargs)
+        return _blockify
+    return decorator
+
+
+
+class PlaceHolder(BatchBlock):
+    def __init__(self):
+        self.data = None
+        super().__init__()
+
+    def load(self,data):
+        self.datas = data
+
+    def batch_process(self,input_=None):
+        return self.data
+
+
+
+
+# dsk = {
+#     "load-1": {load: "myfile.cfg", analyze: "something"},
+#     "load-2":
+#         {
+#         "input":{blank dict b/c no input},
+#         "output":{load: "myfile.cfg", analyze: "something"}
+#         },
+#     "clean-1":
+#         {
+#         "input":{load: "myfile.cfg", analyze: "something"},
+#         "output":{other_func: "yeet"}
+#         },
+#     "clean-2": {load: "myfile.cfg", analyze: "something"},
+#     }
+
 
 
 class Pipeline(object):
@@ -43,35 +117,80 @@ class Pipeline(object):
                                                 self.sibling_id,
                                                 self.uuid)
         self.logger = get_logger(self.logger_name)
-        self.step_types = []
+        self.graph = nx.MultiDiGraph()
 
-        if isinstance(graph, (list,tuple)):
-            self.graph = nx.MultiDiGraph()
-            self.graph.add_node( graph[0].uuid,
-                                    graph[0].get_default_node_attrs() )
+        self.vars = {}
 
-            for block_a,block_b in zip(graph,graph[1:]):
-                self.graph.add_node(block_b.uuid,
-                                        block_b.get_default_node_attrs() )
+        self.data_dict = {}
 
-                # connect an edge for every input in block_b (block2)
-                for i in range(block_b.n_inputs):
-                    self.graph.add_edge(block_a.uuid,
-                                        block_b.uuid,
-                                        **block_b.get_input_edge_attrs(i))
-
-        elif isinstance(graph,(nx.DiGraph, nx.MultiDiGraph)):
-            # TODO:
-            # make sure every element is a pipeline or graph
-            # add node and edge attributes
-            self.graph = graph
-
-        else:
-            raise TypeError(
-                    "'graph' must be tuple, list, or directed networkx Graph")
+        if isinstance(graph, dict):
+            # EXAMPLE FOR DEBUG
+            dsk = {'x': ip.PlaceHolder(),
+                    'y':ip.PlaceHolder(),
+                    ('z1','z2'): (add, 'x', 'y'),
+                    'w': (sum, ['x', 'y', 'z'])}
 
 
-        self.data = data
+            # add all nodes to the graph first
+            # quick helper function to add a node to the graph
+            def _add_to_vars(var):
+                if not isinstance(var,str):
+                    raise TypeError("graph vars must be a string")
+
+                self.vars[var] = {'dependents':set(),
+                                    'processor':None}
+
+            for var in dsk.keys():
+                # for str defined dict keys like 'x' : (func, 'a', 'b')
+                if isinstance(var, str):
+                    _add_to_vars(var)
+
+                # for tuple defined dict keys like ('x','y') : (func, 'a', 'b')
+                elif isinstance(var,(tuple,list)):
+                    for n in var:
+                        _add_to_vars(var)
+
+            # reiterate through the graph definition to define inputs and outputs
+            for var,definition in dsk.items():
+                # e.g. - 'x': ip.PlaceHolder(),
+                if isinstance(definition, ip.PlaceHolder):
+                    # add this variables processor to it's attrs
+                    # these vars will not have any dependents
+                    self.vars[var]['processor'] = definition.uuid
+
+                    # add the processor to the graph
+                    self.graph.add_node(definition.uuid,
+                                        definition.get_default_node_attrs())
+
+                # e.g. - 'z': (block, 'x', 'y'),
+                elif isinstance(definition,(tuple,list)):
+                    processor = definition[0]
+                    inpts = definition[1:]
+                    # if we have a tuple input, then the first value MUST be a block or Pipeline
+                    if not isinstance(processor, (BaseBlock,Pipeline)):
+                        raise TypeError(
+                            "first value in any graph definition tuple must be a Block or Pipeline")
+
+
+                    # add the processor to the graph
+                    self.graph.add_node(processor.uuid,
+                                        processor.get_default_node_attrs(),
+                                        processor=processor,
+                                        inputs=inpts)
+
+                    # now we iterate through the inputs and draw edges between nodes
+                    self.vars[var][dependents].update(inpts)
+
+
+
+
+
+
+
+
+
+                else:
+                    graph.nodes[node]['inputs'].append(inputs)
 
     def process(self, *data, **named_data):
         # JM: TODO
@@ -90,21 +209,45 @@ class Pipeline(object):
 
         # JM: TODO
         # add logging to follow along with this
-        # self.graph.add_nodes_from( self.data.keys() )
-
-
-
-
+        for node in self.data.keys():
+            self.graph.add_node
 
 
     def _get_topology(self):
-        uuid_order = tuple( nx.topological_sort(nx.line_graph(self.graph)) )
+
+        required_data = set()
+
+
+        topological_order =
+            tuple(nx.topological_sort(nx.line_graph(self.graph)))
+
+        last_node = None
+        data = {}
+        # first node is always a pipeline_input for the first iteration
+        for _, node_b, _ in topological_order:
+            # iterate through the topological_order which contains
+            if node_b == last_node:
+                continue
+
+            processor = node_b['uuid']
+            incoming_data = node_b.in_edges()
+
+            required_data =
+
+
+
+
+
+
+
+
+
 
         # iterate through processors and yield them
-        for node_a, node_b, edge_idx in uuid_order:
-            processor_a = self.graph.nodes[node_a]['obj']
-            processor_b = self.graph.nodes[node_b]['obj']
-            yield processor_a, processor_b, edge_idx
+        # for node_a, node_b, edge_idx in uuid_order:
+        #     processor_a = self.graph.nodes[node_a]['obj']
+        #     processor_b = self.graph.nodes[node_b]['obj']
+        #     yield processor_a, processor_b, edge_idx
 
 
     def draw(self, display=True):
