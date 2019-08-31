@@ -372,6 +372,8 @@ class BaseBlock(object):
         # setup initial tags
         self.tags = set()
 
+        # whether or not the input names have been defined for this block
+        self._arg_spec = None
 
         super(BaseBlock,self).__init__()
 
@@ -551,6 +553,7 @@ class BaseBlock(object):
         Returns:
             None
         """
+        # pair this blocks logger with it's pipeline parent
         self.logger = pipeline.logger.getChild( self.logger_name )
         self.pipeline_name = pipeline.name
         self.pipeline_uuid = pipeline.uuid
@@ -641,28 +644,11 @@ class BaseBlock(object):
     def inputs(self):
         pass
 
-    @abstractmethod
-    def outputs(self):
-        pass
-
     def get_default_node_attrs(self):
         attrs = { 'name':self.name,
                     'type':type(self),
                     }
         return attrs
-
-
-    def get_input_edge_attrs(self, index):
-        attrs = { 'name':self.inputs[index],
-                    'index':index,
-                    }
-
-
-    @property
-    def get_output_edge_attrs(self, index):
-        attrs = { 'name':self.outputs[index],
-                    'index':index,
-                    }
 
 
 

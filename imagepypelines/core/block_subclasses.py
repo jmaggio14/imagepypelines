@@ -70,13 +70,12 @@ class SimpleBlock(BaseBlock):
         return [self.label(lbl) for lbl in labels]
 
     @property
-    def n_inputs(self):
-        return len(self.input_names)
+    def inputs(self):
+        # save the argspec in an instance variable if it hasn't been computed
+        if not self._arg_spec:
+            self._arg_spec = inspect.getfullargspec(self.process)
 
-    @property
-    def input_names(self):
-        spec = inspec.getfullargspec(self.process)
-        return ([] if spec.args is None else spec.args)
+        return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
 
 
 
@@ -143,12 +142,12 @@ class BatchBlock(BaseBlock):
 
     @property
     def inputs(self):
-        spec = inspec.getfullargspec(self.process)
-        return ([] if spec.args is None else spec.args)
+        # save the argspec in an instance variable if it hasn't been computed
+        if not self._arg_spec:
+            self._arg_spec = inspect.getfullargspec(self.batch_process)
 
-    @property
-    def outputs(self):
-        return self._outputs
+        return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
+
 
 #
 # class TfBlock(BatchBlock):
