@@ -22,7 +22,15 @@ from uuid import uuid4
 
 
 class FuncBlock(SimpleBlock):
-    """Block that can be instantiated
+    """Block that will run anmy fucntin you give it, either unfettered through
+    the __call__ function, or with optional hardcoded parameters for use in a
+    pipeline. Typically the FuncBlock is only used in the `blockify` decorator
+    method.
+
+    Args:
+        func (function): the function you desire to turn into a block
+        preset_kwargs (dict): preset keyword arguments, typically used for
+            arguments that are not data to process
     """
     def __init__(self,func,preset_kwargs):
         self.func = func
@@ -37,13 +45,13 @@ class FuncBlock(SimpleBlock):
             raise TypeError("function cannot accept a variable number of args")
 
         num_required = len(spec.args) - len(preset_kwargs)
-        self.required = spec.args[:num_required]
+        required = spec.args[:num_required]
 
         exec_string = \
         """
         def process(self,{required}):
             return self.func({required},**self.preset_kwargs)
-        """.format(required = ', '.join(self.required))
+        """.format(required = ', '.join(required))
         exec_locals = {}
         exec(exec_string, {}, exec_locals)
         self.process = exec_locals['process']
@@ -57,6 +65,26 @@ class FuncBlock(SimpleBlock):
 
 
 def blockify(**kwargs):
+    """decorator which converts a normal function into a un-trainable
+    block which can be added to a pipeline. The function can still be used
+    as normal after blockification (the __call__ method is setup such that
+    unfettered access to the function is permitted)
+
+    Example:
+        >>> import imagepypelines as ip
+        >>>
+        >>> @ip.blockify(value=10)
+        >>> def add_value(datum, value):
+        ...    return datum + value
+        >>>
+        >>> type(add_value)
+        <class 'FuncBlock'>
+
+    Args:
+        **kwargs: hardcode keyword arguments for a function, these arguments
+            will not have to be used to
+
+    """
     def decorator(func):
         def _blockify():
             return FuncBlock(func,kwargs)
@@ -125,11 +153,13 @@ class Pipeline(object):
         self.logger = get_logger(self.logger_name)
         self.graph = nx.MultiDiGraph()
 
+        self._build_graph(user_graph=graph)
+
         self.vars = {}
         self.positional_inputs = []
 
 
-    def _build_graph(self,):
+    def _build_graph(self,user_graph):
 
         # add all variables defined in the graph to a dictionary
         # quick helper function to add a node to the graph
@@ -143,7 +173,7 @@ class Pipeline(object):
 
 
         #### FIRST FOR LOOP - defining the variables that we'll be using
-        for var in dsk.keys():
+        for var in user_graph.keys():
             # for str defined dict keys like 'x' : (func, 'a', 'b')
             if isinstance(var, str):
                 _add_to_vars(var)
@@ -155,7 +185,7 @@ class Pipeline(object):
 
         #### SECOND FOR LOOP - adding all nodes to the graph
         # reiterate through the graph definition to define inputs and outputs
-        for outputs,definition in dsk.items():
+        for outputs,definition in user_graph.items():
             # if multiple block outputs are defined, then we need a for loop
             if not isinstance(outputs,(tuple,list)):
                 outputs = [outputs]

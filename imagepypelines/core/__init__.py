@@ -74,6 +74,9 @@ from .pipeline_tools import quick_block
 
 # Pipeline.py
 from .Pipeline import Pipeline
+from .Pipeline import FuncBlock
+from .Pipeline import Input
+
 
 # quick_types.py
 from .quick_types import *
