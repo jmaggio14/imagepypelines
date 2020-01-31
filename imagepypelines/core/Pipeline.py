@@ -296,25 +296,38 @@ class Pipeline(object):
         dependent_data = {}
         output_names = {}
         current_node = None
+
+        # this for loop goes through EDGE BY EDGE
+        # and queues data for the next node in the dictionary "dependent_data"
+        # - Jeff
         for node_a, node_b, edge_idx in order:
-            # we've reached the end of the edges for this connection
-            if node_b != current_node:
-                processor = self.graph.nodes[current_node]['processor']
-                inputs = [dependent_data[k] for k in sorted(dependent_data.keys())]
-                output_names = [output_names[k] for k in sorted(output_names.keys())]
-                yield processor, inputs, output_names
 
-                dependent_data = {}
-                output_names = {}
-                current_node = node_b
-
-            else:
+            # if the node hasn't changed, we are still iterating through edges
+            # for a connection and we keep queuing data
+            if node_b == current_node:
                 # retrieve the data from the data dict and add it to dependent_data
                 # this method relies on the data dict being updated between
                 # iterations of this generator
                 edge = self.graph.edges[node_a, node_b, edge_idx]
                 dependent_data[ edge['index'] ] = self.data_dict[ edge['index'] ]
                 output_names[ edge['index'] ] = edge['var_name']
+
+            # otherwise, we are at a new connection and it is time to compute
+            # all the data we've queued
+            else:
+                # yield the blockdata required to compute the next step
+                # (p.s. a processor is a generic name for a block/sub pipeline
+                # maybe this should be called a 'task' instead?????)
+                processor = self.graph.nodes[current_node]['processor']
+                inputs = [dependent_data[k] for k in sorted(dependent_data.keys())]
+                output_names = [output_names[k] for k in sorted(output_names.keys())]
+                yield processor, inputs, output_names
+
+                # reset local data (this might be wrong/causing errors???)
+                dependent_data = {}
+                output_names = {}
+                current_node = node_b
+
 
 
     def process(self,**named_data):
