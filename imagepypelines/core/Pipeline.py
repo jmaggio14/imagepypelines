@@ -36,30 +36,8 @@ def get_types(data):
 
     return set( _get_types() )
 
-class Input(BaseBlock):
-
-    def __getitem__(self, key):
-
-        return self._outputs[key]
-
-    def __setitem__(self, key, val):
-
-        self._outputs[key] = val
-
-class Output(BaseBlock):
-
-    def __getitem__(self, key):
-
-        return self._inputs[key]
-
-    def __setitem__(self, key, val):
-
-        self._inputs[key] = val
-
-
-
 class FuncBlock(SimpleBlock):
-    """Block that will run anmy fucntin you give it, either unfettered through
+    """Block that will run anmy fucntion you give it, either unfettered through
     the __call__ function, or with optional hardcoded parameters for use in a
     pipeline. Typically the FuncBlock is only used in the `blockify` decorator
     method.
@@ -93,7 +71,7 @@ class FuncBlock(SimpleBlock):
         exec_locals = {}
         exec(exec_string, {}, exec_locals)
         self.process = exec_locals['process']
-        super().__init__({})
+        super().__init__({}, self.func.__name__)
 
     def __call__(self,*args,**kwargs):
         """returns the exact output of the user defined function without any
@@ -140,7 +118,7 @@ class Input(BatchBlock):
     def __init__(self,index=None):
         self.index = index
         self.data = None
-        super().__init__({})
+        super().__init__({},name="Input"+str(index))
 
     def load(self, data):
         self.data = data
@@ -212,7 +190,7 @@ class Pipeline(object):
                 raise TypeError("graph vars must be a string")
 
             self.vars[var] = {'dependents':set(),
-                                'processor':None # will always be defined
+                                'task':None # will always be defined
                                 }
 
 
@@ -245,7 +223,7 @@ class Pipeline(object):
 
                 # add the task to the graph
                 self.graph.add_node(definition.uuid,
-                                    task=None,
+                                    task_processor=None,
                                     dependents=None,
                                     **definition.get_default_node_attrs(),)
 
@@ -264,7 +242,7 @@ class Pipeline(object):
                 # add the task to the graph
                 # import pdb; pdb.set_trace()
                 self.graph.add_node(task.uuid,
-                                    task=task,
+                                    task_processor=task,
                                     inputs=inpts,
                                     **task.get_default_node_attrs(),
                                     )
@@ -281,16 +259,17 @@ class Pipeline(object):
             ## DEBUG
             print()
             print('var_name:', var_name)
-            for i in attrs.items(): print(f"{i[0]} : {i[1]} ")
+            for i in attrs.items(): print("{} : {}".format(*i))
             print()
             ## END DEBUG
 
-            current_node = self.graph.nodes[ attrs['task'] ]
+            import pdb; pdb.set_trace()
+            current_node = self.graph.node[ attrs['task'] ]
 
             # connect all dependents to the variable node
             for prior_node in attrs['dependents']:
-                print(f"{node_a} : {var_name}")
-                import pdb; pdb.set_trace()
+                self.draw()
+                print("{} : {}".format(prior_node, var_name))
                 input_index = current_node['inputs'].index(var_name)
                 input_name = current_node['task'].inputs[input_index]
 
@@ -300,7 +279,6 @@ class Pipeline(object):
                                     index=input_index,
                                     name=input_name)
 
-                self.draw()
 
     def _get_topology(self):
         # first node is always an Input for the first iteration
@@ -330,8 +308,7 @@ class Pipeline(object):
             # all the data we've queued
             else:
                 # yield the blockdata required to compute the next step
-                # (p.s. a task is a generic name for a block/sub pipeline
-                # maybe this should be called a 'task' instead?????)
+                # (p.s. a task is a generic name for a block/sub-pipeline
                 task = self.graph.nodes[current_node]['task']
                 inputs = [dependent_data[k] for k in sorted(dependent_data.keys())]
                 output_names = [output_names[k] for k in sorted(output_names.keys())]
@@ -361,7 +338,9 @@ class Pipeline(object):
 
     def draw(self):
         plt.cla()
-        nx.draw_networkx(self.graph, pos=nx.spring_layout(self.graph))  # use spring layout
+        nx.draw_networkx(self.graph,
+                            pos=nx.spring_layout(self.graph),
+                            labels= { n : self.graph.node[n]['name'] for n in self.graph.nodes()} )  # use spring layout
         plt.ion()
         plt.draw()
         plt.show()

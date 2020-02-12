@@ -637,7 +637,7 @@ class BaseBlock(object):
         return self.name
 
     def __repr__(self):
-        return self.description
+        return str(self)
 
     def __getstate__(self):
         """pickle state retrieval function, its most important use is to
