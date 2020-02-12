@@ -281,424 +281,422 @@ io mapping:
     return description
 
 # VERY BAREBONES IMPLEMENTATION OF BASEBLOCK!!! It is a sufficient proof of concept and I believe is fully extendable
+# class BaseBlock(object):
+#
+#     def __init__(self, name, inputs=None, outputs=None):
+#
+#         self.id = uuid4().hex
+#         self.user_name = f"{name}_{self.id[:6]}"
+#
+#         if inputs is None:
+#             inputs = {}
+#
+#         if outputs is None:
+#             outputs = {}
+#
+#         # these should be set via provided functions or directly by user
+#         self._inputs = inputs
+#         self._outputs = ouptuts
+#
+#     def __str__(self):
+#
+#         return f"This Block's name is < {self.user_name} >"
+#
+#     def __repr__(self):
+#
+#         """
+#         This representation is what is used as the hashable key for the instance
+#             in networkx graphs. Effectively, the instance is stored, but looked
+#             up and identified via its repr string.
+#         """
+#
+#         # I'll change every instance of user_name to the more appropriate block/pipeline/logger id, but for now this works as a POC
+#         return self.user_name
+#
+#     @property
+#     def inputs(self):
+#
+#         return self._inputs
+#
+#     @property
+#     def outputs(self):
+#
+#         return self._outputs
+#
+#     def process(self):
+#
+#         print(f"<{self.user_name}>'s inputs are resolved, processing them, adding to output dictionary...")
+
 class BaseBlock(object):
+    """BaseBlock object which is the root class for SimpleBlock and BatchBlock
+    subclasses
 
-    def __init__(self, name, inputs=None, outputs=None):
+    This is the building block (pun intended) for the entire imagepypelines
+    pipelining system. All blocks, both SimpleBlocks and BatchBlocks, will
+    inherit from this object. Which contains base functionality to setup a
+    block's loggers, unique name, standard input/output_shapes and special
+    functions for pipeline objects to call
 
-        self.id = uuid4().hex
-        self.user_name = f"{name}_{self.id[:6]}"
+    Args:
+        io_map(IoMap,dict): dictionary of input-output mappings for this
+            Block
+        name(str): name for this block, it will be automatically created/modified
+            to make sure it is unique
+        notes(str): a short description of this block
+        requires_training(bool): whether or not this block will require
+            training
+        requires_labels(bool): whether or not this block will require
+            labels during training
 
-        if inputs is None:
+    Attributes:
+        io_map(IoMap): object that maps inputs to this block to it's outputs.
+            subclass of tuple where I/O is stored as:
+            ( (input1,output1),(input2,output2)... )
+        name(str): unique name for this block
+        n_inputs(int): number of data inputs to block (len of data input INCLUDING TRAIN DATA ***TENTATIVE CHANGE USING **kwargs DICT IN PROCESS AND TRAIN AS A INSTANCE VARIABLE!!!: RYAN)
+        n_outputs(int): number of data outputs to block (len of data output)
+        inputs(dict): key names of input data corresponding to each index in data
+        outputs(dict): key names of output data corresponding to each index in return tuple
+        notes(str): a short description of this block, what operations it
+            performs, etc. This will be included in the blocks 'description'
+        requires_training(bool): whether or not this block will require
+            training
+        trained(bool): whether or not this block has been trained, True
+            by default if requires_training = False
+        logger(ip.ImagepypelinesLogger): logger for this block,
+            registered to 'name'
+        description(str): a readable description of this block that includes
+            user defined notes and a summary of inputs and outputs
+    """
+    __metaclass__ = ABCMeta
+    def __init__(self,
+                 io_map,
+                 name=None,
+                 notes=None,
+                 requires_training=False,
+                 requires_labels=False,
+                 ):
+         # this uuid will not change with copying or serialization
+         # as such it can be used to id which blocks are copies or unpickled
+         # versions of the original - it's metaphorical siblings
+        self.sibling_id = uuid4().hex
+        # setup absolutely unique id for this block
+        # this will change even if the block is copied or pickled
+        self.uuid = uuid4().hex
+        # ----------- building a unique name for this block ------------
+        # logger_name is set up as follows
+        # <readable_name>-<sibling_id>-<uuid>
+        if name is None:
+            name = self.__class__.__name__
+        logger_name = self.__get_logger_name(name,
+                                                self.sibling_id,
+                                                self.uuid)
 
-            inputs = {}
+        # ------ setting up instance variables
+        self.io_map = IoMap(io_map)
+        self.name = name
+        self.logger_name = logger_name
+        self.requires_training = requires_training
+        self.requires_labels = requires_labels
+        self.trained = False if self.requires_training else True
 
-        if outputs is None:
+        # this will be defined in _pipeline_pair
+        self.logger = None
+        self.pipeline_uuid = None
+        self.pipeline_name = None
 
-            outputs = {}
+        # create a block description
+        self.description = describe_block(self,notes)
 
-        # these should be set via provided functions or directly by user
-        self._inputs = inputs
-        self._outputs = ouptuts
+        # setup initial metadata dictionary
+        self._metadata = {'processing_time':0.0,
+                            'num_in':int(0),
+                            'num_out':int(0),
+                            'total_in':int(0),
+                            'total_out':int(0),
+                            'training_time':None,
+                            }
+
+        # setup initial tags
+        self.tags = set()
+
+        # whether or not the input names have been defined for this block
+        self._arg_spec = None
+
+        super(BaseBlock,self).__init__()
+
+    def rename(self,name):
+        """Renames this block to the given name
+
+        Args:
+            name(str): the new name for your Block
+
+        Returns:
+            ip.Block : object reference to this block (self)
+
+        Note:
+            unlike naming your block using the `name` parameter in
+            instantiation, imagepypelines will not guarantee that this name
+            will be unique. It is considered the user's responsibility to
+            determine that this will not cause problems in your pipeline.
+        """
+        assert isinstance(name,str),"name must be a string"
+        self.name = name
+        self.logger_name = self.__get_logger_name(self.name,
+                                                    self.sibling_id,
+                                                    self.uuid)
+        return self
+
+    def train(self, data, labels=None):
+        """(optional or required overload)trains the block. overloading
+        is required if the 'requires_training' parameter is set to True
+
+        users are expected to save pertinent variables as instance
+        variables
+
+        Args:
+            data(list): list of datums to train on
+            labels(list,None): corresponding label for each datum,
+                None by default (for unsupervised systems)
+
+        Returns:
+            None
+        """
+        if self.requires_training:
+            msg = "{}.train must be overloaded if the " \
+                        + "'requires_training' is set to True".format(self.name)
+            self.logger.critical(msg)
+            raise NotImplementedError(msg)
+
+    def before_process(self, data, labels=None):
+        """(optional overload)function that runs before processing for
+        optional functionality. this function takes in the full data list and
+        label list. does nothing unless overloaded
+
+        Args:
+            data(list): list of datums to process
+            labels(list,None): corresponding label for each datum,
+                None by default (for unsupervised systems)
+        """
+        pass
+
+    def after_process(self):
+        """
+        (optional overload)function that runs after processing for
+        optional functionality. intended for optional use as a cleanup
+        function
+
+        Args:
+            None
+        """
+        pass
+
+    def _pipeline_train(self, data, labels=None):
+        """function pipeline calls to train this block, modifies
+        self.trained status
+
+        Args:
+            data(list): list of datums to train on
+            labels(list,None): corresponding label for each datum,
+                None by default (for unsupervised systems)
+
+        Returns:
+            None
+
+        Raises:
+            BlockRequiresLabels: if this block requires labels and None
+                was passed in
+        """
+        start = time.time()
+        if self.requires_labels and (labels is None):
+            msg = "{} requires labels for training but none were passed in"\
+                .format(self)
+            raise BlockRequiresLabels(msg)
+
+        if isinstance(labels,list):
+            # if labels are passed in, we must have an equal number
+            # of datums and labels
+            if len(data) != len(labels):
+                raise DataLabelMismatch(data, labels)
+
+        self.train(data, labels)
+        self.trained = True
+
+        # update metadata
+        self._metadata['training_time'] = round(time.time() - start,3)
+
+    def _pipeline_process(self, data, labels=None):
+        """function pipeline calls to process data using this block
+        works with BatchBlocks and SimpleBlocks
+
+        Args:
+            data(list): list of datums to process
+            labels(list,None): corresponding label for each datum,
+                None by default (for unsupervised systems)
+
+        Returns:
+            processed(list): list of processed datums
+            labels(list): list of corresponding labels for processed
+
+        Raises:
+            InvalidBlockInputData: if data is not a list
+            InvalidProcessingStrategy: if processed output is not a list
+            InvalidLabelStrategy: if labels output is not a list
+            DataLabelMismatch: if there is mismatch in the number of labels
+                and processed datums
+
+        """
+        start = time.time()
+        # ---------------- INPUT ERROR CHECKING ------------------------
+        if not isinstance(data, list):
+            raise InvalidBlockInputData(
+                "input data into a block must be a list")
+
+        if labels is None:
+            labels = [None] * len(data)
+
+        if isinstance(labels,list):
+            if len(data) != len(labels):
+                raise DataLabelMismatch(processed, labels)
+
+        # ----------- running block functions -----------------------
+        # running prep function
+        self.before_process(data, labels)
+
+        # processing data and labels
+        processed = self.process_strategy(data)
+        labels = self.label_strategy(labels)
+
+        # running post-process / cleanup function
+        self.after_process()
+
+
+        # --------------- OUTPUT ERROR CHECKING ------------------------
+        # error checking for output types
+        if not isinstance(processed, list):
+            raise InvalidProcessStrategy(self)
+
+        if not isinstance(labels, list):
+            raise InvalidLabelStrategy(self)
+
+        # making sure that we always have the same number of labels and datums
+        if len(processed) != len(labels):
+            raise DataLabelMismatch(processed, labels)
+
+        # update the metadata
+        self._metadata['num_in'] = len(data)
+        self._metadata['num_out'] = len(processed)
+        self._metadata['processing_time'] = round(time.time() - start,5)
+        self._metadata['total_in'] += len(data)
+        self._metadata['total_out'] += len(processed)
+        return processed, labels
+
+
+    def _pipeline_pair(self, pipeline):
+        """pairs this block for use with the pipeline passed in
+
+        Args:
+            pipeline (ip.Pipeline): the pipeline to pair with this block
+
+        Returns:
+            None
+        """
+        # pair this blocks logger with it's pipeline parent
+        self.logger = pipeline.logger.getChild( self.logger_name )
+        self.pipeline_name = pipeline.name
+        self.pipeline_uuid = pipeline.uuid
+
+    @abstractmethod
+    def process_strategy(self, data):
+        """overarching processing management function for this block
+
+        Args:
+            data(list): list of datums to process
+
+        Returns:
+            list: processed datums
+        """
+        raise NotImplementedError(
+            "'process_strategy' must be overloaded in all children")
+
+    @abstractmethod
+    def label_strategy(self, labels):
+        """overarching label management function for this block
+
+        Args:
+            labels(list,None): corresponding label for each datum,
+                None by default (for unsupervised systems)
+
+        Returns:
+            labels (list): labels for datums (Nones for unsupervised systems)
+        """
+        raise NotImplementedError(
+            "'label_strategy' must be overloaded in all children")
 
     def __str__(self):
-
-        return f"This Block's name is < {self.user_name} >"
+        return self.name
 
     def __repr__(self):
+        return self.description
 
-        """
-        This representation is what is used as the hashable key for the instance
-            in networkx graphs. Effectively, the instance is stored, but looked
-            up and identified via its repr string.
-        """
+    def __getstate__(self):
+        """pickle state retrieval function, its most important use is to
+        delete the copied uuid to prevent potential issues from improper
+        restoration
 
-        # I'll change every instance of user_name to the more appropriate block/pipeline/logger id, but for now this works as a POC
-        return self.user_name
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via _super().__getstate__(state)_, or otherwise return
+            a state dictionary without a uuid
+        """
+        state = self.__dict__.copy()
+        del state['uuid']
+        return state
+
+    def __setstate__(self, state):
+        """pickle restoration function, its most important use is to generate
+        a new uuid for the copied or deserialized object
+
+        Note:
+            If you overload this function, it's imperative that you call this
+            function via _super().__setstate__(state)_, or otherwise create a
+            new unique uuid for the restored Block _self.uuid = uuid4().hex_
+        """
+        self.__dict__.update(state)
+        # create a new uuid for this instance, since it's technically a
+        # different object
+        self.uuid = uuid4().hex
+        # update the name to correspond with the new uuid
+        logger_name = self.__get_logger_name(self.name,
+                                                self.sibling_id,
+                                                self.uuid)
+
+
+
+    @staticmethod
+    def __get_logger_name(basename, sibling_id, uuid):
+        """generates a unique logger name that contains both a sibling id
+        (a random string that will be persistent across all copies and unpickled
+        versions of this object) and a uuid (which is unique to this exact
+        object instance)
+        (only the last six chars of each hash is used, so it's technically possible
+        for this name to not be unique) - if you need a truly unique ID, then
+        use obj.uuid
+        """
+        return "{basename} #{sibling_id}-{uuid}".format(basename=basename,
+                                                sibling_id=sibling_id[-6:],
+                                                uuid=uuid[-6:])
 
     @property
+    @abstractmethod
     def inputs(self):
-
-        return self._inputs
-
-    @property
-    def outputs(self):
-
-        return self._outputs
-
-    def process(self):
-
-        print(f"<{self.user_name}>'s inputs are resolved, processing them, adding to output dictionary...")
-
-# class BaseBlock(object):
-#     """BaseBlock object which is the root class for SimpleBlock and BatchBlock
-#     subclasses
-
-#     This is the building block (pun intended) for the entire imagepypelines
-#     pipelining system. All blocks, both SimpleBlocks and BatchBlocks, will
-#     inherit from this object. Which contains base functionality to setup a
-#     block's loggers, unique name, standard input/output_shapes and special
-#     functions for pipeline objects to call
-
-#     Args:
-#         io_map(IoMap,dict): dictionary of input-output mappings for this
-#             Block
-#         name(str): name for this block, it will be automatically created/modified
-#             to make sure it is unique
-#         notes(str): a short description of this block
-#         requires_training(bool): whether or not this block will require
-#             training
-#         requires_labels(bool): whether or not this block will require
-#             labels during training
-
-#     Attributes:
-#         io_map(IoMap): object that maps inputs to this block to it's outputs.
-#             subclass of tuple where I/O is stored as:
-#             ( (input1,output1),(input2,output2)... )
-#         name(str): unique name for this block
-#         n_inputs(int): number of data inputs to block (len of data input INCLUDING TRAIN DATA ***TENTATIVE CHANGE USING **kwargs DICT IN PROCESS AND TRAIN AS A INSTANCE VARIABLE!!!: RYAN)
-#         n_outputs(int): number of data outputs to block (len of data output)
-#         inputs(dict): key names of input data corresponding to each index in data
-#         outputs(dict): key names of output data corresponding to each index in return tuple
-#         notes(str): a short description of this block, what operations it
-#             performs, etc. This will be included in the blocks 'description'
-#         requires_training(bool): whether or not this block will require
-#             training
-#         trained(bool): whether or not this block has been trained, True
-#             by default if requires_training = False
-#         logger(ip.ImagepypelinesLogger): logger for this block,
-#             registered to 'name'
-#         description(str): a readable description of this block that includes
-#             user defined notes and a summary of inputs and outputs
-#     """
-#     __metaclass__ = ABCMeta
-#     def __init__(self,
-#                  io_map,
-#                  name=None,
-#                  notes=None,
-#                  requires_training=False,
-#                  requires_labels=False,
-#                  ):
-#          # this uuid will not change with copying or serialization
-#          # as such it can be used to id which blocks are copies or unpickled
-#          # versions of the original - it's metaphorical siblings
-#         self.sibling_id = uuid4().hex
-#         # setup absolutely unique id for this block
-#         # this will change even if the block is copied or pickled
-#         self.uuid = uuid4().hex
-#         # ----------- building a unique name for this block ------------
-#         # logger_name is set up as follows
-#         # <readable_name>-<sibling_id>-<uuid>
-#         if name is None:
-#             name = self.__class__.__name__
-#         logger_name = self.__get_logger_name(name,
-#                                                 self.sibling_id,
-#                                                 self.uuid)
-
-#         # ------ setting up instance variables
-#         self.io_map = IoMap(io_map)
-#         self.name = name
-#         self.logger_name = logger_name
-#         self.requires_training = requires_training
-#         self.requires_labels = requires_labels
-#         self.trained = False if self.requires_training else True
-
-#         # this will be defined in _pipeline_pair
-#         self.logger = None
-#         self.pipeline_uuid = None
-#         self.pipeline_name = None
-
-#         # create a block description
-#         self.description = describe_block(self,notes)
-
-#         # setup initial metadata dictionary
-#         self._metadata = {'processing_time':0.0,
-#                             'num_in':int(0),
-#                             'num_out':int(0),
-#                             'total_in':int(0),
-#                             'total_out':int(0),
-#                             'training_time':None,
-#                             }
-
-#         # setup initial tags
-#         self.tags = set()
-
-#         # whether or not the input names have been defined for this block
-#         self._arg_spec = None
-
-#         super(BaseBlock,self).__init__()
-
-#     def rename(self,name):
-#         """Renames this block to the given name
-
-#         Args:
-#             name(str): the new name for your Block
-
-#         Returns:
-#             ip.Block : object reference to this block (self)
-
-#         Note:
-#             unlike naming your block using the `name` parameter in
-#             instantiation, imagepypelines will not guarantee that this name
-#             will be unique. It is considered the user's responsibility to
-#             determine that this will not cause problems in your pipeline.
-#         """
-#         assert isinstance(name,str),"name must be a string"
-#         self.name = name
-#         self.logger_name = self.__get_logger_name(self.name,
-#                                                     self.sibling_id,
-#                                                     self.uuid)
-#         return self
-
-#     def train(self, data, labels=None):
-#         """(optional or required overload)trains the block. overloading
-#         is required if the 'requires_training' parameter is set to True
-
-#         users are expected to save pertinent variables as instance
-#         variables
-
-#         Args:
-#             data(list): list of datums to train on
-#             labels(list,None): corresponding label for each datum,
-#                 None by default (for unsupervised systems)
-
-#         Returns:
-#             None
-#         """
-#         if self.requires_training:
-#             msg = "{}.train must be overloaded if the " \
-#                         + "'requires_training' is set to True".format(self.name)
-#             self.logger.critical(msg)
-#             raise NotImplementedError(msg)
-
-#     def before_process(self, data, labels=None):
-#         """(optional overload)function that runs before processing for
-#         optional functionality. this function takes in the full data list and
-#         label list. does nothing unless overloaded
-
-#         Args:
-#             data(list): list of datums to process
-#             labels(list,None): corresponding label for each datum,
-#                 None by default (for unsupervised systems)
-#         """
-#         pass
-
-#     def after_process(self):
-#         """
-#         (optional overload)function that runs after processing for
-#         optional functionality. intended for optional use as a cleanup
-#         function
-
-#         Args:
-#             None
-#         """
-#         pass
-
-#     def _pipeline_train(self, data, labels=None):
-#         """function pipeline calls to train this block, modifies
-#         self.trained status
-
-#         Args:
-#             data(list): list of datums to train on
-#             labels(list,None): corresponding label for each datum,
-#                 None by default (for unsupervised systems)
-
-#         Returns:
-#             None
-
-#         Raises:
-#             BlockRequiresLabels: if this block requires labels and None
-#                 was passed in
-#         """
-#         start = time.time()
-#         if self.requires_labels and (labels is None):
-#             msg = "{} requires labels for training but none were passed in"\
-#                 .format(self)
-#             raise BlockRequiresLabels(msg)
-
-#         if isinstance(labels,list):
-#             # if labels are passed in, we must have an equal number
-#             # of datums and labels
-#             if len(data) != len(labels):
-#                 raise DataLabelMismatch(data, labels)
-
-#         self.train(data, labels)
-#         self.trained = True
-
-#         # update metadata
-#         self._metadata['training_time'] = round(time.time() - start,3)
-
-#     def _pipeline_process(self, data, labels=None):
-#         """function pipeline calls to process data using this block
-#         works with BatchBlocks and SimpleBlocks
-
-#         Args:
-#             data(list): list of datums to process
-#             labels(list,None): corresponding label for each datum,
-#                 None by default (for unsupervised systems)
-
-#         Returns:
-#             processed(list): list of processed datums
-#             labels(list): list of corresponding labels for processed
-
-#         Raises:
-#             InvalidBlockInputData: if data is not a list
-#             InvalidProcessingStrategy: if processed output is not a list
-#             InvalidLabelStrategy: if labels output is not a list
-#             DataLabelMismatch: if there is mismatch in the number of labels
-#                 and processed datums
-
-#         """
-#         start = time.time()
-#         # ---------------- INPUT ERROR CHECKING ------------------------
-#         if not isinstance(data, list):
-#             raise InvalidBlockInputData(
-#                 "input data into a block must be a list")
-
-#         if labels is None:
-#             labels = [None] * len(data)
-
-#         if isinstance(labels,list):
-#             if len(data) != len(labels):
-#                 raise DataLabelMismatch(processed, labels)
-
-#         # ----------- running block functions -----------------------
-#         # running prep function
-#         self.before_process(data, labels)
-
-#         # processing data and labels
-#         processed = self.process_strategy(data)
-#         labels = self.label_strategy(labels)
-
-#         # running post-process / cleanup function
-#         self.after_process()
-
-
-#         # --------------- OUTPUT ERROR CHECKING ------------------------
-#         # error checking for output types
-#         if not isinstance(processed, list):
-#             raise InvalidProcessStrategy(self)
-
-#         if not isinstance(labels, list):
-#             raise InvalidLabelStrategy(self)
-
-#         # making sure that we always have the same number of labels and datums
-#         if len(processed) != len(labels):
-#             raise DataLabelMismatch(processed, labels)
-
-#         # update the metadata
-#         self._metadata['num_in'] = len(data)
-#         self._metadata['num_out'] = len(processed)
-#         self._metadata['processing_time'] = round(time.time() - start,5)
-#         self._metadata['total_in'] += len(data)
-#         self._metadata['total_out'] += len(processed)
-#         return processed, labels
-
-
-#     def _pipeline_pair(self, pipeline):
-#         """pairs this block for use with the pipeline passed in
-
-#         Args:
-#             pipeline (ip.Pipeline): the pipeline to pair with this block
-
-#         Returns:
-#             None
-#         """
-#         # pair this blocks logger with it's pipeline parent
-#         self.logger = pipeline.logger.getChild( self.logger_name )
-#         self.pipeline_name = pipeline.name
-#         self.pipeline_uuid = pipeline.uuid
-
-#     @abstractmethod
-#     def process_strategy(self, data):
-#         """overarching processing management function for this block
-
-#         Args:
-#             data(list): list of datums to process
-
-#         Returns:
-#             list: processed datums
-#         """
-#         raise NotImplementedError(
-#             "'process_strategy' must be overloaded in all children")
-
-#     @abstractmethod
-#     def label_strategy(self, labels):
-#         """overarching label management function for this block
-
-#         Args:
-#             labels(list,None): corresponding label for each datum,
-#                 None by default (for unsupervised systems)
-
-#         Returns:
-#             labels (list): labels for datums (Nones for unsupervised systems)
-#         """
-#         raise NotImplementedError(
-#             "'label_strategy' must be overloaded in all children")
-
-#     def __str__(self):
-#         return self.name
-
-#     def __repr__(self):
-#         return self.description
-
-#     def __getstate__(self):
-#         """pickle state retrieval function, its most important use is to
-#         delete the copied uuid to prevent potential issues from improper
-#         restoration
-
-#         Note:
-#             If you overload this function, it's imperative that you call this
-#             function via _super().__getstate__(state)_, or otherwise return
-#             a state dictionary without a uuid
-#         """
-#         state = self.__dict__.copy()
-#         del state['uuid']
-#         return state
-
-#     def __setstate__(self, state):
-#         """pickle restoration function, its most important use is to generate
-#         a new uuid for the copied or deserialized object
-
-#         Note:
-#             If you overload this function, it's imperative that you call this
-#             function via _super().__setstate__(state)_, or otherwise create a
-#             new unique uuid for the restored Block _self.uuid = uuid4().hex_
-#         """
-#         self.__dict__.update(state)
-#         # create a new uuid for this instance, since it's technically a
-#         # different object
-#         self.uuid = uuid4().hex
-#         # update the name to correspond with the new uuid
-#         logger_name = self.__get_logger_name(self.name,
-#                                                 self.sibling_id,
-#                                                 self.uuid)
-
-
-
-#     @staticmethod
-#     def __get_logger_name(basename, sibling_id, uuid):
-#         """generates a unique logger name that contains both a sibling id
-#         (a random string that will be persistent across all copies and unpickled
-#         versions of this object) and a uuid (which is unique to this exact
-#         object instance)
-#         (only the last six chars of each hash is used, so it's technically possible
-#         for this name to not be unique) - if you need a truly unique ID, then
-#         use obj.uuid
-#         """
-#         return "{basename} #{sibling_id}-{uuid}".format(basename=basename,
-#                                                 sibling_id=sibling_id[-6:],
-#                                                 uuid=uuid[-6:])
-
-#     @property
-#     @abstractmethod
-#     def inputs(self):
-#         pass
-
-#     def get_default_node_attrs(self):
-#         attrs = { 'name':self.name,
-#                     'type':type(self),
-#                     }
-#         return attrs
+        pass
+
+    def get_default_node_attrs(self):
+        attrs = { 'name':self.name,
+                    'type':type(self),
+                    }
+        return attrs
 
 
 

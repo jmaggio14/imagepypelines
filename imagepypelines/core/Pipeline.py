@@ -21,6 +21,7 @@ import numpy as np
 from termcolor import cprint
 from uuid import uuid4
 import networkx as nx
+import matplotlib.pyplot as plt
 
 INCOMPATIBLE = (Incompatible(),)
 
@@ -204,7 +205,6 @@ class Pipeline(object):
 
 
     def _build_graph(self,user_graph):
-
         # add all variables defined in the graph to a dictionary
         # quick helper function to add a node to the graph
         def _add_to_vars(var):
@@ -224,8 +224,9 @@ class Pipeline(object):
 
             # for tuple defined dict keys like ('x','y') : (func, 'a', 'b')
             elif isinstance(var,(tuple,list)):
-                for n in var:
-                    _add_to_vars(n)
+                for v in var:
+                    _add_to_vars(v)
+
 
         #### SECOND FOR LOOP - adding all nodes to the graph
         # reiterate through the graph definition to define inputs and outputs
@@ -237,32 +238,35 @@ class Pipeline(object):
             # GETTING GRAPH INPUTS
             # e.g. - 'x': ip.Input(),
             if isinstance(definition, Input):
-                # add this variables processor to it's attrs
+                # add this variables task to it's attrs
                 # these vars will not have any dependents
                 for output in outputs:
-                    self.vars[output]['processor'] = definition.uuid
+                    self.vars[output]['task'] = definition.uuid
 
-                # add the processor to the graph
+                # add the task to the graph
                 self.graph.add_node(definition.uuid,
-                                    processor=None,
+                                    task=None,
                                     dependents=None,
                                     **definition.get_default_node_attrs(),)
 
             # e.g. - 'z': (block, 'x', 'y'),
             elif isinstance(definition, (tuple,list)):
-                processor = definition[0]
-                print("processor: ", processor)
+                task = definition[0]
                 inpts = definition[1:]
                 # if we have a tuple input, then the first value MUST be a block or Pipeline
-                if not isinstance(processor, (BaseBlock,Pipeline)):
+                if not isinstance(task, (BaseBlock,Pipeline)):
                     raise TypeError(
                         "first value in any graph definition tuple must be a Block or Pipeline")
 
-                # add the processor to the graph
-                self.graph.add_node(processor.uuid,
-                                    processor=processor,
+                for output in outputs:
+                    self.vars[output]['task'] = task.uuid
+
+                # add the task to the graph
+                # import pdb; pdb.set_trace()
+                self.graph.add_node(task.uuid,
+                                    task=task,
                                     inputs=inpts,
-                                    **processor.get_default_node_attrs(),
+                                    **task.get_default_node_attrs(),
                                     )
 
                 # update the dependents for all of these outputs
@@ -270,23 +274,33 @@ class Pipeline(object):
                     self.vars[output]['dependents'].update(inpts)
 
 
+
+
         # THIRD FOR LOOP - drawing edges
         for var_name,attrs in self.vars.items():
+            ## DEBUG
+            print()
             print('var_name:', var_name)
-            print('attrs:', attrs)
-            import pdb; pdb.set_trace()
-            current_node = self.graph.nodes[ attrs['processor'] ]
+            for i in attrs.items(): print(f"{i[0]} : {i[1]} ")
+            print()
+            ## END DEBUG
+
+            current_node = self.graph.nodes[ attrs['task'] ]
 
             # connect all dependents to the variable node
-            for node_a in attrs['dependents']:
-                input_index = current_node['inputs'].index(var)
-                input_name = current_node['processor'].inputs[input_index]
+            for prior_node in attrs['dependents']:
+                print(f"{node_a} : {var_name}")
+                import pdb; pdb.set_trace()
+                input_index = current_node['inputs'].index(var_name)
+                input_name = current_node['task'].inputs[input_index]
 
-                self.graph.add_edge(node_a,
+                self.graph.add_edge(prior_node,
                                     node_b,
                                     var_name=var_name,
                                     index=input_index,
                                     name=input_name)
+
+                self.draw()
 
     def _get_topology(self):
         # first node is always an Input for the first iteration
@@ -316,12 +330,12 @@ class Pipeline(object):
             # all the data we've queued
             else:
                 # yield the blockdata required to compute the next step
-                # (p.s. a processor is a generic name for a block/sub pipeline
+                # (p.s. a task is a generic name for a block/sub pipeline
                 # maybe this should be called a 'task' instead?????)
-                processor = self.graph.nodes[current_node]['processor']
+                task = self.graph.nodes[current_node]['task']
                 inputs = [dependent_data[k] for k in sorted(dependent_data.keys())]
                 output_names = [output_names[k] for k in sorted(output_names.keys())]
-                yield processor, inputs, output_names
+                yield task, inputs, output_names
 
                 # reset local data (this might be wrong/causing errors???)
                 dependent_data = {}
@@ -333,17 +347,25 @@ class Pipeline(object):
     def process(self,**named_data):
         self.data_dict = named_data
 
-        for processor, input_data, output_names in self._get_topology():
-            # processor is a block
-            if isinstance(processor,BaseBlock):
-                outputs = processor._pipeline_process(*input_data)
-            # processor is a pipeline
+        for task, input_data, output_names in self._get_topology():
+            # task is a block
+            if isinstance(task,BaseBlock):
+                outputs = task._pipeline_process(*input_data)
+            # task is a pipeline
             else:
-                outputs = processor.process(*input_data)
+                outputs = task.process(*input_data)
 
             # add data to the data_dict
             for name,output in zip(output_names, outputs):
                 self.data_dict[name] = output
+
+    def draw(self):
+        plt.cla()
+        nx.draw_networkx(self.graph, pos=nx.spring_layout(self.graph))  # use spring layout
+        plt.ion()
+        plt.draw()
+        plt.show()
+        plt.pause(0.01)
 
 
     ################################### util ###################################
@@ -426,7 +448,7 @@ class Pipeline(object):
 #             'orientation' : ( calculate_orientation, 'meas_amp', 'phase_difference')
 #             }
 #
-# coil_processor = ip.Pipeline(graph)
+# coil_task = ip.Pipeline(graph)
 # # Coil processor can now be saved, deployed to a server, or used to
 # # partially document your algorithm for a paper!
 #
@@ -514,4 +536,3 @@ class Pipeline(object):
     #
     # @property
     # def inputs(self):
->>>>>>> Stashed changes
