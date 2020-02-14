@@ -6,6 +6,7 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
 import sys
+import inspect
 from .BaseBlock import BaseBlock
 from .imports import import_tensorflow
 from abc import abstractmethod
@@ -75,7 +76,7 @@ class SimpleBlock(BaseBlock):
         if not self._arg_spec:
             self._arg_spec = inspect.getfullargspec(self.process)
 
-        return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
+        return ([] if (self._arg_spec.args is None) else self._arg_spec.args[1:])
 
 
 

@@ -1,5 +1,6 @@
 import imagepypelines as ip
 import networkx as nx
+import numpy as np
 
 def add_val(a,b,value=1):
     return a+value, b+value
@@ -8,22 +9,26 @@ def minus_val(a,b,value=5):
     return a-value, b-value
 
 # define the blocks
-AddOne = ip.FuncBlock(add_val, {'value':1} )
+AddTen = ip.FuncBlock(add_val, {'value':10} )
 MinusFive = ip.FuncBlock(minus_val, {'value':5} )
 
 
 
 serial_graph = {
             # inputs
-            'zeros' : ip.Input(0),
-            'ones'  : ip.Input(1),
+            'zero' : ip.Input(0),
+            'one'  : ip.Input(1),
             # operations
-            ('zeros_1','ones_1') : (AddOne, 'zeros', 'ones'),
-            ('zeros_2', 'ones_2') : (MinusFive, 'zeros_1', 'ones_1'),
+            ('ten','eleven') : (AddTen, 'zero', 'one'),
+            ('five', 'six') : (MinusFive, 'ten', 'eleven'),
             }
 
 
-p = ip.Pipeline(serial_graph, 'serial_test')
+pipeline = ip.Pipeline(serial_graph, 'serial_test')
+pipeline.process(0,1)
+
+import pdb; pdb.set_trace()
+
 
 
 # add1 = ip.Add("Add1", {"operand1":2, "operand2":5}, {"result":None})

@@ -115,37 +115,22 @@ def blockify(**kwargs):
 
 
 class Input(BatchBlock):
-    def __init__(self,index=None):
-        self.index = index
+    def __init__(self,index_key=None):
+        self.index_key = index_key
+        # DEBUG
+        # eventually we will be able to specify inputs using
+        # END DEBUG
         self.data = None
-        super().__init__({},name="Input"+str(index))
-
-    def load(self, data):
-        self.data = data
+        super().__init__({},name="Input"+str(self.index_key))
 
     def batch_process(self):
         return self.data
 
-    def unload(self,):
+    def load(self, data):
+        self.data = data
+
+    def unload(self, data):
         self.data = None
-
-
-
-
-# dsk = {
-#     "load-1": {load: "myfile.cfg", analyze: "something"},
-#     "load-2":
-#         {
-#         "input":{blank dict b/c no input},
-#         "output":{load: "myfile.cfg", analyze: "something"}
-#         },
-#     "clean-1":
-#         {
-#         "input":{load: "myfile.cfg", analyze: "something"},
-#         "output":{other_func: "yeet"}
-#         },
-#     "clean-2": {load: "myfile.cfg", analyze: "something"},
-#     }
 
 
 
@@ -172,10 +157,14 @@ class Pipeline(object):
                                                 self.sibling_id,
                                                 self.uuid)
         self.logger = get_logger(self.logger_name)
-        self.graph = nx.MultiDiGraph()
 
+        # GRAPHING
+        self.graph = nx.MultiDiGraph()
         self.vars = {}
-        self.positional_inputs = []
+
+        # PROCESS / internal tracking
+        self.inputs = {}
+        self.data_dict = {}
 
         self._build_graph(user_graph=graph)
 
@@ -190,7 +179,8 @@ class Pipeline(object):
                 raise TypeError("graph vars must be a string")
 
             self.vars[var] = {'dependents':set(),
-                                'task':None # will always be defined
+                                'task':None, # will always be defined
+                                'data':None, # will be populated in self.process
                                 }
 
 
@@ -216,16 +206,24 @@ class Pipeline(object):
             # GETTING GRAPH INPUTS
             # e.g. - 'x': ip.Input(),
             if isinstance(definition, Input):
+                # track what inputs are required so we can populate
+                # them with arguments in self.process
+                self.inputs[definition.index_key] = definition
+
                 # add this variables task to it's attrs
                 # these vars will not have any dependents
                 for output in outputs:
                     self.vars[output]['task'] = definition.uuid
 
-                # add the task to the graph
+                # add the input 'task' to the graph
+                # inputs will not have any inputs (ironically) or a task_processor
+                # as these inputs are just placeholders for data supplied by the user
                 self.graph.add_node(definition.uuid,
-                                    task_processor=None,
-                                    dependents=None,
+                                    task_processor=definition,
+                                    inputs=tuple(),
                                     **definition.get_default_node_attrs(),)
+
+
 
             # e.g. - 'z': (block, 'x', 'y'),
             elif isinstance(definition, (tuple,list)):
@@ -255,75 +253,90 @@ class Pipeline(object):
 
 
         # THIRD FOR LOOP - drawing edges
-        for var_name,attrs in self.vars.items():
-            ## DEBUG
-            print()
-            print('var_name:', var_name)
-            for i in attrs.items(): print("{} : {}".format(*i))
-            print()
-            ## END DEBUG
+        for node_b,node_b_attrs in self.graph.nodes(data=True):
+            # draw an edge for every input into this node
+            for input_index, input_name in enumerate(node_b_attrs['inputs']):
+                # first we identify an upstream node by looking up what task
+                # created them
+                node_a = self.vars[input_name]['task']
+                node_a_attrs = self.graph.node[ node_a ]
 
-            import pdb; pdb.set_trace()
-            current_node = self.graph.node[ attrs['task'] ]
-
-            # connect all dependents to the variable node
-            for prior_node in attrs['dependents']:
-                self.draw()
-                print("{} : {}".format(prior_node, var_name))
-                input_index = current_node['inputs'].index(var_name)
-                input_name = current_node['task'].inputs[input_index]
-
-                self.graph.add_edge(prior_node,
+                # draw the edge FOR THIS INPUT from node_a to node_b
+                processor_arg_name = node_b_attrs['task_processor'].inputs[input_index]
+                self.graph.add_edge(node_a,
                                     node_b,
-                                    var_name=var_name,
+                                    var_name=input_name, # name assigned in graph definition
                                     index=input_index,
-                                    name=input_name)
+                                    name=processor_arg_name)  # name of node_b's process argument at the index
+                print("drawing edge {} from {} to {}".format(input_index,
+                                                                node_a,
+                                                                node_b))
 
 
     def _get_topology(self):
         # first node is always an Input for the first iteration
         # first nodes will not have any dependents
-        order = nx.topological_sort(nx.line_graph(self.graph))
 
-        dependent_data = {}
         output_names = {}
+        input_data = {}
         current_node = None
 
         # this for loop goes through EDGE BY EDGE
         # and queues data for the next node in the dictionary "dependent_data"
         # - Jeff
+        order = nx.topological_sort( nx.line_graph(self.graph) )
         for node_a, node_b, edge_idx in order:
-
-            # if the node hasn't changed, we are still iterating through edges
-            # for a connection and we keep queuing data
+            if current_node is None:
+                current_node = node_a
+            # if the node_b hasn't changed, we are still iterating through edges
+            # incoming into this node and thus we keep queuing data
             if node_b == current_node:
-                # retrieve the data from the data dict and add it to dependent_data
+                # retrieve the data from the self.vars dict and queue it for
+                # next task
                 # this method relies on the data dict being updated between
-                # iterations of this generator
+                # iterations of this generator (in the process function)
                 edge = self.graph.edges[node_a, node_b, edge_idx]
-                dependent_data[ edge['index'] ] = self.data_dict[ edge['index'] ]
-                output_names[ edge['index'] ] = edge['var_name']
+                input_data[ edge['index'] ] = self.vars[ edge['var_name'] ]['data']
 
             # otherwise, we are at a new connection and it is time to compute
-            # all the data we've queued
+            # using all the data we've queued
             else:
                 # yield the blockdata required to compute the next step
                 # (p.s. a task is a generic name for a block/sub-pipeline
-                task = self.graph.nodes[current_node]['task']
-                inputs = [dependent_data[k] for k in sorted(dependent_data.keys())]
-                output_names = [output_names[k] for k in sorted(output_names.keys())]
-                yield task, inputs, output_names
+                task = self.graph.nodes[current_node]['task_processor']
 
-                # reset local data (this might be wrong/causing errors???)
-                dependent_data = {}
-                output_names = {}
+                # sort the inputs by their input index into the task
+                inputs_list = tuple(input_data[k] for k in sorted(input_data.keys()))
+
+                # fetch the names of the outputs sorted by output index from the task
+                out_edges_attrs = [e[2] for e in self.graph.out_edges(node_b, data=True)]
+                output_names_dict = {edge_attrs['index'] : edge_attrs['var_name'] for edge_attrs in out_edges_attrs}
+                output_names = sorted(output_names, key=output_names_dict.get)
+
+                yield task, inputs_list, output_names
+
+                # reset local data for next iteration of generator
+                input_data = {}
                 current_node = node_b
 
 
 
-    def process(self,**named_data):
-        self.data_dict = named_data
+    def process(self,*pos_data,**kwdata):
+        # reset all leftover data in this graph
+        self.clear()
 
+        # STORING DATA
+        # store positonal arguments fed in
+        ## NOTE: need error checking here (number of inputs, etc)
+        for i,arg in enumerate(pos_data):
+            self.inputs[i].load(arg)
+
+        # store keyword arguments fed in
+        ## NOTE: need error checking here (number of inputs, etc)
+        for key,val in kwdata.items():
+            self.inputs[key] = val
+
+        # PROCESS
         for task, input_data, output_names in self._get_topology():
             # task is a block
             if isinstance(task,BaseBlock):
@@ -332,14 +345,23 @@ class Pipeline(object):
             else:
                 outputs = task.process(*input_data)
 
-            # add data to the data_dict
-            for name,output in zip(output_names, outputs):
-                self.data_dict[name] = output
+            # add output data to the variable data tracker
+            for name, data in zip(output_names, outputs):
+                self.vars[name]['data'] = data
+
+
+        return {key : self.vars[key]['data'] for key in self.vars}
+
+
+    def clear(self):
+        """resets all data temporarily stored in the graph"""
+        for var in self.vars.values():
+            var['data'] = None
 
     def draw(self):
         plt.cla()
         nx.draw_networkx(self.graph,
-                            pos=nx.spring_layout(self.graph),
+                            pos=nx.planar_layout(self.graph),
                             labels= { n : self.graph.node[n]['name'] for n in self.graph.nodes()} )  # use spring layout
         plt.ion()
         plt.draw()

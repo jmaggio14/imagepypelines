@@ -382,7 +382,7 @@ class BaseBlock(object):
         self.sibling_id = uuid4().hex
         # setup absolutely unique id for this block
         # this will change even if the block is copied or pickled
-        self.uuid = uuid4().hex
+        self.uuid = name + '-' + uuid4().hex if name is not None else self.__class__.__name__ + '-' + uuid4().hex
         # ----------- building a unique name for this block ------------
         # logger_name is set up as follows
         # <readable_name>-<sibling_id>-<uuid>
