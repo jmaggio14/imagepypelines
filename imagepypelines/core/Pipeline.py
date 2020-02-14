@@ -328,13 +328,13 @@ class Pipeline(object):
         # STORING DATA
         # store positonal arguments fed in
         ## NOTE: need error checking here (number of inputs, etc)
-        for i,arg in enumerate(pos_data):
-            self.inputs[i].load(arg)
+        for i,data in enumerate(pos_data):
+            self.inputs[i].load(data)
 
         # store keyword arguments fed in
         ## NOTE: need error checking here (number of inputs, etc)
         for key,val in kwdata.items():
-            self.inputs[key] = val
+            self.inputs[key].load(val)
 
         # PROCESS
         for task, input_data, output_names in self._get_topology():
