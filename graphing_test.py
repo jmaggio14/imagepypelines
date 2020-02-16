@@ -12,8 +12,6 @@ def minus_val(a,b,value=5):
 AddTen = ip.FuncBlock(add_val, {'value':10} )
 MinusFive = ip.FuncBlock(minus_val, {'value':5} )
 
-
-
 serial_graph = {
             # inputs
             'zero' : ip.Input(0),
@@ -25,7 +23,7 @@ serial_graph = {
 
 
 pipeline = ip.Pipeline(serial_graph, 'serial_test')
-pipeline.process(0,1)
+processed = pipeline.process([0],[1])
 
 import pdb; pdb.set_trace()
 

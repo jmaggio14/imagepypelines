@@ -6,11 +6,7 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
 from .BaseBlock import BaseBlock
-from .BaseBlock import ArrayType
-from .BaseBlock import Incompatible
 from .block_subclasses import SimpleBlock, BatchBlock
-from .Exceptions import CrackedPipeline
-from .Exceptions import IncompatibleTypes
 from .util import Timer
 
 import collections
@@ -22,8 +18,6 @@ from termcolor import cprint
 from uuid import uuid4
 import networkx as nx
 import matplotlib.pyplot as plt
-
-INCOMPATIBLE = (Incompatible(),)
 
 def get_types(data):
     """Retrieves the block data type of the input datum"""
@@ -71,7 +65,7 @@ class FuncBlock(SimpleBlock):
         exec_locals = {}
         exec(exec_string, {}, exec_locals)
         self.process = exec_locals['process']
-        super().__init__({}, self.func.__name__)
+        super().__init__(self.func.__name__)
 
     def __call__(self,*args,**kwargs):
         """returns the exact output of the user defined function without any
@@ -113,6 +107,30 @@ def blockify(**kwargs):
     return decorator
 
 
+class Data(object):
+    def __init__(self,data):
+        self.data = data
+        if isinstance(data, np.ndarray):
+            self.type = "array"
+        elif isinstance(data, (list,tuple)):
+            self.type = "iter"
+        else:
+            self.type = "iter"
+            self.data = [self.data]
+
+    def batch_data(self):
+        return self.data
+
+    def datums(self):
+        if self.type == "iter":
+            for d in self.data:
+                yield d
+
+        elif self.type == "array":
+            # return every row of data
+            for r in range(self.data.shape[0]):
+                yield self.data[r]
+
 
 class Input(BatchBlock):
     def __init__(self,index_key=None):
@@ -121,7 +139,7 @@ class Input(BatchBlock):
         # eventually we will be able to specify inputs using
         # END DEBUG
         self.data = None
-        super().__init__({},name="Input"+str(self.index_key))
+        super().__init__(name="Input"+str(self.index_key))
 
     def batch_process(self):
         return self.data
@@ -180,7 +198,6 @@ class Pipeline(object):
 
             self.vars[var] = {'dependents':set(),
                                 'task':None, # will always be defined
-                                'data':None, # will be populated in self.process
                                 }
 
 
@@ -221,6 +238,7 @@ class Pipeline(object):
                 self.graph.add_node(definition.uuid,
                                     task_processor=definition,
                                     inputs=tuple(),
+                                    outputs=outputs,
                                     **definition.get_default_node_attrs(),)
 
 
@@ -266,58 +284,129 @@ class Pipeline(object):
                 self.graph.add_edge(node_a,
                                     node_b,
                                     var_name=input_name, # name assigned in graph definition
-                                    index=input_index,
-                                    name=processor_arg_name)  # name of node_b's process argument at the index
+                                    input_index=input_index,
+                                    output_index=node_a_attrs['outputs'].index(input_name),
+                                    name=processor_arg_name, # name of node_b's process argument at the index
+                                    data=None)
                 print("drawing edge {} from {} to {}".format(input_index,
                                                                 node_a,
                                                                 node_b))
 
+    @property
+    def execution_order(self):
+        return nx.topological_sort( nx.line_graph(self.graph) )
 
-    def _get_topology(self):
-        # first node is always an Input for the first iteration
-        # first nodes will not have any dependents
 
-        output_names = {}
-        input_data = {}
-        current_node = None
+    def _compute(self):
+        n_edges_loaded = 0
+        for node_a, node_b, edge_idx in self.execution_order:
+            # get actual objects instead of just graph ids
+            task_a = self.graph.nodes[node_a]['task_processor']
+            task_b = self.graph.nodes[node_b]['task_processor']
+            edge = self.graph.edges[node_a, node_b, edge_idx]
 
-        # this for loop goes through EDGE BY EDGE
-        # and queues data for the next node in the dictionary "dependent_data"
-        # - Jeff
-        order = nx.topological_sort( nx.line_graph(self.graph) )
-        for node_a, node_b, edge_idx in order:
-            if current_node is None:
-                current_node = node_a
-            # if the node_b hasn't changed, we are still iterating through edges
-            # incoming into this node and thus we keep queuing data
-            if node_b == current_node:
-                # retrieve the data from the self.vars dict and queue it for
-                # next task
-                # this method relies on the data dict being updated between
-                # iterations of this generator (in the process function)
-                edge = self.graph.edges[node_a, node_b, edge_idx]
-                input_data[ edge['index'] ] = self.vars[ edge['var_name'] ]['data']
+            # check if node_a is a root node (no incoming edges)
+            # these nodes can be computed and the edge populated
+            # immmediately because they have no dependents
+            # if self.graph.in_degree(node_a) == 0:
+            #     edge['data'] = task_a._pipeline_process() # no data needed
 
-            # otherwise, we are at a new connection and it is time to compute
-            # using all the data we've queued
-            else:
-                # yield the blockdata required to compute the next step
-                # (p.s. a task is a generic name for a block/sub-pipeline
-                task = self.graph.nodes[current_node]['task_processor']
+            # check if all the data for this node is loaded
+            # inputs (and other roots) will have zero required edges
 
-                # sort the inputs by their input index into the task
-                inputs_list = tuple(input_data[k] for k in sorted(input_data.keys()))
+            n_edges_required = self.graph.in_degree(node_b)
+            if n_edges_loaded == n_edges_required:
 
-                # fetch the names of the outputs sorted by output index from the task
-                out_edges_attrs = [e[2] for e in self.graph.out_edges(node_b, data=True)]
-                output_names_dict = {edge_attrs['index'] : edge_attrs['var_name'] for edge_attrs in out_edges_attrs}
-                output_names = sorted(output_names, key=output_names_dict.get)
+                # fetch input data for this node
+                in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
+                input_names_dict = {e['input_index'] : e['var_name'] for e in in_edges}
+                inputs = sorted(input_names_dict, key=input_names_dict.get)
 
-                yield task, inputs_list, output_names
+                # assign the task outputs to their appropriate edge
+                outputs = task_b._pipeline_process(*inputs)
 
-                # reset local data for next iteration of generator
-                input_data = {}
-                current_node = node_b
+                # populate upstream edges with the data we need
+                # get the output names
+                out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
+                out_edges_sorted = {e['output_index'] : e for e in out_edges}
+                out_edges_sorted = sorted(out_edges_sorted, key=out_edges_sorted.get)
+                # NEED ERROR CHECKING HERE
+                # (psuedo) if n_out == n_expected_out
+                for i,out_edge in out_edges_sorted:
+                    out_edge['data'] = outputs[i]
+
+                n_edges_loaded = 0
+
+            n_edges_loaded + 1
+
+
+
+
+
+
+
+    # def _get_topology(self):
+        # # first node is always an Input for the first iteration
+        # # first nodes will not have any dependents
+        #
+        # output_names = {}
+        # input_data = {}
+        # current_node = None
+        #
+        # # this for loop goes through EDGE BY EDGE
+        # # and queues data for the next node in the dictionary "input_data"
+        # # - Jeff
+        # order = nx.topological_sort( nx.line_graph(self.graph) )
+        # for node_a, node_b, edge_idx in order:
+        #     print(node_a, "---",edge_idx,"--->", node_b)
+        #     # FIRST ITERATION ONLY
+        #     if current_node is None:
+        #         current_node = node_b
+        #
+        #     # while our incoming edges are still from Inputs, we have to
+        #     # queue the input data in the var data dict so we can begin tasks
+        #     prior_task = self.graph.nodes[node_a]['task_processor']
+        #     if isinstance(prior_task, Input):
+        #         # grab the name of the variable and then queue data in the dict
+        #         input_name = self.graph.edges[node_a, node_b, edge_idx]['var_name']
+        #         self.vars[input_name]['data'] = prior_task._pipeline_process()
+        #         # print("queuing {} data".format(prior_task))
+        #
+        #     # if the node_b hasn't changed, we are still iterating through edges
+        #     # incoming into this node and thus we keep queuing data
+        #     # for the first iteration, node_b will be defined, but  current_node
+        #     # will be None
+        #     if node_b == current_node:
+        #         # retrieve the data from the self.vars dict and queue it for
+        #         # next task
+        #         # this method relies on the data dict being updated between
+        #         # iterations of this generator (in the process function
+        #         edge = self.graph.edges[node_a, node_b, edge_idx]
+        #         input_data[ edge['index'] ] = self.vars[ edge['var_name'] ]['data']
+        #         # print("queuing input for ", self.graph.nodes[node_b]['task_processor'] )
+        #
+        #     # otherwise, we are at a new connection and it is time to compute
+        #     # using all the data we've queued
+        #     else:
+        #         # yield the blockdata required to compute the next step
+        #         # (p.s. a task is a generic name for a block/sub-pipeline
+        #         task = self.graph.nodes[current_node]['task_processor']
+        #         # print("computing ", task)
+        #
+        #         # sort the inputs by their input index into the task
+        #         inputs_list = tuple(input_data[k] for k in sorted(input_data.keys()))
+        #
+        #         # fetch the names of the outputs sorted by output index from the task
+        #         out_edges_attrs = [e[2] for e in self.graph.out_edges(node_b, data=True)]
+        #         output_names_dict = {edge_attrs['index'] : edge_attrs['var_name'] for edge_attrs in out_edges_attrs}
+        #         output_names = sorted(output_names, key=output_names_dict.get)
+        #
+        #         yield task, inputs_list, output_names
+        #
+        #
+        #     current_node = node_b
+        #     # reset local data for next iteration of generator
+        #     input_data = {}
 
 
 
@@ -337,20 +426,9 @@ class Pipeline(object):
             self.inputs[key].load(val)
 
         # PROCESS
-        for task, input_data, output_names in self._get_topology():
-            # task is a block
-            if isinstance(task,BaseBlock):
-                outputs = task._pipeline_process(*input_data)
-            # task is a pipeline
-            else:
-                outputs = task.process(*input_data)
+        self._compute()
 
-            # add output data to the variable data tracker
-            for name, data in zip(output_names, outputs):
-                self.vars[name]['data'] = data
-
-
-        return {key : self.vars[key]['data'] for key in self.vars}
+        return {edge['var_name'] : edge['data'] for _,_,edge in self.graph.edges()}
 
 
     def clear(self):

@@ -38,5 +38,5 @@ from .Logger import debug, info, warning, error, critical
 # ---------- import imagepypelines ----------
 from .version_info import *
 from .core import *
-from . import builtin_blocks as blocks
-from . import builtin_pipelines as pipelines
+# from . import builtin_blocks as blocks
+# from . import builtin_pipelines as pipelines

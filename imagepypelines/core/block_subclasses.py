@@ -47,7 +47,7 @@ class SimpleBlock(BaseBlock):
     """
 
     @abstractmethod
-    def process(self, datum):
+    def process(self, *datum):
         """(required overload)processes a single datum
 
         Args:
@@ -58,17 +58,9 @@ class SimpleBlock(BaseBlock):
         """
         raise NotImplementedError("'process' must be overloaded in all children")
 
-    def label(self, lbl):
-        """(optional overload)retrieves the label for this datum"""
-        return lbl
-
-    def process_strategy(self, data):
+    def process_strategy(self, *data):
         """processes each datum using self.process and return list"""
-        return [self.process(datum) for datum in data]
-
-    def label_strategy(self, labels):
-        """calls self.label for each datum and returns a list or Nonetype"""
-        return [self.label(lbl) for lbl in labels]
+        return [self.process(datums) for datums in zip(*data)]
 
     @property
     def inputs(self):
@@ -116,7 +108,7 @@ class BatchBlock(BaseBlock):
     """
 
     @abstractmethod
-    def batch_process(self, data):
+    def batch_process(self, *data):
         """(required overload)processes a list of data using this block's
         algorithm
 
@@ -129,17 +121,9 @@ class BatchBlock(BaseBlock):
         error_msg = "'batch_process' must be overloaded in all children"
         raise NotImplementedError(error_msg)
 
-    def labels(self, labels):
-        """(optional overload) returns all labels for input datums or None"""
-        return labels
-
-    def process_strategy(self, data):
+    def process_strategy(self, *data):
         """runs self.batch_process"""
-        return self.batch_process(data)
-
-    def label_strategy(self, labels):
-        """runs self.labels"""
-        return self.labels(labels)
+        return [self.batch_process(*data)]
 
     @property
     def inputs(self):
@@ -147,7 +131,7 @@ class BatchBlock(BaseBlock):
         if not self._arg_spec:
             self._arg_spec = inspect.getfullargspec(self.batch_process)
 
-        return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
+        return ([] if (self._arg_spec.args is None) else self._arg_spec.args[1:])
 
 
 #
