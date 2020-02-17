@@ -60,7 +60,8 @@ class SimpleBlock(BaseBlock):
 
     def process_strategy(self, *data):
         """processes each datum using self.process and return list"""
-        return [self.process(datums) for datums in zip(*data)]
+        output = [self.process(*datums) for datums in zip(*data)]
+        return output
 
     @property
     def inputs(self):
@@ -123,7 +124,7 @@ class BatchBlock(BaseBlock):
 
     def process_strategy(self, *data):
         """runs self.batch_process"""
-        return [self.batch_process(*data)]
+        return self.batch_process(*data)
 
     @property
     def inputs(self):

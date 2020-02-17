@@ -59,13 +59,11 @@ class FuncBlock(SimpleBlock):
         num_required = len(spec.args) - len(preset_kwargs)
         required = spec.args[:num_required]
 
-        exec_string = \
-        """def process(self,{required}): return self.func({required},**self.preset_kwargs)
-        """.format(required = ', '.join(required))
-        exec_locals = {}
-        exec(exec_string, {}, exec_locals)
-        self.process = exec_locals['process']
+        self._arg_spec = spec
         super().__init__(self.func.__name__)
+
+    def process(self, *args):
+        return self.func(*args, **self.preset_kwargs)
 
     def __call__(self,*args,**kwargs):
         """returns the exact output of the user defined function without any
@@ -75,6 +73,14 @@ class FuncBlock(SimpleBlock):
 
     def __str__(self):
         return self.func.__name__+"FuncBlock"
+
+    @property
+    def inputs(self):
+        # save the argspec in an instance variable if it hasn't been computed
+        if not self._arg_spec:
+            self._arg_spec = inspect.getfullargspec(self.func)
+
+        return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
 
 
 
@@ -130,6 +136,9 @@ class Data(object):
             # return every row of data
             for r in range(self.data.shape[0]):
                 yield self.data[r]
+
+    def __iter__(self):
+        return self.datums()
 
 
 class Input(BatchBlock):
@@ -260,6 +269,7 @@ class Pipeline(object):
                 self.graph.add_node(task.uuid,
                                     task_processor=task,
                                     inputs=inpts,
+                                    outputs=outputs,
                                     **task.get_default_node_attrs(),
                                     )
 
@@ -300,6 +310,7 @@ class Pipeline(object):
     def _compute(self):
         n_edges_loaded = 0
         for node_a, node_b, edge_idx in self.execution_order:
+            n_edges_loaded += 1
             # get actual objects instead of just graph ids
             task_a = self.graph.nodes[node_a]['task_processor']
             task_b = self.graph.nodes[node_b]['task_processor']
@@ -308,8 +319,8 @@ class Pipeline(object):
             # check if node_a is a root node (no incoming edges)
             # these nodes can be computed and the edge populated
             # immmediately because they have no dependents
-            # if self.graph.in_degree(node_a) == 0:
-            #     edge['data'] = task_a._pipeline_process() # no data needed
+            if self.graph.in_degree(node_a) == 0:
+                edge['data'] = task_a._pipeline_process() # no data needed
 
             # check if all the data for this node is loaded
             # inputs (and other roots) will have zero required edges
@@ -319,8 +330,8 @@ class Pipeline(object):
 
                 # fetch input data for this node
                 in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
-                input_names_dict = {e['input_index'] : e['var_name'] for e in in_edges}
-                inputs = sorted(input_names_dict, key=input_names_dict.get)
+                input_data_dict = {e['input_index'] : e['data'] for e in in_edges}
+                inputs = [input_data_dict[k] for k in sorted( input_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
                 outputs = task_b._pipeline_process(*inputs)
@@ -329,15 +340,14 @@ class Pipeline(object):
                 # get the output names
                 out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
                 out_edges_sorted = {e['output_index'] : e for e in out_edges}
-                out_edges_sorted = sorted(out_edges_sorted, key=out_edges_sorted.get)
+                out_edges_sorted = [out_edges_sorted[k] for k in sorted(out_edges_sorted.keys())]
                 # NEED ERROR CHECKING HERE
                 # (psuedo) if n_out == n_expected_out
-                for i,out_edge in out_edges_sorted:
+                for i,out_edge in enumerate(out_edges_sorted):
                     out_edge['data'] = outputs[i]
 
                 n_edges_loaded = 0
 
-            n_edges_loaded + 1
 
 
 
@@ -428,7 +438,7 @@ class Pipeline(object):
         # PROCESS
         self._compute()
 
-        return {edge['var_name'] : edge['data'] for _,_,edge in self.graph.edges()}
+        return {edge['var_name'] : edge['data'] for _,_,edge in self.graph.edges(data=True)}
 
 
     def clear(self):
