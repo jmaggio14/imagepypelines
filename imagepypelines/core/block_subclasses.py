@@ -60,8 +60,8 @@ class SimpleBlock(BaseBlock):
 
     def process_strategy(self, *data):
         """processes each datum using self.process and return list"""
-        output = [self.process(*datums) for datums in zip(*data)]
-        return output
+        output = (self.process(*datums) for datums in zip(*data))
+        return tuple( zip(*output) )
 
     @property
     def inputs(self):

@@ -23,7 +23,7 @@ serial_graph = {
 
 
 pipeline = ip.Pipeline(serial_graph, 'serial_test')
-processed = pipeline.process([0,10],[1,11])
+processed = pipeline.process([0,0],[1,1])
 
 import pdb; pdb.set_trace()
 

@@ -160,6 +160,18 @@ class Input(BatchBlock):
         self.data = None
 
 
+class Leaf(BatchBlock):
+    def __init__(self,var_name):
+        self.var_name = var_name
+        super().__init__(self.var_name)
+
+    def batch_process(self,*data):
+        return data
+
+    @property
+    def inputs(self):
+        return [self.var_name]
+
 
 class Pipeline(object):
     def __init__(self,
@@ -194,8 +206,6 @@ class Pipeline(object):
         self.data_dict = {}
 
         self._build_graph(user_graph=graph)
-
-
 
 
     def _build_graph(self,user_graph):
@@ -297,15 +307,43 @@ class Pipeline(object):
                                     input_index=input_index,
                                     output_index=node_a_attrs['outputs'].index(input_name),
                                     name=processor_arg_name, # name of node_b's process argument at the index
-                                    data=None)
+                                    data=None) # none is a placeholder value. it will be populated
                 print("drawing edge {} from {} to {}".format(input_index,
                                                                 node_a,
                                                                 node_b))
 
+
+        # FOURTH FOR LOOP - drawing leaf nodes
+        # this is required so we can store data on edge - normally the final
+        # nodes of our pipeline won't have output edges, so we can't store data
+        # on those edges
+        end_nodes = [(node,attrs) for node,attrs in self.graph.nodes(data=True) if (self.graph.out_degree(node) ==  0)]
+
+        for node,node_attrs in end_nodes:
+            # this is a final node of the pipeline, so we need to draw a
+            # leaf for each of its output edges
+            for i,end_name in enumerate(node_attrs['outputs']):
+                # add the leaf
+                leaf = Leaf(end_name)
+                self.graph.add_node(leaf.uuid,
+                                    task_processor=leaf,
+                                    inputs=(end_name,),
+                                    outputs=(end_name,),
+                                    **leaf.get_default_node_attrs()
+                                    )
+
+                # draw the edge to the leaf
+                self.graph.add_edge(node,
+                                    leaf.uuid,
+                                    var_name=end_name, # name assigned in graph definition
+                                    input_index=0,
+                                    output_index=i,
+                                    name=end_name, # name of node_b's process argument at the index
+                                    data=None)
+
     @property
     def execution_order(self):
         return nx.topological_sort( nx.line_graph(self.graph) )
-
 
     def _compute(self):
         n_edges_loaded = 0
@@ -347,11 +385,6 @@ class Pipeline(object):
                     out_edge['data'] = outputs[i]
 
                 n_edges_loaded = 0
-
-
-
-
-
 
 
 
