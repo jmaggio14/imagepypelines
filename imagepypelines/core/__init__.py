@@ -33,6 +33,7 @@ from .Exceptions import InvalidBlockInputLabels
 from .Exceptions import InvalidProcessStrategy
 from .Exceptions import InvalidLabelStrategy
 from .Exceptions import DataLabelMismatch
+from .Exceptions import PluginError
 from .Exceptions import CachingError
 from .Exceptions import ChecksumError
 
@@ -48,10 +49,41 @@ from .img_tools import norm_ab
 from .img_tools import norm_dtype
 from .img_tools import low_pass
 from .img_tools import high_pass
+from .img_tools import Viewer
 
 # imports.py
 from .imports import import_tensorflow
 from .imports import import_opencv
+
+# io_tools.py
+# --- standard imagery ---
+from .io_tools import list_standard_images
+from .io_tools import standard_image_filenames
+from .io_tools import standard_image_gen
+from .io_tools import list_standard_images
+from .io_tools import standard_images
+from .io_tools import get_standard_image
+
+from .io_tools import STANDARD_IMAGES
+from .io_tools import funcs
+
+import sys
+
+curr_module = sys.modules[__name__]
+for img_name in STANDARD_IMAGES.keys():
+	setattr(curr_module, img_name, getattr(funcs, img_name))
+
+# ND 9/7/18 - delete these so that the imagepypelines namespace is not polluted
+del sys, curr_module, funcs, STANDARD_IMAGES
+
+# --- other io ---
+from .io_tools import prevent_overwrite
+from .io_tools import make_numbered_prefix
+from .io_tools import convert_to
+
+from .io_tools import CameraCapture
+from .io_tools import Emailer
+from .io_tools import ImageWriter
 
 # ml_tools.py
 from .ml_tools import accuracy
@@ -64,6 +96,12 @@ from .ml_tools import batch
 from .ml_tools import chunks2list
 from .ml_tools import xsample
 from .ml_tools import xysample
+from .ml_tools import ConfigFactory
+from .ml_tools import Mnist
+from .ml_tools import MnistFashion
+from .ml_tools import Cifar10
+from .ml_tools import Cifar100
+
 
 # pipeline_tools.py
 from .pipeline_tools import quick_block
@@ -74,25 +112,6 @@ from .Pipeline import FuncBlock
 from .Pipeline import Input
 
 
-# standard_image.py
-from .standard_image import STANDARD_IMAGES
-from .standard_image import list_standard_images
-from .standard_image import standard_image_filenames
-from .standard_image import standard_image_gen
-from .standard_image import list_standard_images
-from .standard_image import standard_images
-from .standard_image import get_standard_image
-
-from .standard_image import funcs
-import sys
-
-curr_module = sys.modules[__name__]
-for img_name in STANDARD_IMAGES.keys():
-	setattr(curr_module, img_name, getattr(funcs, img_name))
-
-# ND 9/7/18 - delete these so that the imagepypelines namespace is not polluted
-del sys, curr_module, funcs, STANDARD_IMAGES
-
 # util.py
 from .util import interpolation_type_check
 from .util import dtype_type_check
@@ -101,10 +120,3 @@ from .util import arrsummary
 from .util import function_timer
 from .util import function_timer_ms
 from .util import Timer
-
-# Viewer.py
-from .Viewer import Viewer
-
-# import submodules
-from . import io
-from . import ml

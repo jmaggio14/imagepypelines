@@ -105,7 +105,7 @@ You can tweak this example with your own image data and hyperparameters to make 
     >>> import imagepypelines as ip
     >>>
     >>> # ----------------- loading example data ---------------
-    >>> cifar10 = ip.ml.Cifar10(fraction=.01) # doctest:+ELLIPSIS
+    >>> cifar10 = ip.Cifar10(fraction=.01) # doctest:+ELLIPSIS
     [...]
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
@@ -133,7 +133,7 @@ Classification using a Support Vector Machine
 
     >>> import imagepypelines as ip
     >>> # ----------------- loading example data ---------------
-    >>> cifar10 = ip.ml.Cifar10(fraction=.01)
+    >>> cifar10 = ip.Cifar10(fraction=.01)
     >>> train_data, train_labels = cifar10.get_train()
     >>> test_data, ground_truth = cifar10.get_test()
     >>> # --------------- now we'll build the pipeline ----------------

@@ -12,3 +12,6 @@ Examples
 
 .. toctree:: cache.rst
   :maxdepth: 2
+
+.. toctree:: plugins.rst
+    :maxdepth: 2
