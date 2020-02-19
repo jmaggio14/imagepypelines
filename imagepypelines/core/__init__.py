@@ -9,10 +9,6 @@
 from .constants import *
 
 # BaseBlock.py
-from .BaseBlock import ArrayType
-from .BaseBlock import Same
-from .BaseBlock import Incompatible
-from .BaseBlock import IoMap
 from .BaseBlock import BaseBlock
 
 # block_subclasses.py
@@ -112,9 +108,9 @@ from .pipeline_tools import quick_block
 
 # Pipeline.py
 from .Pipeline import Pipeline
+from .Pipeline import FuncBlock
+from .Pipeline import Input
 
-# quick_types.py
-from .quick_types import *
 
 # util.py
 from .util import interpolation_type_check
