@@ -6,182 +6,18 @@
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
 from .BaseBlock import BaseBlock
-from .block_subclasses import SimpleBlock, BatchBlock
-from .util import Timer
+from .block_subclasses import SimpleBlock, BatchBlock, Input, Leaf
 
-import collections
 import inspect
-import pickle
-import copy
 import numpy as np
-from termcolor import cprint
 from uuid import uuid4
 import networkx as nx
 import matplotlib.pyplot as plt
-
-def get_types(data):
-    """Retrieves the block data type of the input datum"""
-    def _get_types():
-        for datum in data:
-            if isinstance(datum,np.ndarray):
-                yield (ArrayType(datum.shape),)
-            else:
-                yield (type(datum),)
-
-    return set( _get_types() )
-
-class FuncBlock(SimpleBlock):
-    """Block that will run anmy fucntion you give it, either unfettered through
-    the __call__ function, or with optional hardcoded parameters for use in a
-    pipeline. Typically the FuncBlock is only used in the `blockify` decorator
-    method.
-
-    Args:
-        func (function): the function you desire to turn into a block
-        preset_kwargs (dict): preset keyword arguments, typically used for
-            arguments that are not data to process
-    """
-    # def __new__(self, func, preset_kwargs):
-    #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
-
-    def __init__(self,func, preset_kwargs):
-        self.func = func
-        self.preset_kwargs = preset_kwargs
-
-        # check if the function meets requirements
-        spec = inspect.getfullargspec(func)
-
-        # we can't allow varargs at all because a block must have a known
-        # number of inputs
-        if (spec.varargs or spec.varkw):
-            raise TypeError("function cannot accept a variable number of args")
-
-        num_required = len(spec.args) - len(preset_kwargs)
-        required = spec.args[:num_required]
-
-        self._arg_spec = spec
-        super().__init__(self.func.__name__)
-
-    def process(self, *args):
-        return self.func(*args, **self.preset_kwargs)
-
-    def __call__(self,*args,**kwargs):
-        """returns the exact output of the user defined function without any
-        interference or interaction with the class
-        """
-        return self.func(*args,**kwargs)
-
-    def __str__(self):
-        return self.func.__name__+"FuncBlock"
-
-    @property
-    def inputs(self):
-        # save the argspec in an instance variable if it hasn't been computed
-        if not self._arg_spec:
-            self._arg_spec = inspect.getfullargspec(self.func)
-
-        return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
-
-
-
-
-def blockify(**kwargs):
-    """decorator which converts a normal function into a un-trainable
-    block which can be added to a pipeline. The function can still be used
-    as normal after blockification (the __call__ method is setup such that
-    unfettered access to the function is permitted)
-
-    Example:
-        >>> import imagepypelines as ip
-        >>>
-        >>> @ip.blockify(value=10)
-        >>> def add_value(datum, value):
-        ...    return datum + value
-        >>>
-        >>> type(add_value)
-        <class 'FuncBlock'>
-
-    Args:
-        **kwargs: hardcode keyword arguments for a function, these arguments
-            will not have to be used to
-
-    """
-    def decorator(func):
-        def _blockify():
-            return FuncBlock(func,kwargs)
-        return _blockify
-    return decorator
-
-
-class Data(object):
-    def __init__(self,data):
-        self.data = data
-        if isinstance(data, np.ndarray):
-            self.type = "array"
-        elif isinstance(data, (list,tuple)):
-            self.type = "iter"
-        else:
-            self.type = "iter"
-            self.data = [self.data]
-
-    def batch_data(self):
-        return self.data
-
-    def datums(self):
-        if self.type == "iter":
-            for d in self.data:
-                yield d
-
-        elif self.type == "array":
-            # return every row of data
-            for r in range(self.data.shape[0]):
-                yield self.data[r]
-
-    def __iter__(self):
-        return self.datums()
-
-
-class Input(BatchBlock):
-    def __init__(self,index_key=None):
-        self.index_key = index_key
-        # DEBUG
-        # eventually we will be able to specify inputs using
-        # END DEBUG
-        self.data = None
-        super().__init__(name="Input"+str(self.index_key))
-
-    def batch_process(self):
-        return self.data
-
-    def load(self, data):
-        self.data = data
-
-    def unload(self, data):
-        self.data = None
-
-
-class Leaf(BatchBlock):
-    def __init__(self,var_name):
-        self.var_name = var_name
-        super().__init__(self.var_name)
-
-    def batch_process(self,*data):
-        return data
-
-    @property
-    def inputs(self):
-        return [self.var_name]
-
 
 class Pipeline(object):
     def __init__(self,
                     graph={},
                     name=None):
-
-         # this uuid will not change with copying or serialization
-         # as such it can be used to id which blocks are copies or unpickled
-         # versions of the original - it's metaphorical siblings
-        self.sibling_id = uuid4().hex
         # setup absolutely unique id for this block
         # this will change even if the block is copied or pickled
         self.uuid = uuid4().hex
@@ -192,9 +28,7 @@ class Pipeline(object):
             name = self.__class__.__name__
 
         self.name = name
-        self.logger_name = self.__get_logger_name(name,
-                                                self.sibling_id,
-                                                self.uuid)
+        self.logger_name = self.__get_logger_name(name, self.uuid)
         self.logger = get_logger(self.logger_name)
 
         # GRAPHING
@@ -314,7 +148,7 @@ class Pipeline(object):
 
 
         # FOURTH FOR LOOP - drawing leaf nodes
-        # this is required so we can store data on edge - normally the final
+        # this is required so we can store data on end edges - otherwise the final
         # nodes of our pipeline won't have output edges, so we can't store data
         # on those edges
         end_nodes = [(node,attrs) for node,attrs in self.graph.nodes(data=True) if (self.graph.out_degree(node) ==  0)]
@@ -387,72 +221,6 @@ class Pipeline(object):
                 n_edges_loaded = 0
 
 
-
-    # def _get_topology(self):
-        # # first node is always an Input for the first iteration
-        # # first nodes will not have any dependents
-        #
-        # output_names = {}
-        # input_data = {}
-        # current_node = None
-        #
-        # # this for loop goes through EDGE BY EDGE
-        # # and queues data for the next node in the dictionary "input_data"
-        # # - Jeff
-        # order = nx.topological_sort( nx.line_graph(self.graph) )
-        # for node_a, node_b, edge_idx in order:
-        #     print(node_a, "---",edge_idx,"--->", node_b)
-        #     # FIRST ITERATION ONLY
-        #     if current_node is None:
-        #         current_node = node_b
-        #
-        #     # while our incoming edges are still from Inputs, we have to
-        #     # queue the input data in the var data dict so we can begin tasks
-        #     prior_task = self.graph.nodes[node_a]['task_processor']
-        #     if isinstance(prior_task, Input):
-        #         # grab the name of the variable and then queue data in the dict
-        #         input_name = self.graph.edges[node_a, node_b, edge_idx]['var_name']
-        #         self.vars[input_name]['data'] = prior_task._pipeline_process()
-        #         # print("queuing {} data".format(prior_task))
-        #
-        #     # if the node_b hasn't changed, we are still iterating through edges
-        #     # incoming into this node and thus we keep queuing data
-        #     # for the first iteration, node_b will be defined, but  current_node
-        #     # will be None
-        #     if node_b == current_node:
-        #         # retrieve the data from the self.vars dict and queue it for
-        #         # next task
-        #         # this method relies on the data dict being updated between
-        #         # iterations of this generator (in the process function
-        #         edge = self.graph.edges[node_a, node_b, edge_idx]
-        #         input_data[ edge['index'] ] = self.vars[ edge['var_name'] ]['data']
-        #         # print("queuing input for ", self.graph.nodes[node_b]['task_processor'] )
-        #
-        #     # otherwise, we are at a new connection and it is time to compute
-        #     # using all the data we've queued
-        #     else:
-        #         # yield the blockdata required to compute the next step
-        #         # (p.s. a task is a generic name for a block/sub-pipeline
-        #         task = self.graph.nodes[current_node]['task_processor']
-        #         # print("computing ", task)
-        #
-        #         # sort the inputs by their input index into the task
-        #         inputs_list = tuple(input_data[k] for k in sorted(input_data.keys()))
-        #
-        #         # fetch the names of the outputs sorted by output index from the task
-        #         out_edges_attrs = [e[2] for e in self.graph.out_edges(node_b, data=True)]
-        #         output_names_dict = {edge_attrs['index'] : edge_attrs['var_name'] for edge_attrs in out_edges_attrs}
-        #         output_names = sorted(output_names, key=output_names_dict.get)
-        #
-        #         yield task, inputs_list, output_names
-        #
-        #
-        #     current_node = node_b
-        #     # reset local data for next iteration of generator
-        #     input_data = {}
-
-
-
     def process(self,*pos_data,**kwdata):
         # reset all leftover data in this graph
         self.clear()
@@ -483,7 +251,8 @@ class Pipeline(object):
         plt.cla()
         nx.draw_networkx(self.graph,
                             pos=nx.planar_layout(self.graph),
-                            labels= { n : self.graph.node[n]['name'] for n in self.graph.nodes()} )  # use spring layout
+                            labels= { n : self.graph.node[n]['name'] for n in self.graph.nodes()},
+                            node_color='orange' )
         plt.ion()
         plt.draw()
         plt.show()
@@ -527,7 +296,7 @@ class Pipeline(object):
 
 
     @staticmethod
-    def __get_logger_name(basename, sibling_id, uuid):
+    def __get_logger_name(basename, uuid):
         """generates a unique logger name that contains both a sibling id
         (a random string that will be persistent across all copies and unpickled
         versions of this object) and a uuid (which is unique to this exact
@@ -536,125 +305,4 @@ class Pipeline(object):
         for this name to not be unique) - if you need a truly unique ID, then
         use obj.uuid
         """
-        return "{basename} #{sibling_id}-{uuid}".format(basename=basename,
-                                                sibling_id=sibling_id[-6:],
-                                                uuid=uuid[-6:])
-
-
-
-# import imagepypelines as ip
-#
-# # you can insert your own functions Really easily!!!
-# @ip.blockify(io_map={'amplitude':ip.Array([None,1]) })
-# def calculate_orientation(amplitude, phase_difference):
-#     #
-#     # * some code to calculate orientation *
-#     #
-#     return orientation
-#
-# graph = {   # create placeholder variables for input data
-#             'measure_coil' : ip.Input(0),
-#             'ref_coil' : ip.Input(1),
-#             # move the data into a wavelet plane
-#             'meas_wavelet' : (ip.Cwt(), 'measure_coil'),
-#             'ref_wavelet' : (ip.Cwt(), 'ref_coil'),
-#             # filter the data to 12Khz +/- 1Hz
-#             'meas_filtered_12k' : (ip.GaussianFilter(mean=12e3, sigma=1), 'meas_wavelet'),
-#             'ref_filtered_12k' : (ip.GaussianFilter(mean=12e3, sigma=1), 'ref_wavelet'),
-#             # calculate amplitude and phase of each coil
-#             'meas_amp' : (ip.Abs(), 'meas_filtered_12k'),
-#             'meas_phase' : (ip.Angle(), 'meas_filtered_12k'),
-#             'ref_amp' : (ip.Abs(), 'ref_filtered_12k'),
-#             # calculate phase difference between the reference and measure_coil
-#             'phase_diff' : (ip.Sub2(), 'meas_phase', 'ref_phase'),
-#             'orientation' : ( calculate_orientation, 'meas_amp', 'phase_difference')
-#             }
-#
-# coil_task = ip.Pipeline(graph)
-# # Coil processor can now be saved, deployed to a server, or used to
-# # partially document your algorithm for a paper!
-#
-# orientation = coil_processor.process(measurment_coil, reference_coil)
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # def process(self, *data, **named_data):
-    #     # JM: TODO
-    #     # check to make sure all data is a list or row separable array
-    #
-    #     # Save all data passed in to a dictionary with a unique identifier
-    #     self.data = {'pipeline_input $%s' % i for i in range(len(data)) :
-    #                     d for d in data}
-    #
-    #     # check to make sure the 'named_data' dictionary contains already
-    #     # existing keys, this is done by checking key intersection using the
-    #     # '&' operator
-    #     if len( self.data.keys() & named_data.keys() ) > 0:
-    #         raise KeyError("illegal input variable name key")
-    #     self.data.update(named_data)
-    #
-    #     # JM: TODO
-    #     # add logging to follow along with this
-    #     for node in self.data.keys():
-    #         self.graph.add_node
-    #
-    #
-
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #
-    #     # iterate through processors and yield them
-    #     # for node_a, node_b, edge_idx in uuid_order:
-    #     #     processor_a = self.graph.nodes[node_a]['obj']
-    #     #     processor_b = self.graph.nodes[node_b]['obj']
-    #     #     yield processor_a, processor_b, edge_idx
-    #
-    #
-    # def draw(self, display=True):
-    #     """generates a matplotlib figure that graphically represents the
-    #     graph for a human
-    #
-    #     Args:
-    #         display(bool): whether or not to display the graph, or just return
-    #             the Figure
-    #
-    #     Returns:
-    #         matplotlib.pyplot.Figure: figure which represents the graph
-    #     """
-    #     # real code here:
-    #     fig = plt.figure()
-    #     axes = fig.add_subplot(111)
-    #
-    #     # get positioning for nodes
-    #     pos = nx.spring_layout(self.graph)
-    #
-    #     nx.draw(self.graph,
-    #                 pos,
-    #                 with_labels=True,
-    #                 font_weight='bold',
-    #                 node_color='orange')
-    #     if display:
-    #         plt.show()
-    #
-    #     return fig
-    #
-    #
-    # @property
-    # def inputs(self):
+        return "{0} #{1}".format(basename, uuid[-6:])

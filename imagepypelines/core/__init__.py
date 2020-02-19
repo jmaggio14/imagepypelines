@@ -104,7 +104,7 @@ from .ml_tools import Cifar100
 
 
 # pipeline_tools.py
-from .pipeline_tools import quick_block
+from .pipeline_tools import blockify
 
 # Pipeline.py
 from .Pipeline import Pipeline

@@ -5,43 +5,65 @@
 #
 # Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
-from .block_subclasses import SimpleBlock
+from .block_subclasses import FuncBlock
 
 
-def quick_block(process_fn,
-                io_map,
-                name=None):
-    """convienence function to make simple blocks
-
-    Args:
-        process_fn(func): function that takes in and processes
-            exactly one datum
-
-        io_map(IoMap,dict): dictionary of input-output mappings for this
-            Block
-        name(str): name for this block, it will be automatically created/modified
-            to make sure it is unique
-
-    Returns:
-        block(ip.SimpleBlock): simple block that applies the given function
+def blockify(**kwargs):
+    """decorator which converts a normal function into a un-trainable
+    block which can be added to a pipeline. The function can still be used
+    as normal after blockification (the __call__ method is setup such that
+    unfettered access to the function is permitted)
 
     Example:
         >>> import imagepypelines as ip
-        >>> import cv2
-        >>> def calculate_orb_features(datum):
-        ...     _,des = cv2.ORB_create().detectAndCompute(datum,None)
-        ...     return des
         >>>
-        >>> io_map = {ip.GRAY:ip.GRAY}
-        >>> block = ip.quick_block(calculate_orb_features, io_map)
-        >>> block.name
-        'calculate_orb_features:1'
-    """
-    if name is None:
-        name = process_fn.__name__
+        >>> @ip.blockify(value=10)
+        >>> def add_value(datum, value):
+        ...    return datum + value
+        >>>
+        >>> type(add_value)
+        <class 'FuncBlock'>
 
-    process_fn = staticmethod(process_fn)
-    block_cls = type(name, (SimpleBlock,), {'process': process_fn})
-    block = block_cls(io_map=io_map,
-                      name=name)
-    return block
+    Args:
+        **kwargs: hardcode keyword arguments for a function, these arguments
+            will not have to be used to
+
+    """
+    def decorator(func):
+        def _blockify():
+            return FuncBlock(func,kwargs)
+        return _blockify
+    return decorator
+
+
+################################################################################
+#                                CLASSES
+################################################################################
+
+# DO NOT DELETE!!! - may be useful in future
+# class Data(object):
+#     def __init__(self,data):
+#         self.data = data
+#         if isinstance(data, np.ndarray):
+#             self.type = "array"
+#         elif isinstance(data, (list,tuple)):
+#             self.type = "iter"
+#         else:
+#             self.type = "iter"
+#             self.data = [self.data]
+#
+#     def batch_data(self):
+#         return self.data
+#
+#     def datums(self):
+#         if self.type == "iter":
+#             for d in self.data:
+#                 yield d
+#
+#         elif self.type == "array":
+#             # return every row of data
+#             for r in range(self.data.shape[0]):
+#                 yield self.data[r]
+#
+#     def __iter__(self):
+#         return self.datums()
