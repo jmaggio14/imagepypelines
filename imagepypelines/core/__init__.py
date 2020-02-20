@@ -14,6 +14,7 @@ from .BaseBlock import BaseBlock
 # block_subclasses.py
 from .block_subclasses import SimpleBlock
 from .block_subclasses import BatchBlock
+from .block_subclasses import FuncBlock
 # from .block_subclasses import TfBlock
 
 # caching.py
@@ -108,7 +109,6 @@ from .pipeline_tools import blockify
 
 # Pipeline.py
 from .Pipeline import Pipeline
-from .Pipeline import FuncBlock
 from .Pipeline import Input
 
 
@@ -117,6 +117,6 @@ from .util import interpolation_type_check
 from .util import dtype_type_check
 from .util import print_args
 from .util import arrsummary
-from .util import function_timer
-from .util import function_timer_ms
+from .util import timer
+from .util import timer_ms
 from .util import Timer
