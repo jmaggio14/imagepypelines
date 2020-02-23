@@ -131,7 +131,7 @@ class Pipeline(object):
                 # first we identify an upstream node by looking up what task
                 # created them
                 node_a = self.vars[input_name]['task']
-                node_a_attrs = self.graph.node[ node_a ]
+                node_a_attrs = self.graph.nodes[ node_a ]
 
                 # draw the edge FOR THIS INPUT from node_a to node_b
                 processor_arg_name = node_b_attrs['task_processor'].inputs[input_index]
@@ -251,7 +251,7 @@ class Pipeline(object):
         plt.cla()
         nx.draw_networkx(self.graph,
                             pos=nx.planar_layout(self.graph),
-                            labels= { n : self.graph.node[n]['name'] for n in self.graph.nodes()},
+                            labels= { n : self.graph.nodes[n]['name'] for n in self.graph.nodes()},
                             node_color='orange' )
         plt.ion()
         plt.draw()
