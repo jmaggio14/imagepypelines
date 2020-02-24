@@ -2,27 +2,27 @@ import imagepypelines as ip
 import networkx as nx
 import numpy as np
 
+@ip.blockify(value=10)
 def add_val(a,b,value=1):
     return a+value, b+value
 
+@ip.blockify(value=5)
 def minus_val(a,b,value=5):
     return a-value, b-value
-
-# define the blocks
-AddTen = ip.FuncBlock(add_val, {'value':10} )
-MinusFive = ip.FuncBlock(minus_val, {'value':5} )
 
 serial_graph = {
             # inputs
             'zero' : ip.Input(0),
             'one'  : ip.Input(1),
             # operations
-            ('ten','eleven') : (AddTen, 'zero', 'one'),
-            ('five', 'six') : (MinusFive, 'ten', 'eleven'),
+            ('ten','eleven') : (add_val, 'zero', 'one'),
+            ('five', 'six') : (minus_val, 'ten', 'eleven'),
             }
 
 
 pipeline = ip.Pipeline(serial_graph, 'serial_test')
+pipeline.draw(show=True)
+
 processed = pipeline.process([0,0],[1,1])
 print(processed)
 

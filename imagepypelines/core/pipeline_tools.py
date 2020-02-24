@@ -29,11 +29,9 @@ def blockify(**kwargs):
             will not have to be used to
 
     """
-    def decorator(func):
-        def _blockify():
-            return FuncBlock(func,kwargs)
-        return _blockify
-    return decorator
+    def _blockify(func):
+        return FuncBlock(func,kwargs)
+    return _blockify
 
 
 ################################################################################
