@@ -7,12 +7,12 @@
 from ..Logger import get_logger
 from .BaseBlock import BaseBlock
 from .block_subclasses import SimpleBlock, BatchBlock, Input, Leaf
+from .pipeline_tools import visualize
 
 import inspect
 import numpy as np
 from uuid import uuid4
 import networkx as nx
-import matplotlib.pyplot as plt
 
 class Pipeline(object):
     def __init__(self,
@@ -254,111 +254,9 @@ class Pipeline(object):
         for inpt in self.inputs.values():
             inpt.data = None
 
-    def draw(self, show=True, axes=None):
+    def draw(self, show=True, ax=None):
+        visualize(self,show,ax)
 
-        labels = { n : self.graph.nodes[n]['name'] for n in self.graph.nodes()}
-        # --------------------------------------------------------------
-        # DETERMINE THE TYPE OF EACH NODE IN THE VISUALIZATION
-        # --------------------------------------------------------------
-        roots = [] # outputs only
-        leaves = [] # inputs only
-        branches = [] # both inputs and outputs
-        isolated = [] # no inputs or outputs - currently unused
-
-        # shorthand degree functions to clean up later code
-        in_degree = lambda node: self.graph.in_degree(node)
-        out_degree = lambda node: self.graph.out_degree(node)
-
-        for node in self.graph.nodes():
-            # branches
-            if in_degree(node) >= 1 and out_degree(node) >= 1:
-                branches.append(node)
-            # isolated
-            elif in_degree(node) == 0 and out_degree(node) == 0:
-                isolated.append(node)
-            # leaves
-            elif in_degree(node) == 0 and out_degree(node) >= 1:
-                leaves.append(node)
-            # roots
-            elif in_degree(node) >= 1 and out_degree(node) == 0:
-                roots.append(node)
-
-        # --------------------------------------------------------------
-        # DETERMINE THE NODE LAYOUT (position)
-        # --------------------------------------------------------------
-
-        # ROOTS
-        # roots go first. at x=0 and along y
-        n_roots = len(roots)
-        max_y = n_roots / 2
-        min_y = -1 * max_y
-        y_vals = np.linspace(min_y, max_y, n_roots)
-        pos = { n:(0,y) for n,y in zip(roots,y_vals) }
-
-        # draw the roots (blue)
-        nx.draw_networkx_nodes(self.graph,
-                                pos,
-                                nodelist=roots,
-                                node_color='blue',
-                                node_shape='o',
-                                labels=labels)
-
-        # BRANCHES AND LEAVES
-        depths = {}
-        # iterate through nodes depth-first to and compute depth
-        for i,node in enumerate( nx.dfs_postorder_nodes(self.graph) ):
-            # we're only drawing branch and leaf nodes now
-            if (node in roots) or (node in isolated):
-                continue
-
-            # compute depth as the number of predecessor nodes
-            depth = len( nx.dfs_predecessors(self.graph, node) )
-
-            if depth in depths:
-                depths[depth].append(node)
-            else:
-                depths[depth] = [node]
-
-
-        # draw each branch
-        # x is depth, y value is arbitrary
-        for depth, nodes in depths.items():
-            n_nodes = len(nodes)
-            y_max = n_nodes / 2
-            y_min = -1 * y_max
-            y_vals = np.linspace(y_min, y_max, n_nodes)
-
-            for node,y in zip(nodes, y_vals):
-                pos[node] = (depth, y)
-
-        # draw the branches (orange)
-        nx.draw_networkx_nodes(self.graph,
-                                pos,
-                                nodelist=branches,
-                                node_color='orange',
-                                node_shape='s',
-                                labels=labels)
-
-
-        # draw the leaves (green... duh)
-        nx.draw_networkx_nodes(self.graph,
-                                pos,
-                                nodelist=leaves,
-                                node_color='green',
-                                node_shape='o',
-                                labels=labels)
-
-        # if axes is None:
-        #     fig, axes = plt.subplots(111)
-
-        # draw and plot the figure if the user desires it
-        if show:
-            plt.ion()
-            plt.draw()
-            plt.show()
-            plt.pause(0.01)
-
-        return axes
 
 
     ################################### util ###################################

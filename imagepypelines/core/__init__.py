@@ -106,6 +106,8 @@ from .ml_tools import Cifar100
 
 # pipeline_tools.py
 from .pipeline_tools import blockify
+from .pipeline_tools import categorize_nodes
+from .pipeline_tools import visualize
 
 # Pipeline.py
 from .Pipeline import Pipeline
