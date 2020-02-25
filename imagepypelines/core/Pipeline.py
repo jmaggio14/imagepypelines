@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
 from .BaseBlock import BaseBlock
 from .block_subclasses import SimpleBlock, BatchBlock, Input, Leaf
