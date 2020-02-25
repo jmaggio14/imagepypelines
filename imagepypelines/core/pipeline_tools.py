@@ -85,7 +85,7 @@ def visualize(pipeline, show=True, ax=None):
         n_roots = len(roots)
         y_max = n_roots / 2.0
         y_min = -1 * y_max
-        y_vals = np.linspace(y_min, y_max, n_roots)
+        y_vals = np.linspace(y_max, y_min, n_roots)
         pos = { n:(0,y) for n,y in zip(roots,y_vals) }
 
 
@@ -94,7 +94,9 @@ def visualize(pipeline, show=True, ax=None):
         # iterate through nodes depth-first to and compute depth
         for i,node in enumerate(branches):
             # compute depth as the number of predecessor nodes
-            depth = len( nx.dfs_predecessors(pipeline.graph, node) ) - 1
+            # JM: 02/25/20 THIS DOESN'T WORK
+            dfs_predecessors = list( nx.dfs_predecessors(pipeline.graph, node) )
+            depth = len( dfs_predecessors ) - 1
 
             if depth in depths:
                 depths[depth].append(node)
@@ -107,11 +109,10 @@ def visualize(pipeline, show=True, ax=None):
             n_nodes = len(nodes)
             y_max = n_nodes / 2.0
             y_min = -1 * y_max
-            y_vals = np.linspace(y_min, y_max, n_nodes)
+            y_vals = np.linspace(y_max, y_min, n_nodes)
 
             for node,y in zip(nodes, y_vals):
                 pos[node] = (depth, y)
-
 
         # LEAVES - TEMPORARY
         n_leaves = len(leaves)
@@ -119,10 +120,12 @@ def visualize(pipeline, show=True, ax=None):
         x = max_depth + 1
         y_max = n_leaves / 2.0
         y_min = -1 * y_max
-        y_vals = np.linspace(y_min, y_max, n_leaves)
+        y_vals = np.linspace(y_max, y_min, n_leaves)
 
         for leaf,y in zip(leaves,y_vals):
             pos[leaf] = (x, y)
+
+
 
         # draw the roots (red)
         nx.draw_networkx_nodes(pipeline.graph,
