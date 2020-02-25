@@ -101,6 +101,8 @@ class DataLabelMismatch(TypeError):
             )
         super(DataLabelMismatch,self).__init__(error_msg)
 
+class PluginError(RuntimeError):
+    pass
 
 class CachingError(RuntimeError):
     pass

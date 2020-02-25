@@ -12,13 +12,14 @@ from .Exceptions import InvalidNumpyType
 import inspect
 import collections
 import time
+from termcolor import colored
+import numpy as np
 
 TIMER_LOGGER = get_logger('TIMER')
 
 ################################################################################
 #                                 Error Checking
 ################################################################################
-
 """
 Helper functions that contain canned tests or checks that we will run
 frequently
@@ -59,7 +60,6 @@ def print_args(func):
     Args:
         func (callable): function or callable to print input arguments of
     """
-
     def _print_args(*args,**kwargs):
         """
         prints the arguments passed into the target
@@ -92,7 +92,7 @@ def print_args(func):
         # adding default positional args values to the dictionary
         for i,var_name in enumerate(specargs):
             if i < num_required:
-                var = color.red("No argument was passed in!",bold=True)
+                var = colored("No argument was passed in!",attrs=['bold'])
             else:
                 var = specdefaults[i - num_required]
 
@@ -141,7 +141,7 @@ def print_args(func):
     return _print_args
 
 
-import numpy as np
+
 
 ################################################################################
 #                                 SUMMARY
@@ -181,7 +181,7 @@ class Summarizer(dict):
         [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]
     """
     def __init__(self, input_array):
-        """Instantiations function
+        """Instantiation function
 
         Args:
             input_array (np.ndarray): input array to summarize
@@ -253,62 +253,58 @@ class Summarizer(dict):
 #                                 TIMING
 ################################################################################
 
-def function_timer(func):
-    """Decorator to time how long a func takes to run in seconds
-
-    Example:
-        >>> import imagepypelines as ip
-        >>> import time
-        >>>
-        >>> @ip.function_timer
-        ... def sleep_for_one_sec():
-        ...    time.sleep(1) #sleep for 1 second
-        >>>
-        >>> sleep_for_one_sec() # doctest: +ELLIPSIS
-        ...
-    """
-    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
-    # TODO: JM: remove relative imports inside these functions and move to top of file
-    def _function_timer(*args,**kwargs):
-        start = time.time()
-        ret = func(*args,**kwargs)
-        run_time = round(time.time() - start,3)
-        msg = "ran function '{name}' in {t}sec".format(name=func.__name__,
-                                                            t=run_time)
-        TIMER_LOGGER.info(msg)
-
-        return ret
-
-    return _function_timer
-
-
-def function_timer_ms(func):
+def timer(func):
     """Decorator to time how long a func takes to run in milliseconds
 
     Example:
         >>> import imagepypelines as ip
         >>> import time
         >>>
-        >>> @ip.function_timer_ms
+        >>> @ip.timer
         ... def sleep_for_one_sec():
         ...    time.sleep(1) #sleep for 1 second
         >>>
         >>> sleep_for_one_sec() # doctest: +ELLIPSIS
         ...
     """
-    # NOTE: JM: relative imports inside function are to avoid python2.7 import issues
-    # TODO: JM: remove relative imports inside these functions and move to top of file
-    def _function_timer(*args,**kwargs):
-        start = time.time()
+    def _timer(*args,**kwargs):
+        t = Time()
         ret = func(*args,**kwargs)
-        run_time = round((time.time() - start) * 1000,3)
-        msg = "ran function '{name}' in {t}ms".format(name=func.__name__,
+        run_time = t.time()
+        msg = "ran function '{name}' in {t}sec".format(name=func.__name__,
                                                             t=run_time)
         TIMER_LOGGER.info(msg)
 
         return ret
 
-    return _function_timer
+    return _timer
+
+
+def timer_ms(func):
+    """Decorator to time how long a func takes to run in milliseconds
+
+    Example:
+        >>> import imagepypelines as ip
+        >>> import time
+        >>>
+        >>> @ip.timer_ms
+        ... def sleep_for_one_sec():
+        ...    time.sleep(1) #sleep for 1 second
+        >>>
+        >>> sleep_for_one_sec() # doctest: +ELLIPSIS
+        ...
+    """
+    def _timer_ms(*args,**kwargs):
+        t = Time()
+        ret = func(*args,**kwargs)
+        run_time_ms = t.time_ms
+        msg = "ran function '{name}' in {t}ms".format(name=func.__name__,
+                                                            t=run_time_ms)
+        TIMER_LOGGER.info(msg)
+
+        return ret
+
+    return _timer_ms
 
 
 

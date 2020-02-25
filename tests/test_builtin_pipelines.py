@@ -10,7 +10,7 @@ def test_SimpleImageClassifier():
     import imagepypelines as ip
 
     # get data subsample
-    cifar10 = ip.ml.Cifar10()
+    cifar10 = ip.Cifar10()
     x_train_base, y_train_base = cifar10.get_train()
     x_test_base, ground_truth_base = cifar10.get_test()
 
