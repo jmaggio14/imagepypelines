@@ -51,6 +51,7 @@ class Pipeline(object):
 
             self.vars[var] = {'dependents':set(),
                                 'task':None, # will always be defined
+                                'task_processor':None # will always be defined
                                 }
 
 
@@ -82,13 +83,15 @@ class Pipeline(object):
 
                 # add this variables task to it's attrs
                 # these vars will not have any dependents
+                node_uuid = definition.name + uuid4().hex + '-node'
                 for output in outputs:
-                    self.vars[output]['task'] = definition.uuid
+                    self.vars[output]['task'] = node_uuid
+                    self.vars[output]['task_processor'] = definition
 
                 # add the input 'task' to the graph
                 # inputs will not have any inputs (ironically) or a task_processor
                 # as these inputs are just placeholders for data supplied by the user
-                self.graph.add_node(definition.uuid,
+                self.graph.add_node(node_uuid,
                                     task_processor=definition,
                                     inputs=tuple(),
                                     outputs=outputs,
@@ -105,12 +108,14 @@ class Pipeline(object):
                     raise TypeError(
                         "first value in any graph definition tuple must be a Block or Pipeline")
 
+                node_uuid = task.name + uuid4().hex + '-node'
                 for output in outputs:
-                    self.vars[output]['task'] = task.uuid
+                    self.vars[output]['task'] = node_uuid
+                    self.vars[output]['task_processor'] = task
 
                 # add the task to the graph
                 # import pdb; pdb.set_trace()
-                self.graph.add_node(task.uuid,
+                self.graph.add_node(node_uuid,
                                     task_processor=task,
                                     inputs=inpts,
                                     outputs=outputs,
@@ -159,7 +164,8 @@ class Pipeline(object):
             for i,end_name in enumerate(node_attrs['outputs']):
                 # add the leaf
                 leaf = Leaf(end_name)
-                self.graph.add_node(leaf.uuid,
+                node_uuid = leaf.name + uuid4().hex + '-node'
+                self.graph.add_node(node_uuid,
                                     task_processor=leaf,
                                     inputs=(end_name,),
                                     outputs=(end_name,),
@@ -168,7 +174,7 @@ class Pipeline(object):
 
                 # draw the edge to the leaf
                 self.graph.add_edge(node,
-                                    leaf.uuid,
+                                    node_uuid,
                                     var_name=end_name, # name assigned in graph definition
                                     input_index=0,
                                     output_index=i,

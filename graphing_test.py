@@ -12,16 +12,19 @@ def minus_val(a,b,value=5):
 
 serial_graph = {
             # inputs
-            'zero' : ip.Input(0),
-            'one'  : ip.Input(1),
+            'data1' : ip.Input(0),
+            'data2' : ip.Input(1),
             # operations
-            ('ten','eleven') : (add_val, 'zero', 'one'),
-            ('five', 'six') : (minus_val, 'ten', 'eleven'),
+            ('data3','data4') : (add_val, 'data1', 'data2'),
+            # ('data3','data4') : (add_val, 'data1', 'data2'),
+            ('data6', 'data5') : (minus_val, 'data3', 'data4'),
+            ('data7','data8') : (add_val, 'data1','data3')
             }
 
 
 pipeline = ip.Pipeline(serial_graph, 'serial_test')
 pipeline.draw(show=True)
+import pdb; pdb.set_trace()
 
 processed = pipeline.process([0,0],[1,1])
 print(processed)
