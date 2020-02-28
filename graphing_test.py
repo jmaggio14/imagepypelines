@@ -22,12 +22,21 @@ serial_graph = {
             ('negativefour', 'negativefive') : (minus_val, 'one', 'zero'),
             }
 
+# pipeline1 - raw construction
+pipeline1 = ip.Pipeline(serial_graph, 'serial_test')
+pipeline1.draw(show=True)
 
-pipeline = ip.Pipeline(serial_graph, 'serial_test')
-pipeline.draw(show=True)
+processed1 = pipeline1.process([0,0],one=[1,1])
+print(processed1)
 
-processed = pipeline.process([0,0],one=[1,1])
-print(processed)
+
+# pipeline2 - construction from static represenation
+static_constructor = pipeline1.get_static_representation()
+
+pipeline2 = ip.Pipeline(static_constructor)
+processed2 = pipeline2.process([0,0],one=[1,1])
+
+assert processed1 == processed2
 import pdb; pdb.set_trace()
 
 

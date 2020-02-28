@@ -47,8 +47,7 @@ class Pipeline(object):
             name = self.__class__.__name__
 
         self.name = name # string name - used to generate the logger_name
-        self.logger_name = self.__get_logger_name(name, self.uuid)
-        self.logger = get_logger(self.logger_name)
+        self.logger = get_logger( self.__get_logger_name() )
 
         # GRAPHING
         self.graph = nx.MultiDiGraph()
@@ -62,8 +61,9 @@ class Pipeline(object):
 
 
     def _build_graph(self,user_graph):
-        # add all variables defined in the graph to a dictionary
-        # quick helper function to add a node to the graph
+        ########################################################################
+        #                           HELPER FUNCTIONS
+        ########################################################################
         def _add_to_vars(var):
             if not isinstance(var,str):
                 msg = "graph vars must be a string, not %s" % type(var)
@@ -72,7 +72,7 @@ class Pipeline(object):
 
             if var in self.vars.keys():
                 msg = "\"%s\" cannot be defined more than once" % var
-                self.error.error(msg)
+                self.logger.error(msg)
                 raise TypeError(msg)
 
             self.vars[var] = {'dependents':set(),
@@ -80,8 +80,29 @@ class Pipeline(object):
                                 'task_processor':None # will always be defined
                                 }
 
+        def _add_input(inpt):
+            # track what inputs are required so we can populate
+            # them with arguments in self.process
+            if len(outputs) != 1:
+                msg = "Inputs must define exactly one output"
+                self.logger.error(msg)
+                raise RuntimeError(msg)
+
+            # add the input block to a tracking dictionary
+            self.inputs[outputs[0]] = inpt
+
+            # add this value to the proper input order tracker
+            if isinstance(inpt.index, int):
+                self.indexed_inputs.append(outputs[0])
+            else:
+                self.kwonly_inputs.append(outputs[0])
+
+        ########################################################################
+        #                           GRAPH CONSTRUCTION
+        ########################################################################
 
         #### FIRST FOR LOOP - defining the variables that we'll be using
+        # add all variables defined in the graph to a dictionary
         for var in user_graph.keys():
             # for str defined dict keys like 'x' : (func, 'a', 'b')
             if isinstance(var, str):
@@ -107,21 +128,7 @@ class Pipeline(object):
                 # e.g. - 'x': ip.Input(),
                 # otherwise we are dealing with a block with no inputs
                 if isinstance(definition, Input):
-                    # track what inputs are required so we can populate
-                    # them with arguments in self.process
-                    if len(outputs) != 1:
-                        msg = "Inputs must define exactly one output"
-                        self.logger.error(msg)
-                        raise RuntimeError(msg)
-
-                    # add the input block to a tracking dictionary
-                    self.inputs[outputs[0]] = definition
-
-                    # add this value to the proper input order tracker
-                    if isinstance(definition.index, int):
-                        self.indexed_inputs.append(outputs[0])
-                    else:
-                        self.kwonly_inputs.append(outputs[0])
+                    _add_input(definition)
 
                 # add this variables task to it's attrs
                 # these vars will not have any dependents
@@ -148,6 +155,11 @@ class Pipeline(object):
                 if not isinstance(task, BaseBlock):
                     raise TypeError("first value in any graph definition tuple must be a Block")
 
+                if isinstance(task, Input):
+                    _add_input(task)
+                    if len(inpts) != 0:
+                        raise RuntimeError("Input blocks cannot take any inputs")
+
                 node_uuid = task.name + uuid4().hex + '-node'
                 for output in outputs:
                     self.vars[output]['task'] = node_uuid
@@ -164,6 +176,9 @@ class Pipeline(object):
                 # update the dependents for all of these outputs
                 for output in outputs:
                     self.vars[output]['dependents'].update(inpts)
+
+            else: # something other than a block or of tuple (block, var1, var2,...)
+                raise RuntimeError("invalid task definition, must be block or tuple (block, var1, var2,...)")
 
 
         # THIRD FOR LOOP - drawing edges
@@ -317,47 +332,24 @@ class Pipeline(object):
         visualize(self,show,ax)
 
     ################################### util ###################################
-    def __getstate__(self):
-        """pickle state retrieval function, its most important use is to
-        delete the copied uuid to prevent potential issues from improper
-        restoration
-
-        Note:
-            If you overload this function, it's imperative that you call this
-            function via super().__getstate__(), or otherwise return
-            a state dictionary without a uuid
+    def __get_logger_name(self):
+        """generates a unique logger name that based off this Pipeline's name
+        and the last 6 chars of it's uuid.
         """
-        state = self.__dict__.copy()
-        del state['uuid']
-        return state
+        return "{0}#{1}".format(self.name, self.uuid[-6:])
 
-    def __setstate__(self, state):
-        """pickle restoration function, its most important use is to generate
-        a new uuid for the copied or deserialized object
 
-        Note:
-            If you overload this function, it's imperative that you call this
-            function via super().__setstate__(state), or otherwise create a
-            new unique uuid for the restored Pipeline _self.uuid = uuid4().hex
-        """
-        self.__dict__.update(state)
-        # create a new uuid for this instance, since it's technically a
-        # different object
-        self.uuid = uuid4().hex
-        # update the name to correspond with the new uuid
-        logger_name = self.__get_logger_name(self.name,
-                                                self.sibling_id,
-                                                self.uuid)
-        self.logger = get_logger(logger_name)
+    def get_static_representation(self):
+        static = {}
+        for _,attrs in self.graph.nodes(data=True):
+            input_vars = tuple(attrs['inputs'])
+            output_vars = tuple(attrs['outputs'])
+            task_processor = attrs['task_processor']
 
-    @staticmethod
-    def __get_logger_name(basename, uuid):
-        """generates a unique logger name that contains both a sibling id
-        (a random string that will be persistent across all copies and unpickled
-        versions of this object) and a uuid (which is unique to this exact
-        object instance)
-        (only the last six chars of each hash is used, so it's technically possible
-        for this name to not be unique) - if you need a truly unique ID, then
-        use obj.uuid
-        """
-        return "{0} #{1}".format(basename, uuid[-6:])
+            # ignore leaf blocks
+            if isinstance(task_processor, Leaf):
+                continue
+
+            static[output_vars] = (task_processor,) + input_vars
+
+        return static
