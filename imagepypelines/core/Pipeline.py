@@ -66,12 +66,14 @@ class Pipeline(object):
         # quick helper function to add a node to the graph
         def _add_to_vars(var):
             if not isinstance(var,str):
-                self.logger.error("graph vars must be a string, not %s" % type(var))
-                raise TypeError()
+                msg = "graph vars must be a string, not %s" % type(var)
+                self.logger.error(msg)
+                raise TypeError(msg)
 
             if var in self.vars.keys():
-                self.error.error("\"%s\"is defined more than once" % var)
-                raise TypeError()
+                msg = "\"%s\" cannot be defined more than once" % var
+                self.error.error(msg)
+                raise TypeError(msg)
 
             self.vars[var] = {'dependents':set(),
                                 'task':None, # will always be defined
@@ -108,7 +110,9 @@ class Pipeline(object):
                     # track what inputs are required so we can populate
                     # them with arguments in self.process
                     if len(outputs) != 1:
-                        raise RuntimeError("Inputs must define exactly one output")
+                        msg = "Inputs must define exactly one output"
+                        self.logger.error(msg)
+                        raise RuntimeError(msg)
 
                     # add the input block to a tracking dictionary
                     self.inputs[outputs[0]] = definition
@@ -221,8 +225,9 @@ class Pipeline(object):
         indices_used = [self.inputs[x].index for x in self.indexed_inputs]
         if len(set(indices_used)) != len(indices_used):
             # Note: add more verbose error message
-            self.logger.error("Input indices cannot be reused")
-            raise RuntimeError()
+            msg = "Input indices cannot be reused"
+            self.logger.error(msg)
+            raise RuntimeError(msg)
 
         self.logger.info("{} defined with inputs {}".format(self.name, self.indexed_inputs + self.kwonly_inputs))
 

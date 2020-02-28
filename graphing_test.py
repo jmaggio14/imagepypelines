@@ -13,7 +13,7 @@ def minus_val(a,b,value):
 serial_graph = {
             # inputs
             'zero' : ip.Input(0),
-            'one' : ip.Input(),
+            'one' : ip.Input(1),
             # operations
             ('ten','eleven') : (add_val, 'zero', 'one'),
             ('twenty','eleven2') : (add_val, 'ten', 'one'),
