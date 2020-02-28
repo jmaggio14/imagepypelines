@@ -138,7 +138,7 @@ class BaseBlock(object):
         for this name to not be unique) - if you need a truly unique ID, then
         use obj.uuid
         """
-        return "{0} #{1}".format(basename,uuid[-6:])
+        return "{0}#{1}".format(basename,uuid[-6:])
 
     @abstractmethod
     def inputs(self):
@@ -149,6 +149,8 @@ class BaseBlock(object):
                     'type':type(self),
                     }
         return attrs
+
+# NOTE: add 'summarize' function -- spits out block metadata
 
 
 

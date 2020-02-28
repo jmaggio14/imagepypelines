@@ -148,6 +148,9 @@ html_theme = 'bootstrap'
 # RH - Activate the pip imported theme
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
+# JM - adds documentation for __special__ functions with docstrings
+napoleon_include_special_with_doc = True
+
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 32x32).
 # Path should be relative to the ``_static`` files directory.
 #

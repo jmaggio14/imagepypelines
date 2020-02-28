@@ -3,33 +3,98 @@ import networkx as nx
 import numpy as np
 
 @ip.blockify(value=10)
-def add_val(a,b,value=1):
+def add_val(a,b,value):
     return a+value, b+value
 
 @ip.blockify(value=5)
-def minus_val(a,b,value=5):
+def minus_val(a,b,value):
     return a-value, b-value
 
 serial_graph = {
             # inputs
-            'data1' : ip.Input(0),
-            'data2' : ip.Input(1),
+            'zero' : ip.Input(0),
+            'one' : ip.Input(),
             # operations
-            ('data3','data4') : (add_val, 'data1', 'data2'),
-            # ('data3','data4') : (add_val, 'data1', 'data2'),
-            ('data6', 'data5') : (minus_val, 'data3', 'data4'),
-            ('data7','data8') : (add_val, 'data1','data3')
+            ('ten','eleven') : (add_val, 'zero', 'one'),
+            ('twenty','eleven2') : (add_val, 'ten', 'one'),
+            ('fifteen', 'six') : (minus_val, 'twenty', 'eleven'),
+            ('twentyfive','twentyone') : (add_val, 'fifteen','eleven2'),
+            ('negativefour', 'negativefive') : (minus_val, 'one', 'zero'),
             }
 
 
 pipeline = ip.Pipeline(serial_graph, 'serial_test')
 pipeline.draw(show=True)
-import pdb; pdb.set_trace()
 
-processed = pipeline.process([0,0],[1,1])
+processed = pipeline.process([0,0],one=[1,1])
 print(processed)
-
 import pdb; pdb.set_trace()
+
+
+
+# import imagepypelines as ip
+# import networkx as nx
+# import numpy as np
+#
+# @ip.blockify(value=10)
+# def add_val(a,b,value=1):
+#     return a+value, b+value
+#
+# @ip.blockify(value=5)
+# def minus_val(a,b,value=5):
+#     return a-value, b-value
+#
+# serial_graph = {
+#             # inputs
+#             'data1' : ip.Input(0),
+#             'data2' : ip.Input(1),
+#             'constant': ip.Constant(data),
+#             'other': ip.constants.PI,
+#             # operations
+#             ('data3','data4') : (add_val, 'data1', 'data2'),
+#             # ('data3','data4') : (add_val, 'data1', 'data2'),
+#             ('data6', 'data5') : (minus_val, 'data3', 'data4'),
+#             ('data7','data8') : (add_val, 'data1','data3')
+#             }
+#
+#
+# pipeline = ip.Pipeline(serial_graph, 'serial_test')
+# pipeline.draw(show=True)
+# import pdb; pdb.set_trace()
+#
+#################
+# def add(self, tasks):
+#     if isinstance(tasks,Pipeline):
+#         tasks = tasks.get_static_representation()
+#
+#     self._build_graph(tasks)
+#
+# task = {('data4'): (some_func, 'data3', 'data7')}
+#
+# tasks = {
+#             ('data9'): (some_func, 'data3', 'data7'),
+#             ('data10'): (some_func, 'data4', 'data6')
+#         }
+#
+# tasks = some_other_pipeline.get_static_representation()
+#
+# pipeline.add(task)
+# pipeline.add(tasks)
+# pipeline.add(some_other_pipeline)
+# pipeline += some_other_pipeline
+#
+# pipeline.remove(task)
+# pipeline.remove(tasks)
+# pipeline.remove(some_other_pipeline)
+# pipeline -= some_other_pipeline
+#
+#
+# #################
+#
+# processed = pipeline.process([0,0],[1,1],data9=[2,2])
+# print(processed)
+#
+# import pdb; pdb.set_trace()
 
 
 

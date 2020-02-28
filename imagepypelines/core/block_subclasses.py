@@ -188,25 +188,27 @@ class FuncBlock(SimpleBlock):
         return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
 
 
-
 ################################################################################
 class Input(BatchBlock):
-    def __init__(self,index_key=None):
-        self.index_key = index_key
-        # DEBUG
-        # eventually we will be able to specify inputs using
-        # END DEBUG
+    def __init__(self,index=None):
+        self.index = index
         self.data = None
-        super().__init__(name="Input"+str(self.index_key))
+        self.loaded = False
+        name = "Input" + str(self.index)
+        super().__init__(name=name)
 
     def batch_process(self):
+        if self.data is None:
+            raise RuntimeError("data not loaded")
         return self.data
 
     def load(self, data):
         self.data = data
+        self.loaded = True
 
-    def unload(self, data):
+    def unload(self):
         self.data = None
+        self.loaded = False
 
 ################################################################################
 class Leaf(BatchBlock):
