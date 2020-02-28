@@ -313,6 +313,17 @@ class Pipeline(object):
                 raise RuntimeError()
             inpt.load(val)
 
+        # check to make sure all inputs are loaded
+        data_loaded = True
+        for key,inpt in self.inputs.items():
+            if not inpt.loaded:
+                msg = "data for \"%s\" must be provided" % key
+                self.logger.error(msg)
+                data_loaded = False
+
+        if not data_loaded:
+            raise RuntimeError("insufficient input data provided")
+
         # --------------------------------------------------------------
         # PROCESS
         # --------------------------------------------------------------
@@ -340,6 +351,9 @@ class Pipeline(object):
 
 
     def get_static_representation(self):
+        """generates a dictionary represenation of the pipeline, which can be
+        used to make other pipelines.
+        """
         static = {}
         for _,attrs in self.graph.nodes(data=True):
             input_vars = tuple(attrs['inputs'])
