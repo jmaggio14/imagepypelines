@@ -17,6 +17,8 @@ __all__ = ['NUMPY_TYPES',
             ]
 
 
+UUID_ORDER = 6
+"""number of digits for pipeline and block UUIDS. default is 6 (~16.7million)"""
 
 
 # ------------------Standard Type Tables------------------

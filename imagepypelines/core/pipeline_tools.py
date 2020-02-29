@@ -5,12 +5,16 @@
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 #
+from .Pipeline import Pipeline
 from .block_subclasses import FuncBlock
+from ..Logger import error as iperror
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 import networkx as nx
-
+import pickle
+import base64
 from math import sqrt, atan2, degrees
 
 ROOT_COLOR = 'red'
@@ -33,6 +37,7 @@ DATA_TEXT = 10
 DATA_SIZE = LEAF_SIZE
 EDGE_ARROW_STYLE = "Simple,tail_width=0.5,head_width=4,head_length=8"
 
+################################################################################
 def blockify(**kwargs):
     """decorator which converts a normal function into a un-trainable
     block which can be added to a pipeline. The function can still be used
@@ -58,7 +63,19 @@ def blockify(**kwargs):
         return FuncBlock(func,kwargs)
     return _blockify
 
+################################################################################
+def to_json(pipeline, pickle_protocol=pickle.HIGHEST_PROTOCOL):
+    return pipeline.to_json(pickle_protocol)
 
+################################################################################
+def from_json(jsonified):
+    return Pipeline.from_json(jsonified)
+
+################################################################################
+def debug_pickle(pipeline):
+    return pipeline.debug_pickle()
+
+################################################################################
 def categorize_nodes(pipeline):
     # --------------------------------------------------------------
     # DETERMINE THE TYPE OF EACH NODE

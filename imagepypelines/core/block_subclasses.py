@@ -8,8 +8,13 @@
 import sys
 import inspect
 from abc import abstractmethod
+import copy
+from types import FunctionType
 
 from .BaseBlock import BaseBlock
+
+this_module = sys.modules[__name__]
+
 
 class SimpleBlock(BaseBlock):
     """Block subclass that processes individual datums separately
@@ -149,8 +154,18 @@ class FuncBlock(SimpleBlock):
     # def __new__(self, func, preset_kwargs):
     #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
 
-    def __init__(self,func, preset_kwargs):
-        self.func = func
+    def __init__(self, func, preset_kwargs):
+
+        # JM: this is an ugly hack to make FuncBlock's serializable - by
+        # adding the user's functions to the current namespace (pickle demands
+        # the source object be in top level of the module)
+        if not hasattr(this_module, func.__name__):
+            func_copy = FunctionType(func.__code__, globals(), func.__name__)
+            setattr(this_module, func_copy.__name__, func_copy)
+        else:
+            raise ValueError("invalid blockified function name: {}".format(func.__name__))
+
+        self.func = func_copy
         self.preset_kwargs = preset_kwargs
 
         # check if the function meets requirements

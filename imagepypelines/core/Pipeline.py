@@ -7,12 +7,14 @@
 from ..Logger import get_logger
 from .BaseBlock import BaseBlock
 from .block_subclasses import SimpleBlock, BatchBlock, Input, Leaf
-from .pipeline_tools import visualize
 
 import inspect
 import numpy as np
 from uuid import uuid4
 import networkx as nx
+import pickle
+import base64
+import json
 
 class Pipeline(object):
     """processing pipeline manager for simple algorithm construction
@@ -340,7 +342,8 @@ class Pipeline(object):
             inpt.unload()
 
     def draw(self, show=True, ax=None):
-        visualize(self,show,ax)
+        # visualize(self, show, ax)
+        pass
 
     ################################### util ###################################
     def __get_logger_name(self):
@@ -367,3 +370,100 @@ class Pipeline(object):
             static[output_vars] = (task_processor,) + input_vars
 
         return static
+
+
+    ############################################################################
+    def to_json(self, pickle_protocol=pickle.HIGHEST_PROTOCOL):
+        """generates a json represenation of a pipeline"""
+
+        # fetch the static graph represenation
+        static = self.get_static_representation()
+
+        # rebuild the static graph with pickled blocks
+        raise_error = False
+        pickled_static = {}
+        for outputs,task in static.items():
+            try:
+                pickled_block = pickle.dumps(task[0], protocol=pickle_protocol)
+            except pickle.PickleError as e:
+                self.logger.error("unable to pickle {}".format(task[0]))
+                raise_error = True
+                import pdb; pdb.set_trace()
+                break
+
+            # encode the pickled object as a b64 string
+            block_str = base64.b64encode(pickled_block)
+            pickled_static[outputs] = (block_str,) + task[1:]
+
+        # raise a runtime error if we can't pickle all the blocks
+        if raise_error:
+            raise RuntimeError("unable to pickle pipeline blocks")
+
+        # convert the pickled static graph to a jsonify object
+        json_rep = {"name":self.name,
+                    "static_graph":pickled_static}
+        return json.dumps(json_rep)
+
+    ############################################################################
+    @staticmethod
+    def from_json(jsonified):
+        """generates a new pipeline based off a json represenation"""
+        # convert json to dict
+        raw = json.loads(jsonified)
+        # fetch the name and static graph
+        name = raw["name"]
+        pickled = raw["static_graph"]
+
+        # depickle every block in the pickled static graph
+        static = {}
+        for outputs,task in pickled.items():
+            try:
+                b64_block = pickle.loads(task[0])
+            except pickle.UnpicklingError as e:
+                iperror("unable to pickle {}".format(task[0]))
+                raise_error = True
+                break
+
+            # decode the b64 string to a block
+            block = base64.b64decode(b64_block)
+            static[outputs] = (block,) + task[1:]
+
+        if raise_error:
+            raise RuntimeError("unable to unpickle pipeline blocks")
+
+        # return a new pipeline instance
+        return Pipeline(static, name)
+
+
+    def debug_pickle(self, pickle_protocol=pickle.HIGHEST_PROTOCOL):
+        """helper function to debug what part of a block is not serializable"""
+        error = False
+
+        # fetch the static graph represenation
+        static = self.get_static_representation()
+
+        # rebuild the static graph with pickled blocks
+        raise_error = False
+        pickled_static = {}
+        for outputs,task in static.items():
+            block = task[0]
+            # iterate through every value in the block's __dict__
+            for key,val in block.__dict__.items():
+                try:
+                    pickle.dumps(val, protocol=pickle_protocol)
+                except Exception as e:
+                    self.logger.error("error pickling {}.{}: {}".format(block,key,e))
+                    error = True
+
+        if not error:
+            self.logger.info("no pickling issues detected")
+
+
+
+
+
+
+
+
+
+# END

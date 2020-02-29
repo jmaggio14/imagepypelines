@@ -503,128 +503,128 @@ class Emailer(object):
         self.close()
 
 
-class ImageWriter(object):
-    """
-    Class that operates as a system that saves single frames to a
-    specified output directory.
-
-    every new frame passed in will be saved in the following format:
-        output_dir/000001example_filename.png
-        output_dir/000002example_filename.png
-        output_dir/000003example_filename.png
-        ...
-
-    automatic resizing is also available
-
-    Args:
-        output_dir (str):
-            path to output directory that images will be saved to
-        base_filename (str): default is 'image.png'
-            filename common among all images, these will be incremented
-            numerically with each new image saved
-        size (tuple,None): Default is None
-            size of the image if forced resizing is desired, or
-            None if raw write is desired
-        interpolation (cv2 interpolation type):
-            Default is cv2.INTER_NEAREST
-            interpolation method to be used if resizing is desired
-
-    """
-
-    def __init__(self, output_dir,
-                         base_filename="image.png",
-                         size=None,
-                         interpolation=cv2.INTER_NEAREST):
-
-        assert isinstance(base_filename, str), "'base_filename' must be str"
-        imagepypelines.util.interpolation_type_check(interpolation)
-
-        self.base_filename = base_filename
-        self.size = size
-        self.interpolation = interpolation
-        self.image_number = 0
-
-    def write(self, frame):
-        """
-        writes an image frame to the specificed directory, forces
-        resizing if specified when the class is instantiated
-
-        Args:
-            frame (np.ndarray): frame to be saved to the output_dir
-
-        Returns:
-            None
-        """
-        self.image_number += 1
-        image_number = imagepypelines.util.make_numbered_prefix(self.image_number,6)
-        out_filename = os.path.join(self.output_dir,
-                                    image_number + self.base_filename)
-
-        if not isinstance(self.size, type(None)):
-            frame = cv2.resize(frame,
-                               dsize=(self.size[1], self.size[0]),
-                               interpolation=self.interpolation)
-
-        cv2.imwrite(filename, frame)
-
-
-class VideoWriter(object):
-    """
-    a wrapper class for the cv2 Video Writer:
-    https://docs.opencv.org/3.0-beta/modules/videoio/doc/reading_and_writing_video.html#videowriter-fourcc
-
-    This class will take a series of single frame imagery and
-    """
-
-    def __init__(self, filename="out_video.avi", fps=30.0, fourcc="XVID"):
-        self.filename = imagepypelines.util.prevent_overwrite(filename)
-        self._fourcc = fourcc
-        self._fourcc_val = cv2.VideoWriter_fourcc(*self._fourcc)
-        self._fps = float(fps)
-        self.__is_initialized = False
-
-    def __init(self, size):
-        """
-        opens and initializes the videowriter
-        """
-        imagepypelines.info("initializing the VideoWriter...")
-        self._h, self._w = size
-        self.video_writer_kwargs = {"filename": self.filename,
-                                    "fourcc": self._fourcc_val,
-                                    "fps": self._fps,
-                                    "frameSize": (self._w, self._h)
-                                    }
-        self.writer = cv2.VideoWriter(**self.video_writer_kwargs)
-        self.__is_initialized = True
-
-    def write(self, frame):
-        """
-        writes a frame to the video file.
-        automatically opens a video writer set to the input frame size
-
-        Args:
-            frame (np.ndarray): input frame to save to file
-
-        Returns:
-            None
-        """
-        if not self.__is_initialized:
-            size = imagepypelines.frame_size(frame)
-            self.__init(size)
-
-        if not self.writer.isOpened():
-            self.writer.open(**self.video_writer_kwargs)
-
-        self.writer.write(frame)
-
-    def release(self):
-        """
-        closes the video writer
-
-        Args:
-            None
-
-        Returns:
-            None
-        """
-        self.writer.release()
+# class ImageWriter(object):
+#     """
+#     Class that operates as a system that saves single frames to a
+#     specified output directory.
+#
+#     every new frame passed in will be saved in the following format:
+#         output_dir/000001example_filename.png
+#         output_dir/000002example_filename.png
+#         output_dir/000003example_filename.png
+#         ...
+#
+#     automatic resizing is also available
+#
+#     Args:
+#         output_dir (str):
+#             path to output directory that images will be saved to
+#         base_filename (str): default is 'image.png'
+#             filename common among all images, these will be incremented
+#             numerically with each new image saved
+#         size (tuple,None): Default is None
+#             size of the image if forced resizing is desired, or
+#             None if raw write is desired
+#         interpolation (cv2 interpolation type):
+#             Default is cv2.INTER_NEAREST
+#             interpolation method to be used if resizing is desired
+#
+#     """
+#
+#     def __init__(self, output_dir,
+#                          base_filename="image.png",
+#                          size=None,
+#                          interpolation=cv2.INTER_NEAREST):
+#
+#         assert isinstance(base_filename, str), "'base_filename' must be str"
+#         imagepypelines.util.interpolation_type_check(interpolation)
+#
+#         self.base_filename = base_filename
+#         self.size = size
+#         self.interpolation = interpolation
+#         self.image_number = 0
+#
+#     def write(self, frame):
+#         """
+#         writes an image frame to the specificed directory, forces
+#         resizing if specified when the class is instantiated
+#
+#         Args:
+#             frame (np.ndarray): frame to be saved to the output_dir
+#
+#         Returns:
+#             None
+#         """
+#         self.image_number += 1
+#         image_number = imagepypelines.util.make_numbered_prefix(self.image_number,6)
+#         out_filename = os.path.join(self.output_dir,
+#                                     image_number + self.base_filename)
+#
+#         if not isinstance(self.size, type(None)):
+#             frame = cv2.resize(frame,
+#                                dsize=(self.size[1], self.size[0]),
+#                                interpolation=self.interpolation)
+#
+#         cv2.imwrite(filename, frame)
+#
+#
+# class VideoWriter(object):
+#     """
+#     a wrapper class for the cv2 Video Writer:
+#     https://docs.opencv.org/3.0-beta/modules/videoio/doc/reading_and_writing_video.html#videowriter-fourcc
+#
+#     This class will take a series of single frame imagery and
+#     """
+#
+#     def __init__(self, filename="out_video.avi", fps=30.0, fourcc="XVID"):
+#         self.filename = imagepypelines.util.prevent_overwrite(filename)
+#         self._fourcc = fourcc
+#         self._fourcc_val = cv2.VideoWriter_fourcc(*self._fourcc)
+#         self._fps = float(fps)
+#         self.__is_initialized = False
+#
+#     def __init(self, size):
+#         """
+#         opens and initializes the videowriter
+#         """
+#         imagepypelines.info("initializing the VideoWriter...")
+#         self._h, self._w = size
+#         self.video_writer_kwargs = {"filename": self.filename,
+#                                     "fourcc": self._fourcc_val,
+#                                     "fps": self._fps,
+#                                     "frameSize": (self._w, self._h)
+#                                     }
+#         self.writer = cv2.VideoWriter(**self.video_writer_kwargs)
+#         self.__is_initialized = True
+#
+#     def write(self, frame):
+#         """
+#         writes a frame to the video file.
+#         automatically opens a video writer set to the input frame size
+#
+#         Args:
+#             frame (np.ndarray): input frame to save to file
+#
+#         Returns:
+#             None
+#         """
+#         if not self.__is_initialized:
+#             size = imagepypelines.frame_size(frame)
+#             self.__init(size)
+#
+#         if not self.writer.isOpened():
+#             self.writer.open(**self.video_writer_kwargs)
+#
+#         self.writer.write(frame)
+#
+#     def release(self):
+#         """
+#         closes the video writer
+#
+#         Args:
+#             None
+#
+#         Returns:
+#             None
+#         """
+#         self.writer.release()

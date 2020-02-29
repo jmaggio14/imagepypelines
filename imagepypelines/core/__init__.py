@@ -84,7 +84,7 @@ from .io_tools import convert_to
 
 from .io_tools import CameraCapture
 from .io_tools import Emailer
-from .io_tools import ImageWriter
+# from .io_tools import ImageWriter
 
 # ml_tools.py
 from .ml_tools import accuracy
