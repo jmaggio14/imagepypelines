@@ -64,12 +64,12 @@ def blockify(**kwargs):
     return _blockify
 
 ################################################################################
-def to_json(pipeline, pickle_protocol=pickle.HIGHEST_PROTOCOL):
-    return pipeline.to_json(pickle_protocol)
-
-################################################################################
-def from_json(jsonified):
-    return Pipeline.from_json(jsonified)
+# def to_json(pipeline, pickle_protocol=pickle.HIGHEST_PROTOCOL):
+#     return pipeline.to_json(pickle_protocol)
+#
+# ################################################################################
+# def from_json(jsonified):
+#     return Pipeline.from_json(jsonified)
 
 ################################################################################
 def debug_pickle(pipeline):
