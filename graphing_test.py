@@ -40,16 +40,16 @@ assert processed1 == processed2
 
 
 # convert the pipeline to json and back again
-pipeline2.debug_pickle()
-
-jsonified = pipeline2.to_json()
-pipeline3 = ip.from_json()
-
-processed3 = pipeline3.process([0,0], one=[1,1])
-
-assert processed3 == processed2
-
-import pdb; pdb.set_trace()
+# pipeline2.debug_pickle()
+#
+# jsonified = pipeline2.to_json()
+# pipeline3 = ip.from_json()
+#
+# processed3 = pipeline3.process([0,0], one=[1,1])
+#
+# assert processed3 == processed2
+#
+# import pdb; pdb.set_trace()
 
 
 

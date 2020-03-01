@@ -31,11 +31,11 @@ class Pipeline(object):
         logger(:obj:`ip.ImagepypelinesLogger`): Logger object for this pipeline
 
     """
-    def __init__(self, graph={}, name=None):
-        """initializes the pipeline with a user-provided graph
+    def __init__(self, tasks={}, name=None):
+        """initializes the pipeline with a user-provided graph (tasks)
 
         Args:
-            graph (dict): graph definition to construct this pipeline
+            tasks (dict): graph definition to construct this pipeline
             name (str): name used to generate the logger name
 
         """
@@ -59,10 +59,10 @@ class Pipeline(object):
         self.indexed_inputs = []
         self.kwonly_inputs = []
         self.inputs = {}
-        self._build_graph(user_graph=graph)
+        self.update(tasks)
 
 
-    def _build_graph(self,user_graph):
+    def update(self, tasks):
         ########################################################################
         #                           HELPER FUNCTIONS
         ########################################################################
@@ -105,7 +105,7 @@ class Pipeline(object):
 
         #### FIRST FOR LOOP - defining the variables that we'll be using
         # add all variables defined in the graph to a dictionary
-        for var in user_graph.keys():
+        for var in tasks.keys():
             # for str defined dict keys like 'x' : (func, 'a', 'b')
             if isinstance(var, str):
                 _add_to_vars(var)
@@ -118,7 +118,7 @@ class Pipeline(object):
 
         #### SECOND FOR LOOP - adding all nodes to the graph
         # reiterate through the graph definition to define inputs and outputs
-        for outputs,definition in user_graph.items():
+        for outputs,definition in tasks.items():
             # make a single value into a list to simplify code
             if not isinstance(outputs, (tuple,list)):
                 outputs = [outputs]
