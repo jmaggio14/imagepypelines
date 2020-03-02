@@ -7,6 +7,7 @@
 from ..Logger import get_logger
 from .BaseBlock import BaseBlock
 from .block_subclasses import SimpleBlock, BatchBlock, Input, Leaf
+from .constants import UUID_ORDER
 
 import inspect
 import numpy as np
@@ -47,9 +48,10 @@ class Pipeline(object):
         # <readable_name>-<sibling_id>-<uuid>
         if name is None:
             name = self.__class__.__name__
-
         self.name = name # string name - used to generate the logger_name
-        self.logger = get_logger( self.__get_logger_name() )
+
+        # build the logger for this pipeline
+        self.logger = get_logger( self.id )
 
         # GRAPHING
         self.graph = nx.MultiDiGraph()
@@ -346,13 +348,6 @@ class Pipeline(object):
         pass
 
     ################################### util ###################################
-    def __get_logger_name(self):
-        """generates a unique logger name that based off this Pipeline's name
-        and the last 6 chars of it's uuid.
-        """
-        return "{0}#{1}".format(self.name, self.uuid[-6:])
-
-
     def get_static_representation(self):
         """generates a dictionary represenation of the pipeline, which can be
         used to make other pipelines.
@@ -394,6 +389,12 @@ class Pipeline(object):
 
         if not error:
             self.logger.info("no pickling issues detected")
+
+
+    ################################ properties ################################
+    @property
+    def id(self):
+        return "{}.{}".format(self.name,self.uuid[-UUID_ORDER:])
 
 
 
