@@ -147,6 +147,8 @@ class BaseBlock(object):
     def get_default_node_attrs(self):
         attrs = { 'name':self.name,
                     'type':type(self),
+                    'color': 'orange'
+                    'shape':'square',
                     }
         return attrs
 

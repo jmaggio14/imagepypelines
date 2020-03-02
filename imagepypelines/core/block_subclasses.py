@@ -244,6 +244,12 @@ class Input(BatchBlock):
         self.data = None
         self.loaded = False
 
+    def get_default_node_attrs(self):
+        attrs = super().get_default_node_attrs()
+        attrs['color'] = 'blue'
+        attrs['shape'] = 'pentagon'
+        return attrs
+
 ################################################################################
 class Leaf(BatchBlock):
     def __init__(self,var_name):
@@ -256,5 +262,11 @@ class Leaf(BatchBlock):
     @property
     def inputs(self):
         return [self.var_name]
+
+    def get_default_node_attrs(self):
+        attrs = super().get_default_node_attrs()
+        attrs['color'] = 'green'
+        attrs['shape'] = 'ellipsis'
+        return attrs
 
 # END
