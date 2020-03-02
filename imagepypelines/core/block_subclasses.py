@@ -15,6 +15,25 @@ from .BaseBlock import BaseBlock
 
 this_module = sys.modules[__name__]
 
+# class PipelineBlock(BatchBlock):
+#     def __init__(self, pipeline):
+#         self.pipeline = pipeline
+#
+#     def batch_process(self, *data):
+#         # we'd need to do some data checking here
+#         self.pipeline.process(*data)
+#
+#     @property
+#     def inputs(self):
+#         return list(self.pipeline.inputs.keys())
+#
+#     @property
+#     def name(self):
+#         return self.pipeline.name
+
+
+
+
 
 class SimpleBlock(BaseBlock):
     """Block subclass that processes individual datums separately
