@@ -46,6 +46,10 @@ class Block(object):
 
         super(Block,self).__init__()
 
+    @staticmethod
+    def process(self,*data):
+        pass
+
     def _pipeline_process(self, *data):
         # NOTE: add type checking here
 
