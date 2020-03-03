@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
-from .BaseBlock import BaseBlock
+from .Block import Block
 from .block_subclasses import SimpleBlock, BatchBlock, Input, Leaf
 from .constants import UUID_ORDER
 
@@ -126,7 +126,7 @@ class Pipeline(object):
                 outputs = [outputs]
 
             # GETTING GRAPH INPUTS
-            if isinstance(definition, BaseBlock):
+            if isinstance(definition, Block):
                 node_uuid = definition.name + uuid4().hex + '-node'
                 # check if we are dealing with an input
                 # e.g. - 'x': ip.Input(),
@@ -156,7 +156,7 @@ class Pipeline(object):
                 task = definition[0]
                 inpts = definition[1:]
                 # if we have a tuple input, then the first value MUST be a block
-                if not isinstance(task, BaseBlock):
+                if not isinstance(task, Block):
                     raise TypeError("first value in any graph definition tuple must be a Block")
 
                 if isinstance(task, Input):

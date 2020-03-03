@@ -11,7 +11,7 @@ from abc import abstractmethod
 import copy
 from types import FunctionType
 
-from .BaseBlock import BaseBlock
+from .Block import Block
 
 this_module = sys.modules[__name__]
 
@@ -19,7 +19,7 @@ this_module = sys.modules[__name__]
 #     def __init__(self, pipeline):
 #         self.pipeline = pipeline
 #
-#     def batch_process(self, *data):
+#     def process(self, *data):
 #         # we'd need to do some data checking here
 #         self.pipeline.process(*data)
 #
@@ -30,132 +30,6 @@ this_module = sys.modules[__name__]
 #     @property
 #     def name(self):
 #         return self.pipeline.name
-
-
-
-
-
-class SimpleBlock(BaseBlock):
-    """Block subclass that processes individual datums separately
-    (as opposed to processing all data at once in a batch). This makes it useful
-    for most CPU bound processing tasks as well as most functions in traditional
-    computer vision that don't require an image sequence to process data
-
-    Args:
-
-        io_map(IoMap,dict): dictionary of input-output mappings for this
-            Block
-        name(str): name for this block, it will be automatically created/modified
-            to make sure it is unique
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        requires_labels(bool): whether or not this block will require
-            labels during training
-
-    Attributes:
-
-        io_map(IoMap): object that maps inputs to this block to outputs
-            subclass of tuple where I/O is stored as:
-            ( (input1,output1),(input2,output2)... )
-        name(str): unique name for this block
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        logger(ip.ImagepypelinesLogger): logger for this block,
-            registered to 'name'
-
-    """
-
-    @abstractmethod
-    def process(self, *datum):
-        """(required overload)processes a single datum
-
-        Args:
-            datum: datum to process
-
-        Returns:
-            processed: datum processed by this block
-        """
-        raise NotImplementedError("'process' must be overloaded in all children")
-
-    def process_strategy(self, *data):
-        """processes each datum using self.process and return list"""
-        output = (self.process(*datums) for datums in zip(*data))
-        return tuple( zip(*output) )
-
-    @property
-    def inputs(self):
-        # save the argspec in an instance variable if it hasn't been computed
-        if not self._arg_spec:
-            self._arg_spec = inspect.getfullargspec(self.process)
-
-        return ([] if (self._arg_spec.args is None) else self._arg_spec.args[1:])
-
-
-################################################################################
-class BatchBlock(BaseBlock):
-    """Block subclass that processes datums as a batch
-    (as opposed to processing each datum individually). This makes it useful
-    for GPU accelerated tasks where processing data in batches frequently
-    increases processing speed. It can also be used for algorithms that
-    require working with a full image sequence.
-
-    Args:
-
-        io_map(IoMap,dict): dictionary of input-output mappings for this
-            Block
-        name(str): name for this block, it will be automatically created/modified
-            to make sure it is unique
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        requires_labels(bool): whether or not this block will require
-            labels during training
-
-    Attributes:
-
-        io_map(IoMap): object that maps inputs to this block to outputs
-            subclass of tuple where I/O is stored as:
-            ( (input1,output1),(input2,output2)... )
-        name(str): unique name for this block
-        notes(str): a short description of this block
-        requires_training(bool): whether or not this block will require
-            training
-        trained(bool): whether or not this block has been trained, True
-            by default if requires_training = False
-        logger(ip.ImagepypelinesLogger): logger for this block,
-            registered to 'name'
-
-    """
-
-    @abstractmethod
-    def batch_process(self, *data):
-        """(required overload)processes a list of data using this block's
-        algorithm
-
-        Args:
-            data(list): list of datums to process
-
-        Returns:
-            process(list): list of processed datums
-        """
-        error_msg = "'batch_process' must be overloaded in all children"
-        raise NotImplementedError(error_msg)
-
-    def process_strategy(self, *data):
-        """runs self.batch_process"""
-        return self.batch_process(*data)
-
-    @property
-    def inputs(self):
-        # save the argspec in an instance variable if it hasn't been computed
-        if not self._arg_spec:
-            self._arg_spec = inspect.getfullargspec(self.batch_process)
-
-        return ([] if (self._arg_spec.args is None) else self._arg_spec.args[1:])
 
 
 ################################################################################
@@ -229,9 +103,9 @@ class Input(BatchBlock):
         self.data = None
         self.loaded = False
         name = "Input" + str(self.index)
-        super().__init__(name=name)
+        super().__init__(name=name, batch_size="all")
 
-    def batch_process(self):
+    def process(self):
         if self.data is None:
             raise RuntimeError("data not loaded")
         return self.data
@@ -254,9 +128,9 @@ class Input(BatchBlock):
 class Leaf(BatchBlock):
     def __init__(self,var_name):
         self.var_name = var_name
-        super().__init__(self.var_name)
+        super().__init__(self.var_name, batch_size="all")
 
-    def batch_process(self,*data):
+    def process(self,*data):
         return data
 
     @property

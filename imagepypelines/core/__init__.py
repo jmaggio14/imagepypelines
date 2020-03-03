@@ -8,8 +8,8 @@
 # constants.py
 from .constants import *
 
-# BaseBlock.py
-from .BaseBlock import BaseBlock
+# Block.py
+from .Block import Block
 
 # block_subclasses.py
 from .block_subclasses import SimpleBlock

@@ -12,7 +12,7 @@
 #         for varname, var in vars(mod).items():
 #             repr(var)
 #             str(var)
-#             if isinstance(var, (ip.Pipeline,ip.BaseBlock) ):
+#             if isinstance(var, (ip.Pipeline,ip.Block) ):
 #                 print('serializing %s...' % varname)
 #                 ip.cache[varname] = var
 #                 ip.cache.remove(varname)

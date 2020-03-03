@@ -2,7 +2,7 @@ from hypothesis import given, example
 from hypothesis import strategies as st
 
 import numpy as np
-# =================== BaseBlock.py ===================
+# =================== Block.py ===================
 # ------------- ArrayType -------------
 numpy_types = [np.uint8,
                 np.int8,
@@ -398,7 +398,7 @@ def test_xysample():
 #     # try a block with a custom name
 #     plus_one_block = ip.quick_block(process_fn,io_map,name)
 #
-#     assert isinstance(plus_one_block,ip.BaseBlock)
+#     assert isinstance(plus_one_block,ip.Block)
 #     assert plus_one_block.name == name + ':1'
 #
 #     pipeline = ip.Pipeline([plus_one_block])
@@ -408,7 +408,7 @@ def test_xysample():
 #     # try a block with a generated name
 #     plus_one_block = ip.quick_block(process_fn,io_map)
 #
-#     assert isinstance(plus_one_block,ip.BaseBlock)
+#     assert isinstance(plus_one_block,ip.Block)
 #     assert plus_one_block.name == '<lambda>' + ':1'
 #
 #     pipeline = ip.Pipeline([plus_one_block])

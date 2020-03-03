@@ -24,7 +24,7 @@ import hashlib
 from .. import CACHE
 from .. import debug as ipdebug, info as ipinfo
 from .Pipeline import Pipeline
-from .BaseBlock import BaseBlock
+from .Block import Block
 from .Exceptions import CachingError, ChecksumError
 
 
