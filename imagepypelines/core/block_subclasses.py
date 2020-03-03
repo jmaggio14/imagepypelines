@@ -15,7 +15,7 @@ from .Block import Block
 
 this_module = sys.modules[__name__]
 
-# class PipelineBlock(BatchBlock):
+# class PipelineBlock(Block):
 #     def __init__(self, pipeline):
 #         self.pipeline = pipeline
 #
@@ -33,7 +33,7 @@ this_module = sys.modules[__name__]
 
 
 ################################################################################
-class FuncBlock(SimpleBlock):
+class FuncBlock(Block):
     """Block that will run anmy fucntion you give it, either unfettered through
     the __call__ function, or with optional hardcoded parameters for use in a
     pipeline. Typically the FuncBlock is only used in the `blockify` decorator
@@ -47,7 +47,7 @@ class FuncBlock(SimpleBlock):
     # def __new__(self, func, preset_kwargs):
     #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
 
-    def __init__(self, func, preset_kwargs):
+    def __init__(self, func, preset_kwargs, batch_size="singles"):
 
         # JM: this is an ugly hack to make FuncBlock's serializable - by
         # adding the user's functions to the current namespace (pickle demands
@@ -73,7 +73,7 @@ class FuncBlock(SimpleBlock):
         required = spec.args[:num_required]
 
         self._arg_spec = spec
-        super().__init__(self.func.__name__)
+        super().__init__(self.func.__name__, batch_size=batch_size)
 
     def process(self, *args):
         return self.func(*args, **self.preset_kwargs)
@@ -97,7 +97,7 @@ class FuncBlock(SimpleBlock):
 
 
 ################################################################################
-class Input(BatchBlock):
+class Input(Block):
     def __init__(self,index=None):
         self.index = index
         self.data = None
@@ -125,7 +125,7 @@ class Input(BatchBlock):
         return attrs
 
 ################################################################################
-class Leaf(BatchBlock):
+class Leaf(Block):
     def __init__(self,var_name):
         self.var_name = var_name
         super().__init__(self.var_name, batch_size="all")

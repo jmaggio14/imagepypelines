@@ -12,9 +12,9 @@ from .constants import *
 from .Block import Block
 
 # block_subclasses.py
-from .block_subclasses import SimpleBlock
-from .block_subclasses import BatchBlock
 from .block_subclasses import FuncBlock
+from .block_subclasses import Input
+from .block_subclasses import Leaf
 # from .block_subclasses import TfBlock
 
 # caching.py

@@ -6,7 +6,7 @@
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
 from .Block import Block
-from .block_subclasses import SimpleBlock, BatchBlock, Input, Leaf
+from .block_subclasses import Block, Input, Leaf
 from .constants import UUID_ORDER
 
 import inspect
