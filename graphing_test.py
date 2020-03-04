@@ -2,28 +2,28 @@ import imagepypelines as ip
 import networkx as nx
 import numpy as np
 
-@ip.blockify(value=10)
+@ip.blockify( kwargs=dict(value=10) )
 def add_val(a,b,value):
     return a+value, b+value
 
-@ip.blockify(value=5)
+@ip.blockify( kwargs=dict(value=5) )
 def minus_val(a,b,value):
     return a-value, b-value
 
-serial_graph = {
-            # inputs
-            'zero' : ip.Input(0),
-            'one' : ip.Input(1),
-            # operations
-            ('ten','eleven') : (add_val, 'zero', 'one'),
-            ('twenty','eleven2') : (add_val, 'ten', 'one'),
-            ('fifteen', 'six') : (minus_val, 'twenty', 'eleven'),
-            ('twentyfive','twentyone') : (add_val, 'fifteen','eleven2'),
-            ('negativefour', 'negativefive') : (minus_val, 'one', 'zero'),
-            }
+tasks = {
+        # inputs
+        'zero' : ip.Input(0),
+        'one' : ip.Input(1),
+        # operations
+        ('ten','eleven') : (add_val, 'zero', 'one'),
+        ('twenty','eleven2') : (add_val, 'ten', 'one'),
+        ('fifteen', 'six') : (minus_val, 'twenty', 'eleven'),
+        ('twentyfive','twentyone') : (add_val, 'fifteen','eleven2'),
+        ('negativefour', 'negativefive') : (minus_val, 'one', 'zero'),
+        }
 
 # pipeline1 - raw construction
-pipeline1 = ip.Pipeline(serial_graph, 'serial_test')
+pipeline1 = ip.Pipeline(tasks, 'AddMinus')
 # pipeline1.draw(show=True)
 
 processed1 = pipeline1.process([0,0], one=[1,1])
@@ -37,6 +37,13 @@ pipeline2 = ip.Pipeline(static_constructor)
 processed2 = pipeline2.process([0,0], one=[1,1])
 
 assert processed1 == processed2
+
+import pdb; pdb.set_trace()
+
+########################################################################
+# TEST 2 - image processing blocks test
+# img_proc_tasks =
+
 
 
 # convert the pipeline to json and back again

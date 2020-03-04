@@ -42,22 +42,50 @@ class Block(object):
         self.tags = set()
 
         # whether or not the input names have been defined for this block
-        self._arg_spec = inspect.getfullargspec(self.process)
+        self._arg_spec = None
 
-        super(Block,self).__init__()
+        super(Block,self).__init__() # for metaclass?
 
     @staticmethod
     def process(self,*data):
         pass
 
-    def _pipeline_process(self, *data):
+    def _pipeline_process(self, *data, logger):
+        self._pair_logger(logger)
         # NOTE: add type checking here
 
-        # prepare the batch generators
-        batches = [d.batch_as(self.batch_size) for d in data]
-        # feed the data into the process function in batches
-        outputs = (self.process(*datums) for datums in zip(*batches))
-        return tuple( zip(*outputs) )
+        # check data partity (same n_items for every data)
+        # this still works even if len(data) is 0
+        if not all(data[0].n_batches_with(self.batch_size) == d.n_batches_with(self.batch_size) for d in data):
+            msg = "Invalid data lengths! all data must have the same"\
+                    + "number of items. {}"
+            # this adds a list ("input_name.n_items"=)
+            msg.format(",".join("{}.n_items={}".format(d.n_items) for i,d in zip(self.inputs,data)))
+            self.logger.error(msg)
+            raise RuntimeError(msg)
+
+        # root blocks don't need input data, and won't have any data
+        # passed in to batch. We only call process once for these
+        if len(self.inputs) == 0:
+            # Note: I think this will lead to errors for block with
+            # more than one output, but no inputs - JM
+            ret = tuple(self.process() for i in range(1))
+        else:
+            # otherwise we prepare to batch the data and run it through process
+            # prepare the batch generators
+            batches = [d.batch_as(self.batch_size) for d in data]
+            # feed the data into the process function in batches
+            outputs = (self.process(*datums) for datums in zip(*batches))
+            ret = tuple( zip(*outputs) )
+
+        self._unpair_logger()
+        return ret
+
+    def _pair_logger(self, pipeline_logger):
+        self.logger = pipeline_logger.getChild(self.id)
+
+    def _unpair_logger(self):
+        self.logger = get_logger(self.id)
 
     def __str__(self):
         return self.name
@@ -76,6 +104,8 @@ class Block(object):
 
     @property
     def inputs(self):
+        if self._arg_spec is None:
+            self._arg_spec = inspect.getfullargspec(self.process)
         # save the argspec in an instance variable if it hasn't been computed
         if (self._arg_spec.args is None):
             return []
@@ -85,7 +115,7 @@ class Block(object):
 
     @property
     def id(self):
-        return "{}.{}".format(self.name, self.uuid[-UUID_ORDER:])
+        return "{}#{}".format(self.name, self.uuid[-UUID_ORDER:])
 
 # NOTE: add 'summarize' function -- spits out block metadata
 

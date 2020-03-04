@@ -6,6 +6,7 @@
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
 from .Block import Block
+from .Data import Data
 from .block_subclasses import Block, Input, Leaf
 from .constants import UUID_ORDER
 
@@ -250,11 +251,6 @@ class Pipeline(object):
 
         self.logger.info("{} defined with inputs {}".format(self.name, self.indexed_inputs + self.kwonly_inputs))
 
-
-    @property
-    def execution_order(self):
-        return nx.topological_sort( nx.line_graph(self.graph) )
-
     def _compute(self):
         for node_a, node_b, edge_idx in self.execution_order:
             # get actual objects instead of just graph ids
@@ -265,8 +261,11 @@ class Pipeline(object):
             # check if node_a is a root node (no incoming edges)
             # these nodes can be computed and the edge populated
             # immmediately because they have no dependents
+            # NOTE: this will currently break if a root has more than one
+            # output - JM
             if self.graph.in_degree(node_a) == 0:
-                edge['data'] = task_a._pipeline_process() # no data needed
+                # no input data is needed
+                edge['data'] = Data( task_a._pipeline_process(logger=self.logger)[0] )
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b,data=True)
@@ -277,7 +276,7 @@ class Pipeline(object):
                 inputs = [input_data_dict[k] for k in sorted( input_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
-                outputs = task_b._pipeline_process(*inputs)
+                outputs = task_b._pipeline_process(*inputs, logger=self.logger)
 
                 # populate upstream edges with the data we need
                 # get the output names
@@ -287,7 +286,7 @@ class Pipeline(object):
                 # NEED ERROR CHECKING HERE
                 # (psuedo) if n_out == n_expected_out
                 for i,out_edge in enumerate(out_edges_sorted):
-                    out_edge['data'] = outputs[i]
+                    out_edge['data'] = Data(outputs[i])
 
 
     def process(self,*pos_data,**kwdata):
@@ -333,10 +332,10 @@ class Pipeline(object):
         # --------------------------------------------------------------
         self._compute()
 
-        return {edge['var_name'] : edge['data'] for _,_,edge in self.graph.edges(data=True)}
+        return {edge['var_name'] : edge['data'].pop() for _,_,edge in self.graph.edges(data=True)}
 
     def clear(self):
-        """resets all data temporarily stored in the graph"""
+        """resets all edges in the graph, clears the inputs"""
         for _,_,edge in self.graph.edges(data=True):
             edge['data'] = None
 
@@ -391,12 +390,15 @@ class Pipeline(object):
             self.logger.info("no pickling issues detected")
 
 
+
     ################################ properties ################################
     @property
     def id(self):
-        return "{}.{}".format(self.name,self.uuid[-UUID_ORDER:])
+        return "{}#{}".format(self.name,self.uuid[-UUID_ORDER:])
 
-
+    @property
+    def execution_order(self):
+        return nx.topological_sort( nx.line_graph(self.graph) )
 
 
 
