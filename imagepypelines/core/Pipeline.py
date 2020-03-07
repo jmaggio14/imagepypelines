@@ -80,7 +80,7 @@ class Pipeline(object):
                 self.logger.error(msg)
                 raise TypeError(msg)
 
-            self.vars[var] = {'dependents':set(),
+            self.vars[var] = {'predecessors':set(),
                                 'task':None, # will always be defined
                                 'task_processor':None # will always be defined
                                 }
@@ -136,7 +136,7 @@ class Pipeline(object):
                     _add_input(definition)
 
                 # add this variables task to it's attrs
-                # these vars will not have any dependents
+                # these vars will not have any predecessors
                 for output in outputs:
                     self.vars[output]['task'] = node_uuid
                     self.vars[output]['task_processor'] = definition
@@ -178,9 +178,9 @@ class Pipeline(object):
                                     **task.get_default_node_attrs(),
                                     )
 
-                # update the dependents for all of these outputs
+                # update the predecessors for all of these outputs
                 for output in outputs:
-                    self.vars[output]['dependents'].update(inpts)
+                    self.vars[output]['predecessors'].update(inpts)
 
             else: # something other than a block or of tuple (block, var1, var2,...)
                 raise RuntimeError("invalid task definition, must be block or tuple: (block, 'var1', 'var2',...)")
@@ -260,7 +260,7 @@ class Pipeline(object):
 
             # check if node_a is a root node (no incoming edges)
             # these nodes can be computed and the edge populated
-            # immmediately because they have no dependents
+            # immmediately because they have no predecessors
             # NOTE: this will currently break if a root has more than one
             # output - JM
             if self.graph.in_degree(node_a) == 0:
@@ -388,6 +388,9 @@ class Pipeline(object):
 
         if not error:
             self.logger.info("no pickling issues detected")
+
+
+    def get_predecessors(self, var):
 
 
 
