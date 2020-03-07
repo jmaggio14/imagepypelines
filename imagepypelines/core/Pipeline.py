@@ -81,7 +81,7 @@ class Pipeline(object):
                 raise TypeError(msg)
 
             self.vars[var] = {'predecessors':set(),
-                                'task':None, # will always be defined
+                                'task_id':None, # will always be defined
                                 'task_processor':None # will always be defined
                                 }
 
@@ -138,7 +138,7 @@ class Pipeline(object):
                 # add this variables task to it's attrs
                 # these vars will not have any predecessors
                 for output in outputs:
-                    self.vars[output]['task'] = node_uuid
+                    self.vars[output]['task_id'] = node_uuid
                     self.vars[output]['task_processor'] = definition
 
                 # add the input 'task' to the graph
@@ -167,7 +167,7 @@ class Pipeline(object):
 
                 node_uuid = task.name + uuid4().hex + '-node'
                 for output in outputs:
-                    self.vars[output]['task'] = node_uuid
+                    self.vars[output]['task_id'] = node_uuid
                     self.vars[output]['task_processor'] = task
 
                 # add the task to the graph
@@ -192,7 +192,7 @@ class Pipeline(object):
             for input_index, input_name in enumerate(node_b_attrs['inputs']):
                 # first we identify an upstream node by looking up what task
                 # created them
-                node_a = self.vars[input_name]['task']
+                node_a = self.vars[input_name]['task_id']
                 node_a_attrs = self.graph.nodes[ node_a ]
 
                 # draw the edge FOR THIS INPUT from node_a to node_b
@@ -281,6 +281,9 @@ class Pipeline(object):
                 # populate upstream edges with the data we need
                 # get the output names
                 out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
+                # URGENT!
+                # NOTE: this won't work in all cases!
+                # multiple edges can be connected to one output_index!
                 out_edges_sorted = {e['output_index'] : e for e in out_edges}
                 out_edges_sorted = [out_edges_sorted[k] for k in sorted(out_edges_sorted.keys())]
                 # NEED ERROR CHECKING HERE
@@ -391,7 +394,35 @@ class Pipeline(object):
 
 
     def get_predecessors(self, var):
+        # retrieve all prior tasks using a depth finding algorithm
+        task_id = self.vars[var]["task_id"]
+        prior_nodes = nx.dfs_predecessors(self.graph, task_id)
+        # NOTE: if this doesn't work, we can calculate in edges using
+        # if self.graph.in_degree(node) > 0:
+        #     fetch incoming edges
+        #     recursively iterate through every incomin node
+        #     add var_names to a set
+        # append the task that created this variable
+        prior_nodes.append(self.vars[var]["task_id"])
 
+        # we need to get the var_names on all incoming edges to these
+        # nodes these variables must be populated
+        preds = set()
+        for node in prior_tasks:
+            for _,_,edge in self.graph.in_edges(node,data=True):
+                preds.add(edge['var_name'])
+
+        return predsw
+
+
+        # pipeline_block = Pipeline.block("name of output1","name of output2")
+        # pipeline.dont_delete = True
+        # Data.fetch(pop=not self.dont_delete)
+        # pipeline.process_and_fetch(outputs)
+
+
+    def get_successors(self, var):
+        pass
 
 
     ################################ properties ################################
