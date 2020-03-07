@@ -394,35 +394,40 @@ class Pipeline(object):
 
 
     def get_predecessors(self, var):
-        # retrieve all prior tasks using a depth finding algorithm
-        task_id = self.vars[var]["task_id"]
-        prior_nodes = nx.dfs_predecessors(self.graph, task_id)
-        # NOTE: if this doesn't work, we can calculate in edges using
-        # if self.graph.in_degree(node) > 0:
-        #     fetch incoming edges
-        #     recursively iterate through every incomin node
-        #     add var_names to a set
-        # append the task that created this variable
-        prior_nodes.append(self.vars[var]["task_id"])
-
-        # we need to get the var_names on all incoming edges to these
-        # nodes these variables must be populated
+        # define a recursive function to get edges from all predecessor nodes
         preds = set()
-        for node in prior_tasks:
-            for _,_,edge in self.graph.in_edges(node,data=True):
-                preds.add(edge['var_name'])
+        nodes_checked = []
+        def _get_priors(node):
+            for node_a,node_b,var_name in self.graph.in_edges(node,'var_name'):
+                preds.add(var_name)
+                # recursively add edges from the source node
+                if node_a not in nodes_checked:
+                    _get_priors(node_a)
 
-        return predsw
+            nodes_checked.append(node)
 
+        _get_priors(self.vars[var]['task_id'])
 
-        # pipeline_block = Pipeline.block("name of output1","name of output2")
-        # pipeline.dont_delete = True
-        # Data.fetch(pop=not self.dont_delete)
-        # pipeline.process_and_fetch(outputs)
-
+        return preds
 
     def get_successors(self, var):
-        pass
+        # define a recursive function to get edges from all successor nodes
+        succs = set()
+        nodes_checked = []
+        def _get_latters(node):
+            for node_a,node_b,var_name in self.graph.out_edges(node,'var_name'):
+                succs.add(var_name)
+                # recursively add edges from the source node
+                if node_b not in nodes_checked:
+                    _get_latters(node_b)
+
+            nodes_checked.append(node)
+
+        _get_latters(self.vars[var]['task_id'])
+
+        # remove the name of the variable
+        succs.remove(var)
+        return succs
 
 
     ################################ properties ################################

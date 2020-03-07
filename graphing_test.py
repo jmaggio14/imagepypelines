@@ -40,6 +40,13 @@ assert processed1 == processed2
 
 import pdb; pdb.set_trace()
 
+
+# pipeline_block = Pipeline.block("name of output1","name of output2")
+# pipeline.dont_delete = True
+# Data.fetch(pop=not self.dont_delete)
+# pipeline.process_and_fetch(outputs)
+
+
 ########################################################################
 # TEST 2 - image processing blocks test
 # img_proc_tasks =
