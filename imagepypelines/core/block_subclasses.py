@@ -99,11 +99,10 @@ class FuncBlock(Block):
 ################################################################################
 class Input(Block):
     def __init__(self,index=None):
-        self.index = index
+        self.set_index(index)
         self.data = None
         self.loaded = False
-        name = "Input" + str(self.index)
-        super().__init__(name=name, batch_size="all")
+        super().__init__(name=self.name, batch_size="all")
 
     def process(self):
         if self.data is None:
@@ -123,6 +122,10 @@ class Input(Block):
         attrs['color'] = 'blue'
         attrs['shape'] = 'pentagon'
         return attrs
+
+    def set_index(self,index):
+        self.index = index
+        self.name = "Input" + str(self.index)
 
 ################################################################################
 class Leaf(Block):
