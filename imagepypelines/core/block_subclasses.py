@@ -88,7 +88,7 @@ class FuncBlock(Block):
         return self.func.__name__+"FuncBlock"
 
     @property
-    def inputs(self):
+    def args(self):
         # save the argspec in an instance variable if it hasn't been computed
         if not self._arg_spec:
             self._arg_spec = inspect.getfullargspec(self.func)

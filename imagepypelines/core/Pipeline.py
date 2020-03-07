@@ -60,12 +60,12 @@ class Pipeline(object):
 
         # PROCESS / internal tracking
         self.indexed_inputs = []
-        self.kwonly_inputs = []
+        self.keyword_inputs = []
         self.inputs = {}
         self.update(tasks)
 
 
-    def update(self, task={}):
+    def update(self, tasks={}):
         ########################################################################
         #                           HELPER FUNCTIONS
         ########################################################################
@@ -80,11 +80,11 @@ class Pipeline(object):
                 self.logger.error(msg)
                 raise TypeError(msg)
 
-            self.vars[var] = {'task_id':None, # will always be defined
-                                'task_processor':None # will always be defined
+            self.vars[var] = {'block_node_id':None, # will always be defined
+                                'block':None # will always be defined
                                 }
 
-        def _add_input(inpt, node_uuid):
+        def _add_input(inpt, outputs, node_uuid):
             # track what inputs are required so we can populate
             # them with arguments in self.process
             if len(outputs) != 1:
@@ -93,7 +93,7 @@ class Pipeline(object):
                 raise RuntimeError(msg)
 
             # add the input block to a tracking dictionary
-            self.inputs[outputs[0]] = node_uuid
+            self.inputs[outputs[0]] = inpt
 
         # ======================================================================
         #                           GRAPH CONSTRUCTION
@@ -120,86 +120,62 @@ class Pipeline(object):
         #                    Add all the task nodes to the graph
         ########################################################################
         # reiterate through the graph definition to define inputs and outputs
-        for outputs,definition in tasks.items():
+        for outputs,task in tasks.items():
             # make a single value into a list to simplify code
             if not isinstance(outputs, (tuple,list)):
-                outputs = [outputs]
-
-            # GETTING GRAPH INPUTS
-            if isinstance(definition, Block):
-                node_uuid = definition.name + uuid4().hex + '-node'
-                # check if we are dealing with an input
-                # e.g. - 'x': ip.Input(),
-                # otherwise we are dealing with a block with no inputs
-                if isinstance(definition, Input):
-                    _add_input(definition, node_uuid)
-
-                # add this variables task to it's attrs
-                # these vars will not have any predecessors
-                for output in outputs:
-                    self.vars[output]['task_id'] = node_uuid
-                    self.vars[output]['task_processor'] = definition
-
-                # add the input 'task' to the graph
-                # inputs will not have any inputs (ironically)
-                # as these inputs are psuedo-blocks for data supplied by the user
-                self.graph.add_node(node_uuid,
-                                    task_processor=definition,
-                                    inputs=tuple(),
-                                    outputs=outputs,
-                                    **definition.get_default_node_attrs(),)
-
-
+                outputs = (outputs,)
+            if not isinstance(task, (tuple,list)):
+                task = (task,)
 
             # e.g. - 'z': (block, 'x', 'y'),
-            elif isinstance(definition, (tuple,list)):
-                task = definition[0]
-                args = definition[1:]
-                node_uuid = task.name + uuid4().hex + '-node'
-                # if we have a tuple input, then the first value MUST be a task
-                if not isinstance(task, Block):
+            if isinstance(task, (tuple,list)):
+                block = task[0]
+                args = task[1:]
+                node_uuid = block.name + uuid4().hex + '-node'
+                # if we have a tuple input, then the first value MUST be a block
+                if not isinstance(block, Block):
                     raise TypeError("first value in any graph definition tuple must be a Block")
 
-                # check if this task is an "Input" Block - this is a special case
+                # check if this block is an "Input" Block - this is a special case
                 # e.g. - 'x': (ip.Input(),)
-                if isinstance(task, Input):
-                    _add_input(task, node_uuid)
+                if isinstance(block, Input):
+                    _add_input(block, outputs, node_uuid)
                     if len(args) != 0:
                         raise RuntimeError("Input blocks cannot take any arguments")
 
                 for output in outputs:
-                    self.vars[output]['task_id'] = node_uuid
-                    self.vars[output]['task_processor'] = task
+                    self.vars[output]['block_node_id'] = node_uuid
+                    self.vars[output]['block'] = block
 
                 # add the task to the graph
                 self.graph.add_node(node_uuid,
-                                    task_processor=task,
-                                    inputs=args,
+                                    block=block,
+                                    args=args,
                                     outputs=outputs,
-                                    **task.get_default_node_attrs(),
+                                    **block.get_default_node_attrs(),
                                     )
 
             else: # something other than a block or of tuple (block, var1, var2,...)
                 raise RuntimeError("invalid task definition, must be block or tuple: (block, 'var1', 'var2',...)")
 
         ########################################################################
-        #             Draw any new edges required for all task nodes
+        #             Draw any new edges required for all block nodes
         ########################################################################
         # THIRD FOR LOOP - drawing edges
         for node_b,node_b_attrs in self.graph.nodes(data=True):
             # draw an edge for every input into this node
-            for input_index, input_name in enumerate(node_b_attrs['inputs']):
+            for in_index, arg_name in enumerate(node_b_attrs['args']):
                 # first we identify an upstream node by looking up what task
                 # created them
-                node_a = self.vars[input_name]['task_id']
+                node_a = self.vars[arg_name]['block_node_id']
                 node_a_attrs = self.graph.nodes[ node_a ]
 
                 # draw the edge FOR THIS INPUT from node_a to node_b
-                processor_arg_name = node_b_attrs['task_processor'].inputs[input_index]
-                output_index = node_a_attrs['outputs'].index(input_name)
+                block_arg_name = node_b_attrs['block'].args[in_index]
+                out_index = node_a_attrs['outputs'].index(arg_name)
 
-                # edge key is {var_name}:{output_index}-->{input_index}
-                edge_key = "{}:{}-->{}".format(var_name, output_index, input_index)
+                # edge key is {var_name}:{out_index}-->{in_index}
+                edge_key = "{}:{}-->{}".format(arg_name, out_index, in_index)
 
                 # draw the edge if it doesn't already exist
                 if not self.graph.has_edge(node_a,node_b,edge_key):
@@ -208,10 +184,10 @@ class Pipeline(object):
                                         # key
                                         key=edge_key,
                                         # attributes
-                                        var_name = input_name, # name assigned in graph definition
-                                        input_index = input_index,
-                                        output_index = output_index,
-                                        name = processor_arg_name, # name of node_b's process argument at the index
+                                        var_name = arg_name, # name assigned in graph definition
+                                        out_index = out_index,
+                                        in_index = in_index,
+                                        name = block_arg_name, # name of node_b's process argument at the index
                                         data = None, # none is a placeholder value. it will be populated
                                         )
 
@@ -231,10 +207,10 @@ class Pipeline(object):
             if self.graph.out_degree(node) > 0:
                 continue
             # if the end node is a Leaf already, then we don't need another leaf
-            elif isinstance(attrs['task_processor'],Leaf):
-                continue
+            elif isinstance(attrs['block'],Leaf):
+                    continue
             else:
-                end_nodes.append(node)
+                end_nodes.append( (node,attrs) )
 
         for node,node_attrs in end_nodes:
             # this is a final node of the pipeline, so we need to draw a
@@ -244,21 +220,21 @@ class Pipeline(object):
                 leaf = Leaf(end_name)
                 leaf_uuid = leaf.name + uuid4().hex + '-node'
                 self.graph.add_node(leaf_uuid,
-                                    task_processor=leaf,
-                                    inputs=(end_name,),
+                                    block=leaf,
+                                    args=(end_name,),
                                     outputs=(end_name,),
                                     **leaf.get_default_node_attrs()
                                     )
 
-                # edge key is {var_name}:{output_index}-->{input_index}
+                # edge key is {var_name}:{out_index}-->{in_index}
                 edge_key = "{}:{}-->{}".format(end_name, i, 0)
                 # draw the edge to the leaf
                 # no need to check if it exists, because we just created the Leaf
                 self.graph.add_edge(node,
                                     leaf_uuid,
                                     var_name=end_name, # name assigned in graph definition
-                                    input_index=0,
-                                    output_index=i,
+                                    out_index=i,
+                                    in_index=0,
                                     name=end_name, # name of node_b's process argument at the index
                                     data=None)
 
@@ -269,21 +245,19 @@ class Pipeline(object):
         ########################################################################
         # reset old index tracking lists
         self.indexed_inputs = []
-        self.kwonly_inputs = []
-        # fetch all the input objects in the graph
-        all_inputs = [self.graph.nodes[node_id]['task_processor'] for node_id in self.inputs]
-        # sort the inputs into kwonly and indexed
-        for inpt in all_inputs:
+        self.keyword_inputs = []
+        # sort the inputs into keyword and indexed
+        for inpt_name, inpt in self.inputs.items():
             # check if the input index is defined
-            if inpt.index:
-                self.indexed_inputs.append(inpt)
+            if isinstance(inpt.index,int):
+                self.indexed_inputs.append(inpt_name)
             else:
-                self.kwonly_inputs.append(inpt)
+                self.keyword_inputs.append(inpt_name)
 
         # sort the positonal inputs by index
         self.indexed_inputs.sort(key=lambda x: self.inputs[x].index)
         # sort keyword only inputs alphabetically
-        self.kwonly_inputs.sort()
+        self.keyword_inputs.sort()
 
 
         # check to make sure an input index isn't defined twice
@@ -301,14 +275,19 @@ class Pipeline(object):
             self.logger.error(msg)
             raise RuntimeError(msg)
 
+        # log the current pipeline status
+        self.logger.info("{} defined with inputs {}".format(self.name, self.args))
 
-        self.logger.info("{} defined with inputs {}".format(self.name, self.indexed_inputs + self.kwonly_inputs))
+
+
+
+
 
     def _compute(self):
         for node_a, node_b, edge_idx in self.execution_order:
             # get actual objects instead of just graph ids
-            task_a = self.graph.nodes[node_a]['task_processor']
-            task_b = self.graph.nodes[node_b]['task_processor']
+            block_a = self.graph.nodes[node_a]['block']
+            block_b = self.graph.nodes[node_b]['block']
             edge = self.graph.edges[node_a, node_b, edge_idx]
 
             # check if node_a is a root node (no incoming edges)
@@ -317,27 +296,27 @@ class Pipeline(object):
             # NOTE: this will currently break if a root has more than one
             # output - JM
             if self.graph.in_degree(node_a) == 0:
-                # no input data is needed
-                edge['data'] = Data( task_a._pipeline_process(logger=self.logger)[0] )
+                # no arg data is needed
+                edge['data'] = Data( block_a._pipeline_process(logger=self.logger)[0] )
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b,data=True)
             if all((e[2]['data'] is not None) for e in in_edges):
                 # fetch input data for this node
                 in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
-                input_data_dict = {e['input_index'] : e['data'] for e in in_edges}
-                inputs = [input_data_dict[k] for k in sorted( input_data_dict.keys() )]
+                arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
+                args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
-                outputs = task_b._pipeline_process(*inputs, logger=self.logger)
+                outputs = block_b._pipeline_process(*args, logger=self.logger)
 
                 # populate upstream edges with the data we need
                 # get the output names
                 out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
                 # URGENT!
                 # NOTE: this won't work in all cases!
-                # multiple edges can be connected to one output_index!
-                out_edges_sorted = {e['output_index'] : e for e in out_edges}
+                # multiple edges can be connected to one out_index!
+                out_edges_sorted = {e['out_index'] : e for e in out_edges}
                 out_edges_sorted = [out_edges_sorted[k] for k in sorted(out_edges_sorted.keys())]
                 # NEED ERROR CHECKING HERE
                 # (psuedo) if n_out == n_expected_out
@@ -352,10 +331,11 @@ class Pipeline(object):
         # --------------------------------------------------------------
         # STORING INPUTS - inside the input nodes
         # --------------------------------------------------------------
+        all_inputs = self.args
         # store positonal arguments fed in
         ## NOTE: need error checking here (number of inputs, etc)
         for i,data in enumerate(pos_data):
-            inpt = self.inputs[ self.indexed_inputs[i] ]
+            inpt = self.inputs[ all_inputs[i] ]
             # check if the data has already been loaded
             if inpt.loaded:
                 self.logger.error(self.indexed_inputs[i] + " has already been loaded")
@@ -409,15 +389,15 @@ class Pipeline(object):
         """
         static = {}
         for _,attrs in self.graph.nodes(data=True):
-            input_vars = tuple(attrs['inputs'])
-            output_vars = tuple(attrs['outputs'])
-            task_processor = attrs['task_processor']
+            arg_vars = tuple(attrs['args'])
+            out_vars = tuple(attrs['outputs'])
+            block = attrs['block']
 
             # ignore leaf blocks
-            if isinstance(task_processor, Leaf):
+            if isinstance(block, Leaf):
                 continue
 
-            static[output_vars] = (task_processor,) + input_vars
+            static[out_vars] = (block,) + arg_vars
 
         return static
 
@@ -461,7 +441,7 @@ class Pipeline(object):
 
             nodes_checked.append(node)
 
-        _get_priors(self.vars[var]['task_id'])
+        _get_priors(self.vars[var]['block_node_id'])
 
         return preds
 
@@ -480,7 +460,7 @@ class Pipeline(object):
 
             nodes_checked.append(node)
 
-        _get_latters(self.vars[var]['task_id'])
+        _get_latters(self.vars[var]['block_node_id'])
 
         # remove the name of the variable
         succs.remove(var)
@@ -491,7 +471,6 @@ class Pipeline(object):
         self.inputs[var].set_index(index)
         self.update()
 
-
     ################################ properties ################################
     @property
     def id(self):
@@ -500,6 +479,14 @@ class Pipeline(object):
     @property
     def execution_order(self):
         return nx.topological_sort( nx.line_graph(self.graph) )
+
+    @property
+    def args(self):
+        return self.indexed_inputs + self.keyword_inputs
+
+
+
+
 
 
 

@@ -66,7 +66,7 @@ class Block(object):
 
         # root blocks don't need input data, and won't have any data
         # passed in to batch. We only call process once for these
-        if len(self.inputs) == 0:
+        if self.n_args == 0:
             # Note: I think this will lead to errors for block with
             # more than one output, but no inputs - JM
             ret = tuple(self.process() for i in range(1))
@@ -103,7 +103,7 @@ class Block(object):
 
 
     @property
-    def inputs(self):
+    def args(self):
         if self._arg_spec is None:
             self._arg_spec = inspect.getfullargspec(self.process)
         # save the argspec in an instance variable if it hasn't been computed
@@ -111,6 +111,11 @@ class Block(object):
             return []
         else:
             return self._arg_spec.args[1:] # ignoring 'self'
+
+
+    @property
+    def n_args(self):
+        return len(self.args)
 
 
     @property
