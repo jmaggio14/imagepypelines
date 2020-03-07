@@ -269,14 +269,16 @@ class Pipeline(object):
             raise RuntimeError(msg)
 
         # check to make sure input indexes are consecutive (don't skip)
-        if max(indices_used) + 1 != len(indices_used):
-            # Note: add more verbose error message
-            msg = "Input indices must be consecutive"
-            self.logger.error(msg)
-            raise RuntimeError(msg)
+        if len(indices_used) > 0:
+            if max(indices_used) + 1 != len(indices_used):
+                # Note: add more verbose error message
+                msg = "Input indices must be consecutive"
+                self.logger.error(msg)
+                raise RuntimeError(msg)
 
         # log the current pipeline status
-        self.logger.info("{} defined with inputs {}".format(self.name, self.args))
+        msg = "{} tasks set up; process arguments are ({})".format(len(tasks), ', '.join(self.args))
+        self.logger.info(msg)
 
 
 
@@ -338,7 +340,7 @@ class Pipeline(object):
             inpt = self.inputs[ all_inputs[i] ]
             # check if the data has already been loaded
             if inpt.loaded:
-                self.logger.error(self.indexed_inputs[i] + " has already been loaded")
+                self.logger.error("'%s' has already been loaded" % self.indexed_inputs[i])
                 raise RuntimeError()
             inpt.load(data)
 
@@ -348,7 +350,7 @@ class Pipeline(object):
             inpt = self.inputs[key]
             # check if the data has already been loaded
             if inpt.loaded:
-                self.logger.error(key + " has already been loaded")
+                self.logger.error("'%s' has already been loaded" % key)
                 raise RuntimeError()
             inpt.load(val)
 

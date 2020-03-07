@@ -13,7 +13,7 @@ def minus_val(a,b,value):
 tasks = {
         # inputs
         'zero' : ip.Input(0),
-        'one' : ip.Input(1),
+        'one' : ip.Input(),
         # operations
         ('ten','eleven') : (add_val, 'zero', 'one'),
         ('twenty','eleven2') : (add_val, 'ten', 'one'),
@@ -23,22 +23,22 @@ tasks = {
         }
 
 # pipeline1 - raw construction
-pipeline1 = ip.Pipeline(tasks, 'AddMinus')
+pipeline1 = ip.Pipeline(tasks, 'Pipeline1')
 # pipeline1.draw(show=True)
 
-processed1 = pipeline1.process([0,0], one=[1,1])
-print(processed1)
+processed1 = pipeline1.process([0,0], [1,1])
+# print(processed1)
 
 
 # pipeline2 - construction from static represenation
 static_constructor = pipeline1.get_static_representation()
 
-pipeline2 = ip.Pipeline(static_constructor)
+pipeline2 = ip.Pipeline(static_constructor,name="Pipeline2")
 processed2 = pipeline2.process([0,0], one=[1,1])
 
 assert processed1 == processed2
 
-import pdb; pdb.set_trace()
+# import pdb; pdb.set_trace()
 
 
 # pipeline_block = Pipeline.block("name of output1","name of output2")
