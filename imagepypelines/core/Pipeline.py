@@ -19,7 +19,7 @@ import base64
 import json
 
 class Pipeline(object):
-    """processing pipeline manager for simple algorithm construction
+    """processing algorithm manager for simple pipeline construction
 
     The Pipeline is t
 
@@ -27,45 +27,57 @@ class Pipeline(object):
     Attributes:
         uuid(str): hex uuid for this pipeline
         name(str): user specified name for this pipeline, used to generate
-            the logger_name. defaults to "Pipeline" or the name of your subclass
-        logger_name(str): unique name for this pipeline's logger. Generated from
-            a combination of name and uuid
-        logger(:obj:`ip.ImagepypelinesLogger`): Logger object for this pipeline
+            the unique id. defaults to "Pipeline" or the name of your subclass
+        logger(:obj:`ImagepypelinesLogger`): Logger object for this pipeline
+        graph(:obj:`networkx.MultiDiGraph`):
+        vars(dict):
+        indexed_inputs(:obj:`list` of :obj:'str'):
+        keyword_inputs(:obj:`list` of :obj:'str'):
+        _inputs(dict):
+
 
     """
     def __init__(self, tasks={}, name=None):
         """initializes the pipeline with a user-provided graph (tasks)
 
         Args:
-            tasks (dict): graph definition to construct this pipeline
+            tasks (dict): dictionary of tasks to define this pipeline's graph
             name (str): name used to generate the logger name
-
         """
-        # setup absolutely unique id for this block
-        # this will change even if the block is copied or pickled
         self.uuid = uuid4().hex # unique univeral hex ID for this pipeline
-        # ----------- building a unique name for this block ------------
-        # name is set up as follows
-        # <readable_name>-<sibling_id>-<uuid>
         if name is None:
             name = self.__class__.__name__
-        self.name = name # string name - used to generate the logger_name
+        self.name = name # string name - used to generate the id
 
         # build the logger for this pipeline
-        self.logger = get_logger( self.id )
+        self.logger = get_logger( self.id ) # logging object
 
         # GRAPHING
-        self.graph = nx.MultiDiGraph()
-        self.vars = {}
+        self.graph = nx.MultiDiGraph() # networkx graph keeping track of tasks
+        self.vars = {} # dict of var_names and the nodes that create them
 
         # PROCESS / internal tracking
-        self.indexed_inputs = []
-        self.keyword_inputs = []
-        self.inputs = {}
+        self.indexed_inputs = [] # sorted list of indexed input variable names
+        self.keyword_inputs = [] # alphabetically sorted list of unindexed inputs
+        self._inputs = {} # dict of input_name: Input_object
         self.update(tasks)
 
 
+    ############################################################################
+    #                       primary frontend functions
+    ############################################################################
     def update(self, tasks={}):
+        """updates the pipeline's graph with a dict of tasks
+
+        `update` will modify and change many instance variables of the pipeline.
+        Despite its generic name, it can only add tasks to the pipeline, not
+        remove them. `update` is called internally to the pipeline during
+        instantiation.
+
+        Args:
+        tasks(dict): dictionary of tasks to define this pipeline's graph
+
+        """
         ########################################################################
         #                           HELPER FUNCTIONS
         ########################################################################
@@ -280,53 +292,16 @@ class Pipeline(object):
         msg = "{} tasks set up; process arguments are ({})".format(len(tasks), ', '.join(self.args))
         self.logger.info(msg)
 
-
-
-
-
-
-    def _compute(self):
-        for node_a, node_b, edge_idx in self.execution_order:
-            # get actual objects instead of just graph ids
-            block_a = self.graph.nodes[node_a]['block']
-            block_b = self.graph.nodes[node_b]['block']
-            edge = self.graph.edges[node_a, node_b, edge_idx]
-
-            # check if node_a is a root node (no incoming edges)
-            # these nodes can be computed and the edge populated
-            # immmediately because they have no predecessors
-            # NOTE: this will currently break if a root has more than one
-            # output - JM
-            if self.graph.in_degree(node_a) == 0:
-                # no arg data is needed
-                edge['data'] = Data( block_a._pipeline_process(logger=self.logger)[0] )
-
-            # compute this node if all the data is queued
-            in_edges = self.graph.in_edges(node_b,data=True)
-            if all((e[2]['data'] is not None) for e in in_edges):
-                # fetch input data for this node
-                in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
-                arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
-                args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
-
-                # assign the task outputs to their appropriate edge
-                outputs = block_b._pipeline_process(*args, logger=self.logger)
-
-                # populate upstream edges with the data we need
-                # get the output names
-                out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
-                # URGENT!
-                # NOTE: this won't work in all cases!
-                # multiple edges can be connected to one out_index!
-                out_edges_sorted = {e['out_index'] : e for e in out_edges}
-                out_edges_sorted = [out_edges_sorted[k] for k in sorted(out_edges_sorted.keys())]
-                # NEED ERROR CHECKING HERE
-                # (psuedo) if n_out == n_expected_out
-                for i,out_edge in enumerate(out_edges_sorted):
-                    out_edge['data'] = Data(outputs[i])
-
-
+    ############################################################################
     def process(self,*pos_data,**kwdata):
+        """processes input data through the pipeline
+
+        process first resets this pipeline, before loading input data into the
+        graph and processing it.
+
+        Note:
+            The argument list for the Pipeline can be found with `Pipeline.args`
+        """
         # reset all leftover data in this graph
         self.clear()
 
@@ -372,6 +347,7 @@ class Pipeline(object):
 
         return {edge['var_name'] : edge['data'].pop() for _,_,edge in self.graph.edges(data=True)}
 
+    ############################################################################
     def clear(self):
         """resets all edges in the graph, clears the inputs"""
         for _,_,edge in self.graph.edges(data=True):
@@ -380,11 +356,58 @@ class Pipeline(object):
         for inpt in self.inputs.values():
             inpt.unload()
 
+    ############################################################################
     def draw(self, show=True, ax=None):
         # visualize(self, show, ax)
         pass
 
-    ################################### util ###################################
+    ############################################################################
+    #                               internal
+    ############################################################################
+    def _compute(self):
+        """executes the graph tasks. Relies on Input data being preloaded"""
+        for node_a, node_b, edge_idx in self.execution_order:
+            # get actual objects instead of just graph ids
+            block_a = self.graph.nodes[node_a]['block']
+            block_b = self.graph.nodes[node_b]['block']
+            edge = self.graph.edges[node_a, node_b, edge_idx]
+
+            # check if node_a is a root node (no incoming edges)
+            # these nodes can be computed and the edge populated
+            # immmediately because they have no predecessors
+            # NOTE: this will currently break if a root has more than one
+            # output - JM
+            if self.graph.in_degree(node_a) == 0:
+                # no arg data is needed
+                edge['data'] = Data( block_a._pipeline_process(logger=self.logger)[0] )
+
+            # compute this node if all the data is queued
+            in_edges = self.graph.in_edges(node_b,data=True)
+            if all((e[2]['data'] is not None) for e in in_edges):
+                # fetch input data for this node
+                in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
+                arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
+                args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
+
+                # assign the task outputs to their appropriate edge
+                outputs = block_b._pipeline_process(*args, logger=self.logger)
+
+                # populate upstream edges with the data we need
+                # get the output names
+                out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
+                # URGENT!
+                # NOTE: this won't work in all cases!
+                # multiple edges can be connected to one out_index!
+                out_edges_sorted = {e['out_index'] : e for e in out_edges}
+                out_edges_sorted = [out_edges_sorted[k] for k in sorted(out_edges_sorted.keys())]
+                # NEED ERROR CHECKING HERE
+                # (psuedo) if n_out == n_expected_out
+                for i,out_edge in enumerate(out_edges_sorted):
+                    out_edge['data'] = Data(outputs[i])
+
+    ############################################################################
+    #                               util
+    ############################################################################
     def get_static_representation(self):
         """generates a dictionary represenation of the pipeline, which can be
         used to make other pipelines.
@@ -403,7 +426,65 @@ class Pipeline(object):
 
         return static
 
+    ############################################################################
+    def get_predecessors(self, var):
+        """fetches the names of the variables which must be computed/loaded
+        before the given variable can be computed.
 
+        Args:
+            var(str): name of variable to find predecessors
+
+        Returns:
+            set: an unordered set of the variables that must be computed before
+                the given variable can be calculated.
+        """
+        # NOTE: we could possibly speed this function up by using a depth
+        # finding algorithm instead?
+        # define a recursive function to get edges from all predecessor nodes
+        preds = set()
+        nodes_checked = []
+        def _get_priors(node):
+            for node_a,node_b,var_name in self.graph.in_edges(node,'var_name'):
+                preds.add(var_name)
+                # recursively add edges from the source node
+                if node_a not in nodes_checked:
+                    _get_priors(node_a)
+
+            nodes_checked.append(node)
+
+        _get_priors(self.vars[var]['block_node_id'])
+
+        return preds
+
+    ############################################################################
+    def get_successors(self, var):
+        # NOTE: we could possibly speed this function up by using a depth
+        # finding algorithm instead?
+        # define a recursive function to get edges from all successor nodes
+        succs = set()
+        nodes_checked = []
+        def _get_latters(node):
+            for node_a,node_b,var_name in self.graph.out_edges(node,'var_name'):
+                succs.add(var_name)
+                # recursively add edges from the source node
+                if node_b not in nodes_checked:
+                    _get_latters(node_b)
+
+            nodes_checked.append(node)
+
+        _get_latters(self.vars[var]['block_node_id'])
+
+        # remove the name of the variable
+        succs.remove(var)
+        return succs
+
+    ############################################################################
+    def assign_input_index(self, var, index):
+        # reset the input index to a new one
+        self._inputs[var].set_index(index)
+        self.update()
+
+    ############################################################################
     def debug_pickle(self, pickle_protocol=pickle.HIGHEST_PROTOCOL):
         """helper function to debug what part of a block is not serializable"""
         error = False
@@ -428,62 +509,30 @@ class Pipeline(object):
             self.logger.info("no pickling issues detected")
 
 
-    def get_predecessors(self, var):
-        # NOTE: we could possibly speed this function up by using a depth
-        # finding algorithm instead?
-        # define a recursive function to get edges from all predecessor nodes
-        preds = set()
-        nodes_checked = []
-        def _get_priors(node):
-            for node_a,node_b,var_name in self.graph.in_edges(node,'var_name'):
-                preds.add(var_name)
-                # recursively add edges from the source node
-                if node_a not in nodes_checked:
-                    _get_priors(node_a)
-
-            nodes_checked.append(node)
-
-        _get_priors(self.vars[var]['block_node_id'])
-
-        return preds
-
-    def get_successors(self, var):
-        # NOTE: we could possibly speed this function up by using a depth
-        # finding algorithm instead?
-        # define a recursive function to get edges from all successor nodes
-        succs = set()
-        nodes_checked = []
-        def _get_latters(node):
-            for node_a,node_b,var_name in self.graph.out_edges(node,'var_name'):
-                succs.add(var_name)
-                # recursively add edges from the source node
-                if node_b not in nodes_checked:
-                    _get_latters(node_b)
-
-            nodes_checked.append(node)
-
-        _get_latters(self.vars[var]['block_node_id'])
-
-        # remove the name of the variable
-        succs.remove(var)
-        return succs
-
-    def assign_input_index(self, var, index):
-        # reset the input index to a new one
-        self.inputs[var].set_index(index)
-        self.update()
-
-    ################################ properties ################################
+    ############################################################################
+    #                               properties
+    ############################################################################
     @property
     def id(self):
+        """str: an unique id for this pipeline
+
+        This id is a combination of the pipeline's non-unique name and
+        part of it's uuid (last 6 characters by default).
+        The entropy of this id can be increased by increasing ImagePypelines
+        UUID_ORDER variable
+        """
         return "{}#{}".format(self.name,self.uuid[-UUID_ORDER:])
 
+    ############################################################################
     @property
     def execution_order(self):
+        """:obj:`Generator`: topologically sorted edges of the pipeline"""
         return nx.topological_sort( nx.line_graph(self.graph) )
 
+    ############################################################################
     @property
     def args(self):
+        """:obj:`list` of :obj:`str`: arguments in the order they are expected"""
         return self.indexed_inputs + self.keyword_inputs
 
 
