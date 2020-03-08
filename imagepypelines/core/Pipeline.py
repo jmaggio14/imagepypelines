@@ -21,7 +21,7 @@ import json
 class Pipeline(object):
     """processing algorithm manager for simple pipeline construction
 
-    The Pipeline is t
+    < RYAN I NEED YOU HERE >
 
 
     Attributes:
@@ -29,11 +29,56 @@ class Pipeline(object):
         name(str): user specified name for this pipeline, used to generate
             the unique id. defaults to "Pipeline" or the name of your subclass
         logger(:obj:`ImagepypelinesLogger`): Logger object for this pipeline
-        graph(:obj:`networkx.MultiDiGraph`):
-        vars(dict):
-        indexed_inputs(:obj:`list` of :obj:'str'):
-        keyword_inputs(:obj:`list` of :obj:'str'):
-        _inputs(dict):
+        graph(:obj:`networkx.MultiDiGraph`): Multi-Edge directed task graph
+            which stores all data and algorithmic order
+        vars(dict): dict to track the block that generates the each variable,
+            keys are variable names, values are a subdictionary containing
+            'block_node_id' and 'block'
+        indexed_inputs(:obj:`list` of :obj:'str'): sorted list of indexed input
+            variable names. (the indexed arguments for the process function)
+        keyword_inputs(:obj:`list` of :obj:'str'): alphabetically sorted list of
+            unindexed input variable names (the keyword arguments for the
+            process function)
+        _inputs(dict): dictionary internally to access Input objects used to
+            queue data into the pipeline
+
+
+    Example:
+        >>> import imagepypelines as ip
+        >>>
+        >>> @ip.blockify( kwargs=dict(value=10) )
+        >>> def add_val(a,b,value):
+        >>>     return a+value, b+value
+        >>>
+        >>> @ip.blockify( kwargs=dict(value=5) )
+        >>> def minus_val(a,b,value):
+        >>>     return a-value, b-value
+        >>>
+        >>> tasks = {
+        >>>         # inputs
+        >>>         'zero' : ip.Input(0),
+        >>>         'one' : ip.Input(1),
+        >>>         # operations
+        >>>         ('ten','eleven') : (add_val, 'zero', 'one'),
+        >>>         ('twenty','eleven2') : (add_val, 'ten', 'one'),
+        >>>         ('fifteen', 'six') : (minus_val, 'twenty', 'eleven'),
+        >>>         ('twentyfive','twentyone') : (add_val, 'fifteen','eleven2'),
+        >>>         ('negativefour', 'negativefive') : (minus_val, 'one', 'zero'),
+        >>>         }
+        >>>
+        >>> # pipeline1 - raw construction
+        >>> pipeline1 = ip.Pipeline(tasks, 'Pipeline1')
+        >>> # pipeline1.draw(show=True)
+        >>>
+        >>> processed1 = pipeline1.process([0,0], [1,1])
+        >>> # print(processed1)
+        >>>
+        >>>
+        >>> # pipeline2 - construction from static represenation
+        >>> static_constructor = pipeline1.get_static_representation()
+        >>>
+        >>> pipeline2 = ip.Pipeline(static_constructor, name="Pipeline2")
+        >>> processed2 = pipeline2.process([0,0], one=[1,1])
 
 
     """
@@ -432,7 +477,7 @@ class Pipeline(object):
         before the given variable can be computed.
 
         Args:
-            var(str): name of variable to find predecessors
+            var(str): name of variable to find predecessors for
 
         Returns:
             set: an unordered set of the variables that must be computed before
@@ -458,6 +503,16 @@ class Pipeline(object):
 
     ############################################################################
     def get_successors(self, var):
+        """fetches the names of the variables which depend on this variable
+        before they can be computed
+
+        Args:
+            var(str): name of variable to find successors for
+
+        Returns:
+            set: an unordered set of the variables that can only be computed
+                once the given variable has been
+        """
         # NOTE: we could possibly speed this function up by using a depth
         # finding algorithm instead?
         # define a recursive function to get edges from all successor nodes
@@ -480,6 +535,7 @@ class Pipeline(object):
 
     ############################################################################
     def assign_input_index(self, var, index):
+        """reassigns the index for this variable in the process argument list"""
         # reset the input index to a new one
         self._inputs[var].set_index(index)
         self.update()
@@ -495,7 +551,7 @@ class Pipeline(object):
         # rebuild the static graph with pickled blocks
         raise_error = False
         pickled_static = {}
-        for outputs,task in static.items():
+        for task in static.values():
             block = task[0]
             # iterate through every value in the block's __dict__
             for key,val in block.__dict__.items():

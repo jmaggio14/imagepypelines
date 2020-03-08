@@ -1,6 +1,4 @@
 import imagepypelines as ip
-import networkx as nx
-import numpy as np
 
 @ip.blockify( kwargs=dict(value=10) )
 def add_val(a,b,value):
@@ -13,7 +11,7 @@ def minus_val(a,b,value):
 tasks = {
         # inputs
         'zero' : ip.Input(0),
-        'one' : ip.Input(),
+        'one' : ip.Input(1),
         # operations
         ('ten','eleven') : (add_val, 'zero', 'one'),
         ('twenty','eleven2') : (add_val, 'ten', 'one'),
@@ -33,7 +31,7 @@ processed1 = pipeline1.process([0,0], [1,1])
 # pipeline2 - construction from static represenation
 static_constructor = pipeline1.get_static_representation()
 
-pipeline2 = ip.Pipeline(static_constructor,name="Pipeline2")
+pipeline2 = ip.Pipeline(static_constructor, name="Pipeline2")
 processed2 = pipeline2.process([0,0], one=[1,1])
 
 assert processed1 == processed2
