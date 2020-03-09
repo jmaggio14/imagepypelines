@@ -8,8 +8,10 @@
 
 
 class PipelineError(RuntimeError):
+    """Error raised within a Pipeline"""
     pass
 
 
 class BlockError(RuntimeError):
+    """Error raised within a Block"""
     pass

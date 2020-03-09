@@ -40,8 +40,8 @@ from .img_tools import high_pass
 from .img_tools import Viewer
 
 # imports.py
-from .imports import import_tensorflow
-from .imports import import_opencv
+# from .imports import import_tensorflow
+# from .imports import import_opencv
 
 # io_tools.py
 # --- standard imagery ---

@@ -123,7 +123,7 @@ class Pipeline(object):
         instantiation.
 
         Args:
-        tasks(dict): dictionary of tasks to define this pipeline's graph
+            tasks(dict): dictionary of tasks to define this pipeline's graph
 
         """
         ########################################################################
@@ -341,7 +341,7 @@ class Pipeline(object):
         self.logger.info(msg)
 
     ############################################################################
-    def process(self,*pos_data,**kwdata):
+    def process(self, *pos_data, **kwdata):
         """processes input data through the pipeline
 
         process first resets this pipeline, before loading input data into the
