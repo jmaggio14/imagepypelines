@@ -4,19 +4,22 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from ..Logger import get_logger
+from ..Logger import get_logger, error as iperror
 from .Block import Block
 from .Data import Data
 from .block_subclasses import Block, Input, Leaf
 from .constants import UUID_ORDER
+from .io_tools import passgen
+
+from cryptography.fernet import Fernet
 
 import inspect
 import numpy as np
 from uuid import uuid4
 import networkx as nx
 import pickle
-import base64
 import json
+import hashlib
 
 class Pipeline(object):
     """processing algorithm manager for simple pipeline construction
@@ -74,8 +77,8 @@ class Pipeline(object):
         >>> # print(processed1)
         >>>
         >>>
-        >>> # pipeline2 - construction from static represenation
-        >>> static_constructor = pipeline1.get_static_representation()
+        >>> # pipeline2 - construction from task dict
+        >>> static_constructor = pipeline1.get_tasks()
         >>>
         >>> pipeline2 = ip.Pipeline(static_constructor, name="Pipeline2")
         >>> processed2 = pipeline2.process([0,0], one=[1,1])
@@ -150,7 +153,7 @@ class Pipeline(object):
                 raise RuntimeError(msg)
 
             # add the input block to a tracking dictionary
-            self.inputs[outputs[0]] = inpt
+            self._inputs[outputs[0]] = inpt
 
         # ======================================================================
         #                           GRAPH CONSTRUCTION
@@ -304,7 +307,7 @@ class Pipeline(object):
         self.indexed_inputs = []
         self.keyword_inputs = []
         # sort the inputs into keyword and indexed
-        for inpt_name, inpt in self.inputs.items():
+        for inpt_name, inpt in self._inputs.items():
             # check if the input index is defined
             if isinstance(inpt.index,int):
                 self.indexed_inputs.append(inpt_name)
@@ -312,13 +315,13 @@ class Pipeline(object):
                 self.keyword_inputs.append(inpt_name)
 
         # sort the positonal inputs by index
-        self.indexed_inputs.sort(key=lambda x: self.inputs[x].index)
+        self.indexed_inputs.sort(key=lambda x: self._inputs[x].index)
         # sort keyword only inputs alphabetically
         self.keyword_inputs.sort()
 
 
         # check to make sure an input index isn't defined twice
-        indices_used = [self.inputs[x].index for x in self.indexed_inputs]
+        indices_used = [self._inputs[x].index for x in self.indexed_inputs]
         if len(set(indices_used)) != len(indices_used):
             # Note: add more verbose error message
             msg = "Input indices cannot be reused"
@@ -357,7 +360,7 @@ class Pipeline(object):
         # store positonal arguments fed in
         ## NOTE: need error checking here (number of inputs, etc)
         for i,data in enumerate(pos_data):
-            inpt = self.inputs[ all_inputs[i] ]
+            inpt = self._inputs[ all_inputs[i] ]
             # check if the data has already been loaded
             if inpt.loaded:
                 self.logger.error("'%s' has already been loaded" % self.indexed_inputs[i])
@@ -367,7 +370,7 @@ class Pipeline(object):
         # store keyword arguments fed in
         ## NOTE: need error checking here (number of inputs, etc)
         for key, val in kwdata.items():
-            inpt = self.inputs[key]
+            inpt = self._inputs[key]
             # check if the data has already been loaded
             if inpt.loaded:
                 self.logger.error("'%s' has already been loaded" % key)
@@ -376,7 +379,7 @@ class Pipeline(object):
 
         # check to make sure all inputs are loaded
         data_loaded = True
-        for key,inpt in self.inputs.items():
+        for key,inpt in self._inputs.items():
             if not inpt.loaded:
                 msg = "data for \"%s\" must be provided" % key
                 self.logger.error(msg)
@@ -398,13 +401,115 @@ class Pipeline(object):
         for _,_,edge in self.graph.edges(data=True):
             edge['data'] = None
 
-        for inpt in self.inputs.values():
+        for inpt in self._inputs.values():
             inpt.unload()
 
     ############################################################################
     def draw(self, show=True, ax=None):
         # visualize(self, show, ax)
         pass
+
+    ############################################################################
+    def save(self, filename, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
+        """pickles and saves the pipeline to the given filename. Pipeline can
+        be optionally encrypted
+
+        Args:
+            filename(str): the filename to save the pickled pipeline to
+            passwd(str): password to encrypt the pickled pipeline with if
+                desired, defaults to None
+            protocol(int): pickle protocol to pickle pipeline with, defaults to
+                pickle.HIGHEST_PROTOCOL
+
+        Returns:
+            str: the sha256 checksum for the saved file
+        """
+        encoded, checksum = self.to_bytes(passwd, protocol)
+        # write the file contents
+        with open(filename, 'wb') as f:
+            f.write(encoded)
+
+        return checksum
+
+    ############################################################################
+    @staticmethod
+    def load(filename, passwd=None, checksum=None):
+        """loads the pipeline from the given file
+
+        Args:
+            filename(str): the filename to load the pickled pipeline from
+            passwd(str): password to decrypt the pickled pipeline with, defaults
+                to None
+            checksum(str): the sha256 checksum to check the file against
+
+        Returns:
+            :obj:`Pipeline`: the loaded pipeline
+        """
+        # fetch the raw file contents
+        with open(filename,'rb') as f:
+            raw_bytes = f.read()
+
+        return self.from_bytes(raw_bytes, passwd, checksum)
+
+    ############################################################################
+    def to_bytes(self, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
+        """pickles the pipeline, and returns the raw bytes. Can be optionally
+        encrypted
+
+        Args:
+            passwd(str): password to encrypt the pickled pipeline with if
+                desired, defaults to None
+            protocol(int): pickle protocol to pickle pipeline with, defaults to
+                pickle.HIGHEST_PROTOCOL
+
+        Returns:
+            (tuple): tuple containing:
+
+                bytes: the pickled and optionally encrypted pipeline
+                str: the sha256 checksum for the raw bytes
+        """
+        # pickle the pipeline
+        raw_bytes = pickle.dumps(self, protocol=protocol)
+
+        # encrypt the pipeline if passwd is provided
+        if passwd:
+            fernet = Fernet( passgen(passwd) )
+            encoded = fernet.encrypt(raw_bytes)
+        else:
+            encoded = raw_bytes
+
+        return encoded, hashlib.sha256(encoded).hexdigest()
+
+    ############################################################################
+    def from_bytes(self, raw_bytes, passwd=None, checksum=None):
+        """loads the pipeline from the given file
+
+        Args:
+            raw_bytes(bytes): the encoded pipeline in bytes format
+            passwd(str): password to decrypt the pickled pipeline with, defaults
+                to None
+            checksum(str): the sha256 checksum to check the bytes against
+
+        Returns:
+            :obj:`Pipeline`: the loaded pipeline
+        """
+        # check the file checksum if provided
+        if checksum:
+            fchecksum = hashlib.sha256(raw_bytes).hexdigest()
+            if fchecksum != checksum:
+                msg = "'%s'checksum doesn't match" % filename
+                iperror(msg)
+                RuntimeError(msg)
+
+        # decrypt the file contents if passwd is provided
+        if passwd:
+            fernet = Fernet( passgen(passwd) )
+            decoded = fernet.decrypt(raw_bytes)
+        else:
+            decoded = raw_bytes
+
+        return pickle.loads(decoded)
+
 
     ############################################################################
     #                               internal
@@ -450,12 +555,13 @@ class Pipeline(object):
                 for i,out_edge in enumerate(out_edges_sorted):
                     out_edge['data'] = Data(outputs[i])
 
+
     ############################################################################
     #                               util
     ############################################################################
-    def get_static_representation(self):
-        """generates a dictionary represenation of the pipeline, which can be
-        used to make other pipelines.
+    def get_tasks(self):
+        """generates a dictionary task represenation of the pipeline, which can
+        be used to make other pipelines.
         """
         static = {}
         for _,attrs in self.graph.nodes(data=True):
@@ -546,11 +652,10 @@ class Pipeline(object):
         error = False
 
         # fetch the static graph represenation
-        static = self.get_static_representation()
+        static = self.get_tasks()
 
-        # rebuild the static graph with pickled blocks
+        # iterate through all tasks and check if their components are serializable
         raise_error = False
-        pickled_static = {}
         for task in static.values():
             block = task[0]
             # iterate through every value in the block's __dict__

@@ -58,6 +58,7 @@ from .imports import import_opencv
 
 # io_tools.py
 # --- standard imagery ---
+from .io_tools import passgen
 from .io_tools import list_standard_images
 from .io_tools import standard_image_filenames
 from .io_tools import standard_image_gen

@@ -11,6 +11,13 @@ import getpass
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+from cryptography import fernet
+from uuid import uuid4
+import base64
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from .imports import import_opencv
 from .constants import IMAGE_EXTENSIONS
@@ -29,6 +36,28 @@ cv2 = import_opencv()
 ################################################################################
 #                                   Functions
 ################################################################################
+
+def passgen(passwd, salt=''):
+    """generate a hashed key from a password
+
+    Args:
+        passwd (None,str): password to hash
+        salt (str): optional, salt for your password
+
+    Returns:
+        bytes: hashed passkey safe string
+    """
+    # generate a proper key using Fernet library
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,
+        salt=salt.encode(),
+        iterations=100000,
+        backend=default_backend()
+    )
+    return base64.urlsafe_b64encode( kdf.derive( passwd.encode() ) )
+
+
 
 # ------------------------------ Standard Imagery ------------------------------
 def list_standard_images():

@@ -29,14 +29,22 @@ processed1 = pipeline1.process([0,0], [1,1])
 
 
 # pipeline2 - construction from static represenation
-static_constructor = pipeline1.get_static_representation()
+static_constructor = pipeline1.get_tasks()
 
 pipeline2 = ip.Pipeline(static_constructor, name="Pipeline2")
 processed2 = pipeline2.process([0,0], one=[1,1])
 
 assert processed1 == processed2
 
-# import pdb; pdb.set_trace()
+checksum = pipeline2.save("pipeline.pck","password")
+pipeline3 = ip.Pipeline.load("pipeline.pck", "password", checksum)
+
+
+
+processed3 = pipeline3.process([0,0], one=[1,1])
+assert processed1 == processed3
+
+import pdb; pdb.set_trace()
 
 
 # pipeline_block = Pipeline.block("name of output1","name of output2")
@@ -98,7 +106,7 @@ assert processed1 == processed2
 #################
 # def add(self, tasks):
 #     if isinstance(tasks,Pipeline):
-#         tasks = tasks.get_static_representation()
+#         tasks = tasks.get_tasks()
 #
 #     self._build_graph(tasks)
 #
@@ -109,7 +117,7 @@ assert processed1 == processed2
 #             ('data10'): (some_func, 'data4', 'data6')
 #         }
 #
-# tasks = some_other_pipeline.get_static_representation()
+# tasks = some_other_pipeline.get_tasks()
 #
 # pipeline.add(task)
 # pipeline.add(tasks)
