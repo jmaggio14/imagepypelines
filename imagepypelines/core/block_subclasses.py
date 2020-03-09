@@ -56,7 +56,7 @@ class FuncBlock(Block):
             func_copy = FunctionType(func.__code__, globals(), func.__name__)
             setattr(this_module, func_copy.__name__, func_copy)
         else:
-            raise ValueError("invalid blockified function name: {}".format(func.__name__))
+            raise ValueError("illegal blockified function name: {}".format(func.__name__))
 
         self.func = func_copy
         self.preset_kwargs = preset_kwargs

@@ -22,21 +22,8 @@ from .caching import Cache
 cache = Cache() # instantiate the cache
 del Cache
 
-# Exceptions.py
-from .Exceptions import CameraReadError
-from .Exceptions import InvalidInterpolationType
-from .Exceptions import InvalidNumpyType
-from .Exceptions import CrackedPipeline
-from .Exceptions import BlockRequiresLabels
-from .Exceptions import IncompatibleTypes
-from .Exceptions import InvalidBlockInputData
-from .Exceptions import InvalidBlockInputLabels
-from .Exceptions import InvalidProcessStrategy
-from .Exceptions import InvalidLabelStrategy
-from .Exceptions import DataLabelMismatch
-from .Exceptions import PluginError
-from .Exceptions import CachingError
-from .Exceptions import ChecksumError
+from .Exceptions import PipelineError
+from .Exceptions import BlockError
 
 # img_tools.py
 from .img_tools import display_safe
@@ -83,8 +70,8 @@ from .io_tools import prevent_overwrite
 from .io_tools import make_numbered_prefix
 from .io_tools import convert_to
 
-from .io_tools import CameraCapture
-from .io_tools import Emailer
+# from .io_tools import CameraCapture
+# from .io_tools import Emailer
 # from .io_tools import ImageWriter
 
 # ml_tools.py

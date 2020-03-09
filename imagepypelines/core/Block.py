@@ -6,12 +6,6 @@
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 from ..Logger import get_logger
 from ..Logger import ImagepypelinesLogger
-from .Exceptions import InvalidBlockInputData
-from .Exceptions import InvalidProcessStrategy
-from .Exceptions import InvalidLabelStrategy
-from .Exceptions import DataLabelMismatch
-from .Exceptions import BlockRequiresLabels
-from .Exceptions import IncompatibleTypes
 from .constants import NUMPY_TYPES, UUID_ORDER
 
 from uuid import uuid4

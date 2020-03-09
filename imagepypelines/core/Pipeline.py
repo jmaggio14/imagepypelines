@@ -9,6 +9,7 @@ from .Block import Block
 from .Data import Data
 from .block_subclasses import Block, Input, Leaf
 from .constants import UUID_ORDER
+from .Exceptions import PipelineError
 from .io_tools import passgen
 
 from cryptography.fernet import Fernet
@@ -150,7 +151,7 @@ class Pipeline(object):
             if len(outputs) != 1:
                 msg = "Inputs must define exactly one output"
                 self.logger.error(msg)
-                raise RuntimeError(msg)
+                raise PipelineError(msg)
 
             # add the input block to a tracking dictionary
             self._inputs[outputs[0]] = inpt
@@ -201,7 +202,7 @@ class Pipeline(object):
                 if isinstance(block, Input):
                     _add_input(block, outputs, node_uuid)
                     if len(args) != 0:
-                        raise RuntimeError("Input blocks cannot take any arguments")
+                        raise PipelineError("Input blocks cannot take any arguments")
 
                 for output in outputs:
                     self.vars[output]['block_node_id'] = node_uuid
@@ -216,7 +217,7 @@ class Pipeline(object):
                                     )
 
             else: # something other than a block or of tuple (block, var1, var2,...)
-                raise RuntimeError("invalid task definition, must be block or tuple: (block, 'var1', 'var2',...)")
+                raise PipelineError("invalid task definition, must be block or tuple: (block, 'var1', 'var2',...)")
 
         ########################################################################
         #             Draw any new edges required for all block nodes
@@ -326,7 +327,7 @@ class Pipeline(object):
             # Note: add more verbose error message
             msg = "Input indices cannot be reused"
             self.logger.error(msg)
-            raise RuntimeError(msg)
+            raise PipelineError(msg)
 
         # check to make sure input indexes are consecutive (don't skip)
         if len(indices_used) > 0:
@@ -334,7 +335,7 @@ class Pipeline(object):
                 # Note: add more verbose error message
                 msg = "Input indices must be consecutive"
                 self.logger.error(msg)
-                raise RuntimeError(msg)
+                raise PipelineError(msg)
 
         # log the current pipeline status
         msg = "{} tasks set up; process arguments are ({})".format(len(tasks), ', '.join(self.args))
@@ -364,7 +365,7 @@ class Pipeline(object):
             # check if the data has already been loaded
             if inpt.loaded:
                 self.logger.error("'%s' has already been loaded" % self.indexed_inputs[i])
-                raise RuntimeError()
+                raise PipelineError()
             inpt.load(data)
 
         # store keyword arguments fed in
@@ -374,7 +375,7 @@ class Pipeline(object):
             # check if the data has already been loaded
             if inpt.loaded:
                 self.logger.error("'%s' has already been loaded" % key)
-                raise RuntimeError()
+                raise PipelineError()
             inpt.load(val)
 
         # check to make sure all inputs are loaded
@@ -386,7 +387,7 @@ class Pipeline(object):
                 data_loaded = False
 
         if not data_loaded:
-            raise RuntimeError("insufficient input data provided")
+            raise PipelineError("insufficient input data provided")
 
         # --------------------------------------------------------------
         # PROCESS
@@ -409,6 +410,7 @@ class Pipeline(object):
         # visualize(self, show, ax)
         pass
 
+    # saving/loading
     ############################################################################
     def save(self, filename, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
         """pickles and saves the pipeline to the given filename. Pipeline can
@@ -432,8 +434,8 @@ class Pipeline(object):
         return checksum
 
     ############################################################################
-    @staticmethod
-    def load(filename, passwd=None, checksum=None):
+    @classmethod
+    def load(cls, filename, passwd=None, checksum=None):
         """loads the pipeline from the given file
 
         Args:
@@ -449,7 +451,7 @@ class Pipeline(object):
         with open(filename,'rb') as f:
             raw_bytes = f.read()
 
-        return self.from_bytes(raw_bytes, passwd, checksum)
+        return cls.from_bytes(raw_bytes, passwd, checksum)
 
     ############################################################################
     def to_bytes(self, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
@@ -481,7 +483,8 @@ class Pipeline(object):
         return encoded, hashlib.sha256(encoded).hexdigest()
 
     ############################################################################
-    def from_bytes(self, raw_bytes, passwd=None, checksum=None):
+    @staticmethod
+    def from_bytes(raw_bytes, passwd=None, checksum=None):
         """loads the pipeline from the given file
 
         Args:
@@ -499,7 +502,7 @@ class Pipeline(object):
             if fchecksum != checksum:
                 msg = "'%s'checksum doesn't match" % filename
                 iperror(msg)
-                RuntimeError(msg)
+                PipelineError(msg)
 
         # decrypt the file contents if passwd is provided
         if passwd:
@@ -593,7 +596,7 @@ class Pipeline(object):
         # finding algorithm instead?
         # define a recursive function to get edges from all predecessor nodes
         preds = set()
-        nodes_checked = []
+        nodes_checked = set()
         def _get_priors(node):
             for node_a,node_b,var_name in self.graph.in_edges(node,'var_name'):
                 preds.add(var_name)
@@ -601,7 +604,7 @@ class Pipeline(object):
                 if node_a not in nodes_checked:
                     _get_priors(node_a)
 
-            nodes_checked.append(node)
+            nodes_checked.add(node)
 
         _get_priors(self.vars[var]['block_node_id'])
 
@@ -623,7 +626,7 @@ class Pipeline(object):
         # finding algorithm instead?
         # define a recursive function to get edges from all successor nodes
         succs = set()
-        nodes_checked = []
+        nodes_checked = set()
         def _get_latters(node):
             for node_a,node_b,var_name in self.graph.out_edges(node,'var_name'):
                 succs.add(var_name)
@@ -631,7 +634,7 @@ class Pipeline(object):
                 if node_b not in nodes_checked:
                     _get_latters(node_b)
 
-            nodes_checked.append(node)
+            nodes_checked.add(node)
 
         _get_latters(self.vars[var]['block_node_id'])
 

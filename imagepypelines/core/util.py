@@ -7,8 +7,6 @@
 from ..Logger import get_logger
 from .constants import CV2_INTERPOLATION_TYPES
 from .constants import NUMPY_TYPES
-from .Exceptions import InvalidInterpolationType
-from .Exceptions import InvalidNumpyType
 import inspect
 import collections
 import time
@@ -27,11 +25,10 @@ frequently
 def interpolation_type_check(interp):
     """
     checks to see if the interpolation type is one of the acceptable
-    values specified in opencv, otherwise raises an
-    imagepypelines.InvalidInterpolationType error
+    values specified in opencv, otherwise raises an RuntimeError
     """
     if interp not in CV2_INTERPOLATION_TYPES:
-        raise InvalidInterpolationType(interp)
+        raise RuntimeError("Invalid interpolation type")
 
     return True
 
@@ -39,11 +36,10 @@ def interpolation_type_check(interp):
 def dtype_type_check(dtype):
     """
     checks to see if the interpolation type is one of the acceptable
-    values specified in opencv, otherwise raises an
-    imagepypelines.InvalidInterpolationType error
+    values specified in opencv, otherwise raises an RuntimeError
     """
     if dtype not in NUMPY_TYPES:
-        raise InvalidNumpyType(dtype)
+        raise InvalidNumpyType("Invalid Numpy type")
 
     return True
 

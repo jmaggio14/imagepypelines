@@ -25,8 +25,6 @@ from .. import CACHE
 from .. import debug as ipdebug, info as ipinfo
 from .Pipeline import Pipeline
 from .Block import Block
-from .Exceptions import CachingError, ChecksumError
-
 
 ILLEGAL_CHARS = ['NUL',
                 '\\',
@@ -239,7 +237,7 @@ class Cache(object):
             bytes: decrypted object
 
         Raises:
-            CachingError: if data decryption failed
+            RuntimeError: if data decryption failed
         """
         fernet = Fernet( Cache.passgen(passwd) )
 
@@ -250,7 +248,7 @@ class Cache(object):
             no_error = False
 
         if not no_error:
-            raise CachingError(
+            raise RuntimeError(
                 "unable to decrypt data. Is the password correct?")
 
         return decoded
@@ -341,8 +339,8 @@ class Cache(object):
 
         Raises:
             KeyError: if no key associated with the cache item was found
-            CachingError: if unable to unpickle the data
-            ChecksumError: if the given checksum doesn't match the checksum read
+            RuntimeError: if unable to unpickle the data
+            RuntimeError: if the given checksum doesn't match the checksum read
         """
         self.__check_if_enabled()
         ipdebug("loading {} from the cache...".format(key))
@@ -365,7 +363,7 @@ class Cache(object):
             assert isinstance(checksum, str),"checksum must be a hex string"
             file_checksum = self.__checksum_bytes(raw_bytes)
             if file_checksum != checksum:
-                raise ChecksumError("file checksum {} doesn't match given"\
+                raise RuntimeError("file checksum {} doesn't match given"\
                         + " checksum {} ".format(file_checksum, checksum) )
 
         # decrypt the data if necessary
@@ -387,7 +385,7 @@ class Cache(object):
             no_error = False
 
         if not no_error:
-            raise CachingError("Unable to unpickle data. Is it corrupt?")
+            raise RuntimeError("Unable to unpickle data. Is it corrupt?")
 
         return obj
 
@@ -425,7 +423,7 @@ class Cache(object):
         if self.__enabled:
             return
 
-        raise CachingError("cache must be enabled before you can save or load "\
+        raise RuntimeError("cache must be enabled before you can save or load "\
                     + "any objects. see ip.cache.secure_enable "\
                     + "or ip.cache.insecure_enable "\
                     + "(a password is required for secure use!)")
