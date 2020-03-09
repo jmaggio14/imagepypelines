@@ -13,6 +13,7 @@ class Data(object):
         Args:
             data (any type): the raw data
         """
+        
         self.data = data
 
     ############################################################################
