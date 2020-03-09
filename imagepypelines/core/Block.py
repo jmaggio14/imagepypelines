@@ -169,7 +169,7 @@ class Block(metaclass=ABCMeta):
 
     ############################################################################
     def __repr__(self):
-        return str(self)
+        return self.id
 
     ############################################################################
     #                           properties
@@ -183,7 +183,8 @@ class Block(metaclass=ABCMeta):
         if (self._arg_spec.args is None):
             return []
         else:
-            return self._arg_spec.args[1:] # ignoring 'self'
+            # ignoring 'self'
+            return self._arg_spec.args[1:]
 
     ############################################################################
     @property
