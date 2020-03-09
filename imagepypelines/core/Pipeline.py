@@ -13,7 +13,6 @@ from .Exceptions import PipelineError
 from .io_tools import passgen
 
 from cryptography.fernet import Fernet
-
 import inspect
 import numpy as np
 from uuid import uuid4
@@ -672,6 +671,19 @@ class Pipeline(object):
         if not error:
             self.logger.info("no pickling issues detected")
 
+    ############################################################################
+    def rename(self, name):
+        """renames the Pipeline to the given name. The id is reset in this process"""
+        if not isinstance(name,str):
+            raise PipelineError("name must be string")
+
+        self.logger.warning("being renamed from '%s' to '%s'" % self.name, name)
+        old_name = self.name
+        self.name = name
+        # reset the logger with the new id
+        self.logger = get_logger(self.id)
+        # log the new name
+        self.logger.warning("renamed from '%s' to '%s'" % old_name, self.name)
 
     ############################################################################
     #                               properties
@@ -699,9 +711,11 @@ class Pipeline(object):
         """:obj:`list` of :obj:`str`: arguments in the order they are expected"""
         return self.indexed_inputs + self.keyword_inputs
 
-
-
-
+    ############################################################################
+    @property
+    def n_args(self):
+        """int: number of arguments for the process function"""
+        return len(self.args)
 
 
 
