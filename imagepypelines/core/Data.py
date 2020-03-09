@@ -2,10 +2,12 @@ import numpy as np
 
 
 class Data(object):
-    def __init__(self,data):
+    def __init__(self, data):
         self.data = data
 
+    ############################################################################
     def n_batches_with(self, batch_size):
+        """calculates the number of batches generated with the given batch_size"""
         if batch_size == "singles":
             return self.n_items
         elif batch_size == "all":
@@ -13,7 +15,9 @@ class Data(object):
         else:
             return int(ceil(float(self.n_items) / batch_size))
 
+    ############################################################################
     def batch_as(self, batch_size):
+        """returns a generator that generates data batches of given batch_size"""
         # ONE DATUM AT A TIME (not batch_size=1!!!)
         if batch_size == "singles":
             # LIST
@@ -51,17 +55,23 @@ class Data(object):
                     # NOTE: check if this results in correct ndim
                     yield np.take_along_axis(self.data, indices, 0)
 
+    ############################################################################
     def pop(self):
         """returns the data, and then removes it from this object"""
         data = self.data
         self.data = None
         return data
 
+    ############################################################################
     def __len__(self):
         return self.n_items
 
+    ############################################################################
+    #                               properties
+    ############################################################################
     @property
     def datatype(self):
+        """str: the type of data loaded"""
         if isinstance(self.data,(tuple,list)):
             return "list"
 
@@ -72,18 +82,20 @@ class Data(object):
         else:
             raise RuntimeError("invalid datatype ('%s')" % type(self.data))
 
-
+    ############################################################################
     @property
     def n_items(self):
+        """int: number of items loaded into the pipeline"""
         if self.datatype == "list":
             return len(self.data)
 
         elif self.datatype == "array":
             return self.data.shape[0]
 
-
+    ############################################################################
     @property
     def shape(self):
+        """tuple: the shape of the data"""
         if self.datatype == "list":
             return (self.n_items,)
 
