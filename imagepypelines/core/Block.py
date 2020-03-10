@@ -62,7 +62,7 @@ class Block(metaclass=ABCMeta):
         # setup initial tags
         self.tags = set()
 
-        # whether or not the input names have been defined for this block
+        # FullArgSpec for this block, defined in self.args
         self._arg_spec = None
 
         super(Block,self).__init__() # for metaclass?
@@ -72,11 +72,14 @@ class Block(metaclass=ABCMeta):
     #                           overloadable
     ############################################################################
     @abstractmethod
-    def process(self,*data_batches):
+    def process(self, *data_batches):
         pass
 
-    def data_check(self,*data_batches):
-        pass
+    ############################################################################
+    # def data_check(self, *data_batches):
+    #     for d in data_batches:
+    #
+    #     pass
 
     ############################################################################
     #                           primary frontend
@@ -159,6 +162,9 @@ class Block(metaclass=ABCMeta):
     def _unpair_logger(self):
         """restores the original block logger"""
         self.logger = get_logger(self.id)
+
+    ############################################################################
+    # def _check_batch(self,d,datatype):
 
 
     ############################################################################

@@ -40,7 +40,9 @@ class FuncBlock(Block):
     method.
 
     Attributes:
-        func(function):the function to call internally
+        func(function): the function to call internally
+        preset_kwargs(dict): preset keyword arguments, typically used for
+            arguments that are not data to process
     """
     # def __new__(self, func, preset_kwargs):
     #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
