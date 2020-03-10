@@ -76,10 +76,31 @@ class Block(metaclass=ABCMeta):
         pass
 
     ############################################################################
-    # def data_check(self, *data_batches):
-    #     for d in data_batches:
-    #
-    #     pass
+    def check_setup(self, task_args):
+        """briefly checks setup with the provided task inputs.
+
+        This function can be overloaded to add additional functionality if
+        desired. By default it simply checks if too many or too few arguments
+        were provided.
+
+        Args:
+            task_args(:obj:`tuple` of :obj:`str`): Arguments for this task
+
+        Note:
+            Be very careful making task-specific modifications to the block
+            setup in this function. It's called once for every task this block
+            is in. Changes made for one task may not apply to another task.
+        """
+        # too few args
+        if len(task_args) < self.n_args:
+            msg = "Not enough arguments provided"
+            self.logger.error(msg)
+            raise BlockError(msg)
+        # too many args
+        elif len(task_args) > self.n_args:
+            msg = "Too many arguments provided"
+            self.logger.error(msg)
+            raise BlockError(msg)
 
     ############################################################################
     #                           primary frontend

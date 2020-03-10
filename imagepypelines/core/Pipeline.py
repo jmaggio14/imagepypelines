@@ -207,6 +207,9 @@ class Pipeline(object):
                     self.vars[output]['block_node_id'] = node_uuid
                     self.vars[output]['block'] = block
 
+                # check this task's setup using the block.check_setup function
+                block.check_setup(args)
+
                 # add the task to the graph
                 self.graph.add_node(node_uuid,
                                     block=block,
@@ -214,6 +217,8 @@ class Pipeline(object):
                                     outputs=outputs,
                                     **block.get_default_node_attrs(),
                                     )
+
+
 
             else: # something other than a block or of tuple (block, var1, var2,...)
                 raise PipelineError("invalid task definition, must be block or tuple: (block, 'var1', 'var2',...)")

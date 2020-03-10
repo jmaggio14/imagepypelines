@@ -63,7 +63,7 @@ class Data(object):
                     end = min(n_items, start+batch_size)
                     indices = np.arange(start, end)
                     # NOTE: check if this results in correct ndim
-                    yield np.take_along_axis(self.data, indices, 0)
+                    yield self.data[start:end,...]
 
     ############################################################################
     def pop(self):
