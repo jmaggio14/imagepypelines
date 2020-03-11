@@ -151,9 +151,9 @@ class Block(metaclass=ABCMeta):
         # root blocks don't need input data, and won't have any data
         # passed in to batch. We only call process once for these
         if self.n_args == 0:
-            # Note: I think this will lead to errors for block with
-            # more than one output, but no inputs - JM
-            ret = tuple(self.process() for i in range(1))
+            # this separate statement is  necessary because we have to ensure
+            # that process is only called once not for every data batch
+            outputs = (self._make_tuple( self.process() )
         else:
             # Note: everything is a generator until the end of this statement
             # otherwise we prepare to batch the data and run it through process
@@ -163,8 +163,8 @@ class Block(metaclass=ABCMeta):
             # self.process(input_batch1, input_batch2, ...)
             outputs = (self._make_tuple( self.process(*datums) ) for datums in zip(*batches))
             # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
-            ret = tuple( zip(*outputs) )
 
+        ret = tuple( zip(*outputs) )
         self._unpair_logger()
         return ret
 
