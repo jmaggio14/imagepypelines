@@ -90,6 +90,7 @@ def require_plugin(plugin_name):
     """check to make sure the given plugin is loaded and raise an error if it
     is not in the imagepypelines namespace
     """
+    import sys
     ip_module = sys.modules[__name__]
 
     if not hasattr(ip_module, plugin_name):

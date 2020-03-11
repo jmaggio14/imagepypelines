@@ -155,11 +155,14 @@ class Block(metaclass=ABCMeta):
             # more than one output, but no inputs - JM
             ret = tuple(self.process() for i in range(1))
         else:
+            # Note: everything is a generator until the end of this statement
             # otherwise we prepare to batch the data and run it through process
             # prepare the batch generators
-            batches = [d.batch_as(self.batch_size) for d in data]
+            batches = (d.batch_as(self.batch_size) for d in data)
             # feed the data into the process function in batches
-            outputs = (self.process(*datums) for datums in zip(*batches))
+            # self.process(input_batch1, input_batch2, ...)
+            outputs = (self._make_tuple( self.process(*datums) ) for datums in zip(*batches))
+            # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
             ret = tuple( zip(*outputs) )
 
         self._unpair_logger()
@@ -183,6 +186,14 @@ class Block(metaclass=ABCMeta):
     def _unpair_logger(self):
         """restores the original block logger"""
         self.logger = get_logger(self.id)
+
+    ############################################################################
+    @staticmethod
+    def _make_tuple(out):
+        """if the output isn't a tuple, put it in one"""
+        if isinstance(out, tuple):
+            return out
+        return (out,)
 
     ############################################################################
     # def _check_batch(self,d,datatype):
