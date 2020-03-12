@@ -12,7 +12,7 @@ from .Exceptions import BlockError
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
 import inspect
-
+import copy
 
 class Block(metaclass=ABCMeta):
     """a contained algorithmic element used to construct pipelines. This class
@@ -120,6 +120,25 @@ class Block(metaclass=ABCMeta):
 
 
     ############################################################################
+    def copy(self):
+        """fetches a shallow copy of this block with the UUID updated"""
+        # NOTE: make sure this results in the same behavior as unpickling
+        # the uuid must be updated
+        copied = copy.copy(self)
+        copied.uuid = uuid4().hex
+        return copied
+
+    ############################################################################
+    def deepcopy(self):
+        """fetches a deep copy of this block with the UUID updated"""
+        # NOTE: make sure this results in the same behavior as unpickling
+        # the uuid must be updated
+        deepcopied = copy.deepcopy(self)
+        deepcopied.uuid = uuid4().hex
+        return deepcopied
+
+
+    ############################################################################
     #                 called by internally or by Pipeline
     ############################################################################
     def _pipeline_process(self, *data, logger):
@@ -153,7 +172,7 @@ class Block(metaclass=ABCMeta):
         if self.n_args == 0:
             # this separate statement is  necessary because we have to ensure
             # that process is only called once not for every data batch
-            outputs = (self._make_tuple( self.process() )
+            outputs = (self._make_tuple( self.process() ))
         else:
             # Note: everything is a generator until the end of this statement
             # otherwise we prepare to batch the data and run it through process
@@ -208,6 +227,16 @@ class Block(metaclass=ABCMeta):
     ############################################################################
     def __repr__(self):
         return self.id
+
+    ############################################################################
+    def __getstate__(self):
+        return self.__dict__
+
+    ############################################################################
+    def __setstate__(self, state):
+        """resets the uuid in the event of a copy"""
+        state['uuid'] = uuid4().hex
+        self.__dict__.update(state)
 
     ############################################################################
     #                           properties

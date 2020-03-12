@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
-from ..Logger import get_logger, error as iperror
+from ..Logger import get_logger, error as iperror, info as ipinfo
 from .Block import Block
 from .Data import Data
 from .block_subclasses import Block, Input, Leaf
@@ -18,8 +18,8 @@ import numpy as np
 from uuid import uuid4
 import networkx as nx
 import pickle
-import json
 import hashlib
+import copy
 
 class Pipeline(object):
     """processing algorithm manager for simple pipeline construction
@@ -89,7 +89,8 @@ class Pipeline(object):
         """initializes the pipeline with a user-provided graph (tasks)
 
         Args:
-            tasks (dict): dictionary of tasks to define this pipeline's graph
+            tasks (dict,:obj:`Pipeline`): dictionary of tasks to define this
+                pipeline's graph or another pipeline to replicate.
             name (str): name used to generate the logger name
         """
         self.uuid = uuid4().hex # unique univeral hex ID for this pipeline
@@ -108,6 +109,12 @@ class Pipeline(object):
         self.indexed_inputs = [] # sorted list of indexed input variable names
         self.keyword_inputs = [] # alphabetically sorted list of unindexed inputs
         self._inputs = {} # dict of input_name: Input_object
+
+        # If a pipeline is passed in, then retrieve tasks and replicate our
+        # pipeline
+        if isinstance(tasks, Pipeline):
+            tasks = tasks.get_tasks()
+
         self.update(tasks)
 
 
@@ -417,8 +424,8 @@ class Pipeline(object):
     # saving/loading
     ############################################################################
     def save(self, filename, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
-        """pickles and saves the pipeline to the given filename. Pipeline can
-        be optionally encrypted
+        """pickles and saves a copy of the  pipeline to the given filename.
+        Pipeline can be optionally encrypted
 
         Args:
             filename(str): the filename to save the pickled pipeline to
@@ -439,7 +446,7 @@ class Pipeline(object):
 
     ############################################################################
     @classmethod
-    def load(cls, filename, passwd=None, checksum=None):
+    def load(cls, filename, passwd=None, checksum=None, name=None):
         """loads the pipeline from the given file
 
         Args:
@@ -447,6 +454,8 @@ class Pipeline(object):
             passwd(str): password to decrypt the pickled pipeline with, defaults
                 to None
             checksum(str): the sha256 checksum to check the file against
+            name(str): new name for the pipeline. If left as None, then
+                defaults to the old name of the pipeline
 
         Returns:
             :obj:`Pipeline`: the loaded pipeline
@@ -455,12 +464,12 @@ class Pipeline(object):
         with open(filename,'rb') as f:
             raw_bytes = f.read()
 
-        return cls.from_bytes(raw_bytes, passwd, checksum)
+        return cls.from_bytes(raw_bytes, passwd, checksum, name)
 
     ############################################################################
     def to_bytes(self, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
-        """pickles the pipeline, and returns the raw bytes. Can be optionally
-        encrypted
+        """pickles a copy of the pipeline, and returns the raw bytes. Can be
+        optionally encrypted
 
         Args:
             passwd(str): password to encrypt the pickled pipeline with if
@@ -475,7 +484,7 @@ class Pipeline(object):
                 str: the sha256 checksum for the raw bytes
         """
         # pickle the pipeline
-        raw_bytes = pickle.dumps(self, protocol=protocol)
+        raw_bytes = pickle.dumps(self.copy(), protocol=protocol)
 
         # encrypt the pipeline if passwd is provided
         if passwd:
@@ -488,14 +497,16 @@ class Pipeline(object):
 
     ############################################################################
     @staticmethod
-    def from_bytes(raw_bytes, passwd=None, checksum=None):
-        """loads the pipeline from the given file
+    def from_bytes(raw_bytes, passwd=None, checksum=None, name=None):
+        """loads the pipeline from the given file without change
 
         Args:
             raw_bytes(bytes): the encoded pipeline in bytes format
             passwd(str): password to decrypt the pickled pipeline with, defaults
                 to None
             checksum(str): the sha256 checksum to check the bytes against
+            name(str): new name for the pipeline. If left as None, then
+                defaults to the old name of the pipeline
 
         Returns:
             :obj:`Pipeline`: the loaded pipeline
@@ -515,7 +526,47 @@ class Pipeline(object):
         else:
             decoded = raw_bytes
 
-        return pickle.loads(decoded)
+        # load the pipeline
+        pipeline = pickle.loads(decoded)
+
+        # rename it if desired
+        if name is not None:
+            pipeline.rename(name)
+
+        ipinfo("loaded {}".format(pipeline.id))
+        return pipeline
+
+    ############################################################################
+    def copy(self, name=None):
+        """returns a copy of the Pipeline, but not a copy of the blocks"""
+        if name is None:
+            name = self.name
+        return Pipeline(self, name=name)
+
+    ############################################################################
+    def deepcopy(self, name=None):
+        """returns a copy of the Pipeline including copies of all its blocks"""
+        if name is None:
+            name = self.name
+        # iterate through all pipeline tasks
+        already_copied = {}
+        new_tasks = {}
+        # for ('out1', 'out2'), (block, 'in1', 'in2')
+        for task_outs, task_ins in self.get_tasks().items():
+            old_block = task_ins[0]
+            args = task_ins[1:]
+
+            # if block is already copied, fetch the copied block for the new tasks
+            if old_block.uuid in already_copied:
+                new_block = already_copied[old_block.uuid]
+            # otherwise copy the block if we haven't already copied it
+            else:
+                new_block = old_block.deepcopy()
+                already_copied[old_block.uuid] = new_block
+
+            new_tasks[task_outs] = (new_block,) + args
+
+        return Pipeline(new_tasks, name=name)
 
 
     ############################################################################
@@ -682,13 +733,30 @@ class Pipeline(object):
         if not isinstance(name,str):
             raise PipelineError("name must be string")
 
-        self.logger.warning("being renamed from '%s' to '%s'" % self.name, name)
+        self.logger.warning("being renamed from '%s' to '%s'" % (self.name, name))
         old_name = self.name
         self.name = name
         # reset the logger with the new id
         self.logger = get_logger(self.id)
         # log the new name
-        self.logger.warning("renamed from '%s' to '%s'" % old_name, self.name)
+        self.logger.warning("renamed from '%s' to '%s'" % (old_name, self.name))
+        return self
+
+
+    ############################################################################
+    #                               special
+    ############################################################################
+    # COPYING & PICKLING
+    def __getstate__(self):
+        return self.__dict__
+
+    ############################################################################
+    def __setstate__(self, state):
+        """resets the uuid in the event of a copy"""
+        state['uuid'] = uuid4().hex
+        self.__dict__.update(state)
+
+    ############################################################################
 
     ############################################################################
     #                               properties
@@ -722,7 +790,16 @@ class Pipeline(object):
         """int: number of arguments for the process function"""
         return len(self.args)
 
-
+    ############################################################################
+    @property
+    def blocks(self):
+        """:obj:`set` of :obj:`Block`: unordered set of pipeline blocks"""
+        blocks = set()
+        for _,block in self.graph.nodes(data='block'):
+            # ignore leaves
+            if not isinstance(block, Leaf):
+                blocks.add(block)
+        return blocks
 
 
 

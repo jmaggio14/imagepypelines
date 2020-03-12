@@ -28,21 +28,39 @@ processed1 = pipeline1.process([0,0], [1,1])
 # print(processed1)
 
 
-# pipeline2 - construction from static represenation
+# pipeline2 - construction from task represenation
 static_constructor = pipeline1.get_tasks()
 
 pipeline2 = ip.Pipeline(static_constructor, name="Pipeline2")
 processed2 = pipeline2.process([0,0], one=[1,1])
 
 assert processed1 == processed2
+assert pipeline1.uuid != pipeline2.uuid
 
+# SAVING AND LOADING CHECK
 checksum = pipeline2.save("pipeline.pck","password")
-pipeline3 = ip.Pipeline.load("pipeline.pck", "password", checksum)
-
-
+pipeline3 = ip.Pipeline.load("pipeline.pck", "password", checksum, name="Pipeline3")
 
 processed3 = pipeline3.process([0,0], one=[1,1])
 assert processed1 == processed3
+assert pipeline2.uuid != pipeline3.uuid
+
+# COPY CHECK
+pipeline4 = pipeline3.copy("Pipeline4")
+assert pipeline3.uuid != pipeline4.uuid
+
+# check to make sure all blocks are identical
+assert pipeline4.blocks == pipeline4.blocks.intersection(pipeline3.blocks)
+
+
+# DEEP COPY CHECK
+pipeline5 = pipeline4.deepcopy("Pipeline5")
+assert pipeline4.uuid != pipeline5.uuid
+
+# check to make sure all blocks are different
+assert len( pipeline5.blocks.intersection(pipeline4.blocks) ) == 0
+
+
 
 import pdb; pdb.set_trace()
 

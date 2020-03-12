@@ -84,14 +84,11 @@ class FuncBlock(Block):
     def process(self, *args):
         return self.func(*args, **self.preset_kwargs)
 
-    def __call__(self,*args,**kwargs):
+    def __call__(self, *args, **kwargs):
         """returns the exact output of the user defined function without any
         interference or interaction with the class
         """
         return self.func(*args,**kwargs)
-
-    def __str__(self):
-        return self.func.__name__+"FuncBlock"
 
     @property
     def args(self):
@@ -100,7 +97,12 @@ class FuncBlock(Block):
         if not self._arg_spec:
             self._arg_spec = inspect.getfullargspec(self.func)
 
-        return ([] if (self._arg_spec.args is None) else self._arg_spec.args)
+        pos_args = ([] if (self._arg_spec.args is None) else self._arg_spec.args).copy()
+
+        for idx,preset in enumerate(self.preset_kwargs.keys()):
+            pos_args.remove(preset)
+
+        return pos_args
 
 
 ################################################################################
