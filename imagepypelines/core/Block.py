@@ -208,7 +208,7 @@ class Block(metaclass=ABCMeta):
 
             # feed the data into the process function in batches
             # self.process(input_batch1, input_batch2, ...)
-            outputs = (self._make_tuple( self.process( *self.check_batches(datums)) ) for datums in zip(*batches))
+            outputs = (self._make_tuple( self.process( *self._check_batches(datums)) ) for datums in zip(*batches))
             # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
 
         ret = tuple( zip(*outputs) )

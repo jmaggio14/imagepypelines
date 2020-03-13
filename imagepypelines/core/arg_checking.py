@@ -4,6 +4,8 @@ from abc import ABCMeta, abstractmethod
 import numpy as np
 
 
+
+
 ################################################################################
 class ArgType(metaclass=ABCMeta):
     def __init__(self, obj_type, containers):
@@ -19,7 +21,6 @@ class ArgType(metaclass=ABCMeta):
         self.obj_type = obj_type
         # NOTE: maybe do a check to ensure shape is a list of lists?
         self.containers = containers
-        self.other = other
 
     ############################################################################
     def validate(self, batch, batch_size):
@@ -30,6 +31,8 @@ class ArgType(metaclass=ABCMeta):
             return isinstance(datum, self.obj_type)
         else:
             return all( isinstance(datum,self.obj_type) for datum in batch )
+
+
 
 ################################################################################
 #                               Default ArgTypes
@@ -157,6 +160,46 @@ class Str(ArgType):
         super().__init__(str, containers)
 
 
+# NUMERICAL
+################################################################################
+class Num(ArgType):
+    """Argument Type for either Ints or Floats"""
+    def __init__(self, containers):
+        """Instantiates Str
+
+        Args:
+            containers(:obj:`tuple` of :obj:`tuple`): list or tuple of container
+                types
+        """
+        super().__init__((float,int), containers)
+
+
+################################################################################
+class Int(ArgType):
+    """Int Argument Type for Blocks"""
+    def __init__(self, containers):
+        """Instantiates Str
+
+        Args:
+            containers(:obj:`tuple` of :obj:`tuple`): list or tuple of container
+                types
+        """
+        super().__init__(int, containers)
+
+
+################################################################################
+class Float(ArgType):
+    """Float Argument Type for Blocks"""
+    def __init__(self, containers):
+        """Instantiates Str
+
+        Args:
+            containers(:obj:`tuple` of :obj:`tuple`): list or tuple of container
+                types
+        """
+        super().__init__(float, containers)
+
+
 # ITERABLE TYPES
 ################################################################################
 class BaseIterable(ArgType):
@@ -210,9 +253,7 @@ class BaseIterable(ArgType):
                 else:
                     return False
 
-             all( isinstance(datum, self.obj_type) for datum in batch )
-
-
+        return True
 ################################################################################
 class List(BaseIterable):
     def __init__(self, length, containers):

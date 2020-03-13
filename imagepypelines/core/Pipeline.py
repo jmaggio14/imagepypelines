@@ -22,21 +22,6 @@ import hashlib
 import copy
 
 
-# CONTAINERS MUST HAVE THE FOLLOWING
-REQUIRED_CONTAINER_ATTRIBUTES = [
-                                '__len__',
-                                '__getitem__',
-                                '__getslice__'
-                                ]
-"""methods that every Input data object in the Pipeline must have"""
-
-
-INVALID_CONTAINER_MSG = "Invalid Container object for Input '{input_name}' - "\
-            + "Pipeline Inputs must contain the methods: {con_methods}. " \
-            + "(this usually means your input data isn't a numpy array, list, "\
-            + "or tuple)"
-"""Error message raised if there is an inssure with the data passed in to Pipeline.process"""
-
 ################################################################################
 class Pipeline(object):
     """processing algorithm manager for simple pipeline construction
@@ -383,36 +368,6 @@ class Pipeline(object):
         self.clear()
 
         # --------------------------------------------------------------
-        # make sure all inputs are in valid containers so the Data
-        # object can work with them
-        # (this typically means that all data passed in are in lists or numpy
-        # array - but anything with __len__, __getitem__, and __getslice__)
-        # will work
-        # --------------------------------------------------------------
-        # check positional input containers for validity
-        for i,d in enumerate(pos_data):
-            if not self._is_valid_container(d):
-                # log the output and raise an error
-                msg = INVALID_CONTAINER_MSG.format(
-                                                    input_name=self.args[i],
-                                                    con_methods=REQUIRED_CONTAINER_ATTRIBUTES
-                                                    )
-                self.logger.error(msg)
-                raise PipelineError(msg)
-
-        # check keyword input containers for validity
-        for k,d in kwdata.items():
-            if not self._is_valid_container(d):
-                # log the output and raise an error
-                msg = INVALID_CONTAINER_MSG.format(
-                                                    input_name=self.args[i],
-                                                    con_methods=REQUIRED_CONTAINER_ATTRIBUTES
-                                                    )
-                self.logger.error(msg)
-                raise PipelineError(msg)
-
-
-        # --------------------------------------------------------------
         # STORING INPUTS - inside the input nodes
         # --------------------------------------------------------------
         all_inputs = self.args
@@ -634,7 +589,7 @@ class Pipeline(object):
             # output - JM
             if self.graph.in_degree(node_a) == 0:
                 # no arg data is needed
-                edge['data'] = Data( block_a._pipeline_process(logger=self.logger)[0] )
+                edge['data'] = Data(edge['var_name'], block_a._pipeline_process(logger=self.logger)[0] )
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b,data=True)
@@ -658,13 +613,7 @@ class Pipeline(object):
                 # NEED ERROR CHECKING HERE
                 # (psuedo) if n_out == n_expected_out
                 for i,out_edge in enumerate(out_edges_sorted):
-                    out_edge['data'] = Data(outputs[i])
-
-    ############################################################################
-    def _is_valid_container(self, container):
-        """tests if the objects passed into Pipeline Inputs are valid containers"""
-        # checks if the container has the required methods
-        if not all(hasattr(container, req) for req in REQUIRED_CONTAINER_ATTRIBUTES):
+                    out_edge['data'] = Data(out_edge['var_name'], outputs[i])
 
 
     ############################################################################

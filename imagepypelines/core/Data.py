@@ -1,18 +1,73 @@
 import numpy as np
+from .Exceptions import ArgTypeError
+
+# --------------------------------------------------------------
+# make sure all inputs are in valid containers so the Data
+# object can work with them
+# (this typically means that all data passed in are in lists or numpy
+# array - but anything with __len__, __getitem__, and __getslice__)
+# will work
+# --------------------------------------------------------------
+# check positional input containers for validity
+# for i,d in enumerate(pos_data):
+#     if not self._is_valid_container(d):
+#         # log the output and raise an error
+#         msg = INVALID_CONTAINER_MSG.format(
+#                                             input_name=self.args[i],
+#                                             con_methods=REQUIRED_CONTAINER_ATTRIBUTES
+#                                             )
+#         self.logger.error(msg)
+#         raise PipelineError(msg)
+#
+# # check keyword input containers for validity
+# for k,d in kwdata.items():
+#     if not self._is_valid_container(d):
+#         # log the output and raise an error
+#         msg = INVALID_CONTAINER_MSG.format(
+#                                             input_name=k,
+#                                             con_methods=REQUIRED_CONTAINER_ATTRIBUTES
+#                                             )
+#         self.logger.error(msg)
+#         raise PipelineError(msg)
+
+# CONTAINERS MUST HAVE THE FOLLOWING
+REQUIRED_CONTAINER_ATTRIBUTES = [
+                                '__len__',
+                                '__getitem__',
+                                '__getslice__'
+                                ]
+"""methods that every Input data object in the Pipeline must have"""
+
+
+INVALID_CONTAINER_MSG = "Invalid Container object for Input '{input_name}' - "\
+            + "Pipeline Inputs must contain the methods: {con_methods}. " \
+            + "(this usually means your input data isn't a numpy array, list, "\
+            + "or tuple)"
+"""Error message raised if there is an inssure with the data passed in to Pipeline.process"""
 
 
 class Data(object):
     """Object to batch lists or arrays as block processable data
 
     Attributes:
+        var_name(str): the name of the variable
         data (any type): the raw data
     """
-    def __init__(self, data):
+    def __init__(self, var_name, data):
         """instantiates the Data object
 
         Args:
+            var_name(str): the name of the variable
             data (any type): the raw data
         """
+        # check if the data is in a valid container so we won't throw errors
+        if not all(hasattr(container, req) for req in REQUIRED_CONTAINER_ATTRS):
+            msg = INVALID_CONTAINER_MSG.format(
+                                            input_name=var_name,
+                                            con_methods=REQUIRED_CONTAINER_ATTRIBUTES)
+            raise ArgTypeError(msg)
+
+        self.var_name = var_name
         self.data = data
 
     ############################################################################
