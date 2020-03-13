@@ -61,9 +61,8 @@ class Data(object):
             elif self.datatype == "array":
                 for start in range(0, n_items, batch_size):
                     end = min(n_items, start+batch_size)
-                    indices = np.arange(start, end)
                     # NOTE: check if this results in correct ndim
-                    yield self.data[start:end,...]
+                    yield self.data[start:end]
 
     ############################################################################
     def pop(self):
