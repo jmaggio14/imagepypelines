@@ -24,7 +24,7 @@ del Cache
 
 from .Exceptions import PipelineError
 from .Exceptions import BlockError
-from .Exceptions import InputTypeError
+from .Exceptions import ArgTypeError
 
 # img_tools.py
 from .img_tools import display_safe
@@ -40,9 +40,17 @@ from .img_tools import low_pass
 from .img_tools import high_pass
 from .img_tools import Viewer
 
-# imports.py
-# from .imports import import_tensorflow
-# from .imports import import_opencv
+# input_checking.py
+# base type
+from .arg_checking import ArgType
+# default types
+from .arg_checking import Array
+from .arg_checking import ArgNone
+from .arg_checking import Str
+from .arg_checking import List
+from .arg_checking import Tuple
+from .arg_checking import Set
+from .arg_checking import Iterable
 
 # io_tools.py
 # --- standard imagery ---

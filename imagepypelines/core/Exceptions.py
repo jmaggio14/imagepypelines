@@ -17,6 +17,6 @@ class BlockError(RuntimeError):
     pass
 
 
-class InputTypeError(RuntimeError):
+class ArgTypeError(RuntimeError):
     """Error raised if the wrong type is passed in"""
     pass
