@@ -225,8 +225,13 @@ class Leaf(Block):
 
     ############################################################################
     def process(self,*data):
-        """returns the data passed in"""
-        return data
+        """does nothing in a leaf"""
+        pass
+        # return data
+
+    ############################################################################
+    def _pipeline_process(self,*data, **kwargs):
+        return data[0]
 
     ############################################################################
     def get_default_node_attrs(self):

@@ -230,18 +230,20 @@ class Block(metaclass=ABCMeta):
         if self.n_args == 0:
             # this separate statement is  necessary because we have to ensure
             # that process is only called once not for every data batch
-            outputs = (self._make_tuple( self.process() ))
+            # (only if there are no inputs, ie no batches, into this block)
+            ret = self._make_tuple( self.process() )
         else:
             # Note: everything is a generator until the end of this statement
             # otherwise we prepare to batch the data and run it through process
             # prepare the batch generators
+            # import pdb; pdb.set_trace()
             batches = (d.batch_as(self.batch_size) for d in data)
             # feed the data into the process function in batches
             # self.process(input_batch1, input_batch2, ...)
             outputs = (self._make_tuple( self.process(*self._check_batches(datums, force_skip)) ) for datums in zip(*batches))
             # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
+            ret = tuple( zip(*outputs) )
 
-        ret = tuple( zip(*outputs) )
         self._unpair_logger()
         return ret
 
@@ -327,6 +329,7 @@ class Block(metaclass=ABCMeta):
                     # FOR ARG SHAPE in all possible arg shapes
                     # ==========================================================
                     ndim_okay = False
+                    axes_okay = True
                     for arg_shape in arg_shapes:
                         # reject automatically unless at least one shape has
                         # right number of dimensions
@@ -336,7 +339,6 @@ class Block(metaclass=ABCMeta):
                         ndim_okay = True
 
                         # otherwise check every axis
-                        axes_okay = True
                         for arg_ax,d_ax in zip(arg_shape,datum_shape):
                             # no need to check if the arg_ax is None (any length)
                             if arg_ax is None:
@@ -349,7 +351,7 @@ class Block(metaclass=ABCMeta):
                         msg = "invalid shape for '{}'. must be one of {}, not {}"
                         msg = msg.format(arg_name, arg_shapes, datum_shape)
                         self.logger.error(msg)
-                        raise BlockError(msg)
+                        raise BlockError(msg + " (you can disable this check with the 'skip_checks' keywork argument)")
 
         return arg_batches
 

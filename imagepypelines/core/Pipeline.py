@@ -632,6 +632,7 @@ class Pipeline(object):
             # output - JM
             if self.graph.in_degree(node_a) == 0:
                 # no arg data is needed
+                # import pdb; pdb.set_trace()
                 edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_checks)[0] )
 
             # compute this node if all the data is queued
