@@ -7,7 +7,7 @@
 from ..Logger import get_logger
 from ..Logger import ImagepypelinesLogger
 from .constants import NUMPY_TYPES, UUID_ORDER
-from .Exceptions import BlockError, ArgTypeError
+from .Exceptions import BlockError, InputTypeError
 
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
@@ -35,21 +35,17 @@ class Block(metaclass=ABCMeta):
         _arg_spec(:obj:`namedtuple`,None): a named tuple describing the
             arguments for this block's process function. Only defined if the
             property `block.args` is accessed.
-        sorted_arg_types(:obj:`tuple`): arg_types objects sorted to correspond
-            with the args
     """
-    def __init__(self, name=None, batch_size="all", arg_types=None, check_args=True):
+    def __init__(self, name=None, arg_types=None, batch_size="all"):
         """instantiates the block
 
         Args:
             name(str,None): the name of this block - how it will show up
                 in the graph. Defaults to name of class
-            batch_size(str, int): the size of the batch fed into your process
-                function. Must be an integer, "all", or "singles"
             arg_types(dict): a dictionary of types for every arg. Name
                 of argument is key, types are values
-            check_args(bool): whether or not to check the arguments for this
-                block
+            batch_size(str, int): the size of the batch fed into your process
+                function. Must be an integer, "all", or "singles"
         """
         assert (batch_size in ["all","singles"] or isinstance(batch_size,int))
 
@@ -60,9 +56,8 @@ class Block(metaclass=ABCMeta):
         if name is None:
             name = self.__class__.__name__
         self.name = name
-        self.batch_size = batch_size
         self.arg_types = arg_types
-        self.check_args = check_args
+        self.batch_size = batch_size
 
         # this will be defined in _pipeline_pair
         self.logger = get_logger( self.id )
@@ -80,16 +75,8 @@ class Block(metaclass=ABCMeta):
             if not set(self.args) == set(arg_types.keys()):
                 msg = "a type for every argument must be provided"
                 self.logger.error(msg)
-                raise ArgTypeError(msg)
+                raise InputTypeError(msg)
             self.sorted_arg_types = tuple(self.arg_types[k] for k in self.args)
-
-            # NOTE:
-            # make sure that all arg_types values are tuples - this makes them
-            # easier to work with later
-            # for key,val in arg_types:
-            #
-            #     if isinstance()
-
 
 
         super(Block,self).__init__() # for metaclass?
@@ -129,7 +116,6 @@ class Block(metaclass=ABCMeta):
             self.logger.error(msg)
             raise BlockError(msg)
 
-
     ############################################################################
     #                           primary frontend
     ############################################################################
@@ -145,6 +131,7 @@ class Block(metaclass=ABCMeta):
         self._unpair_logger()
         # log the new name
         self.logger.warning("renamed from '%s' to '%s'" % old_name, self.name)
+
 
     ############################################################################
     def copy(self):
@@ -205,10 +192,9 @@ class Block(metaclass=ABCMeta):
             # otherwise we prepare to batch the data and run it through process
             # prepare the batch generators
             batches = (d.batch_as(self.batch_size) for d in data)
-
             # feed the data into the process function in batches
             # self.process(input_batch1, input_batch2, ...)
-            outputs = (self._make_tuple( self.process( *self.check_batches(datums)) ) for datums in zip(*batches))
+            outputs = (self._make_tuple( self.process(*datums) ) for datums in zip(*batches))
             # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
 
         ret = tuple( zip(*outputs) )
@@ -242,31 +228,26 @@ class Block(metaclass=ABCMeta):
             return out
         return (out,)
 
+
     ####################################################################
     def _check_batches(self, *batches):
-        """validates the batches with
-        """
-        # don't bother checking if it's disabled or if no arg_types are disabled
-        if self.check_args and (self.arg_types is None):
-            return batches
+        if self.arg_types is None:
+            return
 
-        # check every batch with it's arg types
-        for batch, arg_name, arg_types in zip(batches, self.args, self.sorted_arg_types):
-            batch_okay = False
-            # validate
-            for arg_type in arg_types:
-                batch_okay = (batch_okay or arg_type.validate(batch, self.batch_size))
-                # we don't have to check the other arg types if one of them works
-                if batch_okay:
-                    break
+        # no need to check the container type
+        if self.batch_size == "singles":
+            # every batch is just a datum
+            # check to make sure every datum is the correct shape
+            
+                pass
 
-            # throw an error if the batch can be validated with any possible arg_type
-            if not batch_okay:
-                msg = "Invalid Argument Type for arg '%s'" % arg_name
-                self.logger.error(msg)
-                raise ArgTypeError(msg)
-
-        return batches
+    ############################################################################
+    @staticmethod
+    def _axis_check(shape_axis, input_axis):
+        """checks to make sure the given axis is valid"""
+        if shape_axis is None:
+            return True
+        return (shape_axis == input_axis)
 
 
     ############################################################################

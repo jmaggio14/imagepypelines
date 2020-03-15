@@ -31,20 +31,38 @@ class Data(object):
         # ONE DATUM AT A TIME (not batch_size=1!!!)
         if batch_size == "singles":
             # LIST
-            for datum in self.data:
-                yield datum
+            # return every element if data is a list
+            if self.datatype == "list":
+                for d in self.data:
+                    yield d
+
+            # ARRAY
+            # return every row if it's an array (first axis)
+            elif self.datatype == "array":
+                for row in self.data:
+                    yield d
 
         # ALL DATA AT ONCE
         elif batch_size == "all":
             # no need to differentiate between different types here
             yield self.data
 
-        # SLICING INTO DISCRETE BATCH SIZE
+
+        # DISCRETE BATCH SIZE
         elif isinstance(batch_size, int):
             n_items = self.n_items
-            for start in range(0, n_items, batch_size):
-                end = min(n_items, start+batch_size)
-                yield self.data[start:end]
+
+            # DATA
+            if self.datatype == "list":
+                for start in range(0, n_items, batch_size):
+                    end = min(n_items, start+batch_size)
+                    yield self.data[start:end]
+            # ARRAY
+            elif self.datatype == "array":
+                for start in range(0, n_items, batch_size):
+                    end = min(n_items, start+batch_size)
+                    # NOTE: check if this results in correct ndim
+                    yield self.data[start:end]
 
     ############################################################################
     def pop(self):
@@ -61,6 +79,34 @@ class Data(object):
     #                               properties
     ############################################################################
     @property
+    def datatype(self):
+        """str: the type of data loaded"""
+        if isinstance(self.data,(tuple,list)):
+            return "list"
+
+        elif isinstance(self.data,np.ndarray):
+            return "array"
+        # other types can go here when we support them
+
+        else:
+            raise RuntimeError("invalid datatype ('%s')" % type(self.data))
+
+    ############################################################################
+    @property
     def n_items(self):
         """int: number of items loaded into the pipeline"""
-        return len(self.data)
+        if self.datatype == "list":
+            return len(self.data)
+
+        elif self.datatype == "array":
+            return self.data.shape[0]
+
+    ############################################################################
+    @property
+    def shape(self):
+        """tuple: the shape of the data"""
+        if self.datatype == "list":
+            return (self.n_items,)
+
+        elif self.datatype == "array":
+            return self.data.shape
