@@ -14,10 +14,11 @@ from uuid import uuid4
 from abc import ABCMeta, abstractmethod
 import inspect
 import copy
+import numpy as np
 
 class Block(metaclass=ABCMeta):
     """a contained algorithmic element used to construct pipelines. This class
-    is defined to be inherited from, or used in the form of one of its child
+    is designed to be inherited from, or used in the form of one of its child
     classes.
 
     Note:
@@ -102,13 +103,7 @@ class Block(metaclass=ABCMeta):
                 raise TypeError("'shapes' must be a dictionary or None")
             self.shapes = shapes
 
-        # shape_fns
-        if shape_fns is None:
-            self.shape_fns = DEFAULT_SHAPE_FUNCS.copy()
-        else:
-            if not isinstance(shape_fns,dict):
-                raise TypeError("'shape_fns' must be a dictionary or None")
-            self.shape_fns = shape_fns
+        self.shape_fns = DEFAULT_SHAPE_FUNCS.copy()
 
         super(Block,self).__init__() # for metaclass?
 

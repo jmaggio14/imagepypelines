@@ -424,7 +424,7 @@ class Pipeline(object):
         # --------------------------------------------------------------
         # PROCESS
         # --------------------------------------------------------------
-        self._compute()
+        self._compute(skip_checks)
 
         # populate the output dictionary
         fetch_dict = {}
@@ -617,7 +617,7 @@ class Pipeline(object):
     ############################################################################
     #                               internal
     ############################################################################
-    def _compute(self):
+    def _compute(self, skip_checks=False):
         """executes the graph tasks. Relies on Input data being preloaded"""
         for node_a, node_b, edge_idx in self.execution_order:
             # get actual objects instead of just graph ids
@@ -632,7 +632,7 @@ class Pipeline(object):
             # output - JM
             if self.graph.in_degree(node_a) == 0:
                 # no arg data is needed
-                edge['data'] = Data( block_a._pipeline_process(logger=self.logger)[0] )
+                edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_checks)[0] )
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b,data=True)
@@ -643,7 +643,7 @@ class Pipeline(object):
                 args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
-                outputs = block_b._pipeline_process(*args, logger=self.logger)
+                outputs = block_b._pipeline_process(*args, logger=self.logger, force_skip=skip_checks)
 
                 # populate upstream edges with the data we need
                 # get the output names
