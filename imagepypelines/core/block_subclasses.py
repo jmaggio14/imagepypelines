@@ -31,6 +31,49 @@ this_module = sys.modules[__name__]
 #     def name(self):
 #         return self.pipeline.name
 
+################################################################################
+class PipelineBlock(Block):
+    """Block which runs a pipeline internally (used for nesting pipelines
+    within pipelines)
+
+    Attributes:
+        pipeline(:obj:`Pipeline`): pipeline to process with
+        fetch(:obj:`tuple` of :obj:`str`): variables to fetch from the pipeline
+            in the order to retrieve them in
+    """
+    def __init__(self, pipeline, fetch):
+        """instantiates the PipelineBlock
+
+        Args:
+            pipeline(:obj:`Pipeline`): pipeline to process with
+            fetch(:obj:`tuple` of :obj:`str`): variables to fetch from the
+                pipeline in the order to retrieve them in
+        """
+        # check to make sure all the fetch vars are actually in the pipeline
+        if not all((fet in pipeline.vars) for fet in fetch):
+            msg = "Invalid Pipeline fetch, must be one of %s" % pipeline.vars.keys()
+            raise BlockError(msg)
+
+        # instantiate block args
+        self.fetch = fetch
+        self.pipeline
+        # NOTE: do something here to support arg checking for the pipeline!!!
+
+        super().__init__(name=pipeline.name, batch_size="all")
+
+    def process(self, *args):
+        """Runs the pipeline and fetches the desired variables
+        """
+        # NOTE: we might want to make the pipeline's logger a child of this
+        # block's logger in here?
+        processed = self.pipeline.process(*args, fetch=self.fetch)
+        return tuple(processed[fet] for fet in self.fetch)
+
+    @property
+    def args(self):
+        """:obj:`list` of :obj:`str`: arg names for the pipeline"""
+        return self.pipeline.args
+
 
 ################################################################################
 class FuncBlock(Block):
@@ -162,6 +205,7 @@ class Input(Block):
     def loaded(self):
         """bool: whether or not data has been loaded"""
         return (self.data is not None)
+
 
 ################################################################################
 class Leaf(Block):

@@ -7,7 +7,7 @@
 from ..Logger import get_logger, error as iperror, info as ipinfo
 from .Block import Block
 from .Data import Data
-from .block_subclasses import Block, Input, Leaf
+from .block_subclasses import Input, Leaf, PipelineBlock
 from .constants import UUID_ORDER
 from .Exceptions import PipelineError
 from .io_tools import passgen
@@ -20,6 +20,9 @@ import networkx as nx
 import pickle
 import hashlib
 import copy
+
+ILLEGAL_VAR_NAMES = ['fetch']
+"""illegal or reserved names for variables in the graph"""
 
 class Pipeline(object):
     """processing algorithm manager for simple pipeline construction
@@ -145,7 +148,12 @@ class Pipeline(object):
             if var in self.vars.keys():
                 msg = "\"%s\" cannot be defined more than once" % var
                 self.logger.error(msg)
-                raise TypeError(msg)
+                raise ValueError(msg)
+
+            if var in ILLEGAL_VAR_NAMES:
+                msg = "var cannot be named one of %s" % ILLEGAL_VAR_NAMES
+                self.logger.error(msg)
+                raise PipelineError(msg)
 
             self.vars[var] = {'block_node_id':None, # will always be defined
                                 'block':None # will always be defined
@@ -353,7 +361,7 @@ class Pipeline(object):
         self.logger.info(msg)
 
     ############################################################################
-    def process(self, *pos_data, **kwdata):
+    def process(self, *pos_data, fetch=None, **kwdata):
         """processes input data through the pipeline
 
         process first resets this pipeline, before loading input data into the
@@ -361,9 +369,15 @@ class Pipeline(object):
 
         Note:
             The argument list for the Pipeline can be found with `Pipeline.args`
+
+            MUST ADD FETCHES DOCUMENTATIONS
         """
         # reset all leftover data in this graph
         self.clear()
+
+        # setup fetches
+        if fetch is None:
+            fetch = self.vars.keys()
 
         # --------------------------------------------------------------
         # STORING INPUTS - inside the input nodes
@@ -375,8 +389,9 @@ class Pipeline(object):
             inpt = self._inputs[ all_inputs[i] ]
             # check if the data has already been loaded
             if inpt.loaded:
-                self.logger.error("'%s' has already been loaded" % self.indexed_inputs[i])
-                raise PipelineError()
+                msg = "'%s' has already been loaded" % self.indexed_inputs[i]
+                self.logger.error(msg)
+                raise PipelineError(msg)
             inpt.load(data)
 
         # store keyword arguments fed in
@@ -385,8 +400,9 @@ class Pipeline(object):
             inpt = self._inputs[key]
             # check if the data has already been loaded
             if inpt.loaded:
-                self.logger.error("'%s' has already been loaded" % key)
-                raise PipelineError()
+                msg = "'%s' has already been loaded" % key
+                self.logger.error(msg)
+                raise PipelineError(msg)
             inpt.load(val)
 
         # check to make sure all inputs are loaded
@@ -405,7 +421,31 @@ class Pipeline(object):
         # --------------------------------------------------------------
         self._compute()
 
-        return {edge['var_name'] : edge['data'].pop() for _,_,edge in self.graph.edges(data=True)}
+        # populate the output dictionary
+        fetch_dict = {}
+        for _,_,edge in self.graph.edges(data=True):
+            if edge['var_name'] in fetch:
+                fetch_dict[ edge['var_name'] ] = edge['data'].pop()
+
+        # clear the graph of data to reduce memory footprint
+        self.clear()
+
+        return fetch_dict
+
+    ############################################################################
+    def block(self, *fetches):
+        """generates a block that runs this pipeline internally
+
+        Args:
+            *fetches: variables to fetch from the pipeline in the order they
+                should be outputed as
+
+        Returns:
+            :obj:`Block`: Block which will run the pipeline internally and
+                retrieve the data specified by fetches
+        """
+        return PipelineBlock(self, fetch=fetches)
+
 
     ############################################################################
     def clear(self):

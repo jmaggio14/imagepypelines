@@ -15,7 +15,7 @@ from .Block import Block
 from .block_subclasses import FuncBlock
 from .block_subclasses import Input
 from .block_subclasses import Leaf
-# from .block_subclasses import TfBlock
+from .block_subclasses import PipelineBlock
 
 # caching.py
 from .caching import Cache
