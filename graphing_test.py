@@ -8,6 +8,7 @@ def add_val(a,b,value):
 def minus_val(a,b,value):
     return a-value, b-value
 
+
 tasks = {
         # inputs
         'zero' : ip.Input(0),
@@ -63,6 +64,195 @@ assert len( pipeline5.blocks.intersection(pipeline4.blocks) ) == 0
 
 
 import pdb; pdb.set_trace()
+
+
+
+# Ryan and Jeff Enforcement brainstorming
+################################################################################
+# Block
+# task
+# tasks
+# pipeline
+# args
+# vars
+# Inputs
+# 
+#
+# class Block():
+#
+#     ...
+#     @property
+#     def types(self):
+#
+#         return self._types # internal dict {arg:types}
+#
+#     @types.setter
+#     def types(self, arg_type_dict):
+#
+#         self._types.update(arg_type_dict)
+#
+#     ############################################################################
+#     @property
+#     def shapes(self):
+#
+#         return self._shapes # internal dict {arg:shapes}
+#
+#     @shapes.setter
+#     def shapes(self, arg_shape_dict):
+#
+#         self._shapes.update(arg_shape_dict)
+#
+#     ############################################################################
+#     def enforce(self, arg='arg1', types=(type1, type2, ...), shape=(None,None,3))  OR  enforce(self, {'arg1': ((types,...), (shape)), ...})
+#
+#
+#     #####################################################
+#     # RYAN TYPE/SHAPE/ENFORCE EXAMPLE
+#     #####################################################
+#
+#     b = Block(...)
+#
+#     b.types ---> {
+#                     'arg1': None,
+#                     'arg2': None
+#                  }
+#
+#     b.shapes ---> {
+#                     'arg1': None,
+#                     'arg2': None
+#                  }
+#
+#
+#     b.types = {'arg1': (np.ndarray, nn.Tensor)}
+#
+#     b.types ---> {
+#                     'arg1': (np.ndarray, nn.Tensor),
+#                     'arg2': None
+#                  }
+#
+#
+#
+# # IN shape_fns.py
+# # np.ndarray
+# def numpy_shape(obj):
+#     return obj.shape
+# # int
+# def int_shape(obj):
+#     return None
+# # float
+# def float_shape(obj):
+#     return None
+# # list
+# def list_shape(obj):
+#     return (len(obj),)
+# # tuple
+# def tuple_shape(obj):
+#     return (len(obj),)
+# # str
+# def str_shape(obj):
+#     return (len(obj),)
+# # dict
+# def dict_shape(obj):
+#     return (len(obj),)
+#
+# ######## For actual pre-process shape check logic ####
+#  1) check the pipeline's shape func dict (default + custom)
+#  2) if there:
+#         do thing
+#     else:
+#         throw error
+#
+#
+#     ip.DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
+#                                 int : int_shape,
+#                                 float : float_shape,
+#                                 list : list_shape,
+#                                 tuple : tuple_shape,
+#                                 str : str_shape,
+#                                 dict : dict_shape,
+#                             }
+#
+#     # NOTE: figure out how to update this in the plugin system
+#     # install imagepypelines_tensorflow
+#     # {tf.Tensor : shape_fn}
+#
+#     pipeline.shape_funcs = DEFAULT_SHAPE_FUNCS.copy()
+#
+#     pipeline.shape_funcs[new_obj] = new_obj.shape
+#
+# ################################################################################
+#
+# class block1:
+#     """
+#
+#
+#
+#     Process Args:
+#         A np.array containing images
+#
+#     Returns:
+#         A list containing processed images
+#
+#     """
+#     # batch_size = "each" --> output container is a list
+#     def process(self, one_image):
+#         ...
+#
+#
+# class Resize:
+#
+#
+# class List2Array:
+#
+#
+#
+# [processed_image1, processed_image2]
+#
+# class block2:
+#     # batch_size = "all"
+#     def process(self, image_stack):
+#         neural_network(image_stack)
+#
+#
+#
+#
+#
+# tasks = {
+#         # inputs
+#         'zero' : ip.Input(0),
+#         'one' : ip.Input(1),
+#         # operations
+#         ('ten','eleven') : (add_val, 'zero', 'one'),
+#         ('twenty','eleven2') : (add_val, 'ten', 'one'),
+#         ('fifteen', 'six') : (minus_val, 'twenty', 'eleven'),
+#         ('twentyfive','twentyone') : (add_val, 'fifteen','eleven2'),
+#         ('negativefour', 'negativefive') : (minus_val, 'one', 'zero'),
+#         ('out1','out2'): (pipeline.asblock('fetch1','fetch2'), 'var1', 'var2')
+#         }
+#
+#
+#
+# np.asarray(list) --> array
+# pipe_block = pipeline.asblock('fetch1','fetch2') --> block obj which runs pipeline
+#
+# pipe_block.pipeline --> fetches actual pipeline
+#
+#
+# TODO:
+# =======
+# 1 - visualization!
+# 1 - DOCUMENT
+# 2 - pipeline in pipeline
+# 2 - arg checking
+# 2 - fetches
+# 3 - something something web magic?
+# 3 - making the website pretty
+# 4 - track statistics? extra runtime metadata? _pipeline_process kwarg
+# builtin blocks!
+
+
+# stuff we have now
+#
 
 
 # pipeline_block = Pipeline.block("name of output1","name of output2")
