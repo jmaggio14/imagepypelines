@@ -15,24 +15,8 @@ from .Block import Block
 
 this_module = sys.modules[__name__]
 
-# class PipelineBlock(Block):
-#     def __init__(self, pipeline):
-#         self.pipeline = pipeline
-#
-#     def process(self, *data):
-#         # we'd need to do some data checking here
-#         self.pipeline.process(*data)
-#
-#     @property
-#     def inputs(self):
-#         return list(self.pipeline.inputs.keys())
-#
-#     @property
-#     def name(self):
-#         return self.pipeline.name
 
-
-
+################################################################################
 class BatchAllBlock(Block):
     """Block subclass that batches all data at once into Process"""
     def __init__(self, name=None):
@@ -74,6 +58,7 @@ class PipelineBlock(Block):
 
         super().__init__(name=pipeline.name, batch_size="all")
 
+    ############################################################################
     def process(self, *args):
         """Runs the pipeline and fetches the desired variables
         """
@@ -82,6 +67,7 @@ class PipelineBlock(Block):
         processed = self.pipeline.process(*args, fetch=self.fetch)
         return tuple(processed[fet] for fet in self.fetch)
 
+    ############################################################################
     @property
     def args(self):
         """:obj:`list` of :obj:`str`: arg names for the pipeline"""

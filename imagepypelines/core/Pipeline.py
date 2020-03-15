@@ -21,7 +21,7 @@ import pickle
 import hashlib
 import copy
 
-ILLEGAL_VAR_NAMES = ['fetch']
+ILLEGAL_VAR_NAMES = ['fetch','skip_checks']
 """illegal or reserved names for variables in the graph"""
 
 class Pipeline(object):
@@ -118,6 +118,8 @@ class Pipeline(object):
         if isinstance(tasks, Pipeline):
             tasks = tasks.get_tasks()
 
+
+
         self.update(tasks)
 
 
@@ -140,16 +142,19 @@ class Pipeline(object):
         #                           HELPER FUNCTIONS
         ########################################################################
         def _add_to_vars(var):
+            # make sure variable name is a string
             if not isinstance(var,str):
                 msg = "graph vars must be a string, not %s" % type(var)
                 self.logger.error(msg)
                 raise TypeError(msg)
 
+            # check if variable name already exists
             if var in self.vars.keys():
                 msg = "\"%s\" cannot be defined more than once" % var
                 self.logger.error(msg)
                 raise ValueError(msg)
 
+            # check if variable name is illegal
             if var in ILLEGAL_VAR_NAMES:
                 msg = "var cannot be named one of %s" % ILLEGAL_VAR_NAMES
                 self.logger.error(msg)
@@ -361,7 +366,7 @@ class Pipeline(object):
         self.logger.info(msg)
 
     ############################################################################
-    def process(self, *pos_data, fetch=None, **kwdata):
+    def process(self, *pos_data, fetch=None, skip_checks=False, **kwdata):
         """processes input data through the pipeline
 
         process first resets this pipeline, before loading input data into the

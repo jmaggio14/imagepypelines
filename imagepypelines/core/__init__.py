@@ -5,6 +5,9 @@
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 
+# arg_checking.py
+from .arg_checking import DEFAULT_SHAPE_FUNCS
+
 # constants.py
 from .constants import *
 

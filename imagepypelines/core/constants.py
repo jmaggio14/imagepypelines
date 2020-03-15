@@ -5,6 +5,8 @@
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
 import numpy as np
+from enum import Enum
+
 from .imports import import_opencv
 cv2 = import_opencv()
 

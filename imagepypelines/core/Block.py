@@ -8,6 +8,7 @@ from ..Logger import get_logger
 from ..Logger import ImagepypelinesLogger
 from .constants import NUMPY_TYPES, UUID_ORDER
 from .Exceptions import BlockError
+from .arg_checking import DEFAULT_SHAPE_FUNCS
 
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
@@ -35,8 +36,16 @@ class Block(metaclass=ABCMeta):
         _arg_spec(:obj:`namedtuple`,None): a named tuple describing the
             arguments for this block's process function. Only defined if the
             property `block.args` is accessed.
+        skip_enforcement(bool): whether or not to enforce type and shape checking
+        types(:obj:`dict`): Dictionary of input types. If arg doesn't exist
+            as a key, or if the value is None, then no checking is done
+        shapes(:obj:`dict`): Dictionary of input shapes. If arg doesn't exist
+            as a key, or if the value is None, then no checking is done
+        shape_fns(:obj:`dict`): Dictionary of shape functions to retrieve. If
+            type(arg_datum) doesn't exist as a key, or if the value is None,
+            then no checking is done.
     """
-    def __init__(self, name=None, batch_size="all"):
+    def __init__(self, name=None, batch_size="all", types=None, shapes=None):
         """instantiates the block
 
         Args:
@@ -44,6 +53,14 @@ class Block(metaclass=ABCMeta):
                 graph.
             batch_size(str, int): the size of the batch fed into your process
                 function. Must be an integer, "all", or "each"
+            types(:obj:`dict`,None): Dictionary of input types. If arg doesn't
+                exist as a key, or if the value is None, then no checking is
+                done. If not provided, then will default to args as keys, None
+                as values.
+            shapes(:obj:`dict`,None): Dictionary of input shapes. If arg doesn't
+                exist as a key, or if the value is None, then no checking is
+                done. If not provided, then will default to args as keys, None
+                as values.
         """
         assert (batch_size in ["all","each"] or isinstance(batch_size,int))
 
@@ -64,6 +81,34 @@ class Block(metaclass=ABCMeta):
 
         # FullArgSpec for this block, defined in self.args
         self._arg_spec = None
+
+        # TYPE AND SHAPE CHECKING VARS
+        # ----------------------------------------------------------------------
+        self.skip_enforcement = False
+
+        # types
+        if types is None:
+            self.types = {arg : None for arg in self.args}
+        else:
+            if not isinstance(types,dict):
+                raise TypeError("'types' must be a dictionary or None")
+            self.types = types
+
+        # shapes
+        if shapes is None:
+            self.shapes = {arg : None for arg in self.args}
+        else:
+            if not isinstance(shapes,dict):
+                raise TypeError("'shapes' must be a dictionary or None")
+            self.shapes = shapes
+
+        # shape_fns
+        if shape_fns is None:
+            self.shape_fns = DEFAULT_SHAPE_FUNCS.copy()
+        else:
+            if not isinstance(shape_fns,dict):
+                raise TypeError("'shape_fns' must be a dictionary or None")
+            self.shape_fns = shape_fns
 
         super(Block,self).__init__() # for metaclass?
 
@@ -102,6 +147,7 @@ class Block(metaclass=ABCMeta):
             self.logger.error(msg)
             raise BlockError(msg)
 
+
     ############################################################################
     #                           primary frontend
     ############################################################################
@@ -117,7 +163,6 @@ class Block(metaclass=ABCMeta):
         self._unpair_logger()
         # log the new name
         self.logger.warning("renamed from '%s' to '%s'" % old_name, self.name)
-
 
     ############################################################################
     def copy(self):
@@ -137,11 +182,28 @@ class Block(metaclass=ABCMeta):
         deepcopied.uuid = uuid4().hex
         return deepcopied
 
+    ############################################################################
+    def enforce(self, arg, types=None, shapes=None):
+        """sets the block up to make sure the given arg is the assigned type
+        and shapes
+
+        Args:
+            arg(str): name the process function argument you want to enforce
+                checking on
+            types(:obj:`tuple` of :obj:`type`): the types to restrict this
+                argument to. If left as None, then no type checking will be
+                done
+            shapes(:obj:`tuple` of :obj:`type`):  the shapes to restrict this
+                argument to. If left as None, then no shape checking will be
+                done
+        """
+        self.types[arg] = types
+        self.shapes[arg] = shapes
 
     ############################################################################
     #                 called by internally or by Pipeline
     ############################################################################
-    def _pipeline_process(self, *data, logger):
+    def _pipeline_process(self, *data, logger, force_skip):
         """batches and processes data through the block's process function. This
         function is called by Pipeline, and not intended to be called by the
         user.
@@ -150,6 +212,7 @@ class Block(metaclass=ABCMeta):
             *data: Variable length list of data
             logger(:obj:`ImagepypelinesLogger`): parent pipeline logger, which
                 will be used to create a new child block logger
+            force_skip(bool): whether or not to check batch types and shapes
 
         Returns:
             (tuple): variable length tuple containing processed data
@@ -180,7 +243,7 @@ class Block(metaclass=ABCMeta):
             batches = (d.batch_as(self.batch_size) for d in data)
             # feed the data into the process function in batches
             # self.process(input_batch1, input_batch2, ...)
-            outputs = (self._make_tuple( self.process(*datums) ) for datums in zip(*batches))
+            outputs = (self._make_tuple( self.process(*self._check_batches(datums, force_skip)) ) for datums in zip(*batches))
             # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
 
         ret = tuple( zip(*outputs) )
@@ -207,6 +270,95 @@ class Block(metaclass=ABCMeta):
         self.logger = get_logger(self.id)
 
     ############################################################################
+    def _check_batches(self, arg_batches, force_skip):
+        """checks argument batches to verify if they are the correct type and
+        shapes
+
+        NOTE:
+            This could be much faster if done for the whole container instead of
+            batch by batch
+        """
+        if force_skip or self.skip_enforcement:
+            return arg_batches
+
+        # FOR EVERY ARG AND BATCH
+        # ======================================================================
+        for arg_name,batch in zip(self.args, arg_batches):
+            # fetch the types and shapes we'll be checking
+            arg_types = self.types.get(arg_name, None)
+            arg_shapes = self.shapes.get(arg_name, None)
+
+            # NOTE: ADD CONTAINER CHECKS
+            if self.batch_size == "each":
+                # datums are passed in, not a container
+                # there is only one datum and it's batch
+                datums = (batch,)
+            elif isinstance(batch, np.ndarray):
+                # a container is passed in, but it's a numpy array
+                # we only have to check the first row because it's an array
+                datums = batch[0]
+            else:
+                # it's a container, and not a numpy array
+                # we have to check every item in the container
+                datums = batch
+
+            # FOR EVERY DATUM IN THE BATCH
+            # ==================================================================
+            for datum in datums:
+                # ---------------------------------------
+                # TYPE CHECKING
+                # ---------------------------------------
+                # if arg_types is None, then we will skip all type checking
+                if not (arg_types is None):
+                    if not isinstance(datum, arg_types):
+                        msg = "invalid type for '{}'. must be one of {}, not {}"
+                        msg = msg.format(arg_name, arg_types, type(batch))
+                        self.logger.error(msg)
+                        raise BlockError(msg)
+
+                # ---------------------------------------
+                # SHAPE CHECKING
+                # ---------------------------------------
+                # if arg_shapes is None, then we will skip all shape checking
+                if not (arg_shapes is None):
+                    # skip shape checking if we don't have a shape_fn
+                    shape_fn = self.shape_fns.get( type(datum), None )
+                    if shape_fn is None:
+                        continue
+
+                    # retrieve datum shape
+                    datum_shape = shape_fn(datum)
+
+                    # FOR ARG SHAPE in all possible arg shapes
+                    # ==========================================================
+                    ndim_okay = False
+                    for arg_shape in arg_shapes:
+                        # reject automatically unless at least one shape has
+                        # right number of dimensions
+                        if len(arg_shape) != len(datum_shape):
+                            continue
+
+                        ndim_okay = True
+
+                        # otherwise check every axis
+                        axes_okay = True
+                        for arg_ax,d_ax in zip(arg_shape,datum_shape):
+                            # no need to check if the arg_ax is None (any length)
+                            if arg_ax is None:
+                                continue
+                            # compare every axis length
+                            axes_okay = (axes_okay and (arg_ax == d_ax))
+
+                    # raise a shape error
+                    if not (axes_okay and ndim_okay):
+                        msg = "invalid shape for '{}'. must be one of {}, not {}"
+                        msg = msg.format(arg_name, arg_shapes, datum_shape)
+                        self.logger.error(msg)
+                        raise BlockError(msg)
+
+        return arg_batches
+
+    ############################################################################
     @staticmethod
     def _make_tuple(out):
         """if the output isn't a tuple, put it in one"""
@@ -214,15 +366,12 @@ class Block(metaclass=ABCMeta):
             return out
         return (out,)
 
-    ############################################################################
-    # def _check_batch(self,d,datatype):
-
 
     ############################################################################
     #                            special
     ############################################################################
     def __str__(self):
-        return self.name
+        return self.id
 
     ############################################################################
     def __repr__(self):
@@ -237,6 +386,7 @@ class Block(metaclass=ABCMeta):
         """resets the uuid in the event of a copy"""
         state['uuid'] = uuid4().hex
         self.__dict__.update(state)
+
 
     ############################################################################
     #                           properties
