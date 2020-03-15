@@ -24,7 +24,6 @@ del Cache
 
 from .Exceptions import PipelineError
 from .Exceptions import BlockError
-from .Exceptions import InputTypeError
 
 # img_tools.py
 from .img_tools import display_safe

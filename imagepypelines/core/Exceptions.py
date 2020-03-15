@@ -15,8 +15,3 @@ class PipelineError(RuntimeError):
 class BlockError(RuntimeError):
     """Error raised within a Block"""
     pass
-
-
-class InputTypeError(RuntimeError):
-    """Error raised if the wrong type is passed in"""
-    pass

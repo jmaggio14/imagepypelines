@@ -7,7 +7,7 @@
 from ..Logger import get_logger
 from ..Logger import ImagepypelinesLogger
 from .constants import NUMPY_TYPES, UUID_ORDER
-from .Exceptions import BlockError, InputTypeError
+from .Exceptions import BlockError
 
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
@@ -36,14 +36,12 @@ class Block(metaclass=ABCMeta):
             arguments for this block's process function. Only defined if the
             property `block.args` is accessed.
     """
-    def __init__(self, name=None, arg_types=None, batch_size="all"):
+    def __init__(self, name=None, batch_size="all"):
         """instantiates the block
 
         Args:
-            name(str,None): the name of this block - how it will show up
-                in the graph. Defaults to name of class
-            arg_types(dict): a dictionary of types for every arg. Name
-                of argument is key, types are values
+            name(str,None): the name of this block - how it will show up in the
+                graph.
             batch_size(str, int): the size of the batch fed into your process
                 function. Must be an integer, "all", or "singles"
         """
@@ -56,7 +54,6 @@ class Block(metaclass=ABCMeta):
         if name is None:
             name = self.__class__.__name__
         self.name = name
-        self.arg_types = arg_types
         self.batch_size = batch_size
 
         # this will be defined in _pipeline_pair
@@ -67,17 +64,6 @@ class Block(metaclass=ABCMeta):
 
         # FullArgSpec for this block, defined in self.args
         self._arg_spec = None
-
-        # if arg_types isn't None, then make sure it has a key for every
-        # arg
-        self.sorted_arg_types = None
-        if not arg_types is None:
-            if not set(self.args) == set(arg_types.keys()):
-                msg = "a type for every argument must be provided"
-                self.logger.error(msg)
-                raise InputTypeError(msg)
-            self.sorted_arg_types = tuple(self.arg_types[k] for k in self.args)
-
 
         super(Block,self).__init__() # for metaclass?
 
@@ -228,26 +214,8 @@ class Block(metaclass=ABCMeta):
             return out
         return (out,)
 
-
-    ####################################################################
-    def _check_batches(self, *batches):
-        if self.arg_types is None:
-            return
-
-        # no need to check the container type
-        if self.batch_size == "singles":
-            # every batch is just a datum
-            # check to make sure every datum is the correct shape
-            
-                pass
-
     ############################################################################
-    @staticmethod
-    def _axis_check(shape_axis, input_axis):
-        """checks to make sure the given axis is valid"""
-        if shape_axis is None:
-            return True
-        return (shape_axis == input_axis)
+    # def _check_batch(self,d,datatype):
 
 
     ############################################################################
