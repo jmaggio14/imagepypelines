@@ -27,7 +27,7 @@ class Block(metaclass=ABCMeta):
         name(str): user specified name for this pipeline, used to generate
             the unique id. defaults to the name of your subclass
         batch_size(str, int): the size of the batch fed into your process
-            function. Will be an integer, "all", or "singles"
+            function. Will be an integer, "all", or "each"
         logger(:obj:`ImagepypelinesLogger`): Logger object for this block. When
             run in a pipeline this logger is temporaily replaced with a child of
             the Pipeline's logger
@@ -43,9 +43,9 @@ class Block(metaclass=ABCMeta):
             name(str,None): the name of this block - how it will show up in the
                 graph.
             batch_size(str, int): the size of the batch fed into your process
-                function. Must be an integer, "all", or "singles"
+                function. Must be an integer, "all", or "each"
         """
-        assert (batch_size in ["all","singles"] or isinstance(batch_size,int))
+        assert (batch_size in ["all","each"] or isinstance(batch_size,int))
 
         # setup absolutely unique id for this block
         self.uuid = uuid4().hex

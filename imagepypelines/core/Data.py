@@ -18,7 +18,7 @@ class Data(object):
     ############################################################################
     def n_batches_with(self, batch_size):
         """calculates the number of batches generated with the given batch_size"""
-        if batch_size == "singles":
+        if batch_size == "each":
             return self.n_items
         elif batch_size == "all":
             return 1
@@ -29,7 +29,7 @@ class Data(object):
     def batch_as(self, batch_size):
         """returns a generator that generates data batches of given batch_size"""
         # ONE DATUM AT A TIME (not batch_size=1!!!)
-        if batch_size == "singles":
+        if batch_size == "each":
             # LIST
             # return every element if data is a list
             if self.datatype == "list":

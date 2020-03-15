@@ -31,6 +31,19 @@ this_module = sys.modules[__name__]
 #     def name(self):
 #         return self.pipeline.name
 
+
+
+class BatchAllBlock(Block):
+    """Block subclass that batches all data at once into Process"""
+    def __init__(self, name=None):
+        super().__init__(name, batch_size="all")
+
+################################################################################
+class BatchEachBlock(Block):
+    """Block subclass that batches each datum individually into Process"""
+    def __init__(self, name=None):
+        super().__init__(name, batch_size="each")
+
 ################################################################################
 class PipelineBlock(Block):
     """Block which runs a pipeline internally (used for nesting pipelines
@@ -90,7 +103,7 @@ class FuncBlock(Block):
     # def __new__(self, func, preset_kwargs):
     #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
 
-    def __init__(self, func, preset_kwargs, batch_size="singles"):
+    def __init__(self, func, preset_kwargs, batch_size="each"):
         """instantiates the function block
 
         Args:
@@ -98,7 +111,7 @@ class FuncBlock(Block):
             preset_kwargs (dict): preset keyword arguments, typically used for
                 arguments that are not data to process
             batch_size(str, int): the size of the batch fed into your process
-                function. Must be an integer, "all", or "singles"
+                function. Must be an integer, "all", or "each"
         """
 
         # JM: this is an ugly hack to make FuncBlock's serializable - by

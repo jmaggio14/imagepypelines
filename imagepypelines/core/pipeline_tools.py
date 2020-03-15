@@ -38,7 +38,7 @@ DATA_SIZE = LEAF_SIZE
 EDGE_ARROW_STYLE = "Simple,tail_width=0.5,head_width=4,head_length=8"
 
 ################################################################################
-def blockify(batch_size="singles", input_types=None, kwargs={}):
+def blockify(batch_size="each", input_types=None, kwargs={}):
     """decorator which converts a normal function into a un-trainable
     block which can be added to a pipeline. The function can still be used
     as normal after blockification (the __call__ method is setup such that
