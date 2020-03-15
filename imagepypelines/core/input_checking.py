@@ -1,12 +1,27 @@
 from abc import ABCMeta, abstractmethod
 from .Exceptions import InputTypeError
 
+# PLACEHOLDERS until I write the real functions
+register_container(container)
+register_input_type(obj, shape_fn)
+
+# define the base container class
+class BaseContainer(metaclass=ABCMeta):
+    @abstractmethod
+    def __len__(self):
+        pass
+
+    @abstractmethod
+    def __getitem__(self, idx):
+        pass
+
+    @abstractmethod
+    def __getslice__(self, slice):
+        pass
 
 
-
-
-class ArgType(metaclass=ABCMeta):
-    def __init__(self, obj_type, shapes, containers, other=None):
+class ArgType(object):
+    def __init__(self, shapes, containers):
         """instantiates the ArgType
 
         Args:
@@ -15,29 +30,12 @@ class ArgType(metaclass=ABCMeta):
         """
         self.shapes = shapes
         self.containers = containers
-        self.other = other
 
-    @abstractmethod
-    def check_batch_shapes(self, batch, batch_size):
-        pass
+def batch_check(self, *batches):
+    # batches is a single datum
+    sorted_type_fns = [input_types[k] for k in self.args]
+    if self.batch_size = "singles":
 
-    @abstractmethod
-    def check_batch_types(self, batch, batch_size):
-        pass
-
-    def check_batch_other(self, batch, batch_size):
-        pass
-
-
-class Str(ArgType):
-    pass
-
-class Array(ArgType):
-    pass
-
-class List(ArgType):
-
-class Tuple(List):
 
 
 
