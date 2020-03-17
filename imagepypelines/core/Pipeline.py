@@ -17,6 +17,7 @@ import inspect
 import numpy as np
 from uuid import uuid4
 import networkx as nx
+from networkx.readwrite import json_graph
 import pickle
 import hashlib
 import copy
@@ -47,6 +48,25 @@ class Pipeline(object):
             process function)
         _inputs(dict): dictionary internally to access Input objects used to
             queue data into the pipeline
+
+    Pipeline Graph Information:
+        Nodes are dictionaries representing tasks. They contain:
+            'block'   : block object for this task,
+            'args'    : names of the task inputs for this block,
+            'outputs' : names of the task outputs produced by this block,
+            'name'    : string name of the node for visualization purposes,
+            'color'   : color of the node for visualization purposes,
+            'shape'   : shape of the node for visualization purposes,
+            'class_name' : name of the class, frequently identical to the name
+            <plus other attributes defined by the user in Block.get_default_node_attrs()>
+
+        Pipeline edges are dictionaries containing the following:
+            'var_name'  : name of the variable in task definition
+            'out_index' : output index from the source node,
+            'in_index'  : input index for the target node,
+            'name'      : name target block's argument at the in_index
+            'data'      : data for this edge
+
 
 
     Example:
@@ -96,6 +116,7 @@ class Pipeline(object):
                 pipeline's graph or another pipeline to replicate.
             name (str): name used to generate the logger name
         """
+
         self.uuid = uuid4().hex # unique univeral hex ID for this pipeline
         if name is None:
             name = self.__class__.__name__
@@ -117,7 +138,6 @@ class Pipeline(object):
         # pipeline
         if isinstance(tasks, Pipeline):
             tasks = tasks.get_tasks()
-
 
 
         self.update(tasks)
@@ -451,7 +471,6 @@ class Pipeline(object):
         """
         return PipelineBlock(self, fetch=fetches)
 
-
     ############################################################################
     def clear(self):
         """resets all edges in the graph, clears the inputs"""
@@ -742,6 +761,47 @@ class Pipeline(object):
         # remove the name of the variable
         succs.remove(var)
         return succs
+
+    ############################################################################
+    def get_vis(self):
+        """retreives a pipeline summary for use in visualization purpores"""
+        vis = {}
+
+        # ----------------------------------------------------------------------
+        #                       instance variables
+        # ----------------------------------------------------------------------
+
+        # general variables
+        vis['name'] = self.name
+        vis['id'] = self.id
+        vis['uuid'] = self.uuid
+        vis['args'] = self.args
+
+        # variables and the node id that creates them
+        VARS = {(key : val['block_node_id']) for key,val in self.vars.items()}
+        vis["VARS"] = VARS
+
+        # ----------------------------------------------------------------------
+        #                       visualization graph
+        # ----------------------------------------------------------------------
+        # copy the graph
+        graph_copy = self.graph.copy()
+
+        # create a dictionary containing block summaries
+        vis['BLOCKS'] = {}
+        for node_id,attrs in graph_copy.nodes(data=True):
+            # add block summaries to the BLOCKS dict, with the node
+            vis['BLOCKS'][node_id] = attrs['block'].summary()
+            # delete the block from the copy bc it can't be jsonified
+            del attrs['block']
+
+        # jsonify the graph in node-link format. see:
+        # https://networkx.github.io/documentation/stable/reference/readwrite/json_graph.html
+
+        vis['JSON_GRAPH'] = json_graph.node_link_data(graph_copy)
+
+        return vis
+
 
     ############################################################################
     def assign_input_index(self, var, index):

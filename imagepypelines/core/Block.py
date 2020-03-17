@@ -196,7 +196,7 @@ class Block(metaclass=ABCMeta):
         self.shapes[arg] = shapes
 
     ############################################################################
-    #                 called by internally or by Pipeline
+    #                 called internally or by Pipeline
     ############################################################################
     def _pipeline_process(self, *data, logger, force_skip):
         """batches and processes data through the block's process function. This
@@ -248,12 +248,40 @@ class Block(metaclass=ABCMeta):
         return ret
 
     ############################################################################
+    def _summary(self):
+        """fetches a static summary of the block"""
+        summary = {}
+
+        # instance vars
+        summary['name'] = self.name
+        summary['id'] = self.id
+        summary['uuid'] = self.uuid
+        summary['args'] = self.args
+        summary['types'] = self.types
+        summary['shapes'] = self.shapes
+        summary['skip_enforcement'] = self.skip_enforcement
+        summary['batch_size'] = self.batch_size
+        summary['tags'] = list(self.tags)
+
+        # other data
+        summary['class_name'] = self.__class__.__name__
+
+        # method documentation
+        summary['DOCS'] = {}
+        summary['DOCS']['class'] = self.__doc__
+        summary['DOCS']['process'] = self.process.__doc__
+
+        return summary
+
+
+    ############################################################################
     def get_default_node_attrs(self):
+        """all values must be json serializable"""
         attrs = { 'name':self.name,
-        'type':type(self),
-        'color': 'orange',
-        'shape':'square',
-        }
+                'color': 'orange',
+                'shape':'square',
+                'class_name': str( type(self) ),
+                }
         return attrs
 
     ############################################################################
