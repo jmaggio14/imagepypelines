@@ -268,8 +268,9 @@ class Block(metaclass=ABCMeta):
 
         # method documentation
         summary['DOCS'] = {}
-        summary['DOCS']['class'] = self.__doc__
-        summary['DOCS']['process'] = self.process.__doc__
+        summary['DOCS']['class'] = inspect.getdoc(self)
+        summary['DOCS']['__init__'] = inspect.getdoc(self.__init__)
+        summary['DOCS']['process'] = inspect.getdoc(self.process)
 
         return summary
 

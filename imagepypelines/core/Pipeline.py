@@ -802,7 +802,6 @@ class Pipeline(object):
 
         return vis
 
-
     ############################################################################
     def assign_input_index(self, var, index):
         """reassigns the index for this variable in the process argument list"""
