@@ -21,6 +21,7 @@ from networkx.readwrite import json_graph
 import pickle
 import hashlib
 import copy
+import itertools
 
 ILLEGAL_VAR_NAMES = ['fetch','skip_checks']
 """illegal or reserved names for variables in the graph"""
@@ -206,11 +207,11 @@ class Pipeline(object):
         ########################################################################
         # add all variables defined in the graph to a dictionary
         for var in tasks.keys():
-            # for str defined dict keys like 'x' : (func, 'a', 'b')
+            # for str defined dict keys like 'x' : (block, 'a', 'b')
             if isinstance(var, str):
                 _add_to_vars(var)
 
-            # for tuple defined dict keys like ('x','y') : (func, 'a', 'b')
+            # for tuple defined dict keys like ('x','y') : (block, 'a', 'b')
             elif isinstance(var,(tuple,list)):
                 for v in var:
                     _add_to_vars(v)
@@ -764,8 +765,18 @@ class Pipeline(object):
 
     ############################################################################
     def get_types_for(self, var):
-        """(obj:`tuple` of :obj:`tuple` of :obj:`type`): the types expected for
-        the given varialbe"""
+        """fetches the enforced types for this variable of the pipeline.
+
+        More specifically, these are the types that won't throw an error
+        within the block
+
+        Args:
+            var(str): the name of the variable
+
+        Returns:
+            (:obj:`tuple` of :obj:`type`): the types enforced for
+        the given variable
+        """
         # INTERNAL HELPER FUNCTION
         def _dominant_type(types1, types2):
             """determines which set of types are dominant between two tuples of
@@ -793,70 +804,109 @@ class Pipeline(object):
         # fetch the node that produced the variable
         source_node = self.vars[var]['block_node_id']
         # iterate through all nodes it's connected to and fetch their types
-        for _,node_b,in_index in self.graph.out_edges(source_node, data='in_index'):
-            # fetch target block object
-            target = self.graph.nodes[node_b]
-            # fetch the actual name of the argument in the target's process function
-            target_arg = target.args[in_index]
-            # skip updating this target if its enforcement is disabled
-            if target.skip_enforcement:
-                continue
+        for _,node_b,edge in self.graph.out_edges(source_node, data=True):
+            # only if this out edge is for the given var
+            if (edge['var_name'] == var):
+                # fetch target block object
+                target = self.graph.nodes[node_b]
+                # fetch the actual name of the argument in the target's process function
+                target_arg = target.args[ edge['in_index'] ]
+                # skip updating this target if its enforcement is disabled
+                if target.skip_enforcement:
+                    continue
 
-            # compute and update the dominant type
-            dom_types = _dominant_type(
-                                        target.types.get(target_arg, None),
-                                        dom_types
-                                        )
+                # compute and update the dominant type
+                dom_types = _dominant_type(
+                                            target.types.get(target_arg, None),
+                                            dom_types
+                                            )
 
         return dom_types
 
     ############################################################################
-    def get_types_for(self, var):
-        """(obj:`tuple` of :obj:`tuple` of :obj:`tuple`): the shapes expected
-        for the given varialbe"""
-        # INTERNAL HELPER FUNCTION
-        def _dominant_shapes(shapes1, shapes2):
-            """determines which set of types are dominant between two tuples of
-            types
-            """
-            # make types a tuple if they aren't already to simply the code
-            if (types1 is not None) and not isinstance(types1,(list,tuple,set)):
-                types1 = (types1,)
-            if (types2 is not None) and not isinstance(types2,(list,tuple,set)):
-                types2 = (types2,)
+    def get_shapes_for(self, var):
+        """fetches the enforced shapes for the given variable
 
-            # if either type is None, then the other automatically supercedes
-            if types1 is None:
-                return types2
-            elif types2 is None:
-                return types1
-            # both must lists/tuples of types - we want the intersection
+        More specifically, these are the shapes that won't throw an
+        error within the block
+
+        Args:
+            var(str): the name of the variable
+
+        Returns:
+            (:obj:`tuple` of :obj:`tuple`): the shapes enforced for
+        the given variable
+        """
+        # INTERNAL HELPER FUNCTION
+        def _dominant_shape(shape1, shape2):
+            """determines which shape is dominant between shapes, or calculates
+            the new compatible shape if it's required."""
+            # if either shape is None, then the other automatically supercedes
+            if shape1 is None:
+                return shape2
+            elif shape2 is None:
+                return shape1
+            # both must lists or tuples
             else:
-                okay_types = set(types1).intersection( set(types2) )
-                return tuple( okay_types )
+                # if the ndim aren't the same, then there is no compatible shape
+                if len(shape1) != len(shape2):
+                    return tuple()
+
+                new_shape = []
+                # other we have to iterate through and find the dominant axes
+                for ax1,ax2 in zip(shape1,shape2):
+                    # if one axis is None, then the other is dominant
+                    if ax1 is None:
+                        new_shape.append(ax2)
+                    elif ax2 is None:
+                        new_shape.append(ax1)
+                    # both must be integers
+                    else:
+                        if ax1 == ax2:
+                            # if both axial lengths are identical, then we
+                            # can append either to the new shape
+                            new_shape.append(ax1)
+                        else:
+                            # if the axial lengths aren't identical, there is
+                            # no compatible axis and thus no compatible shape
+                            # so we return an empty shape
+                            return tuple()
+
+                return new_shape
         # END INTERNAL HELPER FUNC
 
-        # Iterate through pipeline args and compute the dominant type
-        dom_types = None
+        dom_shapes = (None,)
         # fetch the node that produced the variable
         source_node = self.vars[var]['block_node_id']
         # iterate through all nodes it's connected to and fetch their types
-        for _,node_b,in_index in self.graph.out_edges(source_node, data='in_index'):
-            # fetch target block object
-            target = self.graph.nodes[node_b]
-            # fetch the actual name of the argument in the target's process function
-            target_arg = target.args[in_index]
-            # skip updating this target if its enforcement is disabled
-            if target.skip_enforcement:
-                continue
+        for _,node_b,edge in self.graph.out_edges(source_node, data=True):
+            # only if this out edge is for the given var
+            if (edge['var_name'] == var):
+                # fetch target block object
+                target = self.graph.nodes[node_b]
+                # fetch the actual name of the argument in the target's process function
+                target_arg = target.args[ edge['in_index'] ]
+                # skip updating this target if its enforcement is disabled
+                if target.skip_enforcement:
+                    continue
+                # fetch target shapes
+                target_shapes = target.shapes.get(target_arg, None)
+                # calculate all possible shape permutations
+                all_possible = itertools.product(
+                                                set(target_shapes),
+                                                set(dom_shapes)
+                                                )
 
-            # compute and update the dominant type
-            dom_types = _dominant_type(
-                                        target.types.get(target_arg, None),
-                                        dom_types
-                                        )
+                # check every possible combination
+                all_workable = []
+                for shape1,shape2 in all_possible:
+                    all_workable.append( _dominant_shape(shape1, shape2) )
 
-        return dom_types
+                # remove empty tuples (i.e. incompatible shapes)
+                dom_shapes = tuple(s for s in all_workable if s != tuple())
+                #update the dominant type
+
+            return dom_shapes
 
     ############################################################################
     def get_vis(self):
@@ -890,6 +940,10 @@ class Pipeline(object):
             vis['BLOCKS'][node_id] = attrs['block'].summary()
             # delete the block from the copy bc it can't be jsonified
             del attrs['block']
+
+        # delete data in the edge dict
+        for _,_,edge_attrs in self.graph.edges(data=True):
+            del edge_attrs['data']
 
         # jsonify the graph in node-link format. see:
         # https://networkx.github.io/documentation/stable/reference/readwrite/json_graph.html
@@ -1010,18 +1064,31 @@ class Pipeline(object):
     ############################################################################
     @property
     def types(self):
-        """(obj:`dict` of str : type): the types expected for input arguments.
+        """(obj:`dict` of str : type): the types enforced for input arguments.
         This is computed dynamically so it will automatically reflect changes to
         Blocks"""
         # Iterate through pipeline args and compute the dominant type
-        arg_types = {pype_arg : None for pype_arg in self.args}
         for pype_arg in self.args:
-                arg_types = self.get_types_for(pype_arg)
-                # check if there is at least 1 valid type
-                if not (arg_types is None):
-                    if len(arg_types) == 0:
-                        # log it, but don't throw an error
-                        msg = "no valid types found for {}".format(pype_arg)
-                        self.logger.error(msg)
+            arg_types = self.get_types_for(pype_arg)
+            # check if there is at least 1 valid type
+            if not (arg_types is None):
+                if len(arg_types) == 0:
+                    # log it, but don't throw an error
+                    msg = "no valid types found for {}".format(pype_arg)
+                    self.logger.error(msg)
 
     ############################################################################
+    @property
+    def shapes(self):
+        """(obj:`dict` of str : tuple): the shapes enforced for input arguments.
+        This is computed dynamically so it will automatically reflect changes to
+        Blocks"""
+        # Iterate through pipeline args and compute the dominant shapes
+        for pype_arg in self.args:
+            arg_types = self.get_shapes_for(pype_arg)
+            # check if there is at least 1 valid type
+            if not (arg_types is None):
+                if len(arg_types) == 0:
+                    # log it, but don't throw an error
+                    msg = "no valid shapes found for {}".format(pype_arg)
+                    self.logger.error(msg)
