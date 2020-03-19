@@ -763,6 +763,102 @@ class Pipeline(object):
         return succs
 
     ############################################################################
+    def get_types_for(self, var):
+        """(obj:`tuple` of :obj:`tuple` of :obj:`type`): the types expected for
+        the given varialbe"""
+        # INTERNAL HELPER FUNCTION
+        def _dominant_type(types1, types2):
+            """determines which set of types are dominant between two tuples of
+            types
+            """
+            # make types a tuple if they aren't already to simply the code
+            if (types1 is not None) and not isinstance(types1,(list,tuple,set)):
+                types1 = (types1,)
+            if (types2 is not None) and not isinstance(types2,(list,tuple,set)):
+                types2 = (types2,)
+
+            # if either type is None, then the other automatically supercedes
+            if types1 is None:
+                return types2
+            elif types2 is None:
+                return types1
+            # both must lists/tuples of types - we want the intersection
+            else:
+                okay_types = set(types1).intersection( set(types2) )
+                return tuple( okay_types )
+        # END INTERNAL HELPER FUNC
+
+        # Iterate through pipeline args and compute the dominant type
+        dom_types = None
+        # fetch the node that produced the variable
+        source_node = self.vars[var]['block_node_id']
+        # iterate through all nodes it's connected to and fetch their types
+        for _,node_b,in_index in self.graph.out_edges(source_node, data='in_index'):
+            # fetch target block object
+            target = self.graph.nodes[node_b]
+            # fetch the actual name of the argument in the target's process function
+            target_arg = target.args[in_index]
+            # skip updating this target if its enforcement is disabled
+            if target.skip_enforcement:
+                continue
+
+            # compute and update the dominant type
+            dom_types = _dominant_type(
+                                        target.types.get(target_arg, None),
+                                        dom_types
+                                        )
+
+        return dom_types
+
+    ############################################################################
+    def get_types_for(self, var):
+        """(obj:`tuple` of :obj:`tuple` of :obj:`tuple`): the shapes expected
+        for the given varialbe"""
+        # INTERNAL HELPER FUNCTION
+        def _dominant_shapes(shapes1, shapes2):
+            """determines which set of types are dominant between two tuples of
+            types
+            """
+            # make types a tuple if they aren't already to simply the code
+            if (types1 is not None) and not isinstance(types1,(list,tuple,set)):
+                types1 = (types1,)
+            if (types2 is not None) and not isinstance(types2,(list,tuple,set)):
+                types2 = (types2,)
+
+            # if either type is None, then the other automatically supercedes
+            if types1 is None:
+                return types2
+            elif types2 is None:
+                return types1
+            # both must lists/tuples of types - we want the intersection
+            else:
+                okay_types = set(types1).intersection( set(types2) )
+                return tuple( okay_types )
+        # END INTERNAL HELPER FUNC
+
+        # Iterate through pipeline args and compute the dominant type
+        dom_types = None
+        # fetch the node that produced the variable
+        source_node = self.vars[var]['block_node_id']
+        # iterate through all nodes it's connected to and fetch their types
+        for _,node_b,in_index in self.graph.out_edges(source_node, data='in_index'):
+            # fetch target block object
+            target = self.graph.nodes[node_b]
+            # fetch the actual name of the argument in the target's process function
+            target_arg = target.args[in_index]
+            # skip updating this target if its enforcement is disabled
+            if target.skip_enforcement:
+                continue
+
+            # compute and update the dominant type
+            dom_types = _dominant_type(
+                                        target.types.get(target_arg, None),
+                                        dom_types
+                                        )
+
+        return dom_types
+
+    ############################################################################
     def get_vis(self):
         """retreives a pipeline summary for use in visualization purpores"""
         vis = {}
@@ -861,7 +957,6 @@ class Pipeline(object):
         state['uuid'] = uuid4().hex
         self.__dict__.update(state)
 
-    ############################################################################
 
     ############################################################################
     #                               properties
@@ -906,8 +1001,27 @@ class Pipeline(object):
                 blocks.add(block)
         return blocks
 
+    ############################################################################
+    @property
+    def variables(self):
+        """:obj:`list` of :obj:`str`: all variables in the pipeline"""
+        return list( self.vars.keys() )
 
+    ############################################################################
+    @property
+    def types(self):
+        """(obj:`dict` of str : type): the types expected for input arguments.
+        This is computed dynamically so it will automatically reflect changes to
+        Blocks"""
+        # Iterate through pipeline args and compute the dominant type
+        arg_types = {pype_arg : None for pype_arg in self.args}
+        for pype_arg in self.args:
+                arg_types = self.get_types_for(pype_arg)
+                # check if there is at least 1 valid type
+                if not (arg_types is None):
+                    if len(arg_types) == 0:
+                        # log it, but don't throw an error
+                        msg = "no valid types found for {}".format(pype_arg)
+                        self.logger.error(msg)
 
-
-
-# END
+    ############################################################################

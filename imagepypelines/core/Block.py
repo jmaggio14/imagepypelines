@@ -191,9 +191,19 @@ class Block(metaclass=ABCMeta):
             shapes(:obj:`tuple` of :obj:`type`):  the shapes to restrict this
                 argument to. If left as None, then no shape checking will be
                 done
+
+        Returns:
+            :obj:`Block` : self
         """
+        # make sure the block is already instantiated before we run this function
+        if not hasattr(self, 'uuid'):
+            raise BlockError("Block __init__ must be called before enforcement")
+
+        # NOTE: force values to be lists of lists/None (ie add error checking)
         self.types[arg] = types
         self.shapes[arg] = shapes
+
+        return self
 
     ############################################################################
     #                 called internally or by Pipeline
