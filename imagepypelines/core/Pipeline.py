@@ -23,7 +23,7 @@ import hashlib
 import copy
 import itertools
 
-ILLEGAL_VAR_NAMES = ['fetch','skip_checks']
+ILLEGAL_VAR_NAMES = ['fetch','skip_enforcement']
 """illegal or reserved names for variables in the graph"""
 
 class Pipeline(object):
@@ -147,7 +147,7 @@ class Pipeline(object):
     ############################################################################
     #                       primary frontend functions
     ############################################################################
-    def update(self, tasks={}):
+    def update(self, tasks={}, predict_compatibility=True):
         """updates the pipeline's graph with a dict of tasks
 
         `update` will modify and change many instance variables of the pipeline.
@@ -258,7 +258,6 @@ class Pipeline(object):
                                     outputs=outputs,
                                     **block.get_default_node_attrs(),
                                     )
-
 
 
             else: # something other than a block or of tuple (block, var1, var2,...)
@@ -386,8 +385,21 @@ class Pipeline(object):
         msg = "{} tasks set up; process arguments are ({})".format(len(tasks), ', '.join(self.args))
         self.logger.info(msg)
 
+
+        if predict_compatibility:
+            # check to make sure there are compatible types
+            for var in self.vars.keys():
+                # check if there are compatible types
+                if self.get_types_for() == tuple():
+                    msg = "PREDICTED INCOMPATIBILITY : no compatible types for '%s'" % var
+                    self.logger.warning(msg)
+                # check if there are compatible shapes
+                if self.get_shapes_for() == tuple():
+                    msg = "PREDICTED INCOMPATIBILITY : no compatible shapes for '%s'" % var
+                    self.logger.warning(msg)
+
     ############################################################################
-    def process(self, *pos_data, fetch=None, skip_checks=False, **kwdata):
+    def process(self, *pos_data, fetch=None, skip_enforcement=False, **kwdata):
         """processes input data through the pipeline
 
         process first resets this pipeline, before loading input data into the
@@ -445,7 +457,7 @@ class Pipeline(object):
         # --------------------------------------------------------------
         # PROCESS
         # --------------------------------------------------------------
-        self._compute(skip_checks)
+        self._compute(skip_enforcement)
 
         # populate the output dictionary
         fetch_dict = {}
@@ -637,7 +649,7 @@ class Pipeline(object):
     ############################################################################
     #                               internal
     ############################################################################
-    def _compute(self, skip_checks=False):
+    def _compute(self, skip_enforcement=False):
         """executes the graph tasks. Relies on Input data being preloaded"""
         for node_a, node_b, edge_idx in self.execution_order:
             # get actual objects instead of just graph ids
@@ -653,7 +665,7 @@ class Pipeline(object):
             if self.graph.in_degree(node_a) == 0:
                 # no arg data is needed
                 # import pdb; pdb.set_trace()
-                edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_checks)[0] )
+                edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_enforcement)[0] )
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b,data=True)
@@ -664,7 +676,7 @@ class Pipeline(object):
                 args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
-                outputs = block_b._pipeline_process(*args, logger=self.logger, force_skip=skip_checks)
+                outputs = block_b._pipeline_process(*args, logger=self.logger, force_skip=skip_enforcement)
 
                 # populate upstream edges with the data we need
                 # get the output names
@@ -1064,12 +1076,14 @@ class Pipeline(object):
     ############################################################################
     @property
     def types(self):
-        """(obj:`dict` of str : type): the types enforced for input arguments.
+        """(obj:`dict` of str : type): the types compatible for input arguments.
         This is computed dynamically so it will automatically reflect changes to
         Blocks"""
         # Iterate through pipeline args and compute the dominant type
+        types = {}
         for pype_arg in self.args:
-            arg_types = self.get_types_for(pype_arg)
+            arg_shapes = self.get_types_for(pype_arg)
+            types[pype_arg] = arg_types
             # check if there is at least 1 valid type
             if not (arg_types is None):
                 if len(arg_types) == 0:
@@ -1077,18 +1091,24 @@ class Pipeline(object):
                     msg = "no valid types found for {}".format(pype_arg)
                     self.logger.error(msg)
 
+        return types
+
     ############################################################################
     @property
     def shapes(self):
-        """(obj:`dict` of str : tuple): the shapes enforced for input arguments.
-        This is computed dynamically so it will automatically reflect changes to
-        Blocks"""
+        """(obj:`dict` of str : tuple): the shapes compatible for input
+        arguments. This is computed dynamically so it will automatically reflect
+        changes to Blocks"""
         # Iterate through pipeline args and compute the dominant shapes
+        shapes = {}
         for pype_arg in self.args:
-            arg_types = self.get_shapes_for(pype_arg)
+            arg_shapes = self.get_shapes_for(pype_arg)
+            shapes[pype_arg] = arg_shapes
             # check if there is at least 1 valid type
-            if not (arg_types is None):
-                if len(arg_types) == 0:
+            if not (arg_shapes is None):
+                if len(arg_shapes) == 0:
                     # log it, but don't throw an error
                     msg = "no valid shapes found for {}".format(pype_arg)
                     self.logger.error(msg)
+
+        return shapes
