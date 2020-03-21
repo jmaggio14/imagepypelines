@@ -369,14 +369,14 @@ class Block(metaclass=ABCMeta):
             elif isinstance(batch, np.ndarray):
                 # a container is passed in, but it's a numpy array
                 # we only have to check the first row because it's an array
-                datums = batch[0]
+                datums = batch[0] 
             else:
                 # ---------- CONTAINER CHECK ----------
                 okay_containers = self.containers.get(arg_name,None)
                 if okay_containers is not None:
                     # check the container type is valid
                     if not isinstance(batch, okay_containers):
-                        msg = "invalid container for '{}'. must be {}, not {}"
+                        msg = "invalid container for '{}'. must be {}, not {}. (you can disable this check with the 'skip_enforcement' keyword)"
                         msg = msg.format(arg_name, okay_containers, type(batch))
                         self.logger.error(msg)
                         raise BlockError(msg)
@@ -394,7 +394,7 @@ class Block(metaclass=ABCMeta):
                 # if arg_types is None, then we will skip all type checking
                 if not (arg_types is None):
                     if not isinstance(datum, arg_types):
-                        msg = "invalid type for '{}'. must be {}, not {}"
+                        msg = "invalid type for '{}'. must be {}, not {}. (you can disable this check with the 'skip_enforcement' keyword)"
                         msg = msg.format(arg_name, arg_types, type(batch))
                         self.logger.error(msg)
                         raise BlockError(msg)
@@ -437,7 +437,7 @@ class Block(metaclass=ABCMeta):
                         msg = "invalid shape for '{}'. must be {}, not {}"
                         msg = msg.format(arg_name, arg_shapes, datum_shape)
                         self.logger.error(msg)
-                        raise BlockError(msg + " (you can disable this check with the 'skip_checks' keywork argument)")
+                        raise BlockError(msg + " (you can disable this check with the 'skip_enforcement' keyword)")
 
         return arg_batches
 

@@ -1,4 +1,5 @@
 import imagepypelines as ip
+import numpy as np
 
 ################################################################################
 #                                 General Testing
@@ -78,12 +79,31 @@ assert pipeline4.uuid != pipeline5.uuid
 # check to make sure all blocks are different
 assert len( pipeline5.blocks.intersection(pipeline4.blocks) ) == 0
 
-import pdb; pdb.set_trace()
 
 
 ################################################################################
 #                                 Image Testing
 ################################################################################
+tasks = {
+        'lennas':ip.Input(0),
+        # normalize the inputs
+        'float_lennas':(ip.image.CastTo(np.float64), 'lennas'),
+        'normalized_lennas': (ip.image.NormAB(0,255), 'float_lennas'),
+        'display_safe' : (ip.image.DisplaySafe(), 'normalized_lennas'),
+        # split into RGB channels
+        ('red','green','blue') : (ip.image.ChannelSplit(), 'display_safe'),
+        # recombine into BGR and display
+        'BGR' : (ip.image.RGBMerger(), 'blue','green','red'),
+        'numberedBGR' : (ip.image.NumberImage(), 'BGR'),
+        'null_data(we should be able to /dev/null this somehow)': (ip.image.SequenceViewer(pause_for=1000), 'numberedBGR'),
+
+        }
+
+lennaviewtest = ip.Pipeline(tasks, name='LennaViewTest')
+lennaviewtest.process( [ip.lenna(), ip.gecko(), ip.pig(), ip.redhat(), ip.roger()] )
+
+
+# import pdb; pdb.set_trace()
 
 # TODO:
 # =======
