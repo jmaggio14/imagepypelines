@@ -1145,7 +1145,7 @@ class Pipeline(object):
         # Iterate through pipeline args and compute the dominant type
         types = {}
         for pype_arg in self.args:
-            arg_shapes = self.get_types_for(pype_arg)
+            arg_types = self.get_types_for(pype_arg)
             types[pype_arg] = arg_types
             # check if there is at least 1 valid type
             if not (arg_types is None):
@@ -1185,7 +1185,7 @@ class Pipeline(object):
         # Iterate through pipeline args and compute the dominant container
         containers = {}
         for pype_arg in self.args:
-            arg_shapes = self.get_containers_for(pype_arg)
+            arg_containers = self.get_containers_for(pype_arg)
             containers[pype_arg] = arg_containers
             # check if there is at least 1 valid container
             if not (arg_containers is None):

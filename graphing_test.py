@@ -34,6 +34,10 @@ pipeline1 = ip.Pipeline(tasks, 'Pipeline1')
 processed1 = pipeline1.process([0,0], [1,1])
 # print(processed1)
 
+print('types:', pipeline1.types)
+print('shapes:', pipeline1.shapes)
+print('containers:', pipeline1.containers)
+
 
 ################################################################################
 # PIPELINE2 CONSTRUCTION FROM get_tasks()
