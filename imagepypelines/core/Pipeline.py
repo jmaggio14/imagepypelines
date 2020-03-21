@@ -463,7 +463,7 @@ class Pipeline(object):
         fetch_dict = {}
         for _,_,edge in self.graph.edges(data=True):
             if edge['var_name'] in fetch:
-                fetch_dict[ edge['var_name'] ] = edge['data'].pop()
+                fetch_dict[ edge['var_name'] ] = edge['data'].grab()
 
         # clear the graph of data to reduce memory footprint
         self.clear()
@@ -664,10 +664,11 @@ class Pipeline(object):
             if self.graph.in_degree(node_a) == 0:
                 # no arg data is needed
                 # import pdb; pdb.set_trace()
+                print('running', block_a)
                 edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_enforcement)[0] )
 
             # compute this node if all the data is queued
-            in_edges = self.graph.in_edges(node_b,data=True)
+            in_edges = self.graph.in_edges(node_b, data=True)
             if all((e[2]['data'] is not None) for e in in_edges):
                 # fetch input data for this node
                 in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
@@ -675,6 +676,7 @@ class Pipeline(object):
                 args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
+                print('running', block_b)
                 outputs = block_b._pipeline_process(*args, logger=self.logger, force_skip=skip_enforcement)
 
                 # populate upstream edges with the data we need

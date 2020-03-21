@@ -55,6 +55,11 @@ class Data(object):
         return data
 
     ############################################################################
+    def grab(self):
+        """returns the data in it's raw form"""
+        return self.data
+
+    ############################################################################
     def __len__(self):
         return len(self.data)
 

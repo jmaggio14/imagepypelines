@@ -95,8 +95,8 @@ tasks = {
         # recombine into BGR and display
         'BGR' : (ip.image.RGBMerger(), 'blue','green','red'),
         'numberedBGR' : (ip.image.NumberImage(), 'BGR'),
-        'null_data(we should be able to /dev/null this somehow)': (ip.image.SequenceViewer(pause_for=1000), 'numberedBGR'),
-
+        'null_data1': (ip.image.SequenceViewer(pause_for=1000), 'numberedBGR'),
+        'null_data2': (ip.image.SequenceViewer(pause_for=1000), 'display_safe'),
         }
 
 lennaviewtest = ip.Pipeline(tasks, name='LennaViewTest')
