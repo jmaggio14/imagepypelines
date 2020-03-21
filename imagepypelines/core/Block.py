@@ -22,7 +22,8 @@ class Block(metaclass=ABCMeta):
     classes.
 
     Note:
-        you must overload Block.process() if you intend to use this class
+        you must overload `Block.process()` if you intend to inherit from this
+        class
 
     Attributes:
         uuid(str): hex uuid for this pipeline
@@ -42,11 +43,20 @@ class Block(metaclass=ABCMeta):
             as a key, or if the value is None, then no checking is done
         shapes(:obj:`dict`): Dictionary of input shapes. If arg doesn't exist
             as a key, or if the value is None, then no checking is done
+        containers(:obj:`dict`): Dictionary of input containers. If arg doesn't
+            exist as a key, or if the value is None, then no checking is done
+            *if batch_size is "each", then the container is irrelevant and can
+            be safely ignored!*
         shape_fns(:obj:`dict`): Dictionary of shape functions to retrieve. If
             type(arg_datum) doesn't exist as a key, or if the value is None,
             then no checking is done.
     """
-    def __init__(self, name=None, batch_size="all", types=None, shapes=None):
+    def __init__(self,
+                    name=None,
+                    batch_size="all",
+                    types=None,
+                    shapes=None,
+                    containers=None):
         """instantiates the block
 
         Args:
@@ -62,6 +72,12 @@ class Block(metaclass=ABCMeta):
                 exist as a key, or if the value is None, then no checking is
                 done. If not provided, then will default to args as keys, None
                 as values.
+            containers(:obj:`dict`,None): Dictionary of input containers. If arg
+                doesn't exist as a key, or if the value is None, then no
+                checking is done. If not provided, then will default to args as
+                keys, None as values.
+                *if batch_size is "each", then the container is irrelevant and can
+                be safely ignored!*
         """
         assert (batch_size in ["all","each"] or isinstance(batch_size,int))
 
@@ -102,6 +118,14 @@ class Block(metaclass=ABCMeta):
             if not isinstance(shapes,dict):
                 raise TypeError("'shapes' must be a dictionary or None")
             self.shapes = shapes
+
+        # containers
+        if containers is None:
+            self.containers = {arg : None for arg in self.args}
+        else:
+            if not isinstance(containers,dict):
+                raise TypeError("'containers' must be a dictionary or None")
+            self.containers = containers
 
         self.shape_fns = DEFAULT_SHAPE_FUNCS.copy()
 
@@ -178,7 +202,7 @@ class Block(metaclass=ABCMeta):
         return deepcopied
 
     ############################################################################
-    def enforce(self, arg, types=None, shapes=None):
+    def enforce(self, arg, types=None, shapes=None, containers=None):
         """sets the block up to make sure the given arg is the assigned type
         and shapes
 
@@ -191,17 +215,30 @@ class Block(metaclass=ABCMeta):
             shapes(:obj:`tuple` of :obj:`type`):  the shapes to restrict this
                 argument to. If left as None, then no shape checking will be
                 done
+            containers(:obj:`tuple` of :obj:`type`):  the containers to restrict
+                this argument to. If left as None, then no container checking
+                will be done.
+                *if batch_size is "each", then the container is irrelevant and
+                can be safely ignored!*
 
         Returns:
             :obj:`Block` : self
+
+        Note:
+            This function must be called after the parent block is instantiated!
+
+            That is, in your `__init__` function, you must call
+            `super().__init__` before calling `self.enforce`
         """
-        # make sure the block is already instantiated before we run this function
+        # make sure the parent block object is already instantiated before we
+        # run this function (i.e. call super().__init__ before enforcement)
         if not hasattr(self, 'uuid'):
             raise BlockError("Block __init__ must be called before enforcement")
 
         # NOTE: force values to be lists of lists/None (ie add error checking)
         self.types[arg] = types
         self.shapes[arg] = shapes
+        self.containers[arg] = containers
 
         return self
 
@@ -334,6 +371,16 @@ class Block(metaclass=ABCMeta):
                 # we only have to check the first row because it's an array
                 datums = batch[0]
             else:
+                # ---------- CONTAINER CHECK ----------
+                okay_containers = self.containers.get(arg_name,None)
+                if okay_containers is not None:
+                    # check the container type is valid
+                    if not isinstance(batch, okay_containers):
+                        msg = "invalid container for '{}'. must be {}, not {}"
+                        msg = msg.format(arg_name, okay_containers, type(batch))
+                        self.logger.error(msg)
+                        raise BlockError(msg)
+
                 # it's a container, and not a numpy array
                 # we have to check every item in the container
                 datums = batch
@@ -347,7 +394,7 @@ class Block(metaclass=ABCMeta):
                 # if arg_types is None, then we will skip all type checking
                 if not (arg_types is None):
                     if not isinstance(datum, arg_types):
-                        msg = "invalid type for '{}'. must be one of {}, not {}"
+                        msg = "invalid type for '{}'. must be {}, not {}"
                         msg = msg.format(arg_name, arg_types, type(batch))
                         self.logger.error(msg)
                         raise BlockError(msg)
@@ -387,7 +434,7 @@ class Block(metaclass=ABCMeta):
 
                     # raise a shape error
                     if not (axes_okay and ndim_okay):
-                        msg = "invalid shape for '{}'. must be one of {}, not {}"
+                        msg = "invalid shape for '{}'. must be {}, not {}"
                         msg = msg.format(arg_name, arg_shapes, datum_shape)
                         self.logger.error(msg)
                         raise BlockError(msg + " (you can disable this check with the 'skip_checks' keywork argument)")
@@ -457,11 +504,5 @@ class Block(metaclass=ABCMeta):
         """
         return "{}#{}".format(self.name, self.uuid[-UUID_ORDER:])
 
-# NOTE: add 'summarize' function -- spits out block metadata
 
-
-
-
-
-
-# # END
+# END

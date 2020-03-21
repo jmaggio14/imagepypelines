@@ -390,11 +390,11 @@ class Pipeline(object):
             # check to make sure there are compatible types
             for var in self.vars.keys():
                 # check if there are compatible types
-                if self.get_types_for() == tuple():
+                if self.get_types_for(var) == tuple():
                     msg = "PREDICTED INCOMPATIBILITY : no compatible types for '%s'" % var
                     self.logger.warning(msg)
                 # check if there are compatible shapes
-                if self.get_shapes_for() == tuple():
+                if self.get_shapes_for(var) == tuple():
                     msg = "PREDICTED INCOMPATIBILITY : no compatible shapes for '%s'" % var
                     self.logger.warning(msg)
 
@@ -471,7 +471,7 @@ class Pipeline(object):
         return fetch_dict
 
     ############################################################################
-    def block(self, *fetches):
+    def asblock(self, *fetches):
         """generates a block that runs this pipeline internally
 
         Args:
@@ -610,7 +610,6 @@ class Pipeline(object):
         if name is not None:
             pipeline.rename(name)
 
-        ipinfo("loaded {}".format(pipeline.id))
         return pipeline
 
     ############################################################################
@@ -820,7 +819,7 @@ class Pipeline(object):
             # only if this out edge is for the given var
             if (edge['var_name'] == var):
                 # fetch target block object
-                target = self.graph.nodes[node_b]
+                target = self.graph.nodes[node_b]['block']
                 # fetch the actual name of the argument in the target's process function
                 target_arg = target.args[ edge['in_index'] ]
                 # skip updating this target if its enforcement is disabled
@@ -895,7 +894,7 @@ class Pipeline(object):
             # only if this out edge is for the given var
             if (edge['var_name'] == var):
                 # fetch target block object
-                target = self.graph.nodes[node_b]
+                target = self.graph.nodes[node_b]['block']
                 # fetch the actual name of the argument in the target's process function
                 target_arg = target.args[ edge['in_index'] ]
                 # skip updating this target if its enforcement is disabled
@@ -903,6 +902,8 @@ class Pipeline(object):
                     continue
                 # fetch target shapes
                 target_shapes = target.shapes.get(target_arg, None)
+                # make target shapes an 1 elem iterable if it's None
+                target_shapes = (None,) if target_shapes is None else target_shapes
                 # calculate all possible shape permutations
                 all_possible = itertools.product(
                                                 set(target_shapes),
@@ -936,7 +937,7 @@ class Pipeline(object):
         vis['args'] = self.args
 
         # variables and the node id that creates them
-        VARS = {(key : val['block_node_id']) for key,val in self.vars.items()}
+        VARS = {key : val['block_node_id'] for key,val in self.vars.items()}
         vis["VARS"] = VARS
 
         # ----------------------------------------------------------------------
@@ -1022,6 +1023,8 @@ class Pipeline(object):
         """resets the uuid in the event of a copy"""
         state['uuid'] = uuid4().hex
         self.__dict__.update(state)
+        # updates the logger for the new state
+        self.logger = get_logger(self.id)
 
 
     ############################################################################

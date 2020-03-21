@@ -17,18 +17,6 @@ this_module = sys.modules[__name__]
 
 
 ################################################################################
-class BatchAllBlock(Block):
-    """Block subclass that batches all data at once into Process"""
-    def __init__(self, name=None):
-        super().__init__(name, batch_size="all")
-
-################################################################################
-class BatchEachBlock(Block):
-    """Block subclass that batches each datum individually into Process"""
-    def __init__(self, name=None):
-        super().__init__(name, batch_size="each")
-
-################################################################################
 class PipelineBlock(Block):
     """Block which runs a pipeline internally (used for nesting pipelines
     within pipelines)
@@ -37,6 +25,9 @@ class PipelineBlock(Block):
         pipeline(:obj:`Pipeline`): pipeline to process with
         fetch(:obj:`tuple` of :obj:`str`): variables to fetch from the pipeline
             in the order to retrieve them in
+
+    Batch Size:
+        "each"
     """
     def __init__(self, pipeline, fetch):
         """instantiates the PipelineBlock
@@ -73,7 +64,6 @@ class PipelineBlock(Block):
         """:obj:`list` of :obj:`str`: arg names for the pipeline"""
         return self.pipeline.args
 
-
 ################################################################################
 class FuncBlock(Block):
     """Block that will run anmy fucntion you give it, either unfettered through
@@ -89,15 +79,14 @@ class FuncBlock(Block):
     # def __new__(self, func, preset_kwargs):
     #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
 
-    def __init__(self, func, preset_kwargs, batch_size="each"):
+    def __init__(self, func, preset_kwargs, **block_kwargs):
         """instantiates the function block
 
         Args:
             func (function): the function you desire to turn into a block
             preset_kwargs (dict): preset keyword arguments, typically used for
                 arguments that are not data to process
-            batch_size(str, int): the size of the batch fed into your process
-                function. Must be an integer, "all", or "each"
+            **block_kwargs: keyword arguments for :obj:`Block` instantiation
         """
 
         # JM: this is an ugly hack to make FuncBlock's serializable - by
@@ -121,7 +110,7 @@ class FuncBlock(Block):
             raise TypeError("function cannot accept a variable number of args")
 
         self._arg_spec = spec
-        super().__init__(self.func.__name__, batch_size=batch_size)
+        super().__init__(self.func.__name__,**block_kwargs)
 
     def process(self, *args):
         return self.func(*args, **self.preset_kwargs)
@@ -146,7 +135,6 @@ class FuncBlock(Block):
 
         return pos_args
 
-
 ################################################################################
 class Input(Block):
     """An object to inject data into the graph
@@ -155,7 +143,7 @@ class Input(Block):
         data(any type):
         loaded(bool): where
     """
-    def __init__(self,index=None):
+    def __init__(self, index=None):
         """instantiates the Input
 
         Args:
@@ -204,7 +192,6 @@ class Input(Block):
     def loaded(self):
         """bool: whether or not data has been loaded"""
         return (self.data is not None)
-
 
 ################################################################################
 class Leaf(Block):

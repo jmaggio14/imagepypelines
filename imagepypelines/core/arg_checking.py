@@ -43,7 +43,7 @@ def dict_shape(obj):
     return (len(obj),)
 
 ######## For actual pre-process shape check logic ####
-DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
+_DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
                                 int : int_shape,
                                 float : float_shape,
                                 list : list_shape,
@@ -52,6 +52,7 @@ DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
                                 dict : dict_shape,
                             }
 
+DEFAULT_SHAPE_FUNCS = _DEFAULT_SHAPE_FUNCS.copy()
 # NOTE: figure out how to update this in the plugin system
 # install imagepypelines_tensorflow
 # {tf.Tensor : shape_fn}
