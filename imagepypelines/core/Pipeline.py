@@ -463,6 +463,7 @@ class Pipeline(object):
         fetch_dict = {}
         for _,_,edge in self.graph.edges(data=True):
             if edge['var_name'] in fetch:
+                print(edge['var_name'])
                 fetch_dict[ edge['var_name'] ] = edge['data'].grab()
 
         # clear the graph of data to reduce memory footprint
@@ -664,11 +665,11 @@ class Pipeline(object):
             if self.graph.in_degree(node_a) == 0:
                 # no arg data is needed
                 # import pdb; pdb.set_trace()
-                print('running', block_a)
                 edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_enforcement)[0] )
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b, data=True)
+            print('running', block_b)
             if all((e[2]['data'] is not None) for e in in_edges):
                 # fetch input data for this node
                 in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
@@ -676,21 +677,17 @@ class Pipeline(object):
                 args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
-                print('running', block_b)
-                outputs = block_b._pipeline_process(*args, logger=self.logger, force_skip=skip_enforcement)
+                outputs = block_b._pipeline_process(*args,
+                                                        logger=self.logger,
+                                                        force_skip=skip_enforcement)
 
                 # populate upstream edges with the data we need
                 # get the output names
                 out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
-                # URGENT!
-                # NOTE: this won't work in all cases!
-                # multiple edges can be connected to one out_index!
-                out_edges_sorted = {e['out_index'] : e for e in out_edges}
-                out_edges_sorted = [out_edges_sorted[k] for k in sorted(out_edges_sorted.keys())]
                 # NEED ERROR CHECKING HERE
                 # (psuedo) if n_out == n_expected_out
-                for i,out_edge in enumerate(out_edges_sorted):
-                    out_edge['data'] = Data(outputs[i])
+                for out_edge in out_edges:
+                    out_edge['data'] = Data( outputs[out_edge['out_index']] )
 
 
     ############################################################################
