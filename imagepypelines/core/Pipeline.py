@@ -922,6 +922,66 @@ class Pipeline(object):
             return dom_shapes
 
     ############################################################################
+    def get_containers_for(self, var):
+        """fetches the enforced containers for this variable of the pipeline.
+
+        More specifically, these are the containers that won't throw an error
+        within the block
+
+        Args:
+            var(str): the name of the variable
+
+        Returns:
+            (:obj:`tuple` of :obj:`type`): the containers enforced for
+        the given variable
+        """
+        # INTERNAL HELPER FUNCTION
+        def _dominant_container(containers1, containers2):
+            """determines which set of containers are dominant between two tuples of
+            containers
+            """
+            # make containers a tuple if they aren't already to simply the code
+            if (containers1 is not None) and not isinstance(containers1,(list,tuple,set)):
+                containers1 = (containers1,)
+            if (containers2 is not None) and not isinstance(containers2,(list,tuple,set)):
+                containers2 = (containers2,)
+
+            # if either container is None, then the other automatically supercedes
+            if containers1 is None:
+                return containers2
+            elif containers2 is None:
+                return containers1
+            # both must lists/tuples of containers - we want the intersection
+            else:
+                okay_containers = set(containers1).intersection( set(containers2) )
+                return tuple( okay_containers )
+        # END INTERNAL HELPER FUNC
+
+        # Iterate through pipeline args and compute the dominant container
+        dom_containers = None
+        # fetch the node that produced the variable
+        source_node = self.vars[var]['block_node_id']
+        # iterate through all nodes it's connected to and fetch their containers
+        for _,node_b,edge in self.graph.out_edges(source_node, data=True):
+            # only if this out edge is for the given var
+            if (edge['var_name'] == var):
+                # fetch target block object
+                target = self.graph.nodes[node_b]['block']
+                # fetch the actual name of the argument in the target's process function
+                target_arg = target.args[ edge['in_index'] ]
+                # skip updating this target if its enforcement is disabled
+                if target.skip_enforcement:
+                    continue
+
+                # compute and update the dominant container
+                dom_containers = _dominant_container(
+                                            target.containers.get(target_arg, None),
+                                            dom_containers
+                                            )
+
+        return dom_containers
+
+    ############################################################################
     def get_vis(self):
         """retreives a pipeline summary for use in visualization purpores"""
         vis = {}
@@ -1115,3 +1175,23 @@ class Pipeline(object):
                     self.logger.error(msg)
 
         return shapes
+
+    ############################################################################
+    @property
+    def containers(self):
+        """(obj:`dict` of str : container): the containers compatible for input
+        arguments. This is computed dynamically so it will automatically reflect
+        changes to Blocks"""
+        # Iterate through pipeline args and compute the dominant container
+        containers = {}
+        for pype_arg in self.args:
+            arg_shapes = self.get_containers_for(pype_arg)
+            containers[pype_arg] = arg_containers
+            # check if there is at least 1 valid container
+            if not (arg_containers is None):
+                if len(arg_containers) == 0:
+                    # log it, but don't throw an error
+                    msg = "no valid containers found for {}".format(pype_arg)
+                    self.logger.error(msg)
+
+        return containers
