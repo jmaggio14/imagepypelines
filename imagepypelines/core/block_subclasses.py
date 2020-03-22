@@ -44,18 +44,20 @@ class PipelineBlock(Block):
 
         # instantiate block args
         self.fetch = fetch
-        self.pipeline
+        self.pipeline = pipeline
         # NOTE: do something here to support arg checking for the pipeline!!!
 
         super().__init__(name=pipeline.name, batch_size="all")
 
+
     ############################################################################
     def process(self, *args):
-        """Runs the pipeline and fetches the desired variables
-        """
+        """Runs the pipeline and fetches the desired variables"""
         # NOTE: we might want to make the pipeline's logger a child of this
         # block's logger in here?
         processed = self.pipeline.process(*args, fetch=self.fetch)
+
+        # turn processed dict into a tuple of fetches
         return tuple(processed[fet] for fet in self.fetch)
 
     ############################################################################
@@ -157,7 +159,9 @@ class Input(Block):
     def process(self):
         """returns the loaded data"""
         if self.data is None:
-            raise RuntimeError("data not loaded")
+            msg = "data not loaded"
+            self.logger.error(msg)
+            raise RuntimeError(msg)
         return self.data
 
     ############################################################################

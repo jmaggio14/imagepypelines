@@ -12,6 +12,7 @@ from .arg_checking import DEFAULT_SHAPE_FUNCS
 
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
+from itertools import chain
 import inspect
 import copy
 import numpy as np
@@ -166,6 +167,18 @@ class Block(metaclass=ABCMeta):
             self.logger.error(msg)
             raise BlockError(msg)
 
+    ############################################################################
+    def preprocess(self):
+        """runs before all batches are processed"""
+        pass
+
+    ############################################################################
+    def postprocess(self):
+        """runs after
+
+         all batches are processed"""
+        pass
+
 
     ############################################################################
     #                           primary frontend
@@ -272,14 +285,26 @@ class Block(metaclass=ABCMeta):
             self.logger.error(msg)
             raise RuntimeError(msg)
 
+        # run the processing
+        self.preprocess()
+
         # root blocks don't need input data, and won't have any data
         # passed in to batch. We only call process once for these
         if self.n_args == 0:
             # this separate statement is  necessary because we have to ensure
             # that process is only called once not for every data batch
             # (only if there are no inputs, ie no batches, into this block)
+            self.preprocess()
             ret = self._make_tuple( self.process() )
+            self.postprocess()
         else:
+            # NOTE:
+            # I really don't like how this is written
+            # check_batches could be made much faster by checking all data
+            # instead of doing it batch by batch
+            # it's not very clearly written
+            #            -Jeff
+            #
             # Note: everything is a generator until the end of this statement
             # otherwise we prepare to batch the data and run it through process
             # prepare the batch generators
@@ -291,6 +316,7 @@ class Block(metaclass=ABCMeta):
             # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
             ret = tuple( zip(*outputs) )
 
+        self.postprocess()
         self._unpair_logger()
         return ret
 
@@ -320,7 +346,6 @@ class Block(metaclass=ABCMeta):
         summary['DOCS']['process'] = inspect.getdoc(self.process)
 
         return summary
-
 
     ############################################################################
     def get_default_node_attrs(self):
@@ -369,7 +394,7 @@ class Block(metaclass=ABCMeta):
             elif isinstance(batch, np.ndarray):
                 # a container is passed in, but it's a numpy array
                 # we only have to check the first row because it's an array
-                datums = batch[0] 
+                datums = batch[0]
             else:
                 # ---------- CONTAINER CHECK ----------
                 okay_containers = self.containers.get(arg_name,None)
