@@ -285,7 +285,7 @@ class Block(metaclass=ABCMeta):
             self.logger.error(msg)
             raise RuntimeError(msg)
 
-        # run the processing
+        # run preprocess
         self.preprocess()
 
         # root blocks don't need input data, and won't have any data
@@ -294,9 +294,7 @@ class Block(metaclass=ABCMeta):
             # this separate statement is  necessary because we have to ensure
             # that process is only called once not for every data batch
             # (only if there are no inputs, ie no batches, into this block)
-            self.preprocess()
             ret = self._make_tuple( self.process() )
-            self.postprocess()
         else:
             # NOTE:
             # I really don't like how this is written
@@ -310,12 +308,37 @@ class Block(metaclass=ABCMeta):
             # prepare the batch generators
             # import pdb; pdb.set_trace()
             batches = (d.batch_as(self.batch_size) for d in data)
+            # only have to check the n_batches for the first arg because we enforce data parity
+            n_batches = data[0].n_batches_with(self.batch_size)
+
             # feed the data into the process function in batches
             # self.process(input_batch1, input_batch2, ...)
-            outputs = (self._make_tuple( self.process(*self._check_batches(datums, force_skip)) ) for datums in zip(*batches))
-            # outputs = (out1batch1,out2batch1), (out1batch2,out2batch2)
-            ret = tuple( zip(*outputs) )
+            if self.batch_size == "each":
+                # every 'batch' is a datum
+                datums = batches
+                # outputs = (out1datum1,out2datum1), (out1datum2,out2datum2)
+                outputs = (self._make_tuple( self.process(*self._check_batches(datums, force_skip)) ) for datums in zip(*datums))
+                # ret = (out1, out2)
+                ret = tuple( zip(*outputs) )
 
+            elif isinstance(self.batch_size, int):
+                # every batch is multiple datums
+                # proc = (out1batch1,out2batch1), (out1batch2,out2batch2)
+                proc = (self._make_tuple( self.process(*self._check_batches(datums, force_skip)) ) for datums in zip(*batches))
+                # zip the corresponding batches together
+                # outputs = (out1batch1, out1batch2), (out2batch1,out2batch2)
+                outputs = zip(*proc)
+                # chain the batches together
+                # ret = (out1, out2)
+                ret = tuple( chain(out) for out in outputs )
+
+            elif self.batch_size == "all":
+                # outputs = (out1, out2)
+                outputs = self.process(*self._check_batches(batches, force_skip))
+                ret = outputs
+
+
+        # import pdb; pdb.set_trace()
         self.postprocess()
         self._unpair_logger()
         return ret
