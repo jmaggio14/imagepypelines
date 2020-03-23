@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 from ..Logger import get_logger, error as iperror, info as ipinfo
 from .Block import Block
 from .Data import Data

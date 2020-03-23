@@ -22,7 +22,7 @@ Example:
 
 # MIT License
 #
-# Copyright (c) 2018-2020 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,7 @@ LICENSE_HEADER = """@Email: jmaggio14@gmail.com
 @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 @github: https://github.com/jmaggio14/imagepypelines
 
-Copyright (c) 2018-2019 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 """
 
 EXTENSIONS_DICT = {'py': '#'}
