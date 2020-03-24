@@ -116,24 +116,4 @@
   <!-- Additional content-related scripts for after first page load
   ================================================================= -->
 
-  <script>
-  // Client Side Javascript to receive width.
-    $(document).ready(function(){
-      // start up the SocketIO connection to the server - the namespace 'test' is also included here if necessary
-      var socket = io.connect('http://' + document.domain + ':' + location.port);
-      // this is a callback that triggers when the "my response" event is emitted by the server.
-      socket.on('return prog bar width', function(msg) {
-          // alert("This is width:   " + msg.width)
-          // alert("Current width:   " + $("#progressbar-example")[0].style)
-          // $("#progressbar-example")[0].style.width = msg.width + "%";
-          $("#progressbar-example").css("width", msg.width + "%");
-      });
-      //example of triggering an event on click of a form submit button
-      $("#progress-form").submit(function(event) {
-          socket.emit('enter prog bar width', {width: $('#progress-width').val()});
-          return false;
-      });
-    });
-  </script>
-
  </html>
