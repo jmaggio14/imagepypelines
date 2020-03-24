@@ -10,6 +10,7 @@
     <!-- THEMES -->
     <!-- THEMES -->
     <link href="../css/ip_custom.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/2.0.0/trianglify.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/united/bootstrap.min.css" rel="stylesheet" integrity="sha384-bzjLLgZOhgXbSvSc5A9LWWo/mSIYf7U7nFbmYIB2Lgmuiw3vKGJuu+abKoaTx4W6" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -72,8 +73,9 @@
 
 <!-- WORK HERE -->
 
-        <div class="jumbotron jumbotron-landing" style="color: white; background-image: linear-gradient(70deg, #E95420 800px, white 800px)">
+        <div id="landing" class="jumbotron jumbotron-landing" style="color: white; background: linear-gradient(70deg, #E95420 800px, transparent 800px)">
         <!-- <div class="jumbotron jumbotron-landing" style="color: white; background-image: radial-gradient(at top left, #E95420 40%, white)"> -->
+          <!-- <canvas id="landing"></canvas> -->
           <h1 class="display-3">ImagePypelines</h1>
           <h2 style="max-width: 600px">A processing pipeline framework by imaging scientists, for all scientists</h2> <!-- A processing pipeline package which packs a punch to impress your peers. -->
           <br>
@@ -143,4 +145,35 @@
 
     </div>
   </body>
+
+  <script>
+    var x = $(landing).outerWidth();
+    var y = $(landing).outerHeight();
+
+    // fitToContainer(canvas);
+    //
+    // function fitToContainer(canvas){
+    //   // Make it visually fill the positioned parent
+    //   canvas.style.width ='100%';
+    //   canvas.style.height='100%';
+    //   // ...then set the internal size to match
+    //   canvas.width  = canvas.offsetWidth;
+    //   canvas.height = canvas.offsetHeight;
+    // }
+
+    var pattern = Trianglify({
+      height: y,
+      width: x,
+      cell_size: 100,
+      variance: 0.75,
+      seed: '4q9y0',
+      x_colors: 'YlOrRd'});
+
+    $(landing).background = 'linear-gradient(70deg, #E95420 800px, transparent 800px), url(' + pattern.png() + ');';
+    $(landing).backgroundSize = "cover"
+
+    // pattern.canvas(canv);
+    document.body.appendChild(pattern.canvas());
+  </script>
+
  </html>
