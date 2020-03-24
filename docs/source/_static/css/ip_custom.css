@@ -1,7 +1,12 @@
 /* .jumbotron-landing {
     width: 150%;
 } */
-
+.img-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
 .fade-in-2-sec {
   animation: fadeIn ease 2s;
   -webkit-animation: fadeIn ease 2s;
