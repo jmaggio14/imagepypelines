@@ -38,24 +38,22 @@ __maintainer__ = "Jeff Maggio"
 __maintainer_email__ = "jmaggio14@gmail.com"
 __keywords__ = 'imaging-science machine-learning computer-vision data-pipelines'
 # must be 2.7, or 3.4-3.6
-__python_requires__ = '>=2.7.*,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.7.*'
+__python_requires__ = '>=3.5.*'
 __platforms__ = ["Windows", "Linux", "Mac OS-X", "Unix"]
 __classifiers__ = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Science/Research',
     # 'Topic :: Software Development',
-    # 'Topic :: Scientific/Engineering',
+    'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Artificial Intelligence',
     'Topic :: Scientific/Engineering :: Image Recognition',
     'Topic :: Scientific/Engineering :: Information Analysis',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
     # 'Programming Language :: Python :: 3.7', # JM: 3.7 must wait for tensorflow
     'Programming Language :: Python :: Implementation :: CPython',
     'Operating System :: MacOS :: MacOS X',
