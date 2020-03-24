@@ -5,8 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Sample Landing Page</title>
+    <title>ImagePypelines Monitor</title>
 
+    <!-- THEMES -->
     <!-- THEMES -->
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/united/bootstrap.min.css" rel="stylesheet" integrity="sha384-bzjLLgZOhgXbSvSc5A9LWWo/mSIYf7U7nFbmYIB2Lgmuiw3vKGJuu+abKoaTx4W6" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -23,6 +24,24 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Help</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/jmaggio14/imagepypelines">GitHub</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" target="_blank" id="pages">Options <span class="caret"></span></a>
+              <li class="dropdown-menu" aria-labelledby="pages">
+                <a class="dropdown-item" href="#" target="_blank">Home</a>
+                <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
+                <a class="dropdown-item" href="#" target="_blank">Stuff</a>
+                <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
+                <a class="dropdown-item" href="#" target="_blank">Stuff</a>
+                <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
+                <a class="dropdown-item" href="#" target="_blank">Stuff</a>
+              </li>
+            </li>
           </ul>
 
           <ul class="nav navbar-nav ml-auto">
@@ -34,32 +53,60 @@
         </div>
       </div>
     </div>
+    <div class="container">
 
-    <footer id="footer">
-      <div class="row">
-        <div class="col-lg-12">
-
-          <ul class="list-unstyled">
-            <li class="float-lg-right"><a href="#top">Back to top</a></li>
-            <li><a href="http://blog.bootswatch.com" onclick="pageTracker._link(this.href); return false;">Blog</a></li>
-            <li><a href="https://feeds.feedburner.com/bootswatch">RSS</a></li>
-            <li><a href="https://twitter.com/bootswatch">Twitter</a></li>
-            <li><a href="https://github.com/thomaspark/bootswatch/">GitHub</a></li>
-            <li><a href="../help/#api">API</a></li>
-            <li><a href="../help/#donate">Donate</a></li>
-          </ul>
-          <p>Made by <a href="http://thomaspark.co">Thomas Park</a>.</p>
-          <p>Code released under the <a href="https://github.com/thomaspark/bootswatch/blob/master/LICENSE">MIT License</a>.</p>
-          <p>Based on <a href="https://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a href="http://fontawesome.io/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="https://fonts.google.com/" rel="nofollow">Google</a>.</p>
-
+      <div class="page-header" id="banner">
+        <div class="row">
+          <div class="col-lg-8 col-md-7 col-sm-6">
+            <h1>Welcome to ImagePypelines Monitor!!!</h1>
+            <p class="lead">Yada yada yada we put a bunch of fun stuff here</p>
+          </div>
         </div>
       </div>
 
-    </footer>
+<!-- WORK HERE -->
 
+
+<!-- DON'T GO BELOW HERE -->
+      <div id="source-modal" class="modal fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Source Code</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+              <pre contenteditable="">&lt;div class="progress"&gt;
+  &lt;div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"&gt;&lt;/div&gt;
+&lt;/div&gt;</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer id="footer">
+        <div class="row">
+          <div class="col-lg-12">
+
+            <ul class="list-unstyled">
+              <li class="float-lg-right"><a href="#top">Back to top</a></li>
+              <li><a href="http://blog.bootswatch.com" onclick="pageTracker._link(this.href); return false;">Blog</a></li>
+              <li><a href="https://feeds.feedburner.com/bootswatch">RSS</a></li>
+              <li><a href="https://twitter.com/bootswatch">Twitter</a></li>
+              <li><a href="https://github.com/thomaspark/bootswatch/">GitHub</a></li>
+              <li><a href="../help/#api">API</a></li>
+              <li><a href="../help/#donate">Donate</a></li>
+            </ul>
+            <p>Made by <a href="http://thomaspark.co">Thomas Park</a>.</p>
+            <p>Code released under the <a href="https://github.com/thomaspark/bootswatch/blob/master/LICENSE">MIT License</a>.</p>
+            <p>Based on <a href="https://getbootstrap.com" rel="nofollow">Bootstrap</a>. Icons from <a href="http://fontawesome.io/" rel="nofollow">Font Awesome</a>. Web fonts from <a href="https://fonts.google.com/" rel="nofollow">Google</a>.</p>
+
+          </div>
+        </div>
+
+      </footer>
+
+
+    </div>
   </body>
-
-  <!-- Additional content-related scripts for after first page load
-  ================================================================= -->
-
  </html>
