@@ -169,11 +169,13 @@
       seed: '4q9y0',
       x_colors: 'YlOrRd'});
 
-    $(landing).background = 'linear-gradient(70deg, #E95420 800px, transparent 800px), url(' + pattern.png() + ');';
-    $(landing).backgroundSize = "cover"
+    // $(landing).background = 'linear-gradient(70deg, #E95420 800px, transparent 800px), url(' + pattern.png() + ');';
+    // $(landing).backgroundSize = "cover"
+
+    document.getElementById('landing').style.background = "linear-gradient(160deg, #E95420 250px, transparent), url(" + pattern.png() + ")";
 
     // pattern.canvas(canv);
-    document.body.appendChild(pattern.canvas());
+    // document.body.appendChild(pattern.canvas());
   </script>
 
  </html>
