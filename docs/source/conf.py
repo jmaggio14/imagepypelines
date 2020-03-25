@@ -51,7 +51,7 @@ release = version_info["__version__"]
 
 def setup(app):
     app.add_javascript('js/copybutton.js')
-    app.add_stylesheet('css/custom.css')
+    app.add_stylesheet('css/ip_custom.css')
 
 # JM idk what this does but the automodapi docs say you should do this
 numpydoc_show_class_members = False
