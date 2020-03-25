@@ -4,12 +4,19 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- META TAGS FOR FACEBOOK: https://developers.facebook.com/docs/sharing/webmasters/ -->
+    <meta property="og:url"                content="https://imagepypelines.org" />
+    <meta property="og:type"               content="website" />
+    <meta property="og:title"              content="ImagePypelines" />
+    <meta property="og:description"        content="Whether it's lab time, class time, or your own time, ImagePypelines frees it up so you can focus on your passion" />
+    <meta property="og:image"              content="{{ pathto('_static/images/ip_logo.svg', 1) }}" />
+
+    <!-- The above meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>ImagePypelines</title>
 
     <!-- THEMES -->
     <!-- THEMES -->
-    <link href=""{{ pathto('_static/css/ip_custom.css', 1) }}"" rel="stylesheet">
+    <link href="{{ pathto('_static/css/ip_custom.css', 1) }}" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/2.0.0/trianglify.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/united/bootstrap.min.css" rel="stylesheet" integrity="sha384-bzjLLgZOhgXbSvSc5A9LWWo/mSIYf7U7nFbmYIB2Lgmuiw3vKGJuu+abKoaTx4W6" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
