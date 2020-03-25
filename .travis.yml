@@ -56,7 +56,7 @@ after_script:
 
 after_success:
   # upload coverage report
-  - codecov
+  # - codecov
   # Building website
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
