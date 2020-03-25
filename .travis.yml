@@ -66,7 +66,7 @@ deploy:
   - provider: pages:git
     github-token: $GITHUB_TOKEN
     keep-history: false
-    local-dir: docs/build/html
+    local-dir: /home/travis/build/jmaggio14/imagepypelines/docs/build/html
     verbose: true
     # opt into travis's v2 deploy tooling
     edge: true
