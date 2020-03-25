@@ -46,7 +46,6 @@ script:
   # license enforcer
   - python enforcer.py
   # generate percent test coverage and a coverage report - this now includes website examples
-  #
   # COMMENTED OUT TEMPORARILTY ON 03/23/2020 SO I CAN WORK ON THE WEBSITE
   # -Jeff
   # UNCOMMENT THE LINE BELOW TO WORK ON THE NEW TESTING SETUP

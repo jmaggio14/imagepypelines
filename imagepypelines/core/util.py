@@ -5,8 +5,6 @@
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 from ..Logger import get_logger
-from .constants import CV2_INTERPOLATION_TYPES
-from .constants import NUMPY_TYPES
 import inspect
 import collections
 import time
@@ -14,34 +12,6 @@ from termcolor import colored
 import numpy as np
 
 TIMER_LOGGER = get_logger('TIMER')
-
-################################################################################
-#                                 Error Checking
-################################################################################
-"""
-Helper functions that contain canned tests or checks that we will run
-frequently
-"""
-def interpolation_type_check(interp):
-    """
-    checks to see if the interpolation type is one of the acceptable
-    values specified in opencv, otherwise raises an RuntimeError
-    """
-    if interp not in CV2_INTERPOLATION_TYPES:
-        raise RuntimeError("Invalid interpolation type")
-
-    return True
-
-
-def dtype_type_check(dtype):
-    """
-    checks to see if the interpolation type is one of the acceptable
-    values specified in opencv, otherwise raises an RuntimeError
-    """
-    if dtype not in NUMPY_TYPES:
-        raise InvalidNumpyType("Invalid Numpy type")
-
-    return True
 
 
 ################################################################################
@@ -135,8 +105,6 @@ def print_args(func):
         ret = func(*args,**kwargs)
         return ret
     return _print_args
-
-
 
 
 ################################################################################

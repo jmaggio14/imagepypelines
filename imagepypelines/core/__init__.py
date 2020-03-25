@@ -20,27 +20,8 @@ from .block_subclasses import Input
 from .block_subclasses import Leaf
 from .block_subclasses import PipelineBlock
 
-# caching.py
-from .caching import Cache
-cache = Cache() # instantiate the cache
-del Cache
-
 from .Exceptions import PipelineError
 from .Exceptions import BlockError
-
-# img_tools.py
-from .img_tools import display_safe
-from .img_tools import quick_image_view
-from .img_tools import number_image
-from .img_tools import centroid
-from .img_tools import frame_size
-from .img_tools import dimensions
-from .img_tools import norm_01
-from .img_tools import norm_ab
-from .img_tools import norm_dtype
-from .img_tools import low_pass
-from .img_tools import high_pass
-from .img_tools import Viewer
 
 # imports.py
 # from .imports import import_tensorflow
@@ -97,8 +78,6 @@ from .ml_tools import Cifar100
 
 # pipeline_tools.py
 from .pipeline_tools import blockify
-from .pipeline_tools import categorize_nodes
-from .pipeline_tools import visualize
 
 # Pipeline.py
 from .Pipeline import Pipeline
@@ -106,8 +85,6 @@ from .Pipeline import Input
 
 
 # util.py
-from .util import interpolation_type_check
-from .util import dtype_type_check
 from .util import print_args
 from .util import arrsummary
 from .util import timer

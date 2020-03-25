@@ -5,17 +5,13 @@
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 import numpy as np
-from enum import Enum
-
-from .imports import import_opencv
-cv2 = import_opencv()
 
 # MODIFY THIS VARIABLE EVERY TIME A NEW IMPORTABLE CONSTANT IS ADDED
 # You must also modify the unit test 'test_constants' located in test_core.py
-__all__ = ['NUMPY_TYPES',
-            'CV2_INTERPOLATION_TYPES',
+__all__ = [
+            'UUID_ORDER',
+            'NUMPY_TYPES',
             'IMAGE_EXTENSIONS',
-            'PRETRAINED_NETWORKS',
             ]
 
 
@@ -35,16 +31,6 @@ NUMPY_TYPES = (np.uint8,
                np.complex128)
 """module variable which contains all acceptable numpy dtypes"""
 
-CV2_INTERPOLATION_TYPES = (cv2.INTER_NEAREST,
-                           cv2.INTER_LINEAR,
-                           cv2.INTER_AREA,
-                           cv2.INTER_CUBIC,
-                           cv2.INTER_LANCZOS4,)
-"""module variable which contains all opencv interpolation variables"""
-
-
-
-
 IMAGE_EXTENSIONS = ['png',
                     'jpg',
                     'tiff',
@@ -61,20 +47,3 @@ IMAGE_EXTENSIONS = ['png',
                     'sr',
                     'ras']
 """module variable which contains all image extensions openable by opencv's imread"""
-
-
-PRETRAINED_NETWORKS = [
-                    'xception',
-                    'vgg16',
-                    'vgg19',
-                    'resnet50',
-                    'inception_v3',
-                    'inception_resnet_v2',
-                    'mobilenet',
-                    'densenet121',
-                    'densenet169',
-                    'densenet201',
-                    ]
-"""module variable which contains all usable pretrained network names for the
-        PretrainedNetwork block
-"""
