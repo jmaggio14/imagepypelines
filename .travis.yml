@@ -70,6 +70,7 @@ deploy:
     github-token: $GITHUB_TOKEN
     keep-history: false
     local-dir: docs/build/html
+    verbose: true
     on:
       python: '3.6'
       branch: develop

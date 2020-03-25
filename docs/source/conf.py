@@ -51,6 +51,7 @@ release = version_info["__version__"]
 
 def setup(app):
     app.add_javascript('js/copybutton.js')
+    app.add_stylesheet('css/custom.css')
 
 # JM idk what this does but the automodapi docs say you should do this
 numpydoc_show_class_members = False
@@ -104,7 +105,9 @@ IP_RESET_STDOUT_STDERR()
 # cleanup environment and reset stdout
 del ip
 '''
-
+# JM - adds our custom landing page
+html_additional_pages = {'index': 'index.html'}
+master_doc = 'contents'
 
 # JM - show inherited class attributes in automodapi
 automodsumm_inherited_members = True

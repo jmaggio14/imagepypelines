@@ -1,4 +1,0 @@
-imagepypelines
-==============
-
-.. include:: ../../README.rst

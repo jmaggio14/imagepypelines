@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 This is a script that will verify that all .py contained in our repo
 contain our license and copyright.
@@ -18,7 +19,6 @@ Example:
         $ python enforcer.py --modify
 
 """
-#!/usr/bin/env python
 
 # MIT License
 #
