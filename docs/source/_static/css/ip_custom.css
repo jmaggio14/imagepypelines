@@ -1,6 +1,8 @@
-/* .jumbotron-landing {
-    width: 150%;
-} */
+.center-block {
+   margin-left:auto;
+   margin-right:auto;
+   display:block;
+}
 .img-center {
   display: block;
   margin-left: auto;
