@@ -59,21 +59,21 @@ from .io_tools import convert_to
 # from .io_tools import ImageWriter
 
 # ml_tools.py
-from .ml_tools import accuracy
-from .ml_tools import confidence_99
-from .ml_tools import confidence_95
-from .ml_tools import confidence_90
-from .ml_tools import confidence
-from .ml_tools import chunk
-from .ml_tools import batch
-from .ml_tools import chunks2list
-from .ml_tools import xsample
-from .ml_tools import xysample
-from .ml_tools import ConfigFactory
-from .ml_tools import Mnist
-from .ml_tools import MnistFashion
-from .ml_tools import Cifar10
-from .ml_tools import Cifar100
+# from .ml_tools import accuracy
+# from .ml_tools import confidence_99
+# from .ml_tools import confidence_95
+# from .ml_tools import confidence_90
+# from .ml_tools import confidence
+# from .ml_tools import chunk
+# from .ml_tools import batch
+# from .ml_tools import chunks2list
+# from .ml_tools import xsample
+# from .ml_tools import xysample
+# from .ml_tools import ConfigFactory
+# from .ml_tools import Mnist
+# from .ml_tools import MnistFashion
+# from .ml_tools import Cifar10
+# from .ml_tools import Cifar100
 
 
 # pipeline_tools.py

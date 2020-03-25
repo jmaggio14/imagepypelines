@@ -72,7 +72,9 @@ deploy:
     edge: true
     on:
       python: '3.6'
-      branch: develop
+      branch:
+          - develop
+          - master
 
   - provider: pypi
     user: jmaggio14
