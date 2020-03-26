@@ -106,7 +106,8 @@ IP_RESET_STDOUT_STDERR()
 del ip
 '''
 # JM - adds our custom landing page
-html_additional_pages = {'index': 'index.html'}
+html_additional_pages = {'index': 'index.html',
+                          'about' : 'about.html'}
 master_doc = 'contents'
 
 # JM - show inherited class attributes in automodapi
