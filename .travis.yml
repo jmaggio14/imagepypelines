@@ -13,7 +13,7 @@ dist: xenial
 python:
   - 3.5
   - 3.6
-  - 3.7
+  # - 3.7
 
 services:
   - xvfb
@@ -25,7 +25,7 @@ addons:
       - graphviz
 
 before_install:
-  # prevent travis from timing out for slow processes
+  # prevent travis from timing out from slow processes
   - chmod +x docs/prevent_travis_timeout.sh
   - docs/prevent_travis_timeout.sh &
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
