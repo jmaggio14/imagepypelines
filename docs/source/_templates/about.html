@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>ImagePypelines Monitor</title>
+
+  <!-- THEMES -->
+  <!-- THEMES -->
+  <link href="../css/ip_custom.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/2.0.0/trianglify.min.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/united/bootstrap.min.css" rel="stylesheet" integrity="sha384-bzjLLgZOhgXbSvSc5A9LWWo/mSIYf7U7nFbmYIB2Lgmuiw3vKGJuu+abKoaTx4W6" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</head>
+
+<body class style>
+
+  <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" style="">
+    <a href="#" class="navbar-brand"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Help</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://github.com/jmaggio14/imagepypelines">GitHub</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" target="_blank" id="pages">Options <span class="caret"></span></a>
+          <li class="dropdown-menu" aria-labelledby="pages">
+            <a class="dropdown-item" href="#" target="_blank">Home</a>
+            <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
+            <a class="dropdown-item" href="#" target="_blank">Stuff</a>
+            <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
+            <a class="dropdown-item" href="#" target="_blank">Stuff</a>
+            <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
+            <a class="dropdown-item" href="#" target="_blank">Stuff</a>
+          </li>
+        </ul>
+
+        <ul class="nav navbar-nav ml-auto">
+          <li class="nav-item">
+            <!-- <a class="nav-link" href="https://www.imagepypelines.org/" target="_blank">ImagePypelines</a> -->
+            <form class="form-inline my-2 my-lg-0">
+              <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- <br><br><br>
+
+    <div class="page-header" id="banner">
+    <div class="row">
+    <div class="col-lg-8 col-md-7 col-sm-6">
+    <h1>Welcome to ImagePypelines Monitor!!!</h1>
+    <p class="lead">Yada yada yada we put a bunch of fun stuff here</p>
+  </div>
+</div>
+</div> -->
+
+<!-- WORK HERE -->
+
+<div class="container">
+  <div class="row">
+    <p>
+      We've all been there.
+      You're 4 hours into a fruitless debugging session and you want to go home - you don't have time for bourgeois luxeries like logging, type checking, or proper data visualization!
+      <br>
+      ...But what if you did?<br>
+      Would you write better code for your peers?<br>
+      Would you publish more code online?<br>
+      Would you finally be able to leave the optics lab for more time than it takes to walk downstairs and grab a stale poptart out of the vending machine?
+      <br>
+    </p>
+    <h4 style="max-width: 1000px">We like to think so, and ImagePypelines can help with that!</h4>
+
+  </div>
+</div>
+
+
+<div class="container">
+  <h2>Install</h2>
+  <p>ImagePypelines can be installed from Pip, Conda, or directly from Source.</p>
+  <p>Copy and paste the following into your terminal of choice</p>
+  <ul class="nav nav-pills">
+    <li class="nav-item active"><a data-toggle="pill" href="#pip">Pip</a></li>
+    <li class="nav-item"><a data-toggle="pill" href="#conda">Conda</a></li>
+    <li class="nav-item"><a data-toggle="pill" href="#source">Source</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="pip" class="tab-pane fade in active">
+      <code>pip install imagepypelines</code>
+    </div>
+    <div id="conda" class="tab-pane fade">
+      <i>coming soon!</i>
+    </div>
+    <div id="source" class="tab-pane fade">
+      <code>git clone https://www.github.com/jmaggio14/imagepypelines.git; cd imagepypelines; python setup.py install</code>
+    </div>
+  </div>
+</div>
+
+<!-- <p style="max-width: 1000px">ImagePypelines takes care of all this on the backend, has a simple (and customizable) web-client interface for interactive code and visualization, and an incredibly extendible plugin system.</p> -->
+
+
+<div class="container">
+
+
+
+
+  <!-- DON'T GO BELOW HERE -->
+  <div id="source-modal" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Source Code</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        </div>
+        <div class="modal-body">
+          <pre contenteditable="">&lt;div class="progress"&gt;
+            &lt;div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"&gt;&lt;/div&gt;
+            &lt;/div&gt;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer id="footer">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <ul class="list-unstyled">
+            <li class="float-lg-right"><a href="#top">Back to top</a></li>
+            <li><a href="https://github.com/jmaggio14/imagepypelines/">GitHub</a></li>
+          </ul>
+          <p>&copy; Copyright 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators</p>
+          <p>Code released under the <a href="https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE">MIT License</a>.</p>
+
+        </div>
+      </div>
+
+    </footer>
+
+
+  </div>
+</body>
+
+<script>
+var x = $(landing).outerWidth();
+var y = $(landing).outerHeight();
+
+// fitToContainer(canvas);
+//
+// function fitToContainer(canvas){
+//   // Make it visually fill the positioned parent
+//   canvas.style.width ='100%';
+//   canvas.style.height='100%';
+//   // ...then set the internal size to match
+//   canvas.width  = canvas.offsetWidth;
+//   canvas.height = canvas.offsetHeight;
+// }
+
+var pattern = Trianglify({
+  height: y,
+  width: x,
+  cell_size: 100,
+  variance: 0.75,
+  seed: '4q9y0',
+  x_colors: 'YlOrRd'});
+
+  // $(landing).background = 'linear-gradient(70deg, #E95420 800px, transparent 800px), url(' + pattern.png() + ');';
+  // $(landing).backgroundSize = "cover"
+
+  document.getElementById('landing').style.background = "linear-gradient(110deg, #E95420 100px, transparent), url(" + pattern.png() + ")";
+
+  // pattern.canvas(canv);
+  // document.body.appendChild(pattern.canvas());
+  </script>
+
+  </html>

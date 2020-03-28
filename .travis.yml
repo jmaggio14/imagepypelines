@@ -13,7 +13,7 @@ dist: xenial
 python:
   - 3.5
   - 3.6
-  - 3.7
+  # - 3.7
 
 services:
   - xvfb
@@ -25,7 +25,7 @@ addons:
       - graphviz
 
 before_install:
-  # prevent travis from timing out for slow processes
+  # prevent travis from timing out from slow processes
   - chmod +x docs/prevent_travis_timeout.sh
   - docs/prevent_travis_timeout.sh &
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
@@ -34,7 +34,6 @@ install:
   # imagepypelines Requirements
   - pip install -r requirements.txt
   - pip install .
-  - pip install tensorflow==1.13.1
 
   # Sphinx requirements
   - pip install Sphinx==1.8.2 sphinx_bootstrap_theme==0.6.5 m2r sphinx-automodapi
@@ -47,7 +46,6 @@ script:
   # license enforcer
   - python enforcer.py
   # generate percent test coverage and a coverage report - this now includes website examples
-  #
   # COMMENTED OUT TEMPORARILTY ON 03/23/2020 SO I CAN WORK ON THE WEBSITE
   # -Jeff
   # UNCOMMENT THE LINE BELOW TO WORK ON THE NEW TESTING SETUP
@@ -58,21 +56,25 @@ after_script:
 
 after_success:
   # upload coverage report
-  - codecov
+  # - codecov
   # Building website
   - cd docs && make html && cd ..
   - cp CNAME docs/build/html/CNAME
 
 deploy:
   # Website Deployment
-  - provider: pages
-    skip-cleanup: true
+  - provider: pages:git
     github-token: $GITHUB_TOKEN
     keep-history: false
-    local-dir: docs/build/html
+    local-dir: /home/travis/build/jmaggio14/imagepypelines/docs/build/html
+    verbose: true
+    # opt into travis's v2 deploy tooling
+    edge: true
     on:
       python: '3.6'
-      branch: develop
+      branch:
+          - develop
+          - master
 
   - provider: pypi
     user: jmaggio14
