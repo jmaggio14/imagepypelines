@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+{% extends "layout.html" %}
+{%- block extrahead %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta property="og:url" content="https://imagepypelines.org/about.html" />
@@ -15,67 +12,17 @@
 
     <!-- THEMES -->
     <!-- cdns -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/2.0.0/trianglify.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/2.0.0/trianglify.min.js"></script> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <!-- local -->
-    <link href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" rel="stylesheet">
-    <link href="{{ pathto('_static/css/ip_custom.css', 1) }}" rel="stylesheet">
+    <!-- <link href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" rel="stylesheet"> -->
+    <!-- <link href="{{ pathto('_static/css/ip_custom.css', 1) }}" rel="stylesheet"> -->
+{% endblock %}
 
-  </head>
-
-  <body>
-
-    <div class="navbar navbar-expand-lg navbar-dark bg-primary" style="">
-        <a href="#" class="navbar-brand"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="#">Help</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="https://github.com/jmaggio14/imagepypelines">GitHub</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" target="_blank" id="pages">Options <span class="caret"></span></a>
-              <li class="dropdown-menu" aria-labelledby="pages">
-                <a class="dropdown-item" href="#" target="_blank">Home</a>
-                <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
-                <a class="dropdown-item" href="#" target="_blank">Stuff</a>
-                <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
-                <a class="dropdown-item" href="#" target="_blank">Stuff</a>
-                <!-- <li class="dropdown-divider" aria-labelledby="pages"></li> -->
-                <a class="dropdown-item" href="#" target="_blank">Stuff</a>
-              </li>
-          </ul>
-
-          <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item">
-              <!-- <a class="nav-link" href="https://www.imagepypelines.org/" target="_blank">ImagePypelines</a> -->
-              <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
-              </form>
-            </li>
-          </ul>
-
-      </div>
-    </div>
-
-    <!-- <br><br><br>
-
-      <div class="page-header" id="banner">
-        <div class="row">
-          <div class="col-lg-8 col-md-7 col-sm-6">
-            <h1>Welcome to ImagePypelines Monitor!!!</h1>
-            <p class="lead">Yada yada yada we put a bunch of fun stuff here</p>
-          </div>
-        </div>
-      </div> -->
+<div role="main">
+{% block body %}
 
 <!-- WORK HERE -->
 
@@ -117,18 +64,14 @@
         <div id="pip" class="container tab-pane active fade-in-fast"><br>
           <i>If you get a permission's error, try adding <code>--user</code> to this command</i><br>
           <i>ImagePypelines is python3 only, so this might be "pip3" on your machine :p</i>
-          <pre>
-            <code>pip install imagepypelines</code>
-          </pre>
+          <pre>pip install imagepypelines</pre>
         </div>
         <div id="conda" class="container tab-pane fade-in-fast"><br>
             <pre>coming soon!</pre>
         </div>
         <div id="source" class="container tab-pane fade-in-fast"><br>
             <i>ImagePypelines is python3 only, so this might be "python3" on your machine :p</i>
-            <pre>
-                <code>git clone https://www.github.com/jmaggio14/imagepypelines.git<br>cd imagepypelines<br>python setup.py install</code>
-            </pre>
+            <pre>git clone https://www.github.com/jmaggio14/imagepypelines.git<br>cd imagepypelines<br>python setup.py install</pre>
         </div>
       </div>
     </div>
@@ -170,38 +113,7 @@
 
 
     </div>
-  </body>
 
-  <script>
-    var x = $(landing).outerWidth();
-    var y = $(landing).outerHeight();
-
-    // fitToContainer(canvas);
-    //
-    // function fitToContainer(canvas){
-    //   // Make it visually fill the positioned parent
-    //   canvas.style.width ='100%';
-    //   canvas.style.height='100%';
-    //   // ...then set the internal size to match
-    //   canvas.width  = canvas.offsetWidth;
-    //   canvas.height = canvas.offsetHeight;
-    // }
-
-    var pattern = Trianglify({
-      height: y,
-      width: x,
-      cell_size: 100,
-      variance: 0.75,
-      seed: '4q9y0',
-      x_colors: 'YlOrRd'});
-
-    // $(landing).background = 'linear-gradient(70deg, #E95420 800px, transparent 800px), url(' + pattern.png() + ');';
-    // $(landing).backgroundSize = "cover"
-
-    document.getElementById('landing').style.background = "linear-gradient(110deg, #E95420 100px, transparent), url(" + pattern.png() + ")";
-
-    // pattern.canvas(canv);
-    // document.body.appendChild(pattern.canvas());
-  </script>
-
- </html>
+<!-- end of document block (the html body) -->
+{% endblock %}
+</div>
