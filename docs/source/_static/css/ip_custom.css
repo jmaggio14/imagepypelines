@@ -1,3 +1,11 @@
+/* code blocks */
+pre code {
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
+  padding: 20px;
+}
+/* misc */
 .center-block {
    margin-left:auto;
    margin-right:auto;
@@ -8,6 +16,13 @@
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+.fade-in-fast {
+  animation: fadeIn ease .5s;
+  -webkit-animation: fadeIn ease .5s;
+  -moz-animation: fadeIn ease .5s;
+  -o-animation: fadeIn ease .5s;
+  -ms-animation: fadeIn ease .5s;
 }
 .fade-in-2-sec {
   animation: fadeIn ease 2s;

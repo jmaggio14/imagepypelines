@@ -152,7 +152,7 @@ html_theme = 'bootstrap'
 
 # RH - Activate the pip imported theme
 # JM - 04/02/20. commented out in favor of shipping with our own css
-# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # JM - adds documentation for __special__ functions with docstrings
 napoleon_include_special_with_doc = True
@@ -187,7 +187,7 @@ html_theme_options = {
                      ("Examples", 'examples.html', True),
                      ("Installation", 'installation.html', True),
                      ("Documentation", 'docs/index.html',True),
-                     ("Github",'https://github.com/jmaggio14/imagepypelines',True),
+                     ("Github",version_info['__download_url__'],True),
                      ],
 
     # Render the next and previous page links in navbar. (Default: true)
@@ -289,7 +289,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'imagepypelines.tex', 'ImagePypelines Documentation',
-     'Nathan Dileas, Ryan Hartzell, Jeff Maggio', 'manual'),
+     version_info['__author__'], 'manual'),
 ]
 
 
@@ -310,7 +310,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'ImagePypelines', 'ImagePypelines Documentation',
-     author, 'ImagePypelines', 'One line description of project.',
+     author, 'ImagePypelines', version_info['__description__'],
      'Miscellaneous'),
 ]
 

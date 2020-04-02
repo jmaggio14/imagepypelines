@@ -29,7 +29,7 @@ __name__ = 'imagepypelines'
 __version__ = '0.3.0-alpha'
 __description__ = 'data pipeline and convienence library targeted at accelerating the development of imaging projects and research'
 
-__author__ = 'Jeff Maggio, Nathan Dileas, Ryan Hartzell'
+__author__ = 'Jeff Maggio, Ryan Hartzell, and collaborators'
 __email__ = "jmaggio14@gmail.com"
 __license__ = "MIT"
 __url__ = "https://www.imagepypelines.org"
@@ -65,4 +65,4 @@ __classifiers__ = [
 __credits__ = ["Jeff Maggio", "Nathan Dileas", "Ryan Hartzell"]
 __status__ = "Experimental"
 
-__copyright__ = "Copyright 2018 (c) " + __author__
+__copyright__ = "Copyright (c) 2018-2020 " + __author__
