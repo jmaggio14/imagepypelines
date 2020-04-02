@@ -36,7 +36,7 @@ install:
   - pip install .
 
   # Sphinx requirements
-  - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.8.0 m2r sphinx-automodapi
+  - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.7.1 m2r sphinx-automodapi
   # codecov and auto-testing requirements
   - pip install pytest sybil pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
   # opencv
