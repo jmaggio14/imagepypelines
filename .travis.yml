@@ -59,7 +59,6 @@ after_success:
   # - codecov
   # Building website
   - cd docs && make html && cd ..
-  - cp CNAME docs/build/html/CNAME
 
 deploy:
   # Website Deployment
@@ -68,6 +67,8 @@ deploy:
     keep-history: false
     local-dir: /home/travis/build/jmaggio14/imagepypelines/docs/build/html
     verbose: true
+    # this is the CNAME file contents
+    fqdn: https://www.imagepypelines.org
     # opt into travis's v2 deploy tooling
     edge: true
     on:

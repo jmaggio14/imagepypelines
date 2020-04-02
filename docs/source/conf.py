@@ -50,7 +50,11 @@ release = version_info["__version__"]
 # ones.
 
 def setup(app):
+    # adds a copybutton for our code examples
     app.add_javascript('js/copybutton.js')
+    # bootswatch theme
+    app.add_stylesheet('css/bootstrap.min.css')
+    # our custom additions
     app.add_stylesheet('css/ip_custom.css')
 
 # JM idk what this does but the automodapi docs say you should do this
@@ -147,7 +151,8 @@ pygments_style = 'colorful'
 html_theme = 'bootstrap'
 
 # RH - Activate the pip imported theme
-html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+# JM - 04/02/20. commented out in favor of shipping with our own css
+# html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 
 # JM - adds documentation for __special__ functions with docstrings
 napoleon_include_special_with_doc = True
