@@ -18,18 +18,17 @@ import sys
 import sphinx_bootstrap_theme
 sys.path.insert(0, os.path.abspath('../..'))
 
-# System to automatically load in the correct
+# load in version variables into 'version_info' dict
 CURRENT_DIR = os.path.dirname(__file__)
 VERSION_FILE = os.path.join(CURRENT_DIR,'..','..','imagepypelines','version_info.py')
 with open(VERSION_FILE,'r') as f:
     raw = f.read()
-# load in version variables into 'version_info' dict
 version_info = {}
 exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
 project = "ImagePypelines"
-copyright = '2018-2019 ' + version_info['__author__']
+copyright = version_info['__copyright__'].replace("Copyright ","")
 author = version_info['__author__']
 
 
@@ -53,7 +52,7 @@ def setup(app):
     # adds a copybutton for our code examples
     app.add_javascript('js/copybutton.js')
     # bootswatch theme
-    app.add_stylesheet('css/bootstrap.min.css')
+    # app.add_stylesheet('css/bootstrap.min.css')
     # our custom additions
     app.add_stylesheet('css/ip_custom.css')
 
@@ -69,7 +68,7 @@ extensions = [
     'sphinx.ext.doctest', # JM: adds doctest directives
     'sphinx_automodapi.automodapi', # hopefully should make separate pages for every object
     # 'sphinx_automodapi.smart_resolver'
-]
+    ]
 
 # doctest config
 doctest_global_setup = '''
@@ -112,7 +111,7 @@ del ip
 # JM - adds our custom landing page
 html_additional_pages = {'index': 'index.html',
                           'about' : 'about.html'}
-master_doc = 'contents'
+master_doc = 'index'
 
 # JM - show inherited class attributes in automodapi
 automodsumm_inherited_members = True
@@ -183,18 +182,15 @@ html_theme_options = {
     'navbar_links': [
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
-                     ("Tutorials", 'tutorials.html', True),
                      ("Examples", 'examples.html', True),
-                     ("Installation", 'installation.html', True),
-                     ("Documentation", 'docs/index.html',True),
                      ("Github",version_info['__download_url__'],True),
                      ],
 
     # Render the next and previous page links in navbar. (Default: true)
-    'navbar_sidebarrel': False,
+    'navbar_sidebarrel': True,
 
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': False,
+    'navbar_pagenav': True,
 
     # Tab name for the current pages TOC. (Default: "Page")
     'navbar_pagenav_name': "Page",
