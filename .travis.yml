@@ -38,7 +38,7 @@ install:
   # install official plugins so we can have their docs on the site as well
   # image
   - git clone https://github.com/jmaggio14/imagepypelines_image.git
-  - cd imagepypelines_astro && python setup.py install && cd ..
+  - cd imagepypelines_image && python setup.py install && cd ..
   # astro
   - git clone https://github.com/jmaggio14/imagepypelines_astro.git
   - cd imagepypelines_astro && python setup.py install && cd ..
