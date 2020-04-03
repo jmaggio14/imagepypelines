@@ -123,59 +123,66 @@
 <!-- <div class="container"> -->
 
 <div style="width: 80%; margin-left: 10%; margin-right: 10%">
-<div class="row">
-    <!-- thingy 1 -->
-    <div class="col-md-4">
-        <div class="bs-component">
-            <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
-                <div class="card-header" style="color: #E95420;"><img class="img-center" src="{{ pathto('_static/images/ip_logo.svg', 1) }}" style="width:50%; height:50%;" alt="ImagePypelines Logo"></div>
-                <div class="card-body" style="color: #E95420;">
-                    <h4 class="card-title">Primary card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="row">
+        <!-- CARD 1 -->
+        <div class="col-md-4">
+            <a class="card-link" href="{{ pathto('docs/plugins/image') }}">
+                <div class="bs-component">
+                    <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem; max-height:30rem">
+                        <div class="card-header" style="color: #E95420;"><img class="img-center" src="https://www.cis.rit.edu/files/pdf/ugrad/booklet/images/Slide1.PNG" alt="ImagePypelines image"></div>
+                        <div class="card-body" style="color: #E95420;">
+                            <h4 class="card-title">Imagery</h4>
+                            <p class="card-text">Automate your image processing in just a few lines of code! Let us take care of all the pesky error checking and automation</p>
+                        </div>
+                    </div>
                 </div>
+            </a>
+        </div>
+        <!-- CARD 2 -->
+        <div class="col-md-4">
+            <a class="card-link" href="{{ pathto('docs/plugins/astro') }}">
+                <div class="bs-component">
+                    <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem; max-height:30rem">
+                        <div class="card-header" style="color: #E95420;"><img class="img-center" src="https://www.nasa.gov/sites/default/files/thumbnails/image/nh-apluto-wide-9-17-15-final_0.png" alt="ImagePypelines astro"></div>
+                        <div class="card-body" style="color: #E95420;">
+                            <h4 class="card-title">Astronomy</h4>
+                            <p class="card-text">Open your processing pipeline up to the web and collaborate with your colleagues like never before!
+                                Includes support for fits files, star tracking, and much more!</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- CARD 3 -->
+            <div class="col-md-4">
+                <a class="card-link" href="{{ pathto('docs/plugins/ml') }}">
+                    <div class="bs-component mx-auto">
+                        <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem; max-height:30rem">
+                            <div class="card-header" style="color: #E95420;"><img class="img-center" src="{{ pathto('_static/images/ip_logo.svg', 1) }}" alt="ImagePypelines ml"></div>
+                            <div class="card-body" style="color: #E95420;">
+                                <h4 class="card-title">Machine Learning</h4>
+                                <p class="card-text">Ryan this is all you</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
-    <!-- thingy 2 -->
-    <div class="col-md-4">
-        <div class="bs-component">
-            <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
-                <div class="card-header" style="color: #E95420;"><img class="img-center" src="{{ pathto('_static/images/ip_logo.svg', 1) }}" style="width:50%; height:50%;" alt="ImagePypelines Logo"></div>
-                <div class="card-body" style="color: #E95420;">
-                    <h4 class="card-title">Primary card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- thingy 3 -->
-    <div class="col-md-4">
-        <div class="bs-component mx-auto">
-            <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
-                <div class="card-header" style="color: #E95420;"><img class="img-center" src="{{ pathto('_static/images/ip_logo.svg', 1) }}" style="width:50%; height:50%;" alt="ImagePypelines Logo"></div>
-                <div class="card-body" style="color: #E95420;">
-                    <h4 class="card-title">Primary card title</h4>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-<!-- </div> -->
+    <!-- </div> -->
 
-<!-- <div class="container">
-<div class="row">
-<p>
-We've all been there.
-You're 4 hours into a fruitless debugging session and you want to go home - you don't have time for bourgeois luxeries like logging, type checking, or proper data visualization!
-<br>
-...But what if you did?<br>
-Would you write better code for your peers?<br>
-Would you publish more code online?<br>
-Would you finally be able to leave the optics lab for more time than it takes to walk downstairs and grab a stale poptart out of the vending machine?</p>
-<br>
-<h4 style="max-width: 1000px">We like to think so, and ImagePypelines can help with that!</p>
+    <!-- <div class="container">
+    <div class="row">
+    <p>
+    We've all been there.
+    You're 4 hours into a fruitless debugging session and you want to go home - you don't have time for bourgeois luxeries like logging, type checking, or proper data visualization!
+    <br>
+    ...But what if you did?<br>
+    Would you write better code for your peers?<br>
+    Would you publish more code online?<br>
+    Would you finally be able to leave the optics lab for more time than it takes to walk downstairs and grab a stale poptart out of the vending machine?</p>
+    <br>
+    <h4 style="max-width: 1000px">We like to think so, and ImagePypelines can help with that!</p>
 
 </p>
 </div>
@@ -228,32 +235,32 @@ Would you finally be able to leave the optics lab for more time than it takes to
 
 <script>
 
-    function render() {
+function render() {
 
-      var x = $(landing).outerWidth();
-      var y = $(landing).outerHeight();
+    var x = $(landing).outerWidth();
+    var y = $(landing).outerHeight();
 
-      var pattern = Trianglify({
-          height: y,
-          width: x,
-          cell_size: 100,
-          variance: 0.75,
-          seed: '4q9y0',
-          x_colors: 'YlOrRd'});
+    var pattern = Trianglify({
+        height: y,
+        width: x,
+        cell_size: 100,
+        variance: 0.75,
+        seed: '4q9y0',
+        x_colors: 'YlOrRd'});
 
-      document.getElementById('landing').style.background = "linear-gradient(110deg, #E95420 100px, transparent), url(" + pattern.png() + ")";
+        document.getElementById('landing').style.background = "linear-gradient(110deg, #E95420 100px, transparent), url(" + pattern.png() + ")";
 
     }
 
     $(document).ready(function () {
 
-      render()
+        render()
 
     });
 
     $(window).resize(function () {
 
-      render();
+        render();
 
     });
 

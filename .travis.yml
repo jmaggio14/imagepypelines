@@ -31,9 +31,18 @@ before_install:
   - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
 install:
-  # imagepypelines Requirements
+  # install imagepypelines core
   - pip install -r requirements.txt
   - pip install .
+
+  # install official plugins so we can have their docs on the site as well
+  # image
+  - git clone https://github.com/jmaggio14/imagepypelines_image.git
+  - cd imagepypelines_astro && python setup.py install && cd ..
+  # astro
+  - git clone https://github.com/jmaggio14/imagepypelines_astro.git
+  - cd imagepypelines_astro && python setup.py install && cd ..
+
 
   # Sphinx requirements
   - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.7.1 m2r sphinx-automodapi
