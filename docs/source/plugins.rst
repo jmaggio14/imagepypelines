@@ -5,7 +5,7 @@ How to make an ImagePypelines plugin
 ImagePypelines provides support for other developers to add accessory
 functionality. Plugins will be loaded and accessible under their own namespace
 
-Encourage your users to use the function *ip.require_plugin("<your_plugin>")*
+Encourage your users to use the function *ip.require("<your_plugin>")*
 at the top level of their scripts to ensure the plugin is loaded correctly.
 
 Simply Define an entrypoint 'imagepypelines.plugins' in your setup.py
