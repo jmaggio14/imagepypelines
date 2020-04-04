@@ -182,7 +182,7 @@ html_theme_options = {
     'navbar_links': [
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
-                     ("Examples", 'examples.html', True),
+                     ("Examples", 'examples'),
                      ("Documentation", 'docs/imagepypelines'),
                      ("Plugins", 'plugins'),
                      ("Github", version_info['__download_url__'], True),
