@@ -6,7 +6,7 @@
 # Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 #
 import sys
-from .. import MASTER_LOGGER
+from ..Logger import MASTER_LOGGER
 
 
 def import_tensorflow():
