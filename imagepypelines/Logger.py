@@ -98,7 +98,6 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
         return logging.getLogger, (self.name,)
 
 
-
 def make_master(level=logging.DEBUG):
     """creates the master logger if it doesn't exist, returns it if it does"""
     if MASTER_LOGGER:
@@ -120,28 +119,6 @@ def make_master(level=logging.DEBUG):
     return master
 
 MASTER_LOGGER = make_master()
-
-# quick calls to the ImagePypelines master logger
-def debug(*messages):
-    """logs a 'debug' level message to the imagepypelines root logger"""
-    MASTER_LOGGER.debug(*messages)
-
-def info(*messages):
-    """logs a 'info' level message to the imagepypelines root logger"""
-    MASTER_LOGGER.info(*messages)
-
-def warning(*messages):
-    """logs a 'warning' level message to the imagepypelines root logger"""
-    MASTER_LOGGER.warning(*messages)
-
-def error(*messages):
-    """logs a 'error' level message to the imagepypelines root logger"""
-    MASTER_LOGGER.error(*messages)
-
-def critical(*messages):
-    """logs a 'critical' level message to the imagepypelines root logger"""
-    MASTER_LOGGER.critical(*messages)
-
 
 # function to create a new ImagePypelines Logger
 def get_logger(name, log_level=logging.INFO):

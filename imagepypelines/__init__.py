@@ -31,7 +31,6 @@ CACHE = os.path.join(os.path.expanduser('~'),'.imagepypelines')
 # import the master logger
 from .Logger import MASTER_LOGGER, get_logger, ImagepypelinesLogger
 # import master logger convienence function
-from .Logger import debug, info, warning, error, critical
 # NOTE: import logging constants our users can modify to change color behavior
 
 

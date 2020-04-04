@@ -5,33 +5,7 @@
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 #
-from .Pipeline import Pipeline
 from .block_subclasses import FuncBlock
-from ..Logger import error as iperror
-
-import numpy as np
-import networkx as nx
-from math import sqrt, atan2, degrees
-
-ROOT_COLOR = 'red'
-ROOT_SHAPE = 'p'
-ROOT_SIZE = 1200
-ROOT_OUTEDGE_COLOR = 'red'
-
-BRANCH_COLOR = 'orange'
-BRANCH_SHAPE = 's'
-BRANCH_SIZE = 1200
-BRANCH_OUTEDGE_COLOR = 'black'
-
-LEAF_COLOR = 'green' # (duh)
-LEAF_SHAPE = 'o'
-LEAF_SIZE = 400
-
-DATA_COLOR = LEAF_COLOR
-DATA_SHAPE = LEAF_SHAPE
-DATA_TEXT = 10
-DATA_SIZE = LEAF_SIZE
-EDGE_ARROW_STYLE = "Simple,tail_width=0.5,head_width=4,head_length=8"
 
 ################################################################################
 def blockify(kwargs={},
@@ -85,17 +59,3 @@ def blockify(kwargs={},
                         shapes=shapes,
                         containers=containers)
     return _blockify
-
-################################################################################
-# def to_json(pipeline, pickle_protocol=pickle.HIGHEST_PROTOCOL):
-#     return pipeline.to_json(pickle_protocol)
-#
-# ################################################################################
-# def from_json(jsonified):
-#     return Pipeline.from_json(jsonified)
-
-################################################################################
-def debug_pickle(pipeline):
-    return pipeline.debug_pickle()
-
-################################################################################

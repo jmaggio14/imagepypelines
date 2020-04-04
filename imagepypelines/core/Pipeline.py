@@ -4,7 +4,7 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
-from ..Logger import get_logger, error as iperror, info as ipinfo
+from ..Logger import get_logger, MASTER_LOGGER
 from .Block import Block
 from .Data import Data
 from .block_subclasses import Input, Leaf, PipelineBlock
@@ -593,7 +593,7 @@ class Pipeline(object):
             fchecksum = hashlib.sha256(raw_bytes).hexdigest()
             if fchecksum != checksum:
                 msg = "'%s'checksum doesn't match" % filename
-                iperror(msg)
+                MASTER_LOGGER.error(msg)
                 PipelineError(msg)
 
         # decrypt the file contents if passwd is provided

@@ -35,7 +35,6 @@ def print_args(func):
         VARPOSITIONAL = 'var-positional|'
         VARKEYWORD    = 'var-keyword   |'
         DEFAULT       = 'default       |'
-        PRINTER = get_logger(func.__name__)
 
         arg_dict = collections.OrderedDict()
         vtypes = {}
@@ -95,7 +94,7 @@ def print_args(func):
             __add_to_arg_dict(var_name,var,vtype)
 
         # formatting the actual string to be printed out
-        PRINTER.info("running '{}' with the following args:".format(func.__name__))
+        MASTER_LOGGER.info("running '{}' with the following args:".format(func.__name__))
         if len(arg_dict) == 0:
             __add_to_arg_dict('None','','')
         longest_arg_name = max(len(k) for k in arg_dict)
