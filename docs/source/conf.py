@@ -66,8 +66,9 @@ extensions = [
     'm2r',   # ND: add support for MarkDown, to allow readme importing,
     'sphinx.ext.githubpages', # JM add .nojekyll creation for github
     'sphinx.ext.doctest', # JM: adds doctest directives
-    'sphinx_automodapi.automodapi', # hopefully should make separate pages for every object
-    # 'sphinx_automodapi.smart_resolver'
+    'sphinx_automodapi.automodapi', # makes separate doc pages for every object
+    # 'sphinx_automodapi.smart_resolver', # don't think this is needed
+    'sphinx_copybutton', # adds a copy button to our examples (NOT THE SAME AS copybutton.js)
     ]
 
 # doctest config
@@ -95,23 +96,13 @@ def IP_RESET_STDOUT_STDERR():
         sys.stderr = sys.__stderr__
         IP_DEVNULL = None
 
-# check if this computer has a webcam
-IP_SILENCE_STDOUT_STDERR()
-try:
-    camera = ip.blocks.CameraBlock(device=0)
-    ip.Pipeline([camera]).process([1])
-    IP_NO_CAMERA = False
-except ip.CameraReadError:
-    IP_NO_CAMERA = True
-IP_RESET_STDOUT_STDERR()
-
-# cleanup environment and reset stdout
+# cleanup environment
 del ip
 '''
 # JM - adds our custom landing page
 html_additional_pages = {'index': 'index.html',
                           'about' : 'about.html'}
-master_doc = 'index'
+master_doc = 'contents'
 
 # JM - show inherited class attributes in automodapi
 automodsumm_inherited_members = True

@@ -1,3 +1,5 @@
+// adds a button to remove or add '>>>' markers to our code examples
+// doesn't actually copy to our clipboard
 $(document).ready(function() {
     /* Add a [>>>] button on the top-right corner of code samples to hide
      * the >>> and ... prompts and the output and thus make the code
