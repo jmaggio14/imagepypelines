@@ -184,7 +184,8 @@ html_theme_options = {
                      # ("Readme", 'readme.html', True),
                      ("Examples", 'examples.html', True),
                      ("Documentation", 'docs/imagepypelines'),
-                     ("Github",version_info['__download_url__'],True),
+                     ("Plugins", 'plugins'),
+                     ("Github", version_info['__download_url__'], True),
                      ],
 
     # Render the next and previous page links in navbar. (Default: true)
