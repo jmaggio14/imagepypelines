@@ -17,16 +17,6 @@ init_time = time.time()
 session_uuid = uuid4().hex
 """a universally unique id for this imagepypelines session"""
 
-# --------- retrieve the source directory for our standard images ---------
-STANDARD_IMAGE_DIRECTORY = pkg_resources.resource_filename(__name__,
-                                                        'data/standard_images')
-"""the location where imagepypelines standard images are stored"""
-# -------- define the cache directory for this machine and session -------
-CACHE = os.path.join(os.path.expanduser('~'),'.imagepypelines')
-"""the local imagepypelines cache/config directory for this user"""
-
-
-
 # ----------- Setup the Root ImagePypelines Logger ---------------
 # import the master logger
 from .Logger import MASTER_LOGGER, get_logger, ImagepypelinesLogger
@@ -85,7 +75,7 @@ def load_plugins():
 load_plugins()
 
 # define a function to check if a plugin is loaded
-def require_plugin(plugin_name):
+def require(plugin_name):
     """check to make sure the given plugin is loaded and raise an error if it
     is not in the imagepypelines namespace
     """

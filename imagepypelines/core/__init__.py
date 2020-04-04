@@ -28,28 +28,7 @@ from .Exceptions import BlockError
 # from .imports import import_opencv
 
 # io_tools.py
-# --- standard imagery ---
 from .io_tools import passgen
-from .io_tools import list_standard_images
-from .io_tools import standard_image_filenames
-from .io_tools import standard_image_gen
-from .io_tools import list_standard_images
-from .io_tools import standard_images
-from .io_tools import get_standard_image
-
-from .io_tools import STANDARD_IMAGES
-from .io_tools import funcs
-
-import sys
-
-curr_module = sys.modules[__name__]
-for img_name in STANDARD_IMAGES.keys():
-	setattr(curr_module, img_name, getattr(funcs, img_name))
-
-# ND 9/7/18 - delete these so that the imagepypelines namespace is not polluted
-del sys, curr_module, funcs, STANDARD_IMAGES
-
-# --- other io ---
 from .io_tools import prevent_overwrite
 from .io_tools import make_numbered_prefix
 from .io_tools import convert_to

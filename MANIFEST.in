@@ -1,4 +1,3 @@
 include LICENSE
 include DEPENDENCY-LICENSE.md
 include README.rst
-recursive-include imagepypelines/data *
