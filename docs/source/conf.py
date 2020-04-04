@@ -28,7 +28,7 @@ exec(raw,{},version_info)
 
 # -- Project information -----------------------------------------------------
 project = "ImagePypelines"
-copyright = version_info['__copyright__'].replace("Copyright ","")
+copyright = version_info['__copyright__'].replace("Copyright (c)","")
 author = version_info['__author__']
 
 

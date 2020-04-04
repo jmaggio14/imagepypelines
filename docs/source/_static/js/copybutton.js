@@ -61,5 +61,4 @@ $(document).ready(function() {
             button.data('hidden', 'false');
         }
     });
-    $('.copybutton').click();
 });
