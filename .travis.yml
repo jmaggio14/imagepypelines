@@ -39,6 +39,7 @@ install:
   # image
   - git clone https://github.com/jmaggio14/imagepypelines_image.git
   - cd imagepypelines_image && python setup.py install && cd ..
+  - pip install opencv-python
   # astro
   - git clone https://github.com/jmaggio14/imagepypelines_astro.git
   - cd imagepypelines_astro && python setup.py install && cd ..
@@ -48,8 +49,6 @@ install:
   - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.7.1 m2r sphinx-automodapi
   # codecov and auto-testing requirements
   - pip install pytest sybil pytest-cov hypothesis coverage codecov pytest-doctest-ellipsis-markers --upgrade
-  # opencv
-  - pip install opencv-python
 
 script:
   # license enforcer
