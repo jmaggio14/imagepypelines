@@ -175,7 +175,7 @@ html_theme_options = {
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
                      ("Examples", 'examples'),
-                     ("Documentation", 'docs/imagepypelines'),
+                     ("Documentation", 'docs/core'),
                      ("Plugins", 'plugins'),
                      ("Github", version_info['__download_url__'], True),
                      ],
