@@ -192,24 +192,23 @@
 
 
 <div class="container">
+
+        <div id="graph">
+        </div>
+
         <footer id="footer">
             <div class="row">
                 <div class="col-lg-12">
-
                     <ul class="list-unstyled">
                         <li class="float-lg-right"><a href="#top">Back to top</a></li>
                         <li><a href="https://github.com/jmaggio14/imagepypelines/">GitHub</a></li>
                     </ul>
                     <p>&copy; Copyright 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators</p>
                     <p>Code released under the <a href="https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE">MIT License</a>.</p>
-
                 </div>
             </div>
-
         </footer>
-
-
-    </div>
+</div>
 </body>
 
 <script>
@@ -290,7 +289,7 @@ var tree = d3.layout.tree()
 var diagonal = d3.svg.diagonal()
 	.projection(function(d) { return [d.y, d.x]; });
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("graph").append("svg")
 	.attr("width", width + margin.right + margin.left)
 	.attr("height", height + margin.top + margin.bottom)
   .append("g")
