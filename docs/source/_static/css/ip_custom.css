@@ -1,6 +1,25 @@
-/* .wy-nav-content {
-max-width: 1200px !important;
-} */
+/* d3 Graphing on home page */
+
+.node {
+		cursor: pointer;
+	}
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 3px;
+}
+
+.node text {
+  font: 12px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
 
 /* code blocks */
 pre code {
