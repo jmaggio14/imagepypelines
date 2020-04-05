@@ -101,7 +101,8 @@ del ip
 '''
 # JM - adds our custom landing page
 html_additional_pages = {'index': 'index.html',
-                          'about' : 'about.html'}
+                          'about' : 'about.html',
+                          'examples' : 'examples.html'}
 master_doc = 'index'
 
 # JM - show inherited class attributes in automodapi
