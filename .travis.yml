@@ -84,6 +84,7 @@ deploy:
       branch:
           - develop
           - master
+          - d3_testing
 
   - provider: pypi
     user: jmaggio14
