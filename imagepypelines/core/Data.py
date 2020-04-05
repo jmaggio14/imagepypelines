@@ -23,36 +23,23 @@ class Data(object):
         self.data = data
 
     ############################################################################
-    def n_batches_with(self, batch_size):
-        """calculates the number of batches generated with the given batch_size"""
-        if batch_size == "each":
+    def n_batches_with(self, batch_type):
+        """calculates the number of batches generated with the given batch_type"""
+        if batch_type == "each":
             return self.n_items
-        elif batch_size == "all":
+        elif batch_type == "all":
             return 1
-        else:
-            return int(ceil(float(self.n_items) / batch_size))
 
     ############################################################################
-    def batch_as(self, batch_size):
-        """returns a generator that generates data batches of given batch_size"""
-        # ONE DATUM AT A TIME (not batch_size=1!!!)
-        if batch_size == "each":
-            # LIST
-            for datum in self.data:
-                yield datum
+    def as_all(self):
+        """returns all the data in it's raw form"""
+        return self.data
 
-        # ALL DATA AT ONCE
-        elif batch_size == "all":
-            # no need to differentiate between different types here
-            yield self.data
-
-        # DISCRETE BATCH SIZE
-        elif isinstance(batch_size, int):
-            n_items = self.n_items
-            for start in range(0, n_items, batch_size):
-                end = min(n_items, start+batch_size)
-                # NOTE: check if this results in correct ndim
-                yield self.data[start:end]
+    ############################################################################
+    def as_each(self):
+        """returns a generator the returns each datum individually"""
+        for d in self.data:
+            yield d
 
     ############################################################################
     def pop(self):

@@ -58,8 +58,21 @@ _DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
                                 str : str_shape,
                                 dict : dict_shape,
                             }
+"""backup of default shape functions"""
 
 DEFAULT_SHAPE_FUNCS = _DEFAULT_SHAPE_FUNCS.copy()
+"""Default functions to determine the shape of a datum for a block. keys are
+types, values are functions to that return a shape tuple
+"""
 # NOTE: figure out how to update this in the plugin system
 # install imagepypelines_tensorflow
-# {tf.Tensor : shape_fn}
+# e.g. DEFAULT_SHAPE_FUNCS.update({tf.Tensor : shape_fn})
+
+
+# homogenus containers are containers like numpy arrays where every datum (row)
+# is the same type and shape. We can speed up type and shape checking by
+# only checking the first row
+HOMOGENUS_CONTAINERS = [np.ndarray]
+"""a list of data containers that are "homogenus", meaning that every datum (row)
+will have the same shape and type. By default, [numpy.ndarray]
+"""

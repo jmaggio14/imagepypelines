@@ -47,7 +47,7 @@ class PipelineBlock(Block):
         self.pipeline = pipeline
         # NOTE: do something here to support arg checking for the pipeline!!!
 
-        super().__init__(name=pipeline.name, batch_size="all")
+        super().__init__(name=pipeline.name, batch_type="all")
 
 
     ############################################################################
@@ -153,7 +153,7 @@ class Input(Block):
         """
         self.set_index(index)
         self.data = None
-        super().__init__(name=self.name, batch_size="all")
+        super().__init__(name=self.name, batch_type="all")
 
     ############################################################################
     def process(self):
@@ -212,7 +212,7 @@ class Leaf(Block):
             var_name(str): the name of the variable this leaf represents
         """
         self.var_name = var_name
-        super().__init__(self.var_name, batch_size="all")
+        super().__init__(self.var_name, batch_type="all")
 
     ############################################################################
     def process(self,*data):

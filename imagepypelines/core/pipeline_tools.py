@@ -9,7 +9,7 @@ from .block_subclasses import FuncBlock
 
 ################################################################################
 def blockify(kwargs={},
-                batch_size="each",
+                batch_type="each",
                 types=None,
                 shapes=None,
                 containers=None):
@@ -33,10 +33,13 @@ def blockify(kwargs={},
             doesn't exist as a key, or if the value is None, then no
             checking is done. If not provided, then will default to args as
             keys, None as values.
-            *if batch_size is "each", then the container is irrelevant and can
+            *if batch_type is "each", then the container is irrelevant and can
             be safely ignored!*
-        batch_size(str, int): the size of the batch fed into your process
-            function. Must be an integer, "all", or "each". defaults to Each
+        batch_type(str, int): the type of the batch processing for your
+            process function. Either "all" or "each". `all` means that all
+            argument data will be passed into to your function at once,
+            `each` means that each argument datum will be passed in
+            individually
 
     Example:
         >>> import imagepypelines as ip
@@ -54,7 +57,7 @@ def blockify(kwargs={},
     def _blockify(func):
         return FuncBlock(func,
                         kwargs,
-                        batch_size=batch_size,
+                        batch_type=batch_type,
                         types=types,
                         shapes=shapes,
                         containers=containers)

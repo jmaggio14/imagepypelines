@@ -8,7 +8,7 @@ from ..Logger import get_logger
 from ..Logger import ImagepypelinesLogger
 from .constants import NUMPY_TYPES, UUID_ORDER
 from .Exceptions import BlockError
-from .arg_checking import DEFAULT_SHAPE_FUNCS
+from .arg_checking import DEFAULT_SHAPE_FUNCS, HOMOGENUS_CONTAINERS
 
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
@@ -30,7 +30,7 @@ class Block(metaclass=ABCMeta):
         uuid(str): hex uuid for this pipeline
         name(str): user specified name for this pipeline, used to generate
             the unique id. defaults to the name of your subclass
-        batch_size(str, int): the size of the batch fed into your process
+        batch_type(str, int): the size of the batch fed into your process
             function. Will be an integer, "all", or "each"
         logger(:obj:`ImagepypelinesLogger`): Logger object for this block. When
             run in a pipeline this logger is temporaily replaced with a child of
@@ -46,7 +46,7 @@ class Block(metaclass=ABCMeta):
             as a key, or if the value is None, then no checking is done
         containers(:obj:`dict`): Dictionary of input containers. If arg doesn't
             exist as a key, or if the value is None, then no checking is done
-            *if batch_size is "each", then the container is irrelevant and can
+            *if batch_type is "each", then the container is irrelevant and can
             be safely ignored!*
         shape_fns(:obj:`dict`): Dictionary of shape functions to retrieve. If
             type(arg_datum) doesn't exist as a key, or if the value is None,
@@ -54,7 +54,7 @@ class Block(metaclass=ABCMeta):
     """
     def __init__(self,
                     name=None,
-                    batch_size="all",
+                    batch_type="all",
                     types=None,
                     shapes=None,
                     containers=None):
@@ -63,8 +63,11 @@ class Block(metaclass=ABCMeta):
         Args:
             name(str,None): the name of this block - how it will show up in the
                 graph.
-            batch_size(str, int): the size of the batch fed into your process
-                function. Must be an integer, "all", or "each"
+            batch_type(str, int): the type of the batch processing for your
+                process function. Either "all" or "each". "all" means that all
+                argument data will be passed into to your function at once,
+                "each" means that each argument datum will be passed in
+                individually
             types(:obj:`dict`,None): Dictionary of input types. If arg doesn't
                 exist as a key, or if the value is None, then no checking is
                 done. If not provided, then will default to args as keys, None
@@ -77,10 +80,10 @@ class Block(metaclass=ABCMeta):
                 doesn't exist as a key, or if the value is None, then no
                 checking is done. If not provided, then will default to args as
                 keys, None as values.
-                *if batch_size is "each", then the container is irrelevant and can
+                *if batch_type is "each", then the container is irrelevant and can
                 be safely ignored!*
         """
-        assert (batch_size in ["all","each"] or isinstance(batch_size,int))
+        assert (batch_type in ["all","each"] or isinstance(batch_type,int))
 
         # setup absolutely unique id for this block
         self.uuid = uuid4().hex
@@ -89,7 +92,7 @@ class Block(metaclass=ABCMeta):
         if name is None:
             name = self.__class__.__name__
         self.name = name
-        self.batch_size = batch_size
+        self.batch_type = batch_type
 
         # this will be defined in _pipeline_pair
         self.logger = get_logger( self.id )
@@ -231,7 +234,7 @@ class Block(metaclass=ABCMeta):
             containers(:obj:`tuple` of :obj:`type`):  the containers to restrict
                 this argument to. If left as None, then no container checking
                 will be done.
-                *if batch_size is "each", then the container is irrelevant and
+                *if batch_type is "each", then the container is irrelevant and
                 can be safely ignored!*
 
         Returns:
@@ -294,151 +297,78 @@ class Block(metaclass=ABCMeta):
             # this separate statement is  necessary because we have to ensure
             # that process is only called once not for every data batch
             # (only if there are no inputs, ie no batches, into this block)
-            ret = self._make_tuple( self.process() )
+            ret = self.process()
+            # put it a tuple if it isn't already
+            if not isinstance(ret, tuple):
+                ret = (ret, )
+
         else:
-            # NOTE:
-            # I really don't like how this is written
-            # check_batches could be made much faster by checking all data
-            # instead of doing it batch by batch
-            # it's not very clearly written
-            #            -Jeff
-            #
-            # Note: everything is a generator until the end of this statement
-            # otherwise we prepare to batch the data and run it through process
-            # prepare the batch generators
-            # import pdb; pdb.set_trace()
-            batches = (d.batch_as(self.batch_size) for d in data)
-            # only have to check the n_batches for the first arg because we enforce data parity
-            n_batches = data[0].n_batches_with(self.batch_size)
+            # --------- CHECKING  ---------
+            # check the batches before processing
+            if not (force_skip or self.skip_enforcement):
+                self._check_batches(*data)
 
-            # feed the data into the process function in batches
-            # self.process(input_batch1, input_batch2, ...)
-            if self.batch_size == "each":
-                # every 'batch' is a datum
-                datums = batches
-                # outputs = (out1datum1,out2datum1), (out1datum2,out2datum2)
-                outputs = (self._make_tuple( self.process(*self._check_batches(datums, force_skip)) ) for datums in zip(*datums))
-                # ret = (out1, out2)
-                ret = tuple( zip(*outputs) )
+            # --------- ACTUAL PROCESSING ---------
+            # EACH - every batch is a datum
+            if self.batch_type == "each":
+                # construct the batch generators
+                def _process_batches(*data):
+                    batches = (d.as_each() for d in data)
+                    for datums in zip(*batches):
+                        out = self.process(*datums)
+                        # put it a tuple if it isn't already
+                        if not isinstance(out, tuple):
+                            out = (out, )
+                        yield out
 
-            elif isinstance(self.batch_size, int):
-                # every batch is multiple datums
-                # proc = (out1batch1,out2batch1), (out1batch2,out2batch2)
-                proc = (self._make_tuple( self.process(*self._check_batches(datums, force_skip)) ) for datums in zip(*batches))
-                # zip the corresponding batches together
-                # outputs = (out1batch1, out1batch2), (out2batch1,out2batch2)
-                outputs = zip(*proc)
-                # chain the batches together
-                # ret = (out1, out2)
-                ret = tuple( chain(out) for out in outputs )
+                ret = tuple( zip(*_process_batches(*data)) )
 
-            elif self.batch_size == "all":
-                # outputs = (out1, out2)
-                outputs = self.process(*self._check_batches(batches, force_skip))
-                ret = outputs
+            # ALL - process everything at once
+            else:
+                batches = (d.as_all() for d in data)
+                ret = self.process(*batches)
+                # put it a tuple if it isn't already
+                if not isinstance(ret, tuple):
+                    ret = (ret, )
 
-
-        # import pdb; pdb.set_trace()
-        self.postprocess()
-        self._unpair_logger()
         return ret
 
     ############################################################################
-    def _summary(self):
-        """fetches a static summary of the block"""
-        summary = {}
-
-        # instance vars
-        summary['name'] = self.name
-        summary['id'] = self.id
-        summary['uuid'] = self.uuid
-        summary['args'] = self.args
-        summary['types'] = self.types
-        summary['shapes'] = self.shapes
-        summary['skip_enforcement'] = self.skip_enforcement
-        summary['batch_size'] = self.batch_size
-        summary['tags'] = list(self.tags)
-
-        # other data
-        summary['class_name'] = self.__class__.__name__
-
-        # method documentation
-        summary['DOCS'] = {}
-        summary['DOCS']['class'] = inspect.getdoc(self)
-        summary['DOCS']['__init__'] = inspect.getdoc(self.__init__)
-        summary['DOCS']['process'] = inspect.getdoc(self.process)
-
-        return summary
-
-    ############################################################################
-    def get_default_node_attrs(self):
-        """all values must be json serializable"""
-        attrs = { 'name':self.name,
-                'color': 'orange',
-                'shape':'square',
-                'class_name': str( type(self) ),
-                }
-        return attrs
-
-    ############################################################################
-    def _pair_logger(self, pipeline_logger):
-        """creates or fetches a new child logger of the pipeline for this block"""
-        self.logger = pipeline_logger.getChild(self.id)
-
-    ############################################################################
-    def _unpair_logger(self):
-        """restores the original block logger"""
-        self.logger = get_logger(self.id)
-
-    ############################################################################
-    def _check_batches(self, arg_batches, force_skip):
-        """checks argument batches to verify if they are the correct type and
-        shapes
-
-        NOTE:
-            This could be much faster if done for the whole container instead of
-            batch by batch
+    def _check_batches(self, *data):
+        """checks argument batches to verify if they are the correct type and shapes
         """
-        if force_skip or self.skip_enforcement:
-            return arg_batches
-
+        all_data = (d.as_all() for d in data)
         # FOR EVERY ARG AND BATCH
         # ======================================================================
-        for arg_name,batch in zip(self.args, arg_batches):
-            # fetch the types and shapes we'll be checking
-            arg_types = self.types.get(arg_name, None)
-            arg_shapes = self.shapes.get(arg_name, None)
-
-            # NOTE: ADD CONTAINER CHECKS
-            if self.batch_size == "each":
-                # datums are passed in, not a container
-                # there is only one datum and it's batch
-                datums = (batch,)
-            elif isinstance(batch, np.ndarray):
-                # a container is passed in, but it's a numpy array
-                # we only have to check the first row because it's an array
-                datums = batch[0]
-            else:
-                # ---------- CONTAINER CHECK ----------
+        for arg_name,data_container in zip(self.args, all_data):
+            # ---------- CONTAINER CHECK ----------
+            # we have to check the container if datums aren't passed in individually
+            if self.batch_type == "all":
                 okay_containers = self.containers.get(arg_name,None)
                 if okay_containers is not None:
                     # check the container type is valid
-                    if not isinstance(batch, okay_containers):
+                    if not isinstance(data_container, okay_containers):
                         msg = "invalid container for '{}'. must be {}, not {}. (you can disable this check with the 'skip_enforcement' keyword)"
                         msg = msg.format(arg_name, okay_containers, type(batch))
                         self.logger.error(msg)
                         raise BlockError(msg)
 
-                # it's a container, and not a numpy array
-                # we have to check every item in the container
-                datums = batch
 
-            # FOR EVERY DATUM IN THE BATCH
+            # check if it's a homogenus container
+            # for example if it's a numpy array, we can speed thing sup because
+            # we only have to check the first row
+            if type(data_container) in HOMOGENUS_CONTAINERS:
+                data_container = data_container[0]
+
+
+            # FOR EVERY DATUM IN THE CONTAINER
             # ==================================================================
-            for datum in datums:
+            for datum in data_container:
                 # ---------------------------------------
                 # TYPE CHECKING
                 # ---------------------------------------
+                # fetch the accepted types for this arg
+                arg_types = self.types.get(arg_name, None)
                 # if arg_types is None, then we will skip all type checking
                 if not (arg_types is None):
                     if not isinstance(datum, arg_types):
@@ -450,6 +380,8 @@ class Block(metaclass=ABCMeta):
                 # ---------------------------------------
                 # SHAPE CHECKING
                 # ---------------------------------------
+                # fetch the accepted shapes for this arg
+                arg_shapes = self.shapes.get(arg_name, None)
                 # if arg_shapes is None, then we will skip all shape checking
                 if not (arg_shapes is None):
                     # skip shape checking if we don't have a shape_fn
@@ -487,7 +419,56 @@ class Block(metaclass=ABCMeta):
                         self.logger.error(msg)
                         raise BlockError(msg + " (you can disable this check with the 'skip_enforcement' keyword)")
 
-        return arg_batches
+
+    ############################################################################
+    def _summary(self):
+        """fetches a static summary of the block"""
+        summary = {}
+
+        # instance vars
+        summary['name'] = self.name
+        summary['id'] = self.id
+        summary['uuid'] = self.uuid
+        summary['args'] = self.args
+        summary['types'] = self.types
+        summary['shapes'] = self.shapes
+        summary['skip_enforcement'] = self.skip_enforcement
+        summary['batch_type'] = self.batch_type
+        summary['tags'] = list(self.tags)
+
+        # other data
+        summary['class_name'] = self.__class__.__name__
+
+        # method documentation
+        summary['DOCS'] = {}
+        summary['DOCS']['class'] = inspect.getdoc(self)
+        summary['DOCS']['__init__'] = inspect.getdoc(self.__init__)
+        summary['DOCS']['process'] = inspect.getdoc(self.process)
+
+        return summary
+
+    ############################################################################
+    def get_default_node_attrs(self):
+        """all values must be json serializable"""
+        attrs = { 'name':self.name,
+                'color': 'orange',
+                'shape':'square',
+                'class_name': str( type(self) ),
+                'batch_type': self.batch_type,
+                }
+        return attrs
+
+    ############################################################################
+    def _pair_logger(self, pipeline_logger):
+        """creates or fetches a new child logger of the pipeline for this block"""
+        self.logger = pipeline_logger.getChild(self.id)
+
+    ############################################################################
+    def _unpair_logger(self):
+        """restores the original block logger"""
+        self.logger = get_logger(self.id)
+
+
 
     ############################################################################
     @staticmethod
