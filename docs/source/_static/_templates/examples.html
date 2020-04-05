@@ -25,7 +25,7 @@
 <div role="main">
     {% block body %}
 
-    <div style="width: 80%; margin-left: 10%; margin-right: 10%">
+    <!-- <div style="width: 80%; margin-left: 10%; margin-right: 10%"> -->
         <div class="row">
             <!-- CARD 1 -->
             <div class="col-md-4">
@@ -43,7 +43,7 @@
             </div>
             <!-- CARD 2 -->
             <div class="col-md-4">
-                <a class="card-link" href="{{ pathto('tutorials/your_first_pipeline.rst') }}">
+                <a class="card-link" href="{{ pathto('tutorials/your_first_pipeline') }}">
                     <div class="bs-component">
                         <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
                             <div class="card-header" style="color: #E95420;"><img class="img-center" src="https://www.nasa.gov/sites/default/files/thumbnails/image/nh-apluto-wide-9-17-15-final_0.png" style="object-fit:fill;" alt="ImagePypelines astro"></div>
@@ -57,7 +57,7 @@
                 </div>
                 <!-- CARD 3 -->
                 <div class="col-md-4">
-                    <a class="card-link" href="{{ pathto('tutorials/your_first_block.rst') }}">
+                    <a class="card-link" href="{{ pathto('tutorials/your_first_block') }}">
                         <div class="bs-component mx-auto">
                             <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
                                 <div class="card-header" style="color: #E95420;"><img class="img-center" src="{{ pathto('_static/images/ip_logo.svg', 1) }}" style="object-fit:cover;" alt="ImagePypelines ml"></div>
@@ -70,7 +70,7 @@
                     </a>
                 </div>
             </div>
-        </div>
+        <!-- </div> -->
 
         <!-- end of document block (the html body) -->
         {% endblock %}
