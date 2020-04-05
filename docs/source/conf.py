@@ -102,10 +102,11 @@ del ip
 # JM - adds our custom landing page
 html_additional_pages = {'index': 'index.html',
                           'about' : 'about.html'}
-master_doc = 'contents'
+master_doc = 'index'
 
 # JM - show inherited class attributes in automodapi
 automodsumm_inherited_members = True
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_static/_templates']
