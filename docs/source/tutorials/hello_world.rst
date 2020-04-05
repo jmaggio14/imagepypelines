@@ -14,7 +14,8 @@ together.
     >>> def print_msg(msg):
     ...     print(msg)
     >>>
-    >>> tasks = {'null':print_msg}
+    >>> tasks = {'msg':ip.Input(),
+    ...            'null':(print_msg, 'msg')}
     >>> pipeline = ip.Pipeline(tasks)
     >>>
     >>> pipeline.process(["Hello World!"])
@@ -41,7 +42,8 @@ Or with a simple modification we, can print everything at once! Just use the
     >>> def print_all(msg):
     ...     print(msg)
     >>>
-    >>> tasks = {'null':print_msg}
+    >>> tasks = {'msg':ip.Input(),
+    ...            'null':(print_msg, 'msg')}
     >>> pipeline = ip.Pipeline(tasks)
     >>>
     >>> pipeline.process(['we','can','print','everything','at','once!'])
