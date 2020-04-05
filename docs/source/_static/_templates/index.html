@@ -191,7 +191,7 @@
 <!-- <p style="max-width: 1000px">ImagePypelines takes care of all this on the backend, has a simple (and customizable) web-client interface for interactive code and visualization, and an incredibly extendible plugin system.</p> -->
 
 
-<div class="container">
+<div id="footer-container" class="container">
 
         <div id="graph">
         </div>
@@ -275,9 +275,13 @@ var treeData = [
 
 
 // ************** Generate the tree diagram	 *****************
+var x = $('#footer-container').outerWidth();
+var y = $('#footer-container').outerHeight();
+
+
 var margin = {top: 20, right: 120, bottom: 20, left: 120},
-	width = 960 - margin.right - margin.left,
-	height = 500 - margin.top - margin.bottom;
+	width = x - margin.right - margin.left,
+	height = y - margin.top - margin.bottom;
 
 var i = 0,
 	duration = 750,
