@@ -448,57 +448,84 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
-d3.json("data.json", function(error, graph) {
-  if (error) throw error;
+var graph = {
 
-  var link = svg.append("g")
-      .attr("class", "links")
-    .selectAll("line")
-    .data(graph.links)
-    .enter().append("line")
-      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+              "nodes": [
+                {"id": "Node1", "group": 1},
+                {"id": "Node2", "group": 2},
+                {"id": "Node3", "group": 1},
+                {"id": "Node4", "group": 1},
+                {"id": "Node5", "group": 2},
+                {"id": "Node6", "group": 1},
+                {"id": "Node7", "group": 1},
+                {"id": "Node8", "group": 2},
+                {"id": "Node9", "group": 1},
+              ],
 
-  var node = svg.append("g")
-      .attr("class", "nodes")
-    .selectAll("g")
-    .data(graph.nodes)
-    .enter().append("g")
+              "links": [
+                {"source": "Node1", "target": "Node2", "value": 1},
+                {"source": "Node1", "target": "Node3", "value": 1},
+                {"source": "Node1", "target": "Node4", "value": 1},
+                {"source": "Node1", "target": "Node5", "value": 1},
+                {"source": "Node2", "target": "Node3", "value": 1},
+                {"source": "Node3", "target": "Node4", "value": 1},
+                {"source": "Node4", "target": "Node5", "value": 1},
+                {"source": "Node8", "target": "Node7", "value": 1},
+                {"source": "Node9", "target": "Node1", "value": 1},
+                {"source": "Node9", "target": "Node2", "value": 1},
+                {"source": "Node9", "target": "Node6", "value": 1},
+              ]
 
-  var circles = node.append("circle")
-      .attr("r", 5)
-      .attr("fill", function(d) { return color(d.group); })
-      .call(d3.drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended));
+            }
 
-  var lables = node.append("text")
-      .text(function(d) {
-        return d.id;
-      })
-      .attr('x', 6)
-      .attr('y', 3);
+var link = svg.append("g")
+    .attr("class", "links")
+  .selectAll("line")
+  .data(graph.links)
+  .enter().append("line")
+    .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
 
-  node.append("title")
-      .text(function(d) { return d.id; });
+var node = svg.append("g")
+    .attr("class", "nodes")
+  .selectAll("g")
+  .data(graph.nodes)
+  .enter().append("g")
 
-  simulation
-      .nodes(graph.nodes)
-      .on("tick", ticked);
+var circles = node.append("circle")
+    .attr("r", 5)
+    .attr("fill", function(d) { return color(d.group); })
+    .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
 
-  simulation.force("link")
-      .links(graph.links);
+var lables = node.append("text")
+    .text(function(d) {
+      return d.id;
+    })
+    .attr('x', 6)
+    .attr('y', 3);
 
-  function ticked() {
-    link
-        .attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; });
+node.append("title")
+    .text(function(d) { return d.id; });
 
-    node
-        .attr("transform", function(d) {
-          return "translate(" + d.x + "," + d.y + ")";
+simulation
+    .nodes(graph.nodes)
+    .on("tick", ticked);
+
+simulation.force("link")
+    .links(graph.links);
+
+function ticked() {
+  link
+      .attr("x1", function(d) { return d.source.x; })
+      .attr("y1", function(d) { return d.source.y; })
+      .attr("x2", function(d) { return d.target.x; })
+      .attr("y2", function(d) { return d.target.y; });
+
+  node
+      .attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
         })
   }
 });
