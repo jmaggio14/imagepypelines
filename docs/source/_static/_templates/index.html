@@ -330,9 +330,14 @@ function update(source) {
 	  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
 	  .on("click", click);
 
-  nodeEnter.append("square")
-	  .attr("r", 1e-6)
-	  .style("fill", function(d) { return d._children ? "darkorange" : "#fff"; });
+  nodeEnter.append("rect")
+      .attr("rx", 6)
+      .attr("ry", 6)
+      .attr("x", -12.5)
+      .attr("y", -12.5)
+      .attr("width", 25)
+      .attr("height", 25)
+	    .style("fill", function(d) { return d._children ? "red" : "#fff"; });
 
   nodeEnter.append("text")
 	  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
@@ -346,8 +351,13 @@ function update(source) {
 	  .duration(duration)
 	  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 
-  nodeUpdate.select("square")
-	  .attr("r", 10)
+  nodeUpdate.select("rect")
+    .attr("rx", 6)
+    .attr("ry", 6)
+    .attr("x", -12.5)
+    .attr("y", -12.5)
+    .attr("width", 25)
+    .attr("height", 25)
 	  .style("fill", function(d) { return d._children ? "orange" : "#fff"; });
 
   nodeUpdate.select("text")
@@ -359,8 +369,13 @@ function update(source) {
 	  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
 	  .remove();
 
-  nodeExit.select("square")
-	  .attr("r", 1e-6);
+  nodeExit.select("rect")
+    .attr("rx", 6)
+    .attr("ry", 6)
+    .attr("x", -12.5)
+    .attr("y", -12.5)
+    .attr("width", 25)
+    .attr("height", 25)
 
   nodeExit.select("text")
 	  .style("fill-opacity", 1e-6);
