@@ -2,37 +2,18 @@
 How to make an ImagePypelines plugin
 ====================================
 
-ImagePypelines provides support for other developers to add accessory
-functionality. Plugins will be loaded and accessible under their own namespace
+.. _link: https://github.com/RyanHartzell/imagepypelines_template
 
-Encourage your users to use the function *ip.require("<your_plugin>")*
-at the top level of their scripts to ensure the plugin is loaded correctly.
+We provide a template for you to construct your own plugins.
 
-Simply Define an entrypoint 'imagepypelines.plugins' in your setup.py
-
-.. code-block:: python
-
-    >>> setup(
-    ...        entry_points={'imagepypelines.plugins': '<plugin_name> = <package_name>'}
-    ...     ) # doctest: +SKIP
-
-please check out the following link for more information:
-https://packaging.python.org/guides/creating-and-discovering-plugins/
-
-**Modules are loaded by alphabetical order**
-
-Requirements
-============
-
-Plugin Modules SHOULD meet the following requirements:
-------------------------------------------------------
-
-1) Do all their own dependency checking
+Click on this `link`_ to get started.
 
 
-WARNING:
-~~~~~~~~
-Many ImagePypelines users will require your Pipelines and Blocks to be
-picklable and unpickable. This is critical for core functionality such as
-server deployment and saving to disk. Please keep this in mind, especially if
-your blocks use tools like `tensorflow`
+
+..
+.. WARNING:
+.. ~~~~~~~~
+.. Many ImagePypelines users will require your Pipelines and Blocks to be
+.. picklable and unpickable. This is critical for core functionality such as
+.. server deployment and saving to disk. Please keep this in mind, especially if
+.. your blocks use tools like `tensorflow`
