@@ -4,9 +4,9 @@
 		cursor: pointer;
 	}
 
-.node circle {
+.node rect {
   fill: #fff;
-  stroke: steelblue;
+  stroke: darkorange;
   stroke-width: 3px;
 }
 
