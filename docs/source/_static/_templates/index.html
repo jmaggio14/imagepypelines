@@ -434,9 +434,43 @@ function render() {
 // FORCE DIRECTED EXAMPLE
 // =======================
 
+d3 = require("d3@5")
+
+drag = simulation => {
+
+  function dragstarted(d) {
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d) {
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+
+  return d3.drag()
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended);
+}
+
+
+color = {
+  const scale = d3.scaleOrdinal(d3.schemeCategory10);
+  return d => scale(d.group);
+}
+
 data = FileAttachment("data.json").json()
 
 height = 600
+
 
 chart = {
   const links = data.links.map(d => Object.create(d));
@@ -490,37 +524,7 @@ chart = {
   return svg.node();
 }
 
-color = {
-  const scale = d3.scaleOrdinal(d3.schemeCategory10);
-  return d => scale(d.group);
-}
 
-drag = simulation => {
-
-  function dragstarted(d) {
-    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
-  }
-
-  function dragged(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
-  }
-
-  function dragended(d) {
-    if (!d3.event.active) simulation.alphaTarget(0);
-    d.fx = null;
-    d.fy = null;
-  }
-
-  return d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended);
-}
-
-d3 = require("d3@5")
 
 </script>
 
