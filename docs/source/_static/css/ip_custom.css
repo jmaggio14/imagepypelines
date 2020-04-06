@@ -1,23 +1,18 @@
 /* d3 Graphing on home page */
 
-.node {
-		cursor: pointer;
-	}
-
-.node rect {
-  fill: #fff;
-  stroke: darkorange;
-  stroke-width: 3px;
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
 }
 
-.node text {
-  font: 12px sans-serif;
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
 }
 
-.link {
-  fill: none;
-  stroke: #ccc;
-  stroke-width: 2px;
+text {
+  font-family: sans-serif;
+  font-size: 10px;
 }
 
 
