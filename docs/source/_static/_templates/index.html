@@ -434,6 +434,10 @@ function render() {
 // FORCE DIRECTED EXAMPLE
 // =======================
 
+data = FileAttachment("data.json").json()
+
+height = 600
+
 chart = {
   const links = data.links.map(d => Object.create(d));
   const nodes = data.nodes.map(d => Object.create(d));
@@ -485,10 +489,6 @@ chart = {
 
   return svg.node();
 }
-
-data = FileAttachment("data.json").json()
-
-height = 600
 
 color = {
   const scale = d3.scaleOrdinal(d3.schemeCategory10);
