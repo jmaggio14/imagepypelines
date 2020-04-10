@@ -536,6 +536,14 @@ class Pipeline(object):
 
         Returns:
             :obj:`Pipeline`: the loaded pipeline
+
+        Warning:
+            Pickled data can be a security risk! For sensitive applications,
+            use the `checksum` parameter. ImagePypelines can use this to ensure
+            the data hasn't been tampered with.
+
+            for more information about pickle security, see:
+            https://docs.python.org/3.8/library/pickle.html
         """
         # fetch the raw file contents
         with open(filename,'rb') as f:
@@ -575,7 +583,7 @@ class Pipeline(object):
     ############################################################################
     @staticmethod
     def from_bytes(raw_bytes, passwd=None, checksum=None, name=None):
-        """loads the pipeline from the given file without change
+        """loads the pipeline from the given bytes
 
         Args:
             raw_bytes(bytes): the encoded pipeline in bytes format
@@ -587,6 +595,14 @@ class Pipeline(object):
 
         Returns:
             :obj:`Pipeline`: the loaded pipeline
+
+        Warning:
+            Pickled data can be a security risk! For sensitive applications,
+            use the `checksum` parameter. ImagePypelines can use this to ensure
+            the data hasn't been tampered with.
+
+            for more information about pickle security, see:
+            https://docs.python.org/3.8/library/pickle.html
         """
         # check the file checksum if provided
         if checksum:
