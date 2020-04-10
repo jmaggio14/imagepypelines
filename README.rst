@@ -44,7 +44,7 @@ A processing pipeline framework by imaging scientists, for all scientists
 
 .. Content actually begins here!
 The `imagepypelines` package is a pipelining library for scientists who want to
-make their code more scalable and more sharable with their colleagues. It's
+make their code more scalable and sharable with their colleagues. It's
 designed with scientists in mind, not software engineers.
 
 ImagePypelines contains tools to turn scripts into robust processing pipelines
@@ -53,6 +53,7 @@ which can be visualized, saved, copied, or deployed to a server easily.
 Installation
 ************
 more options for installation can be found `here <http://www.imagepypelines.org/about.html>`_.
+
 **Python compatibility:** 3.4-3.6 64bit
 
 .. code-block:: shell
@@ -73,5 +74,5 @@ You may use this code for research or commercial settings, but please credit us
 
 .. code-block:: plaintext
 
-    This research made use "ImagePypelines" developed by Jeff Maggio, Ryan
-    Harzell, and collaborators. https://www.imagepypelines.org
+    This research made use "ImagePypelines" developed by Jeff Maggio,
+    Ryan Harzell, and collaborators. https://www.imagepypelines.org
