@@ -3,45 +3,62 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018 Jeff Maggio, Nathan Dileas, Ryan Hartzell
+# Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 #
-from .block_subclasses import SimpleBlock
+from .block_subclasses import FuncBlock
 
-
-def quick_block(process_fn,
-                io_map,
-                name=None):
-    """convienence function to make simple blocks
+################################################################################
+def blockify(kwargs={},
+                batch_type="each",
+                types=None,
+                shapes=None,
+                containers=None):
+    """decorator which converts a normal function into a un-trainable
+    block which can be added to a pipeline. The function can still be used
+    as normal after blockification (the __call__ method is setup such that
+    unfettered access to the function is permitted)
 
     Args:
-        process_fn(func): function that takes in and processes
-            exactly one datum
-
-        io_map(IoMap,dict): dictionary of input-output mappings for this
-            Block
-        name(str): name for this block, it will be automatically created/modified
-            to make sure it is unique
-
-    Returns:
-        block(ip.SimpleBlock): simple block that applies the given function
+        **kwargs: hardcode keyword arguments for a function, these arguments
+            will not have to be used to. defaults to {}
+        types(:obj:`dict`,None): Dictionary of input types. If arg doesn't
+            exist as a key, or if the value is None, then no checking is
+            done. If not provided, then will default to args as keys, None
+            as values.
+        shapes(:obj:`dict`,None): Dictionary of input shapes. If arg doesn't
+            exist as a key, or if the value is None, then no checking is
+            done. If not provided, then will default to args as keys, None
+            as values.
+        containers(:obj:`dict`,None): Dictionary of input containers. If arg
+            doesn't exist as a key, or if the value is None, then no
+            checking is done. If not provided, then will default to args as
+            keys, None as values.
+            *if batch_type is "each", then the container is irrelevant and can
+            be safely ignored!*
+        batch_type(str, int): the type of the batch processing for your
+            process function. Either "all" or "each". `all` means that all
+            argument data will be passed into to your function at once,
+            `each` means that each argument datum will be passed in
+            individually
 
     Example:
         >>> import imagepypelines as ip
-        >>> import cv2
-        >>> def calculate_orb_features(datum):
-        ...     _,des = cv2.ORB_create().detectAndCompute(datum,None)
-        ...     return des
         >>>
-        >>> io_map = {ip.GRAY:ip.GRAY}
-        >>> block = ip.quick_block(calculate_orb_features, io_map)
-        >>> block.name
-        'calculate_orb_features:1'
-    """
-    if name is None:
-        name = process_fn.__name__
+        >>> @ip.blockify( kwargs=dict(value=10) )
+        >>> def add_value(datum, value):
+        ...    return datum + value
+        >>>
+        >>> type(add_value)
+        <class 'FuncBlock'>
 
-    process_fn = staticmethod(process_fn)
-    block_cls = type(name, (SimpleBlock,), {'process': process_fn})
-    block = block_cls(io_map=io_map,
-                      name=name)
-    return block
+
+
+    """
+    def _blockify(func):
+        return FuncBlock(func,
+                        kwargs,
+                        batch_type=batch_type,
+                        types=types,
+                        shapes=shapes,
+                        containers=containers)
+    return _blockify

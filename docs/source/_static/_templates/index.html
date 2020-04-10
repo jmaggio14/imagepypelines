@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <!-- META TAGS FOR FACEBOOK: https://developers.facebook.com/docs/sharing/webmasters/ -->
+    <meta property="og:url" content="https://imagepypelines.org" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="ImagePypelines" />
+    <meta property="og:description" content="Whether it's lab time, class time, or your own time, ImagePypelines frees it up so you can focus on your passion" />
+    <meta property="og:image" content="https://raw.githubusercontent.com/jmaggio14/imagepypelines/develop/docs/source/_static/images/ip_logo.png"/>
+    <title>ImagePypelines - Home</title>
+
+    <!-- THEMES -->
+    <!-- cdns -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/2.0.0/trianglify.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+    <!-- local -->
+    <link href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" rel="stylesheet">
+    <link href="{{ pathto('_static/css/ip_custom.css', 1) }}" rel="stylesheet">
+
+    <!-- D3 -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script> -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- fetch the sphinx navbar... maybe? -->
+    <!-- <script src="{{ pathto('_static/bootstrap-sphinx.js', 1) }}"></script> -->
+
+</head>
+
+<body>
+
+    <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary" style="">
+        <a href="#" class="navbar-brand"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ pathto('about') }}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ pathto('examples') }}">Examples</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ pathto('docs/core') }}">Documentation</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ pathto('plugins') }}">Plugins</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/jmaggio14/imagepypelines">GitHub</a>
+                </li>
+            </ul>
+
+            <!-- <ul class="nav navbar-nav ml-auto"> -->
+                <!-- <li class="nav-item"> -->
+                    <!-- <a class="nav-link" href="https://www.imagepypelines.org/" target="_blank">ImagePypelines</a> -->
+                    <!-- <form class="form-inline my-2 my-lg-0"> -->
+                        <!-- <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"> -->
+                        <!-- <button class="btn btn-info my-2 my-sm-0 nav-link" type="submit">Search</button> -->
+                    <!-- </form> -->
+                <!-- </li> -->
+            <!-- </ul> -->
+
+        </div>
+    </div>
+
+    <!-- <br><br><br>
+
+    <div class="page-header" id="banner">
+    <div class="row">
+    <div class="col-lg-8 col-md-7 col-sm-6">
+    <h1>Welcome to ImagePypelines Monitor!!!</h1>
+    <p class="lead">Yada yada yada we put a bunch of fun stuff here</p>
+</div>
+</div>
+</div> -->
+
+<!-- WORK HERE -->
+
+<!-- BANNER -->
+<div id="landing" class="jumbotron jumbotron-landing" style="color: white">
+    <div class="row fade-in-2-sec">
+        <!-- WELCOME TEXT -->
+        <!-- IP LOGO -->
+        <div class="col col-lg-auto col-md-auto col-sm-auto">
+            <img src="{{ pathto('_static/images/ip_logo.svg', 1) }}" style="width:300px; height:300px;" alt="ImagePypelines Logo">
+        </div>
+
+        <div class="col col-lg-auto col-md-auto col-sm-auto">
+            <h1 class="display-3" style="max-width:100%;">ImagePypelines</h1>
+            <h2 style="max-width: 600px">A processing pipeline framework by imaging scientists, for all scientists</h2> <!-- A processing pipeline package which packs a punch to impress your peers. -->
+            <br>
+            <h4 style="max-width: 600px">Whether it's lab time, class time, or your own time, ImagePypelines frees it up so you can focus on your passion
+            </h4>
+            <br>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="{{ pathto('about') }}" role="button" style="color: #E95420; background-color: white">Learn more</a>
+            </p>
+        </div>
+
+    </div>
+
+</div>
+<!-- SECTIONS -->
+<!-- <div class="container">
+<div class="row">
+<div class="card text-white bg-primary mb-6" style="max-width: 20rem;">
+<div class="card-header">Install</div>
+<div class="card-body">
+<h4 class="card-title">Ryan send help</h4>
+<p class="card-text">how to install</p>
+</div>
+</div>
+</div>
+</div> -->
+
+<!-- Examples??? -->
+<!-- <div class="container"> -->
+
+<div style="width: 80%; margin-left: 10%; margin-right: 10%">
+    <div class="row">
+        <!-- CARD 1 -->
+        <div class="col-md-4">
+            <a class="card-link" href="{{ pathto('docs/plugins/image') }}">
+                <div class="bs-component">
+                    <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
+                        <div class="card-header" style="color: #E95420;"><img class="img-center" src="https://www.cis.rit.edu/files/pdf/ugrad/booklet/images/Slide1.PNG" style="object-fit:cover;" alt="ImagePypelines image"></div>
+                        <div class="card-body" style="color: #E95420;">
+                            <h4 class="card-title">Image Processing</h4>
+                            <p class="card-text">Automate your image processing in just a few lines of code! Let us take care of all the pesky error checking and automation</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- CARD 2 -->
+        <div class="col-md-4">
+            <a class="card-link" href="{{ pathto('docs/plugins/astro') }}">
+                <div class="bs-component">
+                    <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
+                        <div class="card-header" style="color: #E95420;"><img class="img-center" src="https://www.nasa.gov/sites/default/files/thumbnails/image/nh-apluto-wide-9-17-15-final_0.png" style="object-fit:fill;" alt="ImagePypelines astro"></div>
+                        <div class="card-body" style="color: #E95420;">
+                            <h4 class="card-title">Astronomy</h4>
+                            <p class="card-text">Open your processing pipeline up to the web and collaborate with your colleagues like never before!
+                                Includes support for fits files, star tracking, and much more!</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- CARD 3 -->
+            <div class="col-md-4">
+                <a class="card-link" href="{{ pathto('docs/plugins/ml') }}">
+                    <div class="bs-component mx-auto">
+                        <div class="card text-white border-primary mb-1 mx-auto" style="max-width: 40rem;">
+                            <div class="card-header" style="color: #E95420;"><img class="img-center" src="{{ pathto('_static/images/ip_logo.svg', 1) }}" style="object-fit:cover;" alt="ImagePypelines ml"></div>
+                            <div class="card-body" style="color: #E95420;">
+                                <h4 class="card-title">Machine Learning</h4>
+                                <p class="card-text">Ryan this is all you</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+
+    <!-- <div class="container">
+    <div class="row">
+    <p>
+    We've all been there.
+    You're 4 hours into a fruitless debugging session and you want to go home - you don't have time for bourgeois luxeries like logging, type checking, or proper data visualization!
+    <br>
+    ...But what if you did?<br>
+    Would you write better code for your peers?<br>
+    Would you publish more code online?<br>
+    Would you finally be able to leave the optics lab for more time than it takes to walk downstairs and grab a stale poptart out of the vending machine?</p>
+    <br>
+    <h4 style="max-width: 1000px">We like to think so, and ImagePypelines can help with that!</p>
+
+</p>
+</div>
+</div> -->
+
+<!-- <p style="max-width: 1000px">ImagePypelines takes care of all this on the backend, has a simple (and customizable) web-client interface for interactive code and visualization, and an incredibly extendible plugin system.</p> -->
+
+
+<div id="footer-container" class="container">
+        <!-- GRAPH -->
+        <div id='graph-svg'>
+        </div>
+        <!-- FOOTER -->
+        <footer id="footer">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="list-unstyled">
+                        <li class="float-lg-right"><a href="#top">Back to top</a></li>
+                        <li><a href="https://github.com/jmaggio14/imagepypelines/">GitHub</a></li>
+                    </ul>
+                    <p>&copy; Copyright 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators</p>
+                    <p>Code released under the <a href="https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE">MIT License</a>.</p>
+                </div>
+            </div>
+        </footer>
+</div>
+</body>
+
+<script>
+
+function render() {
+
+    var x = $(landing).outerWidth();
+    var y = $(landing).outerHeight();
+
+    var pattern = Trianglify({
+        height: y,
+        width: x,
+        cell_size: 100,
+        variance: 0.75,
+        seed: '4q9y0',
+        x_colors: 'YlOrRd'});
+
+        document.getElementById('landing').style.background = "linear-gradient(110deg, #E95420 100px, transparent), url(" + pattern.png() + ")";
+
+    }
+
+    $(document).ready(function () {
+
+        render()
+
+    });
+
+    $(window).resize(function () {
+
+        render();
+
+    });
+
+</script>
+
+<script>
+// =======================
+// FORCE DIRECTED EXAMPLE
+// =======================
+// $(document).ready(function () {
+//
+//   $("#graph-svg").html("<svg id='graph' xmlns='http://www.w3.org/2000/svg' width='960px' height='600px'></svg>")
+//
+//   var svg = d3.select("#graph");
+//   var width = 960;
+//   var height = 600;
+//
+//   var color = d3.scaleOrdinal(d3.schemeCategory20);
+//
+//   var simulation = d3.forceSimulation()
+//       .force("link", d3.forceLink().id(function(d) { return d.id; }))
+//       .force("charge", d3.forceManyBody())
+//       .force("center", d3.forceCenter(width / 2, height / 2));
+//
+//   var graph = {
+//
+//                 "nodes": [
+//                   {"id": "Node1", "group": 1},
+//                   {"id": "Node2", "group": 2},
+//                   {"id": "Node3", "group": 1},
+//                   {"id": "Node4", "group": 1},
+//                   {"id": "Node5", "group": 2},
+//                 ],
+//
+//                 "links": [
+//                   {"source": "Node1", "target": "Node2", "value": 1},
+//                   {"source": "Node1", "target": "Node3", "value": 1},
+//                   {"source": "Node1", "target": "Node4", "value": 1},
+//                   {"source": "Node1", "target": "Node5", "value": 1},
+//                 ]
+//
+//               };
+//
+//   var link = svg.append("g")
+//       .attr("class", "links")
+//     .selectAll("line")
+//     .data(graph.links)
+//     .enter().append("line")
+//       .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+//
+//   var node = svg.append("g")
+//       .attr("class", "nodes")
+//     .selectAll("g")
+//     .data(graph.nodes)
+//     .enter().append("g")
+//
+//   var circles = node.append("circle")
+//       .attr("r", 5)
+//       .attr("fill", function(d) { return color(d.group); })
+//       .call(d3.drag()
+//           .on("start", dragstarted)
+//           .on("drag", dragged)
+//           .on("end", dragended));
+//
+//   var lables = node.append("text")
+//       .text(function(d) {
+//         return d.id;
+//       })
+//       .attr('x', 6)
+//       .attr('y', 3);
+//
+//   node.append("title")
+//       .text(function(d) { return d.id; });
+//
+//   simulation
+//       .nodes(graph.nodes)
+//       .on("tick", ticked);
+//
+//   simulation.force("link")
+//       .links(graph.links);
+//
+//   function ticked() {
+//     link
+//         .attr("x1", function(d) { return d.source.x; })
+//         .attr("y1", function(d) { return d.source.y; })
+//         .attr("x2", function(d) { return d.target.x; })
+//         .attr("y2", function(d) { return d.target.y; });
+//
+//     node
+//         .attr("transform", function(d) {
+//           return "translate(" + d.x + "," + d.y + ")";
+//         })
+//   }
+//
+//   function dragstarted(d) {
+//     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+//     d.fx = d.x;
+//     d.fy = d.y;
+//   }
+//
+//   function dragged(d) {
+//     d.fx = d3.event.x;
+//     d.fy = d3.event.y;
+//   }
+//
+//   function dragended(d) {
+//     if (!d3.event.active) simulation.alphaTarget(0);
+//     d.fx = null;
+//     d.fy = null;
+//   }
+//
+// });
+
+</script>
+
+
+</html>

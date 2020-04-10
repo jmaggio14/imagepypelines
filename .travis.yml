@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 
 language: python
 
@@ -7,44 +7,87 @@ os:
   - linux
   # - osx # Python not supported yet for travis osx builds 12/11/2018
 
+# ubuntu xenial is required for xvfb (virtual graphics)
+dist: xenial
+
 python:
-  - 2.7
-  - 3.4
   - 3.5
   - 3.6
+  # - 3.7 # until imagepypelines-tools is updated
+
+services:
+  - xvfb
+
+addons:
+  apt:
+    packages:
+      # for sphinx automodapi
+      - graphviz
+
+before_install:
+  # prevent travis from timing out from slow processes
+  - chmod +x docs/prevent_travis_timeout.sh
+  - docs/prevent_travis_timeout.sh &
+  - export PREVENT_TRAVIS_TIMEOUT_PID=$!
 
 install:
-  # imagepypelines Requirements
+  # install imagepypelines core
   - pip install -r requirements.txt
   - pip install .
-  - pip install tensorflow opencv-python
-  # codecov requirements
-  - pip install Sphinx sphinx_bootstrap_theme m2r
-  # codecov requirements
-  - pip install pytest pytest-cov hypothesis coverage codecov
+
+  # install official plugins so we can have their docs on the site as well
+  # NOTE: temporary until plugins are on pypi
+  # image
+  - git clone https://github.com/jmaggio14/imagepypelines_image.git
+  - cd imagepypelines_image && python setup.py install && cd ..
+  - pip install opencv-python
+  # astro
+  - git clone https://github.com/jmaggio14/imagepypelines_astro.git
+  - cd imagepypelines_astro && python setup.py install && cd ..
+
+
+  # Sphinx requirements
+  - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.7.1 sphinx-automodapi sphinx_copybutton
+  # codecov and auto-testing requirements
+  - pip install pytest sybil pytest-cov coverage codecov pytest-doctest-ellipsis-markers --upgrade
 
 script:
   # license enforcer
   - python enforcer.py
-  # running tests and code coverage report
-  - py.test --doctest-module --ignore=setup.py --ignore=tests/ --ignore=imagepypelines_gui/
-  - py.test --cov=./imagepypelines tests/
-  # Building documentation
-  - sphinx-apidoc -o docs/source imagepypelines
-  - cd docs && make html
-  - cd ..
-  - cp CNAME docs/build/html/CNAME
+
+  # run tests (both on website and in testing directory) and then generate
+  # percent test coverage and a coverage report
+  - py.test --cov=./imagepypelines --ignore=setup.py
+
+after_script:
+  - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
 
 after_success:
+  # upload coverage report
   - codecov
+  # Building website
+  - cd docs && make html && cd ..
 
 deploy:
   # Website Deployment
-  - provider: pages
-    skip-cleanup: true
+  - provider: pages:git
     github-token: $GITHUB_TOKEN
     keep-history: false
-    local-dir: docs/build/html
+    local-dir: /home/travis/build/jmaggio14/imagepypelines/docs/build/html
+    verbose: true
+    # this is the CNAME file contents
+    fqdn: https://www.imagepypelines.org
+    # opt into travis's v2 deploy tooling
+    edge: true
     on:
       python: '3.6'
+      branch:
+          - develop
+          - master
+
+  - provider: pypi
+    user: jmaggio14
+    password: $PYPI_PASS
+    on:
       branch: master
+      tags: true

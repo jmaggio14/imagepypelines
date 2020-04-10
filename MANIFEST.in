@@ -1,5 +1,3 @@
 include LICENSE
-include TUTORIALS.md
 include DEPENDENCY-LICENSE.md
-include README.md
-recursive-include imagepypelines/data *
+include README.rst
