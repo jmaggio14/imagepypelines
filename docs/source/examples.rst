@@ -2,11 +2,11 @@
 Examples
 ========
 
-.. toctree:: plugins/image.rst
+.. toctree:: docs/plugins/image.rst
     :maxdepth: 1
 
-.. toctree:: plugins/astro.rst
+.. toctree:: docs/plugins/astro.rst
     :maxdepth: 1
 
-.. toctree:: plugins/ml.rst
+.. toctree:: docs/plugins/ml.rst
     :maxdepth: 1
