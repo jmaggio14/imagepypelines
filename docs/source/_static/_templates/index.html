@@ -22,6 +22,10 @@
     <!-- local -->
     <link href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" rel="stylesheet">
     <link href="{{ pathto('_static/css/ip_custom.css', 1) }}" rel="stylesheet">
+
+    <!-- D3 -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script> -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <!-- fetch the sphinx navbar... maybe? -->
     <!-- <script src="{{ pathto('_static/bootstrap-sphinx.js', 1) }}"></script> -->
 
@@ -188,46 +192,24 @@
 <!-- <p style="max-width: 1000px">ImagePypelines takes care of all this on the backend, has a simple (and customizable) web-client interface for interactive code and visualization, and an incredibly extendible plugin system.</p> -->
 
 
-<div class="container">
-
-
-
-
-    <!-- DON'T GO BELOW HERE -->
-    <div id="source-modal" class="modal fade" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Source Code</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-                    <pre contenteditable="">&lt;div class="progress"&gt;
-                        &lt;div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%"&gt;&lt;/div&gt;
-                        &lt;/div&gt;</pre>
-                    </div>
-                </div>
-            </div>
+<div id="footer-container" class="container">
+        <!-- GRAPH -->
+        <div id='graph-svg'>
         </div>
-
+        <!-- FOOTER -->
         <footer id="footer">
             <div class="row">
                 <div class="col-lg-12">
-
                     <ul class="list-unstyled">
                         <li class="float-lg-right"><a href="#top">Back to top</a></li>
                         <li><a href="https://github.com/jmaggio14/imagepypelines/">GitHub</a></li>
                     </ul>
                     <p>&copy; Copyright 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators</p>
                     <p>Code released under the <a href="https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE">MIT License</a>.</p>
-
                 </div>
             </div>
-
         </footer>
-
-
-    </div>
+</div>
 </body>
 
 <script>
@@ -262,5 +244,116 @@ function render() {
     });
 
 </script>
+
+<script>
+// =======================
+// FORCE DIRECTED EXAMPLE
+// =======================
+// $(document).ready(function () {
+//
+//   $("#graph-svg").html("<svg id='graph' xmlns='http://www.w3.org/2000/svg' width='960px' height='600px'></svg>")
+//
+//   var svg = d3.select("#graph");
+//   var width = 960;
+//   var height = 600;
+//
+//   var color = d3.scaleOrdinal(d3.schemeCategory20);
+//
+//   var simulation = d3.forceSimulation()
+//       .force("link", d3.forceLink().id(function(d) { return d.id; }))
+//       .force("charge", d3.forceManyBody())
+//       .force("center", d3.forceCenter(width / 2, height / 2));
+//
+//   var graph = {
+//
+//                 "nodes": [
+//                   {"id": "Node1", "group": 1},
+//                   {"id": "Node2", "group": 2},
+//                   {"id": "Node3", "group": 1},
+//                   {"id": "Node4", "group": 1},
+//                   {"id": "Node5", "group": 2},
+//                 ],
+//
+//                 "links": [
+//                   {"source": "Node1", "target": "Node2", "value": 1},
+//                   {"source": "Node1", "target": "Node3", "value": 1},
+//                   {"source": "Node1", "target": "Node4", "value": 1},
+//                   {"source": "Node1", "target": "Node5", "value": 1},
+//                 ]
+//
+//               };
+//
+//   var link = svg.append("g")
+//       .attr("class", "links")
+//     .selectAll("line")
+//     .data(graph.links)
+//     .enter().append("line")
+//       .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+//
+//   var node = svg.append("g")
+//       .attr("class", "nodes")
+//     .selectAll("g")
+//     .data(graph.nodes)
+//     .enter().append("g")
+//
+//   var circles = node.append("circle")
+//       .attr("r", 5)
+//       .attr("fill", function(d) { return color(d.group); })
+//       .call(d3.drag()
+//           .on("start", dragstarted)
+//           .on("drag", dragged)
+//           .on("end", dragended));
+//
+//   var lables = node.append("text")
+//       .text(function(d) {
+//         return d.id;
+//       })
+//       .attr('x', 6)
+//       .attr('y', 3);
+//
+//   node.append("title")
+//       .text(function(d) { return d.id; });
+//
+//   simulation
+//       .nodes(graph.nodes)
+//       .on("tick", ticked);
+//
+//   simulation.force("link")
+//       .links(graph.links);
+//
+//   function ticked() {
+//     link
+//         .attr("x1", function(d) { return d.source.x; })
+//         .attr("y1", function(d) { return d.source.y; })
+//         .attr("x2", function(d) { return d.target.x; })
+//         .attr("y2", function(d) { return d.target.y; });
+//
+//     node
+//         .attr("transform", function(d) {
+//           return "translate(" + d.x + "," + d.y + ")";
+//         })
+//   }
+//
+//   function dragstarted(d) {
+//     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+//     d.fx = d.x;
+//     d.fy = d.y;
+//   }
+//
+//   function dragged(d) {
+//     d.fx = d3.event.x;
+//     d.fy = d3.event.y;
+//   }
+//
+//   function dragended(d) {
+//     if (!d3.event.active) simulation.alphaTarget(0);
+//     d.fx = null;
+//     d.fy = null;
+//   }
+//
+// });
+
+</script>
+
 
 </html>
