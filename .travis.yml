@@ -54,18 +54,17 @@ install:
 script:
   # license enforcer
   - python enforcer.py
-  # generate percent test coverage and a coverage report - this now includes website examples
-  # COMMENTED OUT TEMPORARILTY ON 03/23/2020 SO I CAN WORK ON THE WEBSITE
-  # -Jeff
-  # UNCOMMENT THE LINE BELOW TO WORK ON THE NEW TESTING SETUP
-  # - py.test --cov=./imagepypelines --ignore=setup.py
+
+  # run tests (both on website and in testing directory) and then generate
+  # percent test coverage and a coverage report
+  - py.test --cov=./imagepypelines --ignore=setup.py
 
 after_script:
   - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID
 
 after_success:
   # upload coverage report
-  # - codecov
+  - codecov
   # Building website
   - cd docs && make html && cd ..
 

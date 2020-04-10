@@ -691,7 +691,6 @@ class Pipeline(object):
                 args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
-                print(block_b)
                 outputs = block_b._pipeline_process(*args,
                                                         logger=self.logger,
                                                         force_skip=skip_enforcement)
