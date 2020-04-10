@@ -1,19 +1,22 @@
+==============
+ImagePypelines
+==============
+
+A processing pipeline framework by imaging scientists, for all scientists
+#########################################################################
+
+.. add in the logo
+.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/develop/docs/source/_static/images/ip_logo_mini.png
+  :alt: ImagePypelines Logo
+
+..  Definitions
 .. defining a raw html role
 .. role:: raw-html(raw)
     :format: html
-
 .. defining hyperlinks Substitutions
 .. _Imagepypelines: http://www.imagepypelines.org/
-
 .. _MIT: https://choosealicense.com/licenses/mit/
 
-.. add in the header image
-.. image:: https://raw.githubusercontent.com/jmaggio14/imagepypelines/develop/docs/source/_static/images/ip_logo_mini.png
-  :align: center
-  :alt: ip_logo
-
-:raw-html:`<h1 align="center">imagepypelines</h1>`
-:raw-html:`<h3 align="center">A processing pipeline framework by imaging scientists, for all scientists</h3>`
 
 .. Add badges for version, build, etc
 .. image:: https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master
@@ -41,14 +44,12 @@
 
 .. Content actually begins here!
 The `imagepypelines` package is a pipelining library for scientists who want to
-make their code more scalable and more sharable with their colleagues.
+make their code more scalable and more sharable with their colleagues. It's
+designed with scientists in mind, not software engineers.
 
-ImagePypelines contains
+ImagePypelines contains tools to turn scripts into robust processing pipelines
+which can be visualized, saved, copied, or deployed to a server easily.
 
-
-*This project is currently in alpha*
-
-************
 Installation
 ************
 more options for installation can be found `here <http://www.imagepypelines.org/about.html>`_.
