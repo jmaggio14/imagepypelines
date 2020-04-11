@@ -94,11 +94,8 @@ class FuncBlock(Block):
         # JM: this is an ugly hack to make FuncBlock's serializable - by
         # adding the user's functions to the current namespace (pickle demands
         # the source object be in top level of the module)
-        if not hasattr(this_module, func.__name__):
-            func_copy = FunctionType(func.__code__, globals(), func.__name__)
-            setattr(this_module, func_copy.__name__, func_copy)
-        else:
-            raise ValueError("illegal blockified function name: {}".format(func.__name__))
+        func_copy = FunctionType(func.__code__, globals(), func.__name__)
+        setattr(this_module, func_copy.__name__, func_copy)
 
         self.func = func_copy
         self.preset_kwargs = preset_kwargs

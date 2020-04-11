@@ -96,7 +96,15 @@ def test_Pipeline():
     pipeline5.get_vis()
 
     ################################################################################
-    # CHECK PREDECESSORS
+    # pickle debug
+    pipeline5.debug_pickle()
+
+    ################################################################################
+    # vars
+    pipeline5.variables
+
+
+
 
 def test_preds_and_succs():
     import imagepypelines as ip
@@ -177,6 +185,35 @@ def test_Pipeline_error_checking():
     except ip.PipelineError:
         pass
 
+
+
+def test_shape_checking():
+    # make sample blocks
+    import imagepypelines as ip
+    # some sample blocks
+    @ip.blockify()
+    def block1(a, b, c):
+        return 'd','e','f'
+
+    block2 = block1.deepcopy()
+
+    block1.enforce('a', np.ndarray, [(None, 200)], tuple)
+    block2.enforce('a', np.ndarray, [(200, None)], tuple)
+
+
+    tasks = {'a':ip.Input(),
+                'b':ip.Input(),
+                'c':ip.Input(),
+                ('d1','e1','f1') : (block1,'a','b','c'),
+                ('d2','e2','f2') : (block2,'a','b','c'),
+                }
+
+    pipeline = ip.Pipeline(tasks)
+
+    d = np.zeros((200,200))
+    pipeline.process([d],[d],[d])
+
+    pipeline.get_shapes_for('a')
 
 
 # def test_Block():
