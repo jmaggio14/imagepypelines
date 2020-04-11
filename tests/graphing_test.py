@@ -2,7 +2,7 @@ import numpy as np
 
 
 
-def testcore():
+def test_Pipeline():
     import imagepypelines as ip
     # ###############################################################################
     #                                 General Testing
@@ -57,12 +57,19 @@ def testcore():
     ################################################################################
     # SAVING AND LOADING CHECK
     print("SAVING AND LOADING")
-    checksum = pipeline2.save("pipeline.pck","password")
-    pipeline3 = ip.Pipeline.load("pipeline.pck", "password", checksum, name="Pipeline3")
+    checksum = pipeline2.save("pipeline.pype","password")
+    pipeline3 = ip.Pipeline.load("pipeline.pype", "password", checksum, name="Pipeline3")
 
     processed3 = pipeline3.process([0,0], one=[1,1])
     assert processed1 == processed3
     assert pipeline2.uuid != pipeline3.uuid
+
+    # test bad checksum
+    try:
+        bad_pipeline = ip.Pipeline.load('pipeline.pype','password', 'not_checksum')
+    except ip.PipelineError:
+        pass
+
 
     ################################################################################
     # COPY CHECK
@@ -76,11 +83,103 @@ def testcore():
     ################################################################################
     # DEEP COPY CHECK
     print('DEEP COPY')
+    _ = pipeline4.deepcopy()
     pipeline5 = pipeline4.deepcopy("Pipeline5")
     assert pipeline4.uuid != pipeline5.uuid
 
     # check to make sure all blocks are different
     assert len( pipeline5.blocks.intersection(pipeline4.blocks) ) == 0
+
+
+    ################################################################################
+    # GET VIS
+    pipeline5.get_vis()
+
+    ################################################################################
+    # CHECK PREDECESSORS
+
+def test_preds_and_succs():
+    import imagepypelines as ip
+    # some sample blocks
+    @ip.blockify()
+    def block1(a, b, c):
+        return 'd','e','f'
+
+    @ip.blockify()
+    def block2(d, e, f, g):
+        return 'h', 'i'
+
+
+    tasks = {'a':ip.Input(0),
+                'b':ip.Input(1),
+                'c':ip.Input(2),
+                ('d','e','f') : (block1,'a','b','c'),
+                ('h','i') : (block2,'d','e','f','a'), # g is a
+                ('final1','final2') : (block2,'a','b','c','d')
+                }
+
+    pipeline = ip.Pipeline(tasks)
+
+    ############################################################################
+    # PREDS
+    d_preds = {'a', 'b', 'c'}
+    final1_preds = {'a','b','c','d'}
+    final2_preds = final1_preds
+
+    assert d_preds == pipeline.get_predecessors('d')
+    assert final1_preds == pipeline.get_predecessors('final1')
+    assert final2_preds == pipeline.get_predecessors('final2')
+
+    ############################################################################
+    # SUCCS
+    d_succs = {'h','i','final1','final2'}
+    final1_succs = set()
+    final2_succs = final1_succs
+    a_succs = {'d','e','f','h','i','final1','final2'}
+
+    assert d_succs == pipeline.get_successors('d')
+    assert final1_succs == pipeline.get_successors('final1')
+    assert final2_succs == pipeline.get_successors('final2')
+    assert a_succs == pipeline.get_successors('a')
+
+
+
+def test_Pipeline_error_checking():
+    import imagepypelines as ip
+
+    # test rejection of non-strings as variables
+    try:
+        not_a_string = 50
+        non_string_var_tasks = { not_a_string : ip.Input() }
+        ip.Pipeline(non_string_var_tasks)
+    except TypeError:
+        pass
+
+    # test multiple outputs per input rejection
+    try:
+        multi_out_tasks = { ('out1','out2') : ip.Input() }
+        ip.Pipeline(multi_out_tasks)
+    except ip.PipelineError:
+        pass
+
+    # test duplicate variable rejection
+    try:
+        duplicate_out_tasks = { ('out','out') : ip.Input() }
+        ip.Pipeline(duplicate_out_tasks)
+    except ValueError:
+        pass
+
+    # test illegal variable names
+    try:
+        illegal_vars = {'fetches' : ip.Input(0),
+                            'skip_enforcement':ip.Input(1)}
+        ip.Pipeline(illegal_vars)
+    except ip.PipelineError:
+        pass
+
+
+
+# def test_Block():
 
 
 

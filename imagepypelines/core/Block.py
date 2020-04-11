@@ -469,16 +469,6 @@ class Block(metaclass=ABCMeta):
         self.logger = get_logger(self.id)
 
 
-
-    ############################################################################
-    @staticmethod
-    def _make_tuple(out):
-        """if the output isn't a tuple, put it in one"""
-        if isinstance(out, tuple):
-            return out
-        return (out,)
-
-
     ############################################################################
     #                            special
     ############################################################################

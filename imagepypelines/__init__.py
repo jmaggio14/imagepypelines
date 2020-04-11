@@ -51,14 +51,15 @@ def load_plugins():
         ip_module = sys.modules[__name__]
         plugin_module = plugins[plugin_name]
 
-        # check that the module has the required objects
-        for req in required_objects:
-            if not hasattr(plugin_module, req):
-                raise PluginError(
-                        "Plugin '%s' doesn't meet requirements" % plugin_name)
-            elif not callable( getattr(plugin_module, req) ):
-                raise PluginError(
-                        "Plugin '%s' doesn't meet requirements" % plugin_name)
+        # JM - commented out 04/11/20
+        # # check that the module has the required objects
+        # for req in required_objects:
+        #     if not hasattr(plugin_module, req):
+        #         raise PluginError(
+        #                 "Plugin '%s' doesn't meet requirements" % plugin_name)
+        #     elif not callable( getattr(plugin_module, req) ):
+        #         raise PluginError(
+        #                 "Plugin '%s' doesn't meet requirements" % plugin_name)
 
         MASTER_LOGGER.warning(
             "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
@@ -80,10 +81,9 @@ def require(plugin_name):
     is not in the imagepypelines namespace
     """
     import sys
-    ip_module = sys.modules[__name__]
 
-    if not hasattr(ip_module, plugin_name):
-        raise PluginError('unable to find required plugin "%s"' % plugin_name)
+    if not plugin_name in LOADED_PLUGINS.keys():
+        raise RuntimeError('unable to find required plugin "%s"' % plugin_name)
 
 # ---------- delete namespace pollutants ----------
 del pkg_resources, os, uuid4, time, OrderedDict, sys

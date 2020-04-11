@@ -57,7 +57,7 @@ script:
 
   # run tests (both on website and in testing directory) and then generate
   # percent test coverage and a coverage report
-  - py.test --cov=./imagepypelines --ignore=setup.py
+  - py.test --cov=./imagepypelines --ignore=setup.py --verbose
 
 after_script:
   - kill -9 $PREVENT_TRAVIS_TIMEOUT_PID

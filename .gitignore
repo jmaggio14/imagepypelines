@@ -6,6 +6,7 @@ docs/source/api/
 */output_dir/*
 output_dir/*
 *.pck
+*.pype
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

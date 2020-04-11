@@ -207,14 +207,15 @@ class Pipeline(object):
         ########################################################################
         # add all variables defined in the graph to a dictionary
         for var in tasks.keys():
-            # for str defined dict keys like 'x' : (block, 'a', 'b')
-            if isinstance(var, str):
-                _add_to_vars(var)
-
             # for tuple defined dict keys like ('x','y') : (block, 'a', 'b')
-            elif isinstance(var,(tuple,list)):
+            if isinstance(var,(tuple,list)):
                 for v in var:
                     _add_to_vars(v)
+
+            # for str defined dict keys like 'x' : (block, 'a', 'b')
+            else:
+                _add_to_vars(var)
+
 
 
         ########################################################################
@@ -608,7 +609,7 @@ class Pipeline(object):
         if checksum:
             fchecksum = hashlib.sha256(raw_bytes).hexdigest()
             if fchecksum != checksum:
-                msg = "'%s'checksum doesn't match" % filename
+                msg = "Invalid Checksum!"
                 MASTER_LOGGER.error(msg)
                 PipelineError(msg)
 
@@ -780,10 +781,10 @@ class Pipeline(object):
 
             nodes_checked.add(node)
 
-        _get_latters(self.vars[var]['block_node_id'])
+        # start with every node node after this one - (so we don't include companion outputs)
+        for _,next_node in self.graph.out_edges(self.vars[var]['block_node_id']):
+            _get_latters(next_node)
 
-        # remove the name of the variable
-        succs.remove(var)
         return succs
 
     ############################################################################
@@ -1022,7 +1023,7 @@ class Pipeline(object):
         vis['BLOCKS'] = {}
         for node_id,attrs in graph_copy.nodes(data=True):
             # add block summaries to the BLOCKS dict, with the node
-            vis['BLOCKS'][node_id] = attrs['block'].summary()
+            vis['BLOCKS'][node_id] = attrs['block']._summary()
             # delete the block from the copy bc it can't be jsonified
             del attrs['block']
 
