@@ -14,8 +14,8 @@ with open(requirements_path,'r') as f:
     requirements = f.readlines()
 
 long_description = ''
-if os.path.exists(os.path.join(current_dir,'README.md')):
-    with open(os.path.join(current_dir,'README.md'), 'r') as f:
+if os.path.exists(os.path.join(current_dir,'README.rst')):
+    with open(os.path.join(current_dir,'README.rst'), 'r') as f:
         long_description = f.read()
 
 setup(name='imagepypelines',

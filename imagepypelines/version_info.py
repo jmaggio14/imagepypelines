@@ -37,7 +37,6 @@ __download_url__ = 'https://github.com/jmaggio14/imagepypelines'
 __maintainer__ = "Jeff Maggio"
 __maintainer_email__ = "jmaggio14@gmail.com"
 __keywords__ = 'imaging-science machine-learning computer-vision data-pipelines'
-# must be 2.7, or 3.4-3.6
 __python_requires__ = '>=3.5.*'
 __platforms__ = ["Windows", "Linux", "Mac OS-X", "Unix"]
 __classifiers__ = [
@@ -54,7 +53,6 @@ __classifiers__ = [
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
-    # 'Programming Language :: Python :: 3.7', # JM: 3.7 must wait for tensorflow
     'Programming Language :: Python :: Implementation :: CPython',
     'Operating System :: MacOS :: MacOS X',
     'Operating System :: Microsoft :: Windows',

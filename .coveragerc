@@ -9,7 +9,5 @@ ignore_errors = True
 omit =
     tests/*
     docs/*
-    examples/*
     setup.py
     enforcer.py
-    check_readme_examples.py
