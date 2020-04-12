@@ -333,6 +333,7 @@ class Test_io_tools(object):
             os.remove(f)
 
         os.rmdir(test_dir)
+        os.rmdir('test/')
 
 
 
