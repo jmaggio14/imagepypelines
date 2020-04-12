@@ -64,13 +64,3 @@ class Data(object):
     def n_items(self):
         """int: number of items loaded into the pipeline"""
         return len(self)
-
-    ############################################################################
-    @property
-    def shape(self):
-        """tuple: the shape of the data"""
-        if self.datatype == "list":
-            return (self.n_items,)
-
-        elif self.datatype == "array":
-            return self.data.shape

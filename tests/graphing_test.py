@@ -216,6 +216,17 @@ def test_shape_checking():
     pipeline.get_shapes_for('a')
 
 
+def test_Data():
+    import imagepypelines as ip
+
+    d = ip.Data([1,2,3,4,5])
+
+    assert d.n_batches_with('all') == 1
+    assert d.n_batches_with('each') == 5
+
+    d.pop()
+
+    
 # def test_Block():
 
 

@@ -14,6 +14,9 @@ from .constants import *
 # Block.py
 from .Block import Block
 
+# Data.py
+from .Data import Data
+
 # block_subclasses.py
 from .block_subclasses import FuncBlock
 from .block_subclasses import Input
