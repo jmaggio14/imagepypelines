@@ -31,7 +31,7 @@ from .Exceptions import BlockError
 from .io_tools import passgen
 from .io_tools import prevent_overwrite
 from .io_tools import make_numbered_prefix
-from .io_tools import convert_to
+# from .io_tools import convert_to
 
 # from .io_tools import CameraCapture
 # from .io_tools import Emailer

@@ -292,6 +292,52 @@ class TestUtil(object):
 
 
 
+class Test_io_tools(object):
+    def test_make_numbered_prefix(self):
+        import imagepypelines as ip
+
+        assert "00025" == ip.make_numbered_prefix(25)
+        assert "-00100" == ip.make_numbered_prefix(-100)
+        assert "-000100" == ip.make_numbered_prefix(-100,6)
+        assert "-100" == ip.make_numbered_prefix(-100,2)
+
+
+    def test_passgen(self):
+        import imagepypelines as ip
+        assert isinstance(ip.passgen("password","salt"), bytes)
+
+
+    def test_prevent_overwrite(self):
+        import imagepypelines as ip
+        import os
+
+        # test file and directory creation
+        test_dir = 'test/test'
+        test_f = 'test.txt'
+
+        ip.prevent_overwrite(test_dir, True)
+        ip.prevent_overwrite(test_f, True)
+
+        assert ip.prevent_overwrite(test_f) == "test(1).txt"
+        assert ip.prevent_overwrite(test_dir) == "test/test(1)"
+
+
+        for i in range(9):
+            ip.prevent_overwrite(test_f, True)
+
+        assert ip.prevent_overwrite(test_f) == "test(10).txt"
+
+        files_created = ["test(%s).txt" % i for i in range(1,10)] + [test_f]
+
+        for f in files_created:
+            os.remove(f)
+
+        os.rmdir(test_dir)
+
+
+
+
+
 
 
 
