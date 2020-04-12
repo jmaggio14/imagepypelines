@@ -220,6 +220,82 @@ def test_shape_checking():
 
 
 
+class TestUtil(object):
+    def test_timer_decs(self):
+        import imagepypelines as ip
+        import time
+
+        @ip.timer
+        def sleep1():
+            time.sleep(0.01)
+
+
+        @ip.timer_ms
+        def sleep2():
+            time.sleep(0.02)
+
+        sleep1()
+        sleep2()
+
+    def test_Timer(self):
+        import imagepypelines as ip
+        import time
+
+        t = ip.Timer()
+        time.sleep(0.01)
+        t.time_ms()
+        t.time()
+
+        lap1 = t.lap_ms()
+        time.sleep(0.02)
+        lap2 = t.lap_ms()
+        assert lap2 > lap1
+
+        t.countdown # before it's set
+        t.countdown = 0.1
+        while t.countdown:
+            print(t.countdown)
+            time.sleep(0.005)
+
+        t.start
+        str(t)
+
+
+        # test bad countdown
+        t2 = ip.Timer()
+        try:
+            t2.countdown = "not a number"
+        except TypeError:
+            pass
+
+
+
+
+    def test_summary(self):
+        import imagepypelines as ip
+        import numpy as np
+
+        test_arr = np.arange(10)
+
+        summ = ip.arrsummary(test_arr)
+
+
+        summ.summarize()
+        str(summ)
+
+
+        # test bad array
+        try:
+            ip.arrsummary("not array")
+        except TypeError:
+            pass
+
+
+
+
+
+
+
 #
 # ################################################################################
 # #                                 Image Testing

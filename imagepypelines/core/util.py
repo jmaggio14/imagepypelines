@@ -18,92 +18,92 @@ TIMER_LOGGER = get_logger('TIMER')
 #                                 Decorators
 ################################################################################
 
-def print_args(func):
-    """Decorator to print out the arguments that a function is running with,
-    this includes: arguments passed in, default values that are unspecified,
-    varargs ``(*args)``, and varkwargs ``(**kwargs)``
-
-    Args:
-        func (callable): function or callable to print input arguments of
-    """
-    def _print_args(*args,**kwargs):
-        """
-        prints the arguments passed into the target
-        """
-        POSITIONAL    = 'positional    |'
-        KEYWORD       = 'keyword       |'
-        VARPOSITIONAL = 'var-positional|'
-        VARKEYWORD    = 'var-keyword   |'
-        DEFAULT       = 'default       |'
-
-        arg_dict = collections.OrderedDict()
-        vtypes = {}
-        def __add_to_arg_dict(key,val,vtype):
-            if isinstance(val, np.ndarray):
-                val = str( Summarizer(val) )
-            arg_dict[key] = val
-            vtypes[key] = vtype
-
-
-        spec = inspect.getfullargspec(func)
-        specdefaults = [] if spec.defaults is None else spec.defaults
-        specargs = [] if spec.args is None else spec.args
-        speckwonlyargs = [] if spec.kwonlyargs is None else spec.kwonlyargs
-        speckwonlydefaults = {} if spec.kwonlydefaults is None else spec.kwonlydefaults
-
-        num_positional_passed_in = len(args)
-        num_required = len(specargs) - len(specdefaults)
-
-        # adding default positional args values to the dictionary
-        for i,var_name in enumerate(specargs):
-            if i < num_required:
-                var = colored("No argument was passed in!",attrs=['bold'])
-            else:
-                var = specdefaults[i - num_required]
-
-            vtype = DEFAULT
-            __add_to_arg_dict(var_name,var,vtype)
-
-        # positional arguments passed in and varargs passed in
-        for i in range(num_positional_passed_in):
-            if i < num_required:
-                var_name = specargs[i]
-                vtype = POSITIONAL
-            else:
-                var_name = 'arg{}'.format(i)
-                vtype = VARPOSITIONAL
-            var = args[i]
-            __add_to_arg_dict(var_name,var,vtype)
-
-        # adding keyword only args to the dict
-        for var_name in speckwonlyargs:
-            var = color.red("No argument was passed in!",bold=True)
-            vtype = KEYWORD
-            __add_to_arg_dict(var_name,var,vtype)
-        for var_name,var in speckwonlydefaults.items():
-            vtype = DEFAULT
-            __add_to_arg_dict(var_name,var,vtype)
-
-        # keyword arguments passed in
-        for var_name in kwargs:
-            if var_name in specargs:
-                vtype = KEYWORD
-            else:
-                vtype = VARKEYWORD
-            var = kwargs[var_name]
-            __add_to_arg_dict(var_name,var,vtype)
-
-        # formatting the actual string to be printed out
-        MASTER_LOGGER.info("running '{}' with the following args:".format(func.__name__))
-        if len(arg_dict) == 0:
-            __add_to_arg_dict('None','','')
-        longest_arg_name = max(len(k) for k in arg_dict)
-        arg_string = ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
-        print( arg_string )
-
-        ret = func(*args,**kwargs)
-        return ret
-    return _print_args
+# def print_args(func):
+#     """Decorator to print out the arguments that a function is running with,
+#     this includes: arguments passed in, default values that are unspecified,
+#     varargs ``(*args)``, and varkwargs ``(**kwargs)``
+#
+#     Args:
+#         func (callable): function or callable to print input arguments of
+#     """
+#     def _print_args(*args,**kwargs):
+#         """
+#         prints the arguments passed into the target
+#         """
+#         POSITIONAL    = 'positional    |'
+#         KEYWORD       = 'keyword       |'
+#         VARPOSITIONAL = 'var-positional|'
+#         VARKEYWORD    = 'var-keyword   |'
+#         DEFAULT       = 'default       |'
+#
+#         arg_dict = collections.OrderedDict()
+#         vtypes = {}
+#         def __add_to_arg_dict(key,val,vtype):
+#             if isinstance(val, np.ndarray):
+#                 val = str( Summarizer(val) )
+#             arg_dict[key] = val
+#             vtypes[key] = vtype
+#
+#
+#         spec = inspect.getfullargspec(func)
+#         specdefaults = [] if spec.defaults is None else spec.defaults
+#         specargs = [] if spec.args is None else spec.args
+#         speckwonlyargs = [] if spec.kwonlyargs is None else spec.kwonlyargs
+#         speckwonlydefaults = {} if spec.kwonlydefaults is None else spec.kwonlydefaults
+#
+#         num_positional_passed_in = len(args)
+#         num_required = len(specargs) - len(specdefaults)
+#
+#         # adding default positional args values to the dictionary
+#         for i,var_name in enumerate(specargs):
+#             if i < num_required:
+#                 var = colored("No argument was passed in!",attrs=['bold'])
+#             else:
+#                 var = specdefaults[i - num_required]
+#
+#             vtype = DEFAULT
+#             __add_to_arg_dict(var_name,var,vtype)
+#
+#         # positional arguments passed in and varargs passed in
+#         for i in range(num_positional_passed_in):
+#             if i < num_required:
+#                 var_name = specargs[i]
+#                 vtype = POSITIONAL
+#             else:
+#                 var_name = 'arg{}'.format(i)
+#                 vtype = VARPOSITIONAL
+#             var = args[i]
+#             __add_to_arg_dict(var_name,var,vtype)
+#
+#         # adding keyword only args to the dict
+#         for var_name in speckwonlyargs:
+#             var = color.red("No argument was passed in!",bold=True)
+#             vtype = KEYWORD
+#             __add_to_arg_dict(var_name,var,vtype)
+#         for var_name,var in speckwonlydefaults.items():
+#             vtype = DEFAULT
+#             __add_to_arg_dict(var_name,var,vtype)
+#
+#         # keyword arguments passed in
+#         for var_name in kwargs:
+#             if var_name in specargs:
+#                 vtype = KEYWORD
+#             else:
+#                 vtype = VARKEYWORD
+#             var = kwargs[var_name]
+#             __add_to_arg_dict(var_name,var,vtype)
+#
+#         # formatting the actual string to be printed out
+#         MASTER_LOGGER.info("running '{}' with the following args:".format(func.__name__))
+#         if len(arg_dict) == 0:
+#             __add_to_arg_dict('None','','')
+#         longest_arg_name = max(len(k) for k in arg_dict)
+#         arg_string = ''.join(["\t{} {} : {}\n".format(vtypes[k], k+(' ' * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])
+#         print( arg_string )
+#
+#         ret = func(*args,**kwargs)
+#         return ret
+#     return _print_args
 
 
 ################################################################################
@@ -231,7 +231,7 @@ def timer(func):
         ...
     """
     def _timer(*args,**kwargs):
-        t = Time()
+        t = Timer()
         ret = func(*args,**kwargs)
         run_time = t.time()
         msg = "ran function '{name}' in {t}sec".format(name=func.__name__,
@@ -258,9 +258,9 @@ def timer_ms(func):
         ...
     """
     def _timer_ms(*args,**kwargs):
-        t = Time()
+        t = Timer()
         ret = func(*args,**kwargs)
-        run_time_ms = t.time_ms
+        run_time_ms = t.time_ms()
         msg = "ran function '{name}' in {t}ms".format(name=func.__name__,
                                                             t=run_time_ms)
         TIMER_LOGGER.info(msg)
@@ -357,7 +357,7 @@ class Timer(object):
         if not isinstance(value,(int,float)):
             error_msg = "countdown must be set using a float \
                         or an int, current type is {0}".format(type(value))
-            core.error(error_msg)
+            TIMER_LOGGER.error(error_msg)
             raise TypeError(error_msg)
 
         self._countdown_timer = Timer()
