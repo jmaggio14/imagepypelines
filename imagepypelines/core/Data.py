@@ -7,6 +7,7 @@
 #
 import numpy as np
 
+CONTAINER_REQUIRES = ['__getitem__', '__iter__', '__len__']
 
 class Data(object):
     """Object to batch lists or arrays as block processable data
@@ -20,6 +21,11 @@ class Data(object):
         Args:
             data (any type): the raw data
         """
+        # check if the data is a valid container
+        if not all(hasattr(data,req) for req in CONTAINER_REQUIRES):
+            msg = "invalid container type '%s' passed in. must functions for %s" % (type(data), CONTAINER_REQUIRES)
+            raise TypeError(msg)
+
         self.data = data
 
     ############################################################################

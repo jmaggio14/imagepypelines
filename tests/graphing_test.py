@@ -226,7 +226,18 @@ def test_Data():
 
     d.pop()
 
-    
+
+    # give it bad data
+    bad_data = 50
+
+    try:
+        d2 = ip.Data(bad_data)
+    except TypeError:
+        pass
+
+        
+
+
 # def test_Block():
 
 
