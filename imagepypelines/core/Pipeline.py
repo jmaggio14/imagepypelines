@@ -491,7 +491,10 @@ class Pipeline(object):
         fetch_dict = {}
         for _,_,edge in self.graph.edges(data=True):
             if edge['var_name'] in fetch:
-                fetch_dict[ edge['var_name'] ] = edge['data'].grab()
+                if edge['data'] is None:
+                    fetch_dict[ edge['var_name'] ] = None #Could eventually be ip.Void or ip.NULL type
+                else:
+                    fetch_dict[ edge['var_name'] ] = edge['data'].grab()
 
         # clear the graph of data to reduce memory footprint
         self.clear()

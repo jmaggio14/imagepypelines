@@ -109,7 +109,7 @@ class Block(metaclass=ABCMeta):
             name = self.__class__.__name__
         self.name = name
         self.batch_type = batch_type
-        self.void = void
+        self._void = void
 
         # this will be defined in _pipeline_pair
         self.logger = get_logger( self.id )
@@ -347,7 +347,7 @@ class Block(metaclass=ABCMeta):
 
                 # if there is a return value for this block (most blocks)
                 # we make sure we can write this data to a graph edge
-                if not self.void:
+                if not self._void:
                     # put it a tuple if it isn't already
                     if not isinstance(ret, tuple):
                         ret = (ret, )
@@ -538,20 +538,41 @@ class Block(metaclass=ABCMeta):
     ############################################################################
     @property
     def n_args(self):
-        """int: number of arguments for the process function"""
+        """int: Number of arguments for the process function"""
         return len(self.args)
 
     ############################################################################
     @property
     def id(self):
-        """str: an unique id for this pipeline
+        """str: A unique id for this block
 
-        This id is a combination of the pipeline's non-unique name and
+        This id is a combination of the block's non-unique name and
         part of it's uuid (last 6 characters by default).
         The entropy of this id can be increased by increasing ImagePypelines
         UUID_ORDER variable
         """
         return "{}#{}".format(self.name, self.uuid[-UUID_ORDER:])
 
+    ############################################################################
+    @property
+    def void(self):
+        """bool: Represents whether or not the block has a void output"""
+        return self._void
+
+    @void.setter
+    def void(self, val):
+        """
+        Setter for the 'void' property of this block
+        """
+
+        if (val==1) or (val==0) or (val==True) or (val==False):
+
+            self._void = val
+
+        else:
+
+            msg = "'Void' only takes boolean values."
+            self.logger.error(msg)
+            raise BlockError(msg + "You specified a value of {}".format(val))
 
 # END
