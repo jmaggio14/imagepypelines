@@ -459,7 +459,7 @@ def test_Logger():
     master.critical('color critical test')
 
     # disable colors
-    ip.ENABLE_LOG_COLOR = False
+    ip.MASTER_LOGGER.ENABLE_LOG_COLOR = False
     master.debug('no color debug test')
     master.info('no color info test')
     master.warning('no color warning test')

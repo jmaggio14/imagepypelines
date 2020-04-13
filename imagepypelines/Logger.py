@@ -38,10 +38,6 @@ LOG_TEXT_ATTRS = {
 modified to suit the end user's needs or ignored entirely by setting
 imagepypelines.ENABLE_LOG_COLOR = False"""
 
-ENABLE_LOG_COLOR = True
-"""Module variable controlling whether or not to markup log output with ANSI
-color codes, True by default"""
-
 
 MASTER_LOGGER = None
 """logging.Logger subclass that is the root of all loggers instantiated in
@@ -54,9 +50,14 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
     outputs if desired. the color, functionality and text attributes can be
     controlled by setting the module variables imagepypelines.LOG_COLORS,
     imagepypelines.ENABLE_LOG_COLOR, imagepypelines.LOG_TEXT_ATTRS
+
+    Attributes:
+        ENABLE_LOG_COLOR(bool): class level variable controlling whether or not
+            to markup log output with ANSI color codes. True by default
     """
+    ENABLE_LOG_COLOR = True
     def _color_msg(self, msg, level, LEVEL):
-        if self.isEnabledFor(LEVEL) and ENABLE_LOG_COLOR:
+        if self.isEnabledFor(LEVEL) and self.ENABLE_LOG_COLOR:
             return colored(msg, LOG_COLORS[level], attrs=LOG_TEXT_ATTRS[level])
         return msg
 
