@@ -56,9 +56,10 @@ def test_Pipeline():
 
     ################################################################################
     # SAVING AND LOADING CHECK
+    # with a password
     print("SAVING AND LOADING")
-    checksum = pipeline2.save("pipeline.pype","password")
-    pipeline3 = ip.Pipeline.load("pipeline.pype", "password", checksum, name="Pipeline3")
+    checksum = pipeline2.save("pipeline.pype.enc","password")
+    pipeline3 = ip.Pipeline.load("pipeline.pype.enc", "password", checksum, name="Pipeline3")
 
     processed3 = pipeline3.process([0,0], one=[1,1])
     assert processed1 == processed3
@@ -66,9 +67,14 @@ def test_Pipeline():
 
     # test bad checksum
     try:
-        bad_pipeline = ip.Pipeline.load('pipeline.pype','password', 'not_checksum')
+        bad_pipeline = ip.Pipeline.load('pipeline.pype.enc','password', 'not_checksum')
     except ip.PipelineError:
         pass
+
+    # without a password or checksum
+    checksum = pipeline3.save("pipeline.pype")
+    pipeline3 = ip.Pipeline.load("pipeline.pype")
+
 
 
     ################################################################################
@@ -104,8 +110,39 @@ def test_Pipeline():
     pipeline5.variables
 
 
+################################################################################
+def test_pipeline_in_pipeline():
+    import imagepypelines as ip
+
+    # # create some example blocks
+    @ip.blockify(batch_type="all")
+    def block1(a,b,c):
+        return a,b,c
+
+    @ip.blockify(batch_type="each")
+    def block2(a,b,c):
+        return a,b,c
+    #
+    sub_tasks = {'a':ip.Input(0),
+                'b':ip.Input(1),
+                'c':ip.Input(2),
+                ('d1','e1','f1') : (block1, 'a', 'b', 'c'),
+                ('d2','e2','f2') : (block2, 'a', 'b', 'c'),
+                }
+    sub_pipeline = ip.Pipeline(sub_tasks)
+
+    tasks = {'a':ip.Input(0),
+                'b':ip.Input(1),
+                'c':ip.Input(2),
+                ('d2','e2','f2') : (block1, 'a', 'b', 'c'),
+                ('d2','e2','f2') : (sub_pipeline.asblock('d2','e2','f2'), 'a', 'b', 'c'),
+                }
+    pipeline = ip.Pipeline(tasks)
+
+    pipeline.process([1],[2],[3])
 
 
+################################################################################
 def test_preds_and_succs():
     import imagepypelines as ip
     # some sample blocks
@@ -152,6 +189,7 @@ def test_preds_and_succs():
 
 
 
+################################################################################
 def test_Pipeline_error_checking():
     import imagepypelines as ip
 
@@ -187,6 +225,7 @@ def test_Pipeline_error_checking():
 
 
 
+################################################################################
 def test_shape_checking():
     # make sample blocks
     import imagepypelines as ip
@@ -216,6 +255,7 @@ def test_shape_checking():
     pipeline.get_shapes_for('a')
 
 
+################################################################################
 def test_Data():
     import imagepypelines as ip
 
@@ -235,14 +275,16 @@ def test_Data():
     except TypeError:
         pass
 
-        
+
 
 
 # def test_Block():
 
 
 
+################################################################################
 class TestUtil(object):
+    ############################################################################
     def test_timer_decs(self):
         import imagepypelines as ip
         import time
@@ -259,6 +301,7 @@ class TestUtil(object):
         sleep1()
         sleep2()
 
+    ############################################################################
     def test_Timer(self):
         import imagepypelines as ip
         import time
@@ -284,15 +327,14 @@ class TestUtil(object):
 
 
         # test bad countdown
-        t2 = ip.Timer()
+        t.reset()
         try:
-            t2.countdown = "not a number"
+            t.countdown = "not a number"
         except TypeError:
             pass
 
 
-
-
+    ############################################################################
     def test_summary(self):
         import imagepypelines as ip
         import numpy as np
@@ -313,7 +355,7 @@ class TestUtil(object):
             pass
 
 
-
+################################################################################
 class Test_io_tools(object):
     def test_make_numbered_prefix(self):
         import imagepypelines as ip
@@ -336,6 +378,7 @@ class Test_io_tools(object):
         # test file and directory creation
         test_dir = 'test/test'
         test_f = 'test.txt'
+        test_f2 = 'test/test/test/test.txt'
 
         ip.prevent_overwrite(test_dir, True)
         ip.prevent_overwrite(test_f, True)
@@ -349,11 +392,15 @@ class Test_io_tools(object):
 
         assert ip.prevent_overwrite(test_f) == "test(10).txt"
 
-        files_created = ["test(%s).txt" % i for i in range(1,10)] + [test_f]
+        # create file and directories
+        ip.prevent_overwrite(test_f2, True)
+
+        files_created = ["test(%s).txt" % i for i in range(1,10)] + [test_f, test_f2]
 
         for f in files_created:
             os.remove(f)
 
+        os.rmdir('test/test/test')
         os.rmdir(test_dir)
         os.rmdir('test/')
 
@@ -363,6 +410,34 @@ class Test_io_tools(object):
 
 
 
+################################################################################
+def test_shape_fns():
+    import imagepypelines as ip
+    import numpy as np
+
+    # np array
+    assert (10,10) == ip.DEFAULT_SHAPE_FUNCS[np.ndarray](np.zeros((10,10)))
+    # int
+    assert ip.DEFAULT_SHAPE_FUNCS[int](10) is None
+    # float
+    assert ip.DEFAULT_SHAPE_FUNCS[float](10.0) is None
+    # list
+    assert (3,) == ip.DEFAULT_SHAPE_FUNCS[list]([1,2,3])
+    # tuple
+    assert (4,) == ip.DEFAULT_SHAPE_FUNCS[tuple]( (1,2,3,4) )
+    # str
+    assert (5,) == ip.DEFAULT_SHAPE_FUNCS[str]( "12345" )
+    # dict
+    assert (2,) == ip.DEFAULT_SHAPE_FUNCS[dict]( dict(a=1, b=2) )
+
+
+################################################################################
+def test_bad_plugin():
+    import imagepypelines as ip
+    try:
+        ip.require("this plugin doesn't exist")
+    except RuntimeError:
+        pass
 
 
 #
