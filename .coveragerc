@@ -16,6 +16,10 @@ exclude_lines =
     if 0:
     if __name__ == .__main__.:
 
+    # Don't complain if there is nothing there
+    @abstractmethod
+    pass
+
 ignore_errors = True
 
 omit =

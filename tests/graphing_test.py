@@ -440,6 +440,31 @@ def test_bad_plugin():
         pass
 
 
+################################################################################
+def test_Logger():
+    import imagepypelines as ip
+    import pickle
+
+    # serialize the master logger
+    pickled = pickle.dumps(ip.MASTER_LOGGER)
+    master = pickle.loads(pickled)
+
+    assert id(ip.MASTER_LOGGER) == id(master)
+
+    # test every function with color
+    master.debug('color debug test')
+    master.info('color info test')
+    master.warning('color warning test')
+    master.error('color error test')
+    master.critical('color critical test')
+
+    # disable colors
+    ip.ENABLE_LOG_COLOR = False
+    master.debug('no color debug test')
+    master.info('no color info test')
+    master.warning('no color warning test')
+    master.error('no color error test')
+    master.critical('no color critical test')
 #
 # ################################################################################
 # #                                 Image Testing
