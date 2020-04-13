@@ -573,6 +573,6 @@ class Block(metaclass=ABCMeta):
 
             msg = "'Void' only takes boolean values."
             self.logger.error(msg)
-            raise BlockError(msg + "You specified a value of {}".format(val))
+            raise AttributeError(msg + "You specified a value of {}".format(val))
 
 # END
