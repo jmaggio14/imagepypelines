@@ -386,6 +386,9 @@ class Pipeline(object):
         msg = "{} tasks set up; process arguments are ({})".format(len(tasks), ', '.join(self.args))
         self.logger.info(msg)
 
+        ########################################################################
+        #                       Running Checks
+        ########################################################################
 
         if predict_compatibility:
             # check to make sure there are compatible types
@@ -398,6 +401,30 @@ class Pipeline(object):
                 if self.get_shapes_for(var) == tuple():
                     msg = "PREDICTED INCOMPATIBILITY : no compatible shapes for '%s'" % var
                     self.logger.warning(msg)
+
+
+        # iterate through edges and check if any blocks are expecting void data
+        for node_a_id, node_b_id, var_name  in self.graph.edges(data="var_name"):
+            block_a = self.graph.nodes[node_a_id]['block']
+            block_b = self.graph.nodes[node_b_id]['block']
+
+            # if block a is void, then we make sure block_b isn't a block
+            # expecting data that won't exist (make sure block b isn't a leaf)
+            if block_a.void:
+                if not isinstance(block_b, Leaf):
+                    msg = "INCOMPATIBILE EDGE: {block_b} is expecting '{var_name}' from {block_a}, but {block_a} is void (doesn't return data)"
+                    msg.format(block_a=block_a,
+                                block_b=block_b,
+                                var_name=var_name)
+                    self.logger.warning(msg)
+
+        # print warning for vars that won't be computed
+        noncomputable = self.noncomputable
+        if len(noncomputable) > 0:
+            msg = "{vars} won't be computed because they rely on data from void blocks (blocks that don't return data)"
+            msg.format(vars=noncomputable)
+            self.logger.warning(msg)
+
 
     ############################################################################
     def process(self, *pos_data, fetch=None, skip_enforcement=False, **kwdata):
@@ -667,6 +694,9 @@ class Pipeline(object):
     ############################################################################
     def _compute(self, skip_enforcement=False):
         """executes the graph tasks. Relies on Input data being preloaded"""
+        ## NOTE:
+        # add warning that for edges that are non-computable
+        ###
         for node_a, node_b, edge_idx in self.execution_order:
             # get actual objects instead of just graph ids
             block_a = self.graph.nodes[node_a]['block']
@@ -696,12 +726,18 @@ class Pipeline(object):
                                                         logger=self.logger,
                                                         force_skip=skip_enforcement)
                 # populate upstream edges with the data we need
-                # get the output names
+                # get the output edges
                 out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
                 # NEED ERROR CHECKING HERE
                 # (psuedo) if n_out == n_expected_out
-                for out_edge in out_edges:
-                    out_edge['data'] = Data( outputs[out_edge['out_index']] )
+                if block_b.void:
+                    # there's no output for this block, so we write None to the
+                    # edges
+                    for out_edge in out_edges:
+                        out_edge['data'] = None
+                else:
+                    for out_edge in out_edges:
+                        out_edge['data'] = Data( outputs[out_edge['out_index']] )
 
 
     ############################################################################
@@ -1208,3 +1244,26 @@ class Pipeline(object):
                     self.logger.error(msg)
 
         return containers
+
+    ############################################################################
+    @property
+    def void_vars(self):
+        """set: unordered set of variables which won't have data assigned to them
+            during runtime"""
+        void_vars = set()
+        for node,attrs in self.graph.nodes(data=True):
+            # if the block is void (has no outputs), then we add the variable names to a set
+            if attrs['block'].void:
+                void_vars.update(attrs['outputs'])
+
+        return void_vars
+
+    ############################################################################
+    @property
+    def noncomputable(self):
+        """set: unordered set of every variable that can't be computed because
+            it relies on void data"""
+        noncomputable = set()
+        for var in self.void_vars:
+            noncomputable.update( self.get_successors(var) )
+        return noncomputable

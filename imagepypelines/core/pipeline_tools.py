@@ -60,5 +60,6 @@ def blockify(kwargs={},
                         batch_type=batch_type,
                         types=types,
                         shapes=shapes,
-                        containers=containers)
+                        containers=containers,
+                        void=void)
     return _blockify

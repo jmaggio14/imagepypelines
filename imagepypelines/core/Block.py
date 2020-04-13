@@ -9,6 +9,7 @@ from ..Logger import ImagepypelinesLogger
 from .constants import NUMPY_TYPES, UUID_ORDER
 from .Exceptions import BlockError
 from .arg_checking import DEFAULT_SHAPE_FUNCS, HOMOGENUS_CONTAINERS
+from .Data import is_container
 
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
@@ -32,6 +33,13 @@ class Block(metaclass=ABCMeta):
             the unique id. defaults to the name of your subclass
         batch_type(str, int): the size of the batch fed into your process
             function. Will be an integer, "all", or "each"
+        void(bool): Boolean value. By default all blocks return a value or
+            values as output. However, if printing to screen, plotting, or
+            saving data to a file, a block may not have a meaningful output
+            that should be stored in a pipeline's output dictionary. In this
+            case, void should be set to True, so that the output of the block
+            is ignored. The associated var key in the pipeline output will
+            contain a value of :obj:`None`.
         logger(:obj:`ImagepypelinesLogger`): Logger object for this block. When
             run in a pipeline this logger is temporaily replaced with a child of
             the Pipeline's logger
@@ -57,7 +65,8 @@ class Block(metaclass=ABCMeta):
                     batch_type="all",
                     types=None,
                     shapes=None,
-                    containers=None):
+                    containers=None,
+                    void=False):
         """instantiates the block
 
         Args:
@@ -82,8 +91,15 @@ class Block(metaclass=ABCMeta):
                 keys, None as values.
                 *if batch_type is "each", then the container is irrelevant and can
                 be safely ignored!*
+            void(bool): Boolean value. By default all blocks return a value or
+                values as output. However, if printing to screen, plotting, or
+                saving data to a file, a block may not have a meaningful output
+                that should be stored in a pipeline's output dictionary. In this
+                case, void should be set to True, so that the output of the block
+                is ignored. The associated var key in the pipeline output will
+                contain a value of :obj:`None`. Default is False
         """
-        assert (batch_type in ["all","each"] or isinstance(batch_type,int))
+        assert batch_type in ("all","each"),"batch_type must be 'each' or 'all'"
 
         # setup absolutely unique id for this block
         self.uuid = uuid4().hex
@@ -93,6 +109,7 @@ class Block(metaclass=ABCMeta):
             name = self.__class__.__name__
         self.name = name
         self.batch_type = batch_type
+        self.void = void
 
         # this will be defined in _pipeline_pair
         self.logger = get_logger( self.id )
@@ -324,13 +341,26 @@ class Block(metaclass=ABCMeta):
                 ret = tuple( zip(*_process_batches(*data)) )
 
             # ALL - process everything at once
-            else:
+            else: # if batch_type == "all"
                 batches = (d.as_all() for d in data)
                 ret = self.process(*batches)
-                # put it a tuple if it isn't already
-                if not isinstance(ret, tuple):
-                    ret = (ret, )
 
+                # if there is a return value for this block (most blocks)
+                # we make sure we can write this data to a graph edge
+                if not self.void:
+                    # put it a tuple if it isn't already
+                    if not isinstance(ret, tuple):
+                        ret = (ret, )
+
+                    # enforce container outputs on batch_type="all" blocks
+                    for i,out in enumerate(ret):
+                        if not is_container(out):
+                            msg = "Blocks with batch_type='all' must return containers of data (output %s is '%s', which is not an iterable type) or have their 'void' attribute set to 'True'. "
+                            msg = msg % (i, type(out))
+                            self.logger.error(msg)
+                            raise BlockError(msg)
+
+        self.postprocess()
         return ret
 
     ############################################################################

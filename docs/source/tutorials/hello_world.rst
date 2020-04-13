@@ -10,7 +10,7 @@ together.
 
     >>> import imagepypelines as ip
     >>>
-    >>> @ip.blockify()
+    >>> @ip.blockify(void=True)
     ... def print_msg(msg):
     ...     print(msg)
     >>>
@@ -38,7 +38,7 @@ Or with a simple modification we, can print everything at once! Just use the
 
 .. doctest:: hello_world1
 
-    >>> @ip.blockify(batch_type="all")
+    >>> @ip.blockify(batch_type="all", void=True)
     ... def print_all(msg):
     ...     print(msg)
     >>>
