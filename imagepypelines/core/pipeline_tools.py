@@ -12,7 +12,8 @@ def blockify(kwargs={},
                 batch_type="each",
                 types=None,
                 shapes=None,
-                containers=None):
+                containers=None,
+                void=False):
     """decorator which converts a normal function into a un-trainable
     block which can be added to a pipeline. The function can still be used
     as normal after blockification (the __call__ method is setup such that
@@ -40,6 +41,13 @@ def blockify(kwargs={},
             argument data will be passed into to your function at once,
             `each` means that each argument datum will be passed in
             individually
+        void(bool): Boolean value. By default all blocks return a value or
+            values as output. However, if printing to screen, plotting, or
+            saving data to a file, a block may not have a meaningful output
+            that should be stored in a pipeline's output dictionary. In this
+            case, void should be set to True, so that the output of the block
+            is ignored. The associated var key in the pipeline output will
+            contain a value of :obj:`None`.
 
     Example:
         >>> import imagepypelines as ip
