@@ -6,8 +6,11 @@ docs/source/api/
 */output_dir/*
 output_dir/*
 *.pck
-*.pype
+*.ipl
 *.enc
+*.pickle
+docs/source/auto_tutorials/
+docs/source/auto_examples/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

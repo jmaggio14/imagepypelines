@@ -58,8 +58,8 @@ def test_Pipeline():
     # SAVING AND LOADING CHECK
     # with a password
     print("SAVING AND LOADING")
-    checksum = pipeline2.save("pipeline.pype.enc","password")
-    pipeline3 = ip.Pipeline.load("pipeline.pype.enc", "password", checksum, name="Pipeline3")
+    checksum = pipeline2.save("pipeline.ipl.enc","password")
+    pipeline3 = ip.Pipeline.load("pipeline.ipl.enc", "password", checksum, name="Pipeline3")
 
     processed3 = pipeline3.process([0,0], one=[1,1])
     assert processed1 == processed3
@@ -67,13 +67,13 @@ def test_Pipeline():
 
     # test bad checksum
     try:
-        bad_pipeline = ip.Pipeline.load('pipeline.pype.enc','password', 'not_checksum')
+        bad_pipeline = ip.Pipeline.load('pipeline.ipl.enc','password', 'not_checksum')
     except ip.PipelineError:
         pass
 
     # without a password or checksum
-    checksum = pipeline3.save("pipeline.pype")
-    pipeline3 = ip.Pipeline.load("pipeline.pype")
+    checksum = pipeline3.save("pipeline.ipl")
+    pipeline3 = ip.Pipeline.load("pipeline.ipl")
 
 
 

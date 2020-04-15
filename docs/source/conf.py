@@ -84,7 +84,8 @@ extensions = [
     'sphinx_automodapi.automodapi', # makes separate doc pages for every object
     # 'sphinx_automodapi.smart_resolver', # don't think this is needed
     'sphinx_copybutton', # adds a copy button to our examples (NOT THE SAME AS copybutton.js)
-    'nbsphinx', # JM: lets us include jupyter notebooks in sphinx rst files
+    # 'nbsphinx', # JM: lets us include jupyter notebooks in sphinx rst files
+    'sphinx_gallery.gen_gallery', # JM: turns .py examples into .ipynb and generates example gallery
     ]
 
 # doctest config
@@ -118,7 +119,8 @@ del ip
 # JM - adds our custom landing page
 html_additional_pages = {'index': 'index.html',
                           'about' : 'about.html',
-                          'examples' : 'examples.html'}
+                          # 'examples' : 'examples.html'
+                          }
 master_doc = 'index'
 
 # JM - show inherited class attributes in automodapi
@@ -130,8 +132,6 @@ templates_path = ['_static/_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
-
-# ND: add support for MarkDown, to allow readme importing, m2r
 source_suffix = ['.rst',]
 
 
@@ -142,25 +142,34 @@ source_suffix = ['.rst',]
 # Usually you set "language" from the command line for these cases.
 language = None
 
+
+# JM
+sphinx_gallery_conf = {
+    'examples_dirs': ['examples', 'tutorials'],
+    'gallery_dirs': ['auto_examples', 'auto_tutorials'],
+    'filename_pattern': '/*',
+    'ignore_pattern': r'__init__\.py',
+}
+
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 
 # JM: nbsphinx (jupyter notebook support)
 # from this guide: https://nbsphinx.readthedocs.io/en/0.6.0/usage.html
-exclude_patterns = ['_build', '**.ipynb_checkpoints']
-html_sourcelink_suffix = ''
-
-# JM: modified from here: https://github.com/spatialaudio/nbsphinx/blob/0.6.0/doc/conf.py#L45-L88
-nbsphinx_prolog = """
-Generated from `{{ env.docname }}.ipynb <https://github.com/jmaggio14/imagepypelines/tree/%s/docs/source/{{ env.docname }}>`_
-
-----
-""" % GIT_SHA
-# This is processed by Jinja2 and inserted after each notebook
-nbsphinx_epilog = r"""
-{% set docname = 'doc/' + env.doc2path(env.docname, base=None) %}
-"""
+# exclude_patterns = ['_build', '**.ipynb_checkpoints']
+# html_sourcelink_suffix = ''
+#
+# # JM: modified from here: https://github.com/spatialaudio/nbsphinx/blob/0.6.0/doc/conf.py#L45-L88
+# nbsphinx_prolog = """
+# Generated from `{{ env.docname }}.ipynb <https://github.com/jmaggio14/imagepypelines/tree/%s/docs/source/{{ env.docname }}>`_
+#
+# ----
+# """ % GIT_SHA
+# # This is processed by Jinja2 and inserted after each notebook
+# nbsphinx_epilog = r"""
+# {% set docname = 'doc/' + env.doc2path(env.docname, base=None) %}
+# """
 
 
 # The name of the Pygments (syntax highlighting) style to use.
@@ -207,7 +216,8 @@ html_theme_options = {
     'navbar_links': [
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
-                     ("Examples", 'examples'),
+                     ("Examples", 'auto_examples/index.html',1),
+                     ("Tutorials", 'auto_tutorials/index.html',1),
                      ("Documentation", 'docs/core'),
                      ("Plugins", 'plugins'),
                      ("Github", version_info['__download_url__'], True),
