@@ -21,8 +21,10 @@ services:
 addons:
   apt:
     packages:
-      # for sphinx automodapi
+      # for sphinx automodapi (inheritance diagrams)
       - graphviz
+      # for nbsphinx (to read ipynb markdown)
+      - pandoc
 
 before_install:
   # prevent travis from timing out from slow processes
