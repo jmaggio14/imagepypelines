@@ -29,15 +29,17 @@ exec(raw,{},version_info)
 # fetch the git branch sha for a permalink
 import subprocess
 
+# JM: GET THE GIT SHA FOR PERMALINKS (this should be replaced down the line with tagged releases)
 # for travis builds
-if 'TRAVIS_COMMIT' in os.environ:
+if 'TRAVIS' in os.environ:
     # for pull requests
     if os.environ['TRAVIS_PULL_REQUEST_SHA'] != "":
         GIT_SHA = os.environ['TRAVIS_PULL_REQUEST_SHA']
     else:
         GIT_SHA = os.environ['TRAVIS_COMMIT']
 # for local builds
-GIT_SHA = subprocess.check_output("git rev-parse --verify HEAD").decode('utf-8').replace(' ','')
+else:
+    GIT_SHA = subprocess.check_output("git rev-parse --verify HEAD").decode('utf-8').replace(' ','')
 
 
 # -- Project information -----------------------------------------------------
