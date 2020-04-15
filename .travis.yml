@@ -49,7 +49,7 @@ install:
 
 
   # Sphinx requirements
-  - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.7.1 sphinx-automodapi sphinx_copybutton nbsphinx
+  - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.7.1 sphinx-automodapi sphinx_copybutton nbsphinx jupyter notebook
   # codecov and auto-testing requirements
   - pip install pytest sybil pytest-cov coverage codecov pytest-doctest-ellipsis-markers --upgrade
 
