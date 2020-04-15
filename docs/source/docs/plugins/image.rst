@@ -1,4 +1,4 @@
 Official Image Plugin
 =====================
 
-.. .. automodapi:: imagepypelines_image
+.. automodapi:: imagepypelines_image
