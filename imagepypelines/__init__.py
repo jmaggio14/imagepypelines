@@ -61,7 +61,7 @@ def load_plugins():
         #         raise PluginError(
         #                 "Plugin '%s' doesn't meet requirements" % plugin_name)
 
-        MASTER_LOGGER.warning(
+        MASTER_LOGGER.info(
             "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
             .format(plugin_name))
 

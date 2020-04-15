@@ -26,6 +26,11 @@ with open(VERSION_FILE,'r') as f:
 version_info = {}
 exec(raw,{},version_info)
 
+# fetch the git branch sha for a permalink
+import subprocess
+GIT_SHA = subprocess.check_output("git rev-parse --verify HEAD").decode('utf-8').replace(' ','')
+
+
 # -- Project information -----------------------------------------------------
 project = "ImagePypelines"
 copyright = version_info['__copyright__'].replace("Copyright (c)","")
@@ -68,6 +73,7 @@ extensions = [
     'sphinx_automodapi.automodapi', # makes separate doc pages for every object
     # 'sphinx_automodapi.smart_resolver', # don't think this is needed
     'sphinx_copybutton', # adds a copy button to our examples (NOT THE SAME AS copybutton.js)
+    'nbsphinx', # JM: lets us include jupyter notebooks in sphinx rst files
     ]
 
 # doctest config
@@ -128,7 +134,23 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+
+# JM: nbsphinx (jupyter notebook support)
+# from this guide: https://nbsphinx.readthedocs.io/en/0.6.0/usage.html
+exclude_patterns = ['_build', '**.ipynb_checkpoints']
+html_sourcelink_suffix = ''
+
+# JM: modified from here: https://github.com/spatialaudio/nbsphinx/blob/0.6.0/doc/conf.py#L45-L88
+nbsphinx_prolog = """
+Generated from `{{ env.docname }}.ipynb <https://github.com/jmaggio14/imagepypelines/tree/%s/docs/source/{{ env.docname }}>`_
+
+----
+""" % GIT_SHA
+# This is processed by Jinja2 and inserted after each notebook
+nbsphinx_epilog = r"""
+{% set docname = 'doc/' + env.doc2path(env.docname, base=None) %}
+"""
+
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'colorful'
