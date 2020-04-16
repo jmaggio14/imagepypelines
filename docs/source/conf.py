@@ -149,8 +149,8 @@ def silence_ip(gallery_conf, fname):
     ip.MASTER_LOGGER.setLevel("WARNING")
 
 sphinx_gallery_conf = {
-    'examples_dirs': ['examples', 'tutorials'],
-    'gallery_dirs': ['auto_examples', 'auto_tutorials'],
+    'examples_dirs': ['_examples'],
+    'gallery_dirs': ['examples'],
     'filename_pattern': '/*',
     'ignore_pattern': r'__init__\.py',
     'reset_modules': (silence_ip,),
@@ -221,8 +221,7 @@ html_theme_options = {
     'navbar_links': [
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
-                     ("Examples", 'auto_examples/index.html',1),
-                     ("Tutorials", 'auto_tutorials/index.html',1),
+                     ("Examples", 'examples/index.html', 1),
                      ("Documentation", 'docs/core'),
                      ("Plugins", 'plugins'),
                      ("Github", version_info['__download_url__'], True),
