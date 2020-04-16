@@ -14,10 +14,14 @@ import imagepypelines as ip
 def print_msg(msg):
     print(msg)
 
+###############################################################################
 tasks = {'msg':ip.Input(),
          'null':(print_msg, 'msg')}
+
+
 msg_printer = ip.Pipeline(tasks)
 
+###############################################################################
 processed = msg_printer.process(["Hello World!"])
 
 ###############################################################################
