@@ -27,4 +27,4 @@ viewer = ip.Pipeline(tasks)
 # let's grab some example data
 images = [ip.image.panda(), ip.image.gecko(), ip.image.redhat()]
 # and then number and view the images!
-viewer.process(images)
+out = viewer.process(images)
