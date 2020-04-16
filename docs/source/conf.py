@@ -76,6 +76,7 @@ def setup(app):
 numpydoc_show_class_members = False
 
 extensions = [
+    'sphinx_gallery.gen_gallery', # JM: turns .py examples into .ipynb and generates example gallery
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',   # nD: support for google style docstrings
@@ -85,7 +86,6 @@ extensions = [
     # 'sphinx_automodapi.smart_resolver', # don't think this is needed
     'sphinx_copybutton', # adds a copy button to our examples (NOT THE SAME AS copybutton.js)
     # 'nbsphinx', # JM: lets us include jupyter notebooks in sphinx rst files
-    'sphinx_gallery.gen_gallery', # JM: turns .py examples into .ipynb and generates example gallery
     ]
 
 # doctest config
