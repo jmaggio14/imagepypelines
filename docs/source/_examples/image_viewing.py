@@ -27,7 +27,7 @@ viewer = ip.Pipeline(tasks)
 ###############################################################################
 # let's process some data!
 
-# let's grab some example data
+# let's grab some example data from the ImagePypelines standard set
 images = [ip.image.panda(), ip.image.gecko(), ip.image.redhat()]
 # and then number and view the images!
 processed = viewer.process(images)
