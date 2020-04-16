@@ -6,7 +6,6 @@ Number and view a sequence of images
 """
 
 ###############################################################################
-import matplotlib.pyplot as plt
 # make sure we have the image plugin
 import imagepypelines as ip
 ip.require('image')
@@ -16,7 +15,7 @@ ip.require('image')
 tasks = {
         # set an entry point for images into the pipeline
         'images': ip.Input(),
-        # add number to the bottom left corner
+        # add number to the bottom right corner
         'numbered': (ip.image.NumberImage(), 'images'),
         # View the numbered images in sequence
         'null' : (ip.image.QuickView(pause_for=500), 'numbered')
