@@ -145,8 +145,12 @@ language = None
 
 # JM
 def silence_ip(gallery_conf, fname):
+    # increasing logging level so we are less likely
     import imagepypelines as ip
     ip.MASTER_LOGGER.setLevel("WARNING")
+    # temporarily suppress Warnings (mostly for matplotlib)
+    import warnings
+    warnings.simplefilter('ignore')
 
 sphinx_gallery_conf = {
     'examples_dirs': ['_examples'],

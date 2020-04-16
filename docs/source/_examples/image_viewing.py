@@ -29,15 +29,5 @@ viewer = ip.Pipeline(tasks)
 
 # let's grab some example data from the ImagePypelines standard set
 images = [ip.image.panda(), ip.image.gecko(), ip.image.redhat()]
-# and then number and view the images!
+# Number and view the images!
 processed = viewer.process(images)
-
-
-
-###############################################################################
-# This will display all numbered images in sequencegrab any processed data you need
-# numbered_images = processed['numbered']
-#
-# plt.imshow(numbered_images[0])
-# # To avoid matplotlib text output
-# plt.show()

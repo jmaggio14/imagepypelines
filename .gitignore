@@ -9,8 +9,8 @@ output_dir/*
 *.ipl
 *.enc
 *.pickle
-docs/source/examples/
 docs/source/examples/*
+docs/source/examples
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
