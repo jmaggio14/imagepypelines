@@ -3,15 +3,6 @@ How to make an ImagePypelines plugin
 ====================================
 
 
-
-.. toctree::
-    :maxdepth: 2
-
-    examples/hello_world
-
-
-
-
 .. _link: https://github.com/RyanHartzell/imagepypelines_template
 
 We provide a template for you to construct your own plugins.
