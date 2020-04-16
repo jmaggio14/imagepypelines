@@ -182,7 +182,7 @@ sphinx_gallery_conf = {
 
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'colorful'
+pygments_style = 'perldoc'
 
 
 # -- Options for HTML output -------------------------------------------------

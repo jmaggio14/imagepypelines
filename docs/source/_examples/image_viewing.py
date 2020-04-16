@@ -6,11 +6,13 @@ Number and view a sequence of images
 """
 
 ###############################################################################
+
 # make sure we have the image plugin
 import imagepypelines as ip
 ip.require('image')
 
 ###############################################################################
+# define our tasks
 
 tasks = {
         # set an entry point for images into the pipeline
