@@ -99,7 +99,7 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
         return logging.getLogger, (self.name,)
 
 
-def make_master(level=logging.DEBUG):
+def make_master(level=logging.INFO):
     """creates the master logger if it doesn't exist, returns it if it does"""
     if MASTER_LOGGER:
         MASTER_LOGGER.setLevel(level)
@@ -132,13 +132,11 @@ def get_logger(name, log_level=logging.INFO):
             module for more information
 
     Returns:
-        logging.Logger: a new child logger object from the ImagePypelines master
+        ImagepypelinesLogger: a new child logger object from the ImagePypelines master
             logger
     """
     child = MASTER_LOGGER.getChild(name)
-    child.setLevel(log_level)
     return child
-
 
 
 # END

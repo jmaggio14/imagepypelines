@@ -29,17 +29,17 @@ exec(raw,{},version_info)
 # fetch the git branch sha for a permalink
 import subprocess
 
-# JM: GET THE GIT SHA FOR PERMALINKS (this should be replaced down the line with tagged releases)
-# for travis builds
-if 'TRAVIS' in os.environ:
-    # for pull requests
-    if os.environ['TRAVIS_PULL_REQUEST_SHA'] != "":
-        GIT_SHA = os.environ['TRAVIS_PULL_REQUEST_SHA']
-    else:
-        GIT_SHA = os.environ['TRAVIS_COMMIT']
-# for local builds
-else:
-    GIT_SHA = subprocess.check_output("git rev-parse --verify HEAD").decode('utf-8').replace(' ','')
+# # JM: GET THE GIT SHA FOR PERMALINKS (this should be replaced down the line with tagged releases)
+# # for travis builds
+# if 'TRAVIS' in os.environ:
+#     # for pull requests
+#     if os.environ['TRAVIS_PULL_REQUEST_SHA'] != "":
+#         GIT_SHA = os.environ['TRAVIS_PULL_REQUEST_SHA']
+#     else:
+#         GIT_SHA = os.environ['TRAVIS_COMMIT']
+# # for local builds
+# else:
+#     GIT_SHA = subprocess.check_output("git rev-parse --verify HEAD").decode('utf-8').replace(' ','')
 
 
 # -- Project information -----------------------------------------------------
@@ -144,11 +144,16 @@ language = None
 
 
 # JM
+def silence_ip(gallery_conf, fname):
+    import imagepypelines as ip
+    ip.MASTER_LOGGER.setLevel("WARNING")
+
 sphinx_gallery_conf = {
     'examples_dirs': ['examples', 'tutorials'],
     'gallery_dirs': ['auto_examples', 'auto_tutorials'],
     'filename_pattern': '/*',
     'ignore_pattern': r'__init__\.py',
+    'reset_modules': (silence_ip,),
 }
 
 # List of patterns, relative to source directory, that match files and
