@@ -2,6 +2,8 @@
 Module Documentation
 ====================
 
+.. _offical-plugins:
+
 Official Plugins
 ================
 .. toctree:: plugins/image.rst
