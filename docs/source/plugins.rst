@@ -8,16 +8,6 @@ All tools in ImagePypelines are developed and maintained in the form of plugins.
 We maintain several :ref:`offical-plugins` for applications in Imaging Science
 and Astronomy.
 
-
-
-Section to cross-reference
---------------------------
-
-This is the text of the section.
-
-It refers to the section itself, see :ref:`my-reference-label`.
-
-
 We encourage 3rd parties to make plugins for other applications, but **cannot
 speak for their specific licensing restrictions or usability.**
 
