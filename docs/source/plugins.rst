@@ -3,15 +3,18 @@ How to make an ImagePypelines plugin
 ====================================
 
 
-.. _link: https://github.com/RyanHartzell/imagepypelines_template
-
 We provide a template for you to construct your own plugins.
 
-Click on this `link`_ to get started.
+Click on this `link <https://github.com/RyanHartzell/imagepypelines_template>`_ to get started.
 
 
 
-..
+Already made your own plugin?
+-----------------------------
+
+`Email us! <mailto:jmaggio14@gmail.com>`_ We can talk about hosting your
+documentation on this site! Or we'll just link to your official documentation.
+
 .. WARNING:
 .. ~~~~~~~~
 .. Many ImagePypelines users will require your Pipelines and Blocks to be
