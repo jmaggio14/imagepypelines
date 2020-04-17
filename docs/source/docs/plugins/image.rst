@@ -8,6 +8,8 @@ Official Imaging Science Plugin
 
 **Version:** 0.1.0
 
+**Licence:** MIT
+
 **Find it on:**
 `Github <https://www.github.com/jmaggio14/imagepypelines_image>`_,
 (todo)pypi

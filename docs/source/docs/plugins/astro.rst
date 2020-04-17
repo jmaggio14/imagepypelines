@@ -8,6 +8,8 @@ Official Astronomy Plugin
 
 **Version:** 0.1.0
 
+**Licence:** MIT
+
 **Find it on:**
 `Github <https://www.github.com/jmaggio14/imagepypelines_astro>`_,
 (todo)pypi
