@@ -8,7 +8,7 @@ Official Imaging Science Plugin
 
 **Version:** 0.1.0
 
-**Licence:** MIT
+**Licence:** `MIT <https://github.com/jmaggio14/imagepypelines_image/blob/master/LICENSE>`_
 
 **Find it on:**
 `Github <https://www.github.com/jmaggio14/imagepypelines_image>`_,
