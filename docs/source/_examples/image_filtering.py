@@ -1,13 +1,12 @@
 """
-Image Filtering
-===============
-
-Learn how to efficiently filter images using a pipeline and plot the results.
+Number and View Images
+======================
+Number and view a sequence of images
 """
 
 ###############################################################################
 
-# Make sure we have the image plugin installed
+# make sure we have the image plugin
 import imagepypelines as ip
 ip.require('image')
 
