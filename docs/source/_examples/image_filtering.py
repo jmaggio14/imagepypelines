@@ -57,7 +57,7 @@ tasks = {
         ('fft', 'shape'): (fft, 'images'),
         'circles': (circ_aperture, 'shape'),
         ('kernel', 'circ_shapes'): (fft, 'circles'),
-        ('filtered'): (freq_filter, 'fft', 'kernel'),
+        'filtered': (freq_filter, 'fft', 'kernel'),
         'ifft': (ifft, 'filtered'),
         # View the numbered images in sequence
         'null' : (ip.image.QuickView(pause_for=500), 'ifft')
