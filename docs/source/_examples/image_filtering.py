@@ -37,11 +37,13 @@ def freq_filter(src, kernel):
 
 # Circular Aperture
 @ip.blockify()
-def circ_aperture(shape, radius = 0.1):
+def circ_aperture(shape): #, radius = 0.1):
 
     x, y = np.meshgrid(linspace(-1, 1, shape[0]), np.linspace(-1, 1, shape[1]))
 
     # For now, radius = 0.1, normalized to edge of the array
+    radius = 0.1
+
     return (x - radius)*(x - radius) + (y - radius)*(y - radius)
 
 
