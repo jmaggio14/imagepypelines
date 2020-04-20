@@ -7,45 +7,40 @@ Learn how to filter images through a pipeline.
 ###############################################################################
 
 # Make sure we have the image plugin
+import numpy as np
 import imagepypelines as ip
 ip.require('image')
 
-import numpy as np
 
 ###############################################################################
 
 # Construct our filtering blocks
 
-# FFT
-@ip.blockify()
-def fft(src):
-
-    # Note: fft2d operates on LAST 2 axes of src (tensor-like: [Channels, W, H])
-    return np.fft.fftshift(np.fft.fft2d(src)), src.shape
-
-# IFFT
-@ip.blockify()
-def ifft(filtered):
-
-    return np.fft.ifft2d(np.fft.fftshift(src))
-
 # Frequency Filter
-@ip.blockify()
+@ip.blockify(globals())
 def freq_filter(src, kernel):
 
     return src * kernel
 
-# Circular Aperture
-@ip.blockify()
-def circ_aperture(shape): #, radius = 0.1):
+# Easy "frequency space" normalized lowpass filter
+@ip.blockify(globals())
+def circular_pass_filter(shape, radius=0.1, type='low'):
 
     x, y = np.meshgrid(linspace(-1, 1, shape[0]), np.linspace(-1, 1, shape[1]))
 
-    # For now, radius = 0.1, normalized to edge of the array
-    radius = 0.1
+    circle = np.sqrt(x*x + y*y)
 
-    return (x - radius)*(x - radius) + (y - radius)*(y - radius)
+    if type=='low':
 
+        return np.where(circle > radius, 0, 1)
+
+    elif type=='high':
+
+        return np.where(circle > radius, 1, 0)
+
+    else:
+
+        raise ValueError("Filter 'type' must be either 'low' or 'high'")
 
 ###############################################################################
 # Define our tasks
@@ -53,17 +48,26 @@ def circ_aperture(shape): #, radius = 0.1):
 tasks = {
         # set an entry point for images into the pipeline
         'images': ip.Input(),
-        # add number to the bottom right corner
-        ('fft', 'shape'): (fft, 'images'),
-        'circles': (circ_aperture, 'shape'),
-        ('kernel', 'circ_shapes'): (fft, 'circles'),
-        'filtered': (freq_filter, 'fft', 'kernel'),
-        'ifft': (ifft, 'filtered'),
-        # View the numbered images in sequence
-        'null' : (ip.image.QuickView(pause_for=500), 'ifft')
+        # get the image dimensions for later use
+        'shape': (ip.image.Dimensions(order="WHC"), 'images'),
+        # take the fourier transform
+        'fft': (ip.image.ImageFFT(order="WHC"), 'images'),
+        # produce 'frequency space' circular pass filters
+        'circles': (circular_pass_filter, 'shape'),
+        # add an extra dimension to the filters for broadcasting the arrays
+        'unsqueezed': (ip.image.Unsqueeze(-1), 'circles'),
+        # the convolution of your image and filter is element-wise
+        # multiplication in frequency space!!!
+        'filtered': (freq_filter, 'fft', 'unsqueezed'),
+        # take the inverse fourier transform of your filtered images
+        'ifft': (ip.image.ImageIFFT(order="WHC"), 'filtered'),
+        # Scale the images, cast dtype, and view the filtered images
+        # in sequence! Note: simple filtering in RGB results in artifacts!
+        'safe': (ip.image.DisplaySafe(), 'ifft'),
+        'null' : (ip.image.CompareView(pause_for=5000), 'images','safe')
          }
 
-viewer = ip.Pipeline(tasks)
+im_filt = ip.Pipeline(tasks)
 
 ###############################################################################
 # Let's process some data!
@@ -72,4 +76,4 @@ viewer = ip.Pipeline(tasks)
 # Let's grab some example data from the ImagePypelines standard set
 images = [ip.image.panda(), ip.image.gecko(), ip.image.redhat()]
 # Number and view the images!
-processed = viewer.process(images)
+processed = im_filt.process(images)

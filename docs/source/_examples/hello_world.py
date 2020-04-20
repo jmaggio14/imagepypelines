@@ -10,7 +10,7 @@ Learn the basics with Hello World!
 # together.
 
 import imagepypelines as ip
-@ip.blockify(void=True)
+@ip.blockify(globals(),void=True)
 def print_msg(msg):
     print(msg)
 
@@ -33,7 +33,7 @@ processed = msg_printer.process(['we','can','print','anything','individually!'])
 # We can also print everything at once with the `batch_type` variable
 # -------------------------------------------------------------------
 #
-@ip.blockify(batch_type="all", void=True)
+@ip.blockify(globals(),batch_type="all", void=True)
 def print_all(msg):
     print(msg)
 
