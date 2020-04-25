@@ -1,7 +1,7 @@
 """
-Image Filtering
-===============
-Learn how to filter images through a pipeline.
+Number and View Images
+======================
+Number and view a sequence of images
 """
 
 ###############################################################################
