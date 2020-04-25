@@ -26,7 +26,7 @@ def freq_filter(src, kernel):
 @ip.blockify(globals())
 def circular_pass_filter(shape, radius=0.1, type='low'):
 
-    x, y = np.meshgrid(np.linspace(-1, 1, shape[0]), np.linspace(-1, 1, shape[1]))
+    x, y = np.meshgrid(linspace(-1, 1, shape[0]), np.linspace(-1, 1, shape[1]))
 
     circle = np.sqrt(x*x + y*y)
 
