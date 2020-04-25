@@ -8,11 +8,11 @@ def test_Pipeline():
     #                                 General Testing
     # ###############################################################################
     # Blockify testing
-    @ip.blockify(globals(), types={'a':int, 'b':int}, kwargs=dict(value=10) )
+    @ip.blockify( types={'a':int, 'b':int}, kwargs=dict(value=10) )
     def add_val(a,b,value):
         return a+value, b+value
 
-    @ip.blockify(globals(), types={'a':int, 'b':int}, kwargs=dict(value=5) )
+    @ip.blockify( types={'a':int, 'b':int}, kwargs=dict(value=5) )
     def minus_val(a,b,value):
         return a-value, b-value
 
@@ -115,11 +115,11 @@ def test_pipeline_in_pipeline():
     import imagepypelines as ip
 
     # # create some example blocks
-    @ip.blockify(globals(),batch_type="all")
+    @ip.blockify(batch_type="all")
     def block1(a,b,c):
         return a,b,c
 
-    @ip.blockify(globals(),batch_type="each")
+    @ip.blockify(batch_type="each")
     def block2(a,b,c):
         return a,b,c
     #
@@ -146,11 +146,11 @@ def test_pipeline_in_pipeline():
 def test_preds_and_succs():
     import imagepypelines as ip
     # some sample blocks
-    @ip.blockify(globals())
+    @ip.blockify()
     def block1(a, b, c):
         return 'd','e','f'
 
-    @ip.blockify(globals())
+    @ip.blockify()
     def block2(d, e, f, g):
         return 'h', 'i'
 
@@ -230,7 +230,7 @@ def test_shape_checking():
     # make sample blocks
     import imagepypelines as ip
     # some sample blocks
-    @ip.blockify(globals())
+    @ip.blockify()
     def block1(a, b, c):
         return 'd','e','f'
 

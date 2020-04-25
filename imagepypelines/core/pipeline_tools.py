@@ -8,7 +8,7 @@
 from .block_subclasses import FuncBlock
 
 ################################################################################
-def blockify(global_ns, kwargs={},
+def blockify(kwargs={},
                 batch_type="each",
                 types=None,
                 shapes=None,
@@ -52,7 +52,7 @@ def blockify(global_ns, kwargs={},
     Example:
         >>> import imagepypelines as ip
         >>>
-        >>> @ip.blockify(globals(), kwargs=dict(value=10) )
+        >>> @ip.blockify( kwargs=dict(value=10) )
         >>> def add_value(datum, value):
         ...    return datum + value
         >>>
@@ -64,7 +64,6 @@ def blockify(global_ns, kwargs={},
     """
     def _blockify(func):
         return FuncBlock(func,
-                        global_ns,
                         kwargs,
                         batch_type=batch_type,
                         types=types,

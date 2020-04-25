@@ -81,24 +81,20 @@ class FuncBlock(Block):
     # def __new__(self, func, preset_kwargs):
     #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
 
-    def __init__(self, func, global_ns, preset_kwargs, **block_kwargs):
+    def __init__(self, func, preset_kwargs, **block_kwargs):
         """instantiates the function block
 
         Args:
             func (function): the function you desire to turn into a block
-            global_ns (dict): the globals when blockify is executed
             preset_kwargs (dict): preset keyword arguments, typically used for
                 arguments that are not data to process
             **block_kwargs: keyword arguments for :obj:`Block` instantiation
         """
 
-        # RH:: Need to pass globals() as a variable from where we use blockify!
-        self.global_ns = global_ns
-
         # JM: this is an ugly hack to make FuncBlock's serializable - by
         # adding the user's functions to the current namespace (pickle demands
         # the source object be in top level of the module)
-        func_copy = FunctionType(func.__code__, self.global_ns, func.__name__)
+        func_copy = FunctionType(func.__code__, globals(), func.__name__)
         setattr(this_module, func_copy.__name__, func_copy)
 
         self.func = func_copy
@@ -113,15 +109,6 @@ class FuncBlock(Block):
             raise TypeError("function cannot accept a variable number of args")
 
         self._arg_spec = spec
-
-        # Check to see if the func has any default kwargs and use those,
-        # then update that dict with the preset_kwargs dict! User friendly
-        # when using default kwargs
-        if spec.defaults is not None:
-            tmp_kwargs = {k:v for k,v in zip(spec.args[-len(spec.defaults):], spec.defaults)}
-            tmp_kwargs.update(self.preset_kwargs)
-            self.preset_kwargs = tmp_kwargs
-
         super().__init__(self.func.__name__,**block_kwargs)
 
     def process(self, *args):

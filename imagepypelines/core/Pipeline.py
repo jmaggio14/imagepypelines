@@ -73,11 +73,11 @@ class Pipeline(object):
     Example:
         >>> import imagepypelines as ip
         >>>
-        >>> @ip.blockify(globals(), kwargs=dict(value=10) )
+        >>> @ip.blockify( kwargs=dict(value=10) )
         >>> def add_val(a,b,value):
         >>>     return a+value, b+value
         >>>
-        >>> @ip.blockify(globals(), kwargs=dict(value=5) )
+        >>> @ip.blockify( kwargs=dict(value=5) )
         >>> def minus_val(a,b,value):
         >>>     return a-value, b-value
         >>>
