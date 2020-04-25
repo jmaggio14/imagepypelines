@@ -7,12 +7,12 @@ Number and view a sequence of images
 
 ###############################################################################
 
-# Make sure we have the image plugin installed
+# make sure we have the image plugin
 import imagepypelines as ip
 ip.require('image')
 
 ###############################################################################
-# Define our tasks
+# define our tasks
 
 tasks = {
         # set an entry point for images into the pipeline
@@ -26,11 +26,9 @@ tasks = {
 viewer = ip.Pipeline(tasks)
 
 ###############################################################################
-# Let's process some data!
-# ------------------------
+# let's process some data!
 
-# First, let's grab some example data from the ImagePypelines standard set
+# let's grab some example data from the ImagePypelines standard set
 images = [ip.image.panda(), ip.image.gecko(), ip.image.redhat()]
-
-# Now number and view the images!
+# Number and view the images!
 processed = viewer.process(images)
