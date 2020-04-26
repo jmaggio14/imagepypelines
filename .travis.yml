@@ -11,9 +11,10 @@ os:
 dist: xenial
 
 python:
-  - 3.5
+  # - 3.5
   - 3.6
   # - 3.7 # until imagepypelines-tools is updated
+  # - 3.8 # until imagepypelines-tools is updated
 
 services:
   - xvfb

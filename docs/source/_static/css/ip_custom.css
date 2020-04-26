@@ -8,7 +8,6 @@
 .nodes circle {
   stroke: #fff;
   stroke-width: 1.5px;
-}
 
 text {
   font-family: sans-serif;
@@ -22,6 +21,10 @@ pre code {
   border: 1px solid #999;
   display: block;
   padding: 20px;
+}
+
+.bordered-block {
+    border: 1px solid #999;
 }
 /* misc */
 .center-block {

@@ -19,7 +19,7 @@
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
 <!-- local -->
 <!-- <link href="{{ pathto('_static/css/bootstrap.min.css', 1) }}" rel="stylesheet"> -->
-<!-- <link href="{{ pathto('_static/css/ip_custom.css', 1) }}" rel="stylesheet"> -->
+<link href="{{ pathto('_static/css/ip_custom.css', 1) }}" rel="stylesheet">
 {% endblock %}
 
 <div role="main">
@@ -32,7 +32,7 @@
             <div class="bs-component">
                 <div class="card border-primary text-white">
                     <h2>We've all been there...</h2>
-                    <p style="font-size:18px">
+                    <p style="font-size:18px color:#E95420">
                         You're 4 hours into a fruitless debugging session and you want to go home - you don't have time for bourgeois luxeries like logging, type checking, or proper data visualization!
                         <br>
                         ...But what if you did?<br>
@@ -64,22 +64,51 @@
             </li>
         </ul>
         <!-- PILL CONTENT -->
-        <div class="tab-content">
-            <div id="pip" class="container tab-pane active fade in active"><br>
-                <i>If you get a permission's error, try adding <code>--user</code> to this command</i><br>
-                <i>ImagePypelines is python3 only, so this might be "pip3" on your machine :p</i>
-                <pre>pip install imagepypelines</pre>
+        <div class="container tab-content bordered-block">
+            <div id="pip" class="tab-pane active fade in active"><br>
+                ImagePypelines is python3 only, so this might be "pip3" on your machine :p<br>
+                <i>(remove <code>--user</code> to install systemwide)</i>
+                <pre>pip install imagepypelines --user</pre>
             </div>
-            <div id="conda" class="container tab-pane fade"><br>
+            <div id="conda" class="tab-pane fade"><br>
                 <pre>coming soon!</pre>
             </div>
-            <div id="source" class="container tab-pane fade"><br>
+            <div id="source" class="tab-pane fade"><br>
                 <i>ImagePypelines is python3 only, so this might be "python3" on your machine :p</i>
                 <pre>git clone https://www.github.com/jmaggio14/imagepypelines.git<br>cd imagepypelines<br>python setup.py install</pre>
             </div>
         </div>
+
+
+        <h4>OpenCV</h4>
+        <div class="container">
+            The imagepypelines_image plugin also requires OpenCV. You can install this using
+            <pre>pip install opencv-python --user</pre>
+            or <a href="https://docs.opencv.org/master/da/df6/tutorial_py_table_of_contents_setup.html">build it from source</a>.
+        </div>
     </div>
 
-        <!-- end of document block (the html body) -->
-        {% endblock %}
+    <div class="container">
+        <h3>Setting up a virtual environment <i>(the quick and dirty way)</i></h3>
+        If you have issues installing ImagePypelines (or any python package),
+        sometimes setting up a virtual environment can help. A more thorough
+        guide can he found
+        <a href="https://docs.python-guide.org/dev/virtualenvs/">here</a>.
+
+        <h4>First install pipenv</h4>
+        <i>This is often already installed on lab servers</i>
+        <pre>pip install pipenv --user</pre>
+
+        <h4>Launch a virtual environment</h4>
+        <pre>pipenv shell</pre>
+
+        You will now be in a virtual shell where you can install any python package
+        without worrying about permissions! Try installing ImagePypelines here!
+
+        <pre>pip install imagepypelines</pre>
+
     </div>
+
+    <!-- end of document block (the html body) -->
+    {% endblock %}
+</div>
