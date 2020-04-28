@@ -43,7 +43,7 @@ install:
   # image
   - git clone https://github.com/jmaggio14/imagepypelines_image.git
   - cd imagepypelines_image && python setup.py install && cd ..
-  - pip install opencv-python
+  - pip install opencv-python matplotlib
   # astro
   - git clone https://github.com/jmaggio14/imagepypelines_astro.git
   - cd imagepypelines_astro && python setup.py install && cd ..

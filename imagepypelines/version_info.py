@@ -26,7 +26,7 @@ __all__ = [
 
 
 __name__ = 'imagepypelines'
-__version__ = '0.3.0-alpha'
+__version__ = '0.3.2-alpha'
 __description__ = 'data pipeline and convienence library targeted at accelerating the development of imaging projects and research'
 
 __author__ = 'Jeff Maggio, Ryan Hartzell, and collaborators'
