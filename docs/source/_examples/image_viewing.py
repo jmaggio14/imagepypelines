@@ -5,6 +5,11 @@ Number and View Images
 Number and view a sequence of images
 """
 
+# import our new cis plugin
+import imagepypelines as ip
+print( ip.cis )
+
+
 ###############################################################################
 
 # make sure we have the image plugin
