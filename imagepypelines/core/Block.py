@@ -117,8 +117,9 @@ class Block(metaclass=ABCMeta):
         # setup initial tags
         self.tags = set()
 
-        # FullArgSpec for this block, defined in self.args
-        self._arg_spec = None
+        # FullArgSpec for this block, defined in self.args for most blocks
+        if not hasattr(self, '_arg_spec'):
+            self._arg_spec = None
 
         # TYPE AND SHAPE CHECKING VARS
         # ----------------------------------------------------------------------

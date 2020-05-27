@@ -10,10 +10,10 @@ import inspect
 from abc import abstractmethod
 import copy
 from types import FunctionType
+from functools import wraps
 
 from .Block import Block
-
-this_module = sys.modules[__name__]
+from . import func_namespace
 
 
 ################################################################################
@@ -66,22 +66,56 @@ class PipelineBlock(Block):
         """:obj:`list` of :obj:`str`: arg names for the pipeline"""
         return self.pipeline.args
 
+
 ################################################################################
 class FuncBlock(Block):
-    """Block that will run anmy fucntion you give it, either unfettered through
+    """Block that will run any function you give it, either unfettered through
     the __call__ function, or with optional hardcoded parameters for use in a
-    pipeline. Typically the FuncBlock is only used in the `blockify` decorator
-    method.
+    pipeline. Typically the FuncBlock is only used in the :obj:`blockify`
+    decorator method.
 
     Attributes:
         func(function): the function to call internally
         preset_kwargs(dict): preset keyword arguments, typically used for
             arguments that are not data to process
     """
-    # def __new__(self, func, preset_kwargs):
-    #     return type(func.__name__+"FuncBlock", (SimpleBlock,), {})
+    def __new__(cls, func, preset_kwargs={}, **block_kwargs):
+        """Generates the new function block
 
-    def __init__(self, func, preset_kwargs, **block_kwargs):
+        Args:
+            func (function): the function you desire to turn into a block
+            preset_kwargs (dict): preset keyword arguments, typically used for
+                arguments that are not data to process
+            **block_kwargs: keyword arguments for :obj:`Block` instantiation
+        """
+        obj = super().__new__(cls)
+        obj.namespace_key = str( id(obj) )
+
+        # copy the method to avoid and any possible edge-case weirdness
+        func = copy.copy(func)
+        # make the func a staticmethod if it isn't already
+        # next line checks if it's not a staticmethod
+        if isinstance(func, FunctionType):
+            # set the object in the funcblock namespace so it can be pickled
+            vars(func_namespace)[obj.namespace_key] = func
+            # sets class attributes with metadata that won't be available
+            # in a staticmethod
+            obj.func_name = func.__name__
+            obj._arg_spec = inspect.getfullargspec(func)
+            func = staticmethod( func )
+            # import pdb; pdb.set_trace()
+        else:
+            # these will be set later by pickle or the copy module,
+            # (see __deepcopy__ for more info)
+            obj.func_name = None
+            obj._arg_spec = None
+
+        obj.func = func
+        obj.preset_kwargs = preset_kwargs
+
+        return obj
+
+    def __init__(self, func, preset_kwargs={}, **block_kwargs):
         """instantiates the function block
 
         Args:
@@ -90,49 +124,50 @@ class FuncBlock(Block):
                 arguments that are not data to process
             **block_kwargs: keyword arguments for :obj:`Block` instantiation
         """
-
-        # JM: this is an ugly hack to make FuncBlock's serializable - by
-        # adding the user's functions to the current namespace (pickle demands
-        # the source object be in top level of the module)
-        func_copy = FunctionType(func.__code__, globals(), func.__name__)
-        setattr(this_module, func_copy.__name__, func_copy)
-
-        self.func = func_copy
-        self.preset_kwargs = preset_kwargs
-
-        # check if the function meets requirements
-        spec = inspect.getfullargspec(func)
-
         # we can't allow varargs at all because a block must have a known
         # number of inputs
-        if (spec.varargs or spec.varkw):
+        if (self._arg_spec.varargs or self._arg_spec.varkw):
             raise TypeError("function cannot accept a variable number of args")
 
-        self._arg_spec = spec
-        super().__init__(self.func.__name__,**block_kwargs)
+        super().__init__(self.func_name, **block_kwargs)
 
     def process(self, *args):
-        return self.func(*args, **self.preset_kwargs)
+        # reference the original function as staticmethods aren't callable when unbound
+        return self.func.__func__(*args, **self.preset_kwargs)
 
     def __call__(self, *args, **kwargs):
         """returns the exact output of the user defined function without any
         interference or interaction with the class
         """
-        return self.func(*args,**kwargs)
+        return self.func.__func__(*args,**kwargs)
 
     @property
     def args(self):
         """:obj:`list` of :obj:`str`: arguments in the order they are expected"""
         # save the argspec in an instance variable if it hasn't been computed
-        if not self._arg_spec:
-            self._arg_spec = inspect.getfullargspec(self.func)
-
         pos_args = ([] if (self._arg_spec.args is None) else self._arg_spec.args).copy()
 
         for idx,preset in enumerate(self.preset_kwargs.keys()):
             pos_args.remove(preset)
 
         return pos_args
+
+
+    def __deepcopy__(self, memo):
+        # NOTE: this behavior assumes that the uuid will be updated outside
+        # this function (as occurs in Block.copy() and Block.deepcopy())
+        cls = self.__class__
+        # create a new block - note that func isn't actually copied
+        new_block = cls.__new__(cls, self.func, self.preset_kwargs)
+        memo[id(self)] = new_block
+        for k,v in self.__dict__.items():
+            # don't copy values already set in the class by __new__
+            if (k == "func") or (k == "preset_kwargs"):
+                continue
+            setattr(new_block, k, copy.deepcopy(v,memo))
+
+
+        return new_block
 
 ################################################################################
 class Input(Block):
