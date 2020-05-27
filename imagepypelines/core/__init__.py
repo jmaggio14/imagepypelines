@@ -18,19 +18,6 @@ from .Block import Block
 from .Data import Data
 
 # block_subclasses.py
-# create a namespace to store FuncBlocks in so they can be pickled
-import types
-func_namespace_doc = \
-"""
-This is a holding module for functions that are used in Blocks created by
-the blockify decorator or FuncBlock object. Objects are stored here so they can
-serialize by the pickle module
-"""
-func_namespace = types.ModuleType('func_namespace',
-                                        func_namespace_doc )
-del types, func_namespace_doc
-
-# block_subclasses imports
 from .block_subclasses import FuncBlock
 from .block_subclasses import Input
 from .block_subclasses import Leaf

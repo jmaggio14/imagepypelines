@@ -18,10 +18,10 @@ import numpy as np
 from uuid import uuid4
 import networkx as nx
 from networkx.readwrite import json_graph
-import pickle
 import hashlib
 import copy
 import itertools
+import dill
 
 ILLEGAL_VAR_NAMES = ['fetch','skip_enforcement']
 """illegal or reserved names for variables in the graph"""
@@ -531,21 +531,19 @@ class Pipeline(object):
 
     # saving/loading
     ############################################################################
-    def save(self, filename, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
-        """pickles and saves a copy of the  pipeline to the given filename.
+    def save(self, filename, passwd=None):
+        """serializes and saves a copy of the  pipeline to the given filename.
         Pipeline can be optionally encrypted
 
         Args:
-            filename(str): the filename to save the pickled pipeline to
-            passwd(str): password to encrypt the pickled pipeline with if
+            filename(str): the filename to save the serialized pipeline to
+            passwd(str): password to encrypt the serialized pipeline with if
                 desired, defaults to None
-            protocol(int): pickle protocol to pickle pipeline with, defaults to
-                pickle.HIGHEST_PROTOCOL
 
         Returns:
             str: the sha256 checksum for the saved file
         """
-        encoded, checksum = self.to_bytes(passwd, protocol)
+        encoded, checksum = self.to_bytes(passwd)
         # write the file contents
         with open(filename, 'wb') as f:
             f.write(encoded)
@@ -558,8 +556,8 @@ class Pipeline(object):
         """loads the pipeline from the given file
 
         Args:
-            filename(str): the filename to load the pickled pipeline from
-            passwd(str): password to decrypt the pickled pipeline with, defaults
+            filename(str): the filename to load the serialized pipeline from
+            passwd(str): password to decrypt the serialized pipeline with, defaults
                 to None
             checksum(str): the sha256 checksum to check the file against
             name(str): new name for the pipeline. If left as None, then
@@ -569,11 +567,11 @@ class Pipeline(object):
             :obj:`Pipeline`: the loaded pipeline
 
         Warning:
-            Pickled data can be a security risk! For sensitive applications,
+            Serilized data can be a security risk! For sensitive applications,
             use the `checksum` parameter. ImagePypelines can use this to ensure
             the data hasn't been tampered with.
 
-            for more information about pickle security, see:
+            for more information about serialization security, see:
             https://docs.python.org/3.8/library/pickle.html
         """
         # fetch the raw file contents
@@ -583,24 +581,20 @@ class Pipeline(object):
         return cls.from_bytes(raw_bytes, passwd, checksum, name)
 
     ############################################################################
-    def to_bytes(self, passwd=None, protocol=pickle.HIGHEST_PROTOCOL):
-        """pickles a copy of the pipeline, and returns the raw bytes. Can be
+    def to_bytes(self, passwd=None):
+        """serialized a copy of the pipeline, and returns the raw bytes. Can be
         optionally encrypted
 
         Args:
-            passwd(str): password to encrypt the pickled pipeline with if
+            passwd(str): password to encrypt the serialized pipeline with if
                 desired, defaults to None
-            protocol(int): pickle protocol to pickle pipeline with, defaults to
-                pickle.HIGHEST_PROTOCOL
-
         Returns:
             (tuple): tuple containing:
 
-                bytes: the pickled and optionally encrypted pipeline
+                bytes: the serialized and optionally encrypted pipeline
                 str: the sha256 checksum for the raw bytes
         """
-        # pickle the pipeline
-        raw_bytes = pickle.dumps(self.copy(), protocol=protocol)
+        raw_bytes = dill.dumps(self.copy())
 
         # encrypt the pipeline if passwd is provided
         if passwd:
@@ -618,7 +612,7 @@ class Pipeline(object):
 
         Args:
             raw_bytes(bytes): the encoded pipeline in bytes format
-            passwd(str): password to decrypt the pickled pipeline with, defaults
+            passwd(str): password to decrypt the serialized pipeline with, defaults
                 to None
             checksum(str): the sha256 checksum to check the bytes against
             name(str): new name for the pipeline. If left as None, then
@@ -628,11 +622,11 @@ class Pipeline(object):
             :obj:`Pipeline`: the loaded pipeline
 
         Warning:
-            Pickled data can be a security risk! For sensitive applications,
+            Serialized data can be a security risk! For sensitive applications,
             use the `checksum` parameter. ImagePypelines can use this to ensure
             the data hasn't been tampered with.
 
-            for more information about pickle security, see:
+            for more information about serialization security, see:
             https://docs.python.org/3.8/library/pickle.html
         """
         # check the file checksum if provided
@@ -651,7 +645,7 @@ class Pipeline(object):
             decoded = raw_bytes
 
         # load the pipeline
-        pipeline = pickle.loads(decoded)
+        pipeline = dill.loads(decoded)
 
         # rename it if desired
         if name is not None:
@@ -1085,8 +1079,9 @@ class Pipeline(object):
         self.update()
 
     ############################################################################
-    def debug_pickle(self, pickle_protocol=pickle.HIGHEST_PROTOCOL):
+    def debug_serialization(self):
         """helper function to debug what part of a block is not serializable"""
+        # NOTE: needs to be updated to use dill's builtin debugging tools
         error = False
 
         # fetch the static graph represenation
@@ -1099,9 +1094,9 @@ class Pipeline(object):
             # iterate through every value in the block's __dict__
             for key,val in block.__dict__.items():
                 try:
-                    pickle.dumps(val, protocol=pickle_protocol)
+                    dill.dumps(val)
                 except Exception as e:
-                    self.logger.error("error pickling {}.{}: {}".format(block,key,e))
+                    self.logger.error("error serializing {}.{}: {}".format(block,key,e))
                     error = True
 
         if not error:

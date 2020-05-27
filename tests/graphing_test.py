@@ -102,8 +102,8 @@ def test_Pipeline():
     pipeline5.get_vis()
 
     ################################################################################
-    # pickle debug
-    pipeline5.debug_pickle()
+    # serialization debug
+    pipeline5.debug_serialization()
 
     ################################################################################
     # vars
