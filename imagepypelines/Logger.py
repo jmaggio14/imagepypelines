@@ -25,7 +25,7 @@ LOG_COLORS = {
 }
 """Module variable controlling the color of our logs, this can be modified to
 suit the end user's needs or ignored entirely by setting
-imagepypelines.ENABLE_LOG_COLOR = False"""
+ip.MASTER_LOGGER.ENABLE_LOG_COLOR = False"""
 
 LOG_TEXT_ATTRS = {
             'debug':['bold'],
@@ -36,9 +36,9 @@ LOG_TEXT_ATTRS = {
 }
 """Module variable controlling the text attributes of our logs, this can be
 modified to suit the end user's needs or ignored entirely by setting
-imagepypelines.ENABLE_LOG_COLOR = False"""
+ip.MASTER_LOGGER.ENABLE_LOG_COLOR = False"""
 
-
+# this is defined lower down in this file
 MASTER_LOGGER = None
 """logging.Logger subclass that is the root of all loggers instantiated in
 ImagePypelines"""
