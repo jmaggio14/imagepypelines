@@ -50,7 +50,7 @@ def dict_shape(obj):
     return (len(obj),)
 
 ######## For actual pre-process shape check logic ####
-_DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
+DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
                                 int : int_shape,
                                 float : float_shape,
                                 list : list_shape,
@@ -58,10 +58,11 @@ _DEFAULT_SHAPE_FUNCS = {np.ndarray : numpy_shape,
                                 str : str_shape,
                                 dict : dict_shape,
                             }
-"""backup of default shape functions"""
+"""default shape functions built into core ImagePypelines. Keys are
+types, values are functions to that return a shape tuple"""
 
-DEFAULT_SHAPE_FUNCS = _DEFAULT_SHAPE_FUNCS.copy()
-"""Default functions to determine the shape of a datum for a block. keys are
+SHAPE_FUNCS = DEFAULT_SHAPE_FUNCS.copy()
+"""functions to determine the shape of a datum passed into a block. Keys are
 types, values are functions to that return a shape tuple
 """
 # NOTE: figure out how to update this in the plugin system
@@ -72,7 +73,13 @@ types, values are functions to that return a shape tuple
 # homogenus containers are containers like numpy arrays where every datum (row)
 # is the same type and shape. We can speed up type and shape checking by
 # only checking the first row
-HOMOGENUS_CONTAINERS = [np.ndarray]
+DEFAULT_HOMOGENUS_CONTAINERS = [np.ndarray]
+"""default homogenus containers in ImagePypelines core. A list of data
+containers that are "homogenus", meaning that every datum (row) will have the
+same shape and type. By default, [numpy.ndarray]
+"""
+
+HOMOGENUS_CONTAINERS = DEFAULT_HOMOGENUS_CONTAINERS.copy()
 """a list of data containers that are "homogenus", meaning that every datum (row)
 will have the same shape and type. By default, [numpy.ndarray]
 """

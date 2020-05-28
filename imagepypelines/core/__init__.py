@@ -6,7 +6,7 @@
 # Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
 
 # arg_checking.py
-from .arg_checking import DEFAULT_SHAPE_FUNCS
+from .arg_checking import SHAPE_FUNCS, HOMOGENUS_CONTAINERS
 
 # constants.py
 from .constants import *

@@ -416,19 +416,19 @@ def test_shape_fns():
     import numpy as np
 
     # np array
-    assert (10,10) == ip.DEFAULT_SHAPE_FUNCS[np.ndarray](np.zeros((10,10)))
+    assert (10,10) == ip.SHAPE_FUNCS[np.ndarray](np.zeros((10,10)))
     # int
-    assert ip.DEFAULT_SHAPE_FUNCS[int](10) is None
+    assert ip.SHAPE_FUNCS[int](10) is None
     # float
-    assert ip.DEFAULT_SHAPE_FUNCS[float](10.0) is None
+    assert ip.SHAPE_FUNCS[float](10.0) is None
     # list
-    assert (3,) == ip.DEFAULT_SHAPE_FUNCS[list]([1,2,3])
+    assert (3,) == ip.SHAPE_FUNCS[list]([1,2,3])
     # tuple
-    assert (4,) == ip.DEFAULT_SHAPE_FUNCS[tuple]( (1,2,3,4) )
+    assert (4,) == ip.SHAPE_FUNCS[tuple]( (1,2,3,4) )
     # str
-    assert (5,) == ip.DEFAULT_SHAPE_FUNCS[str]( "12345" )
+    assert (5,) == ip.SHAPE_FUNCS[str]( "12345" )
     # dict
-    assert (2,) == ip.DEFAULT_SHAPE_FUNCS[dict]( dict(a=1, b=2) )
+    assert (2,) == ip.SHAPE_FUNCS[dict]( dict(a=1, b=2) )
 
 
 ################################################################################

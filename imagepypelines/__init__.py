@@ -51,16 +51,6 @@ def load_plugins():
         ip_module = sys.modules[__name__]
         plugin_module = plugins[plugin_name]
 
-        # JM - commented out 04/11/20
-        # # check that the module has the required objects
-        # for req in required_objects:
-        #     if not hasattr(plugin_module, req):
-        #         raise PluginError(
-        #                 "Plugin '%s' doesn't meet requirements" % plugin_name)
-        #     elif not callable( getattr(plugin_module, req) ):
-        #         raise PluginError(
-        #                 "Plugin '%s' doesn't meet requirements" % plugin_name)
-
         MASTER_LOGGER.info(
             "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
             .format(plugin_name))
@@ -68,9 +58,14 @@ def load_plugins():
         # add the plugin to the current namespace
         setattr(ip_module, plugin_name, plugin_module)
 
+        # update the default shape functions if the plugin provides new ones
+        SHAPE_FUNCS.update( getattr(plugin_module, 'SHAPE_FUNCS', {}) )
+
+        # update the default homogenus containers if the plugin provides new ones
+        HOMOGENUS_CONTAINERS.extend( getattr(plugin_module, 'HOMOGENUS_CONTAINERS', []) )
+
         # add the plugin name to a global list for debugging
         LOADED_PLUGINS[plugin_name] = plugin_module
-
 
 # load all of our plugins
 load_plugins()
