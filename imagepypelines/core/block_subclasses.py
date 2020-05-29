@@ -92,10 +92,6 @@ class FuncBlock(Block):
         # copy the method to avoid and any possible edge-case weirdness
         func = copy.copy(func)
         obj.func = func
-        obj.preset_kwargs = preset_kwargs
-        if func:
-            obj._arg_spec = inspect.getfullargspec(func)
-
         return obj
 
     def __init__(self, func, preset_kwargs={}, **block_kwargs):
@@ -111,6 +107,9 @@ class FuncBlock(Block):
         # number of inputs
         if (self._arg_spec.varargs or self._arg_spec.varkw):
             raise TypeError("function cannot accept a variable number of args")
+
+        self._arg_spec = inspect.getfullargspec(func)
+        self.preset_kwargs = preset_kwargs
 
         super().__init__(self.func.__name__, **block_kwargs)
 

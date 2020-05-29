@@ -16,6 +16,16 @@ if os.name == 'nt':
     colorama.init()
     del colorama
 
+
+LOG_LEVELS = {
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'warning': logging.WARNING,
+    'error': logging.ERROR,
+    'critical': logging.CRITICAL,
+    }
+"""Log level strings mapped to their numerical values"""
+
 LOG_COLORS = {
     'debug': 'cyan',
     'info': None,
@@ -92,6 +102,10 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
         child.addHandler(ch)
         return child
 
+    def setLevel(self, level, *args, **kwargs):
+        level = LOG_LEVELS.get(level, level)
+        super().setLevel(level, *args, **kwargs)
+
     # JEFF: modified from here https://github.com/python/cpython/blob/ca7b504a4d4c3a5fde1ee4607b9501c2bab6e743/Lib/logging/__init__.py
     def __reduce__(self):
         if self.name == 'ImagePypelines':
@@ -141,6 +155,7 @@ def get_logger(name, log_level=logging.INFO):
 
 def set_log_level(log_level):
     """sets the global master logger level"""
+    log_level = LOG_LEVELS.get(log_level, log_level)
     make_master(log_level)
 
 # END

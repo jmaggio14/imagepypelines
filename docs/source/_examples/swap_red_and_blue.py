@@ -16,9 +16,3 @@ ip.set_log_level('debug')
 @ip.blockify()
 def swap_red_and_blue(image):
     return np.flip(image, axis=2)
-
-
-
-
-
-import imagepypelines as ip

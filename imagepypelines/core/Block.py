@@ -181,12 +181,12 @@ class Block(metaclass=ABCMeta):
         if len(task_args) < self.n_args:
             msg = "Not enough arguments provided"
             self.logger.error(msg)
-            raise BlockError(msg)
+            raise BlockError(msg + " (%s)" % self.name)
         # too many args
         elif len(task_args) > self.n_args:
             msg = "Too many arguments provided"
             self.logger.error(msg)
-            raise BlockError(msg)
+            raise BlockError(msg + " (%s)" % self.name)
 
     ############################################################################
     def preprocess(self):
