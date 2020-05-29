@@ -57,7 +57,7 @@ tasks = {
         # Scale the images, cast dtype, and view the filtered images
         # in sequence! Note: simple filtering in RGB results in artifacts!
         'safe': (ip.image.DisplaySafe(), 'ifft'),
-        'null' : (ip.image.CompareView(pause_for=5000), 'images','safe')
+        'null' : (ip.image.CompareView(pause_for=500), 'images','safe')
          }
 
 im_filt = ip.Pipeline(tasks)
@@ -70,3 +70,6 @@ im_filt = ip.Pipeline(tasks)
 images = [ip.image.panda(), ip.image.gecko(), ip.image.redhat()]
 # Number and view the images!
 processed = im_filt.process(images)
+
+# check the real computational time
+print(im_filt.analytics)

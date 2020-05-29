@@ -11,6 +11,7 @@ from .block_subclasses import Input, Leaf, PipelineBlock
 from .constants import UUID_ORDER
 from .Exceptions import PipelineError
 from .io_tools import passgen
+from .util import Timer
 
 from cryptography.fernet import Fernet
 import inspect
@@ -117,7 +118,7 @@ class Pipeline(object):
                 pipeline's graph or another pipeline to replicate.
             name (str): name used to generate the logger name
         """
-
+        self.timer = Timer()
         self.uuid = uuid4().hex # unique univeral hex ID for this pipeline
         if name is None:
             name = self.__class__.__name__
@@ -135,6 +136,9 @@ class Pipeline(object):
         self.keyword_inputs = [] # alphabetically sorted list of unindexed inputs
         self._inputs = {} # dict of input_name: Input_object
 
+        # analytics
+        self.analytics = {}
+
         # If a pipeline is passed in, then retrieve tasks and replicate our
         # pipeline
         if isinstance(tasks, Pipeline):
@@ -142,6 +146,7 @@ class Pipeline(object):
 
 
         self.update(tasks)
+        self.logger.debug("initialized in %sms" % self.timer.lap_ms())
 
 
     ############################################################################
@@ -694,6 +699,7 @@ class Pipeline(object):
         ## NOTE:
         # add warning that for edges that are non-computable
         ###
+        self.timer.reset()
         for node_a, node_b, edge_idx in self.execution_order:
             # get actual objects instead of just graph ids
             block_a = self.graph.nodes[node_a]['block']
@@ -709,6 +715,7 @@ class Pipeline(object):
                 # no arg data is needed
                 # import pdb; pdb.set_trace()
                 edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_enforcement)[0] )
+                self.analytics[block_a.id] = self.timer.lap_ms()
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b, data=True)
@@ -722,6 +729,9 @@ class Pipeline(object):
                 outputs = block_b._pipeline_process(*args,
                                                         logger=self.logger,
                                                         force_skip=skip_enforcement)
+                # track computational time for this block
+                self.analytics[block_b.id] = self.timer.lap_ms()
+
                 # populate upstream edges with the data we need
                 # get the output edges
                 out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]

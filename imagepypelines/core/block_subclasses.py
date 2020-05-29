@@ -103,13 +103,20 @@ class FuncBlock(Block):
                 arguments that are not data to process
             **block_kwargs: keyword arguments for :obj:`Block` instantiation
         """
+
+        self._arg_spec = inspect.getfullargspec(func)
+        
         # we can't allow varargs at all because a block must have a known
         # number of inputs
         if (self._arg_spec.varargs or self._arg_spec.varkw):
             raise TypeError("function cannot accept a variable number of args")
 
-        self._arg_spec = inspect.getfullargspec(func)
         self.preset_kwargs = preset_kwargs
+
+        if self._arg_spec.defaults is not None:
+            tmp_kwargs = {k:v for k,v in zip(self._arg_spec.args[-len(self._arg_spec.defaults):], self._arg_spec.defaults)}
+            tmp_kwargs.update(self.preset_kwargs)
+            self.preset_kwargs = tmp_kwargs
 
         super().__init__(self.func.__name__, **block_kwargs)
 
