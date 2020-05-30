@@ -70,6 +70,3 @@ im_filt = ip.Pipeline(tasks)
 images = [ip.image.panda(), ip.image.gecko(), ip.image.redhat()]
 # Number and view the images!
 processed = im_filt.process(images)
-
-# check the real computational time
-print(im_filt.analytics)

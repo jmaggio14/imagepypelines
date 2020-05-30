@@ -48,8 +48,8 @@ class Pipeline(object):
         keyword_inputs(:obj:`list` of :obj:'str'): alphabetically sorted list of
             unindexed input variable names (the keyword arguments for the
             process function)
-        _inputs(dict): dictionary internally to access Input objects used to
-            queue data into the pipeline
+        _inputs(dict): dictionary internally used to access Input objects for
+            queuing data into the pipeline
 
     Pipeline Graph Information:
         Nodes are dictionaries representing tasks. They contain:
@@ -60,14 +60,19 @@ class Pipeline(object):
             'color'   : color of the node for visualization purposes,
             'shape'   : shape of the node for visualization purposes,
             'class_name' : name of the class, frequently identical to the name
+            'validation_time': time required to validate incoming data if applicable
+            'processing_time' : time required to process the data using this node
+            'avg_time_per_datum': average processing time for each datum
+            'num_in' : number of datums coming into this node
+            'n_batches' : number of batches for this node
             <plus other attributes defined by the user in Block.get_default_node_attrs()>
 
         Pipeline edges are dictionaries containing the following:
-            'var_name'  : name of the variable in task definition
-            'out_index' : output index from the source node,
-            'in_index'  : input index for the target node,
-            'name'      : name target block's argument at the in_index
-            'data'      : data for this edge
+            'var_name'        : name of the variable in task definition
+            'out_index'       : output index from the source node,
+            'in_index'        : input index for the target node,
+            'name'            : name target block's argument at the in_index
+            'data'            : data for this edge
 
 
 
@@ -118,7 +123,6 @@ class Pipeline(object):
                 pipeline's graph or another pipeline to replicate.
             name (str): name used to generate the logger name
         """
-        self.timer = Timer()
         self.uuid = uuid4().hex # unique univeral hex ID for this pipeline
         if name is None:
             name = self.__class__.__name__
@@ -136,9 +140,6 @@ class Pipeline(object):
         self.keyword_inputs = [] # alphabetically sorted list of unindexed inputs
         self._inputs = {} # dict of input_name: Input_object
 
-        # analytics
-        self.analytics = {}
-
         # If a pipeline is passed in, then retrieve tasks and replicate our
         # pipeline
         if isinstance(tasks, Pipeline):
@@ -146,7 +147,6 @@ class Pipeline(object):
 
 
         self.update(tasks)
-        self.logger.debug("initialized in %sms" % self.timer.lap_ms())
 
 
     ############################################################################
@@ -262,6 +262,11 @@ class Pipeline(object):
                                     block=block,
                                     args=args,
                                     outputs=outputs,
+                                    validation_time=None,
+                                    processing_time=None,
+                                    avg_time_per_datum=None,
+                                    num_in=None,
+                                    n_batches=None,
                                     **block.get_default_node_attrs(),
                                     )
 
@@ -334,6 +339,11 @@ class Pipeline(object):
                                     block=leaf,
                                     args=(end_name,),
                                     outputs=(end_name,),
+                                    validation_time=None,
+                                    processing_time=None,
+                                    avg_time_per_datum=None,
+                                    num_in=None,
+                                    n_batches=None,
                                     **leaf.get_default_node_attrs()
                                     )
 
@@ -699,7 +709,6 @@ class Pipeline(object):
         ## NOTE:
         # add warning that for edges that are non-computable
         ###
-        self.timer.reset()
         for node_a, node_b, edge_idx in self.execution_order:
             # get actual objects instead of just graph ids
             block_a = self.graph.nodes[node_a]['block']
@@ -714,8 +723,11 @@ class Pipeline(object):
             if self.graph.in_degree(node_a) == 0:
                 # no arg data is needed
                 # import pdb; pdb.set_trace()
-                edge['data'] = Data( block_a._pipeline_process(logger=self.logger, force_skip=skip_enforcement)[0] )
-                self.analytics[block_a.id] = self.timer.lap_ms()
+                analytics = {}
+                edge['data'] = Data( block_a._pipeline_process(logger=self.logger,
+                                                                force_skip=skip_enforcement,
+                                                                analytics=analytics)[0])
+                self.graph.nodes[node_a].update(analytics)
 
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b, data=True)
@@ -726,11 +738,13 @@ class Pipeline(object):
                 args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
                 # assign the task outputs to their appropriate edge
+                analytics = {}
                 outputs = block_b._pipeline_process(*args,
                                                         logger=self.logger,
-                                                        force_skip=skip_enforcement)
+                                                        force_skip=skip_enforcement,
+                                                        analytics=analytics)
                 # track computational time for this block
-                self.analytics[block_b.id] = self.timer.lap_ms()
+                self.graph.nodes[node_b].update(analytics)
 
                 # populate upstream edges with the data we need
                 # get the output edges

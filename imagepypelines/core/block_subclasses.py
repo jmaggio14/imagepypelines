@@ -105,7 +105,7 @@ class FuncBlock(Block):
         """
 
         self._arg_spec = inspect.getfullargspec(func)
-        
+
         # we can't allow varargs at all because a block must have a known
         # number of inputs
         if (self._arg_spec.varargs or self._arg_spec.varkw):

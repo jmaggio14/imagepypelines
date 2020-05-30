@@ -10,6 +10,7 @@ from .constants import NUMPY_TYPES, UUID_ORDER
 from .Exceptions import BlockError
 from .arg_checking import DEFAULT_SHAPE_FUNCS, HOMOGENUS_CONTAINERS
 from .Data import is_container
+from .util import Timer
 
 from uuid import uuid4
 from abc import ABCMeta, abstractmethod
@@ -279,7 +280,7 @@ class Block(metaclass=ABCMeta):
     ############################################################################
     #                 called internally or by Pipeline
     ############################################################################
-    def _pipeline_process(self, *data, logger, force_skip):
+    def _pipeline_process(self, *data, logger, force_skip, analytics):
         """batches and processes data through the block's process function. This
         function is called by Pipeline, and not intended to be called by the
         user.
@@ -289,6 +290,8 @@ class Block(metaclass=ABCMeta):
             logger(:obj:`ImagepypelinesLogger`): parent pipeline logger, which
                 will be used to create a new child block logger
             force_skip(bool): whether or not to check batch types and shapes
+            analytics(dict): dictionary to store processing analytics for this
+                block.
 
         Returns:
             (tuple): variable length tuple containing processed data
@@ -306,6 +309,8 @@ class Block(metaclass=ABCMeta):
             self.logger.error(msg)
             raise RuntimeError(msg)
 
+
+        timer = Timer()
         # run preprocess
         self.preprocess()
 
@@ -324,7 +329,12 @@ class Block(metaclass=ABCMeta):
             # --------- CHECKING  ---------
             # check the batches before processing
             if not (force_skip or self.skip_enforcement):
+                # reset the lap timer
+                timer.lap_ms()
+                # validate incoming data
                 self._check_batches(*data)
+                analytics['validation_time'] = timer.lap_ms()
+
 
             # --------- ACTUAL PROCESSING ---------
             # EACH - every batch is a datum
@@ -361,7 +371,14 @@ class Block(metaclass=ABCMeta):
                             self.logger.error(msg)
                             raise BlockError(msg)
 
-        self.postprocess()
+
+        analytics['processing_time'] = timer.time_ms()
+        # track the number of incoming datums to this block
+        if len(data) > 0:
+            analytics["num_in"] = data[0].n_items
+            analytics["n_batches"] = data[0].n_batches_with(self.batch_type)
+            analytics['avg_time_per_datum'] = analytics['processing_time'] / analytics['num_in']
+            
         return ret
 
     ############################################################################
