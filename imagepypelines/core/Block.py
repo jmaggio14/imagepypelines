@@ -18,6 +18,7 @@ from itertools import chain
 import inspect
 import copy
 import numpy as np
+import os
 
 class Block(metaclass=ABCMeta):
     """a contained algorithmic element used to construct pipelines. This class
@@ -310,6 +311,9 @@ class Block(metaclass=ABCMeta):
             raise RuntimeError(msg)
 
 
+        # fetch the process id for this block
+        analytics['pid'] = os.getpid()
+
         timer = Timer()
         # run preprocess
         self.preprocess()
@@ -378,7 +382,7 @@ class Block(metaclass=ABCMeta):
             analytics["num_in"] = data[0].n_items
             analytics["n_batches"] = data[0].n_batches_with(self.batch_type)
             analytics['avg_time_per_datum'] = analytics['processing_time'] / analytics['num_in']
-            
+
         return ret
 
     ############################################################################

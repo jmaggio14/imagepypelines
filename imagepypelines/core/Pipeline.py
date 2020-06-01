@@ -65,6 +65,7 @@ class Pipeline(object):
             'avg_time_per_datum': average processing time for each datum
             'num_in' : number of datums coming into this node
             'n_batches' : number of batches for this node
+            'pid' : process id for this node
             <plus other attributes defined by the user in Block.get_default_node_attrs()>
 
         Pipeline edges are dictionaries containing the following:
@@ -267,6 +268,7 @@ class Pipeline(object):
                                     avg_time_per_datum=None,
                                     num_in=None,
                                     n_batches=None,
+                                    pid=None,
                                     **block.get_default_node_attrs(),
                                     )
 
@@ -344,6 +346,7 @@ class Pipeline(object):
                                     avg_time_per_datum=None,
                                     num_in=None,
                                     n_batches=None,
+                                    pid=None,
                                     **leaf.get_default_node_attrs()
                                     )
 
