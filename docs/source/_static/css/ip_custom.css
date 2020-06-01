@@ -16,7 +16,7 @@ text {
 }
 
 .alpha-jumbotron{
-    max-height: 2rem;
+    /* max-height: 2rem; */
     background-color: #a83232;
     color: white;
 }
