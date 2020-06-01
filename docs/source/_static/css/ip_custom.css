@@ -51,9 +51,15 @@ pre code {
   width: 50%;
 }
 
+.ip-card {
+    max-width: 40rem;
+    height: 25rem;
+}
+
 .landing-card-image{
-    object-fit: fill;
+    object-fit: contain;
     width: 80%;
+    height:13rem;
 }
 
 .fade-in-fast {
