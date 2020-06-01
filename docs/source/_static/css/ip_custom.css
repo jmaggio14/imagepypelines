@@ -8,13 +8,18 @@
 .nodes circle {
   stroke: #fff;
   stroke-width: 1.5px;
+}
 
 text {
   font-family: sans-serif;
   font-size: 10px;
 }
 
-
+.alpha-jumbotron{
+    max-height: 2rem;
+    background-color: #a83232;
+    color: white;
+}
 /* code blocks */
 pre code {
   background-color: #eee;
@@ -32,12 +37,25 @@ pre code {
    margin-right:auto;
    display:block;
 }
+
+.card-container {
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%
+}
+
 .img-center {
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 50%;
 }
+
+.landing-card-image{
+    object-fit: fill;
+    width: 80%;
+}
+
 .fade-in-fast {
   animation: fadeIn ease .5s;
   -webkit-animation: fadeIn ease .5s;
@@ -94,4 +112,5 @@ pre code {
   }
   100% {
     opacity:1;
+    }
 }
