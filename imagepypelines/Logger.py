@@ -93,13 +93,15 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
 
     def getChild(self,*args,**kwargs):
         # make a formatter for the child logger
-        ch = logging.StreamHandler()
-        formatter = logging.Formatter(
-                            '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
-        ch.setFormatter(formatter)
-
         child = super().getChild(*args,**kwargs)
-        child.addHandler(ch)
+
+        if not len(self.handlers):
+            ch = logging.StreamHandler()
+            formatter = logging.Formatter(
+                                '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
+            ch.setFormatter(formatter)
+
+            child.addHandler(ch)
         return child
 
     def setLevel(self, level, *args, **kwargs):
