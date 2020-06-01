@@ -204,7 +204,9 @@ napoleon_include_special_with_doc = True
 #
 # RH -I'm currently working on this and will add at a later date - 09/29/18
 #
-html_logo = "./_static/images/ip_logo.png"
+html_logo = "./_static/images/ip_logo.svg"
+
+html_favicon = "./_static/images/favicon.ico"
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.
