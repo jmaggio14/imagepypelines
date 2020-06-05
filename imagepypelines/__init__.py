@@ -3,7 +3,7 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
+# Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell
 
 # -------- setup a uuid for this imagepypelines session -------
 import time

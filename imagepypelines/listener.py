@@ -3,9 +3,25 @@
 # @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE
 # @github: https://github.com/jmaggio14/imagepypelines
 #
-# Copyright (c) 2018-2020 Jeff Maggio, Ryan Hartzell, and collaborators
+# Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell
 #
 import socket, sys, queue, threading, time, signal, random
+
+
+# # **called at the session level
+# ip.connect_dashboard(host, ip)
+# # this launches the listener threadz
+# # this can be called multiple times for multiple dashboards
+#
+# # ** called internally in a pipeline **
+# commands = listener.check_for_commands(self.id) # --> have the listener check it's queues for commandss
+# # right now, the only command is "pause"
+# # might also be
+# listener.publish(self.id)
+# listener.delete(self.id) # called in pipeline.__del__()
+
+
+
 
 # WARNING: temporary - remove this once it's added to the module
 from imagepypelines import get_logger
