@@ -1056,7 +1056,58 @@ class Pipeline(object):
 
     ############################################################################
     def get_vis(self):
-        """retreives a pipeline summary for use in visualization purpores"""
+        """retreives a pipeline summary for use in visualization purpores
+
+
+        top level:
+            name
+            id
+            uuid
+            args
+            vars (list of variable names)
+            graph_structure:
+                nodes:
+                    'args'
+                    'outputs'
+                    'name'
+                    'color'
+                    'shape'
+                    'class_name'
+                    'validation_time
+                    'processing_time'
+                    'avg_time_per_datum
+                    'num_in'
+                    'n_batches'
+                    'pid'
+                    <plus other attributes defined by the user in Block.get_default_node_attrs()>
+
+                edges:
+                    'var_name'  
+                    'out_index' 
+                    'in_index'  
+                    'name'      
+
+            BLOCKS:
+                'name'
+                'id'
+                'uuid'
+                'args'
+                'types'
+                'shapes'
+                'skip_enforcement'
+                'batch_type'
+                'tags'
+                'class_name'
+
+                # method documentation
+                DOCS:
+                    class_docstring
+                    __init___docstring
+                    process_docstring
+
+
+
+        """
         vis = {}
 
         # ----------------------------------------------------------------------
