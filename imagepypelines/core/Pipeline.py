@@ -550,7 +550,7 @@ class Pipeline(object):
     # saving/loading
     ############################################################################
     def save(self, filename, passwd=None):
-        """serializes and saves a copy of the  pipeline to the given filename.
+        """serializes and saves a copy of the pipeline to the given filename.
         Pipeline can be optionally encrypted
 
         Args:
@@ -1082,10 +1082,10 @@ class Pipeline(object):
                     <plus other attributes defined by the user in Block.get_default_node_attrs()>
 
                 edges:
-                    'var_name'  
-                    'out_index' 
-                    'in_index'  
-                    'name'      
+                    'var_name'
+                    'out_index'
+                    'in_index'
+                    'name'
 
             BLOCKS:
                 'name'

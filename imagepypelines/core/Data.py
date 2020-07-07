@@ -23,7 +23,11 @@ class Data(object):
         """instantiates the Data object
 
         Args:
-            data (any type): the raw data
+            data (any type): the raw data container. A container is any
+                type that can
+                1) getitems -- i.e. container[i],
+                2) iterate -- for datum in container,
+                3) fetch length -- len(container)
         """
         # check if the data is a valid container
         if not is_container(data):

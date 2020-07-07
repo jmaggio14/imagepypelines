@@ -54,7 +54,7 @@ Installation
 ************
 more options for installation can be found `here <http://www.imagepypelines.org/about.html>`_.
 
-**Python compatibility:** 3.4-3.6 64bit
+**Python compatibility:** 3.6+ 64bit
 
 .. code-block:: shell
 
