@@ -75,4 +75,4 @@ You may use this code for research or commercial settings, but please credit us
 .. code-block:: plaintext
 
     This research made use "ImagePypelines" developed by Jeff Maggio,
-    Ryan Harzell, Jai Mehra, and their collaborators. https://www.imagepypelines.org
+    Ryan Hartzell, Jai Mehra, and their collaborators. https://www.imagepypelines.org
