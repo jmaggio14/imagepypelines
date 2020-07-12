@@ -12,6 +12,7 @@ from .constants import UUID_ORDER
 from .Exceptions import PipelineError
 from .io_tools import passgen
 from .util import Timer
+from .DashboardComm import DashboardComm
 
 from cryptography.fernet import Fernet
 import inspect
@@ -146,7 +147,10 @@ class Pipeline(object):
         if isinstance(tasks, Pipeline):
             tasks = tasks.get_tasks()
 
+        # build the dashboard comm object
+        self.dashcomm = DashboardComm()
 
+        # update the tasks
         self.update(tasks)
 
 
