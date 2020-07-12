@@ -55,7 +55,7 @@ class DashboardComm(object):
         new_client = TCPClient().connect(host, port)
         cls.clients.append( new_client )
 
-        # send the pipeline graph messages to new clients so they interpret new
+        # send the pipeline graph messages to new clients so they can interpret new
         # status and reset messages
         # (@Jai, will these work being send one after another like this????)
         for rep in self.graphs_reps.values():
