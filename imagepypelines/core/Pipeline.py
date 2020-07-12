@@ -24,6 +24,7 @@ import hashlib
 import copy
 import itertools
 import dill
+import json
 
 ILLEGAL_VAR_NAMES = ['fetch','skip_enforcement']
 """illegal or reserved names for variables in the graph"""
@@ -448,6 +449,12 @@ class Pipeline(object):
             self.logger.warning(msg)
 
 
+        # send along the new graph message to the Dashboards
+        # TODO: format and build the graph message ( derivation of get_vis() )
+        graph_msg = json.dumps({})
+        self.dashcomm.write_graph(self.id, graph_msg)
+
+
     ############################################################################
     def process(self, *pos_data, fetch=None, skip_enforcement=False, **kwdata):
         """processes input data through the pipeline
@@ -460,9 +467,6 @@ class Pipeline(object):
 
             MUST ADD FETCHES DOCUMENTATIONS
         """
-        # reset all leftover data in this graph
-        self.clear()
-
         # setup fetches
         if fetch is None:
             fetch = self.vars.keys()
@@ -539,12 +543,19 @@ class Pipeline(object):
 
     ############################################################################
     def clear(self):
-        """resets all edges in the graph, clears the inputs"""
+        """resets all edges in the graph, clears the inputs (and updates the dashboards)"""
+        # unload all edge data
         for _,_,edge in self.graph.edges(data=True):
             edge['data'] = None
 
+        # unload all input data
         for inpt in self._inputs.values():
             inpt.unload()
+
+        # send a message to the dashboards saying the pipeline has been reset
+        # TODO: decide on and build the reset message
+        reset_msg = json.dumps({})
+        self.dashcomm.write_reset(reset_msg)
 
     ############################################################################
     def draw(self, show=True, ax=None):
@@ -760,6 +771,9 @@ class Pipeline(object):
 
         # UPDATE THE DASHBOARD
         # -----------------------------------
+        # TODO: decide on and build the status messages
+        update_msg = json.dumps({})
+        self.dashcomm.write_status(update_msg)
 
 
     def __compute(self, skip_enforcement=False):
