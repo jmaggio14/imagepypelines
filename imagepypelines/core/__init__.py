@@ -14,6 +14,10 @@ from .constants import *
 # Block.py
 from .Block import Block
 
+# DashboardComm.py
+from .DashboardComm import DashboardComm
+from .DashboardComm import connect_to_dash
+
 # Data.py
 from .Data import Data
 

@@ -26,6 +26,8 @@ def connect_to_dash(host, port):
     """
     DashboardComm.connect(host, port)
 
+    # TODO: update the logging handler to send logging messages to the dashboard
+
 ################################################################################
 class DashboardComm(object):
     clients = []
