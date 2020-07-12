@@ -114,11 +114,12 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
             return make_master, (self.level,)
         return logging.getLogger, (self.name,)
 
+def get_master_logger():
+    return make_master()
 
 def make_master(level=logging.INFO):
     """creates the master logger if it doesn't exist, returns it if it does"""
     if MASTER_LOGGER:
-        MASTER_LOGGER.setLevel(level)
         return MASTER_LOGGER
 
     # create our ImagePypelines master logger
