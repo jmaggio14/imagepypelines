@@ -721,7 +721,7 @@ class Pipeline(object):
         # ORGANIZE INPUT DATA FOR COMPUTATION
         # -----------------------------------
         # fetch input data for this node
-        in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
+        in_edges = [e[2] for e in self.graph.in_edges(node_id, data=True)]
         arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
         args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
@@ -746,7 +746,7 @@ class Pipeline(object):
         out_edges = [e[2] for e in self.graph.out_edges(node_id, data=True)]
         # NEED ERROR CHECKING HERE
         # (psuedo) if n_out == n_expected_out
-        if block_b.void:
+        if block.void:
             # there's no output for this block, so we write None to the edges
             for out_edge in out_edges:
                 out_edge['data'] = None
