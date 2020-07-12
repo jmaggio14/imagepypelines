@@ -147,6 +147,8 @@ class Pipeline(object):
             tasks = tasks.get_tasks()
 
 
+        # start the communication thread for the
+
         self.update(tasks)
 
 
@@ -746,6 +748,9 @@ class Pipeline(object):
                                                         logger=self.logger,
                                                         force_skip=skip_enforcement,
                                                         analytics=analytics)
+                # TODO: Implement below
+                # self.dashboard_comm.write(update_json)
+
                 # track computational time for this block
                 self.graph.nodes[node_b].update(analytics)
 

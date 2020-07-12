@@ -4,14 +4,275 @@
 # @github: https://github.com/jmaggio14/imagepypelines
 #
 # Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell
-from ..Logger import get_logger
+from ..Logger import get_logger, get_master_logger
 import inspect
 import collections
 import time
 from termcolor import colored
 import numpy as np
+import socket
+import threading
+from heapq import heappush, heappop
+from struct import pack, unpack
+
 
 TIMER_LOGGER = get_logger('TIMER')
+
+MAX_UNACCEPTED_CONNECTIONS = 10
+
+
+################################################################################
+#                                 Socket Helpers
+################################################################################
+class BaseTCP:
+    def __init__(self):
+        self.__s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #<-- TCP SOCKET
+
+    # --------------------------------------------------------------------------
+    def disconnect(self):
+        self.__s.close()
+
+    # --------------------------------------------------------------------------
+    @staticmethod
+    def recvall(c, length):
+        '''Convenience function to read large amounts of data (>4096 bytes)'''
+        data = b''
+        while len(data) < length:
+            remaining = length - len(data)
+            data += c.recv(min(remaining, 4096))
+        return data
+
+    # --------------------------------------------------------------------------
+    def write(self, msg):
+        msg_b = msg.encode()
+        length = pack('>Q', len(msg_b))
+        self.__s.sendall(length) # send length of the message as 64bit integer
+        self.__s.sendall(msg_b) # send the message itself
+
+    # --------------------------------------------------------------------------
+    def read(self):
+        """
+        """
+        line = self.__s.recv(8) # 8 bytes for 64bit integer
+        length, _ = unpack('>Q', line)
+        return recvall(self.__s, length)
+
+    # --------------------------------------------------------------------------
+    @property
+    def sock(self):
+        """:obj:`socket.Socket`: socket for this TCP connection"""
+        return self.__s
+
+    # --------------------------------------------------------------------------
+    @property
+    def host(self):
+        """str: ip address for this socket, or None if not connected"""
+        # if the socket isn't connected, just return None
+        try:
+            return self.__s.getsockname()[0]
+        except OSError:
+            return None
+
+    # --------------------------------------------------------------------------
+    @property
+    def port(self):
+        """int: port for this socket, or None if not connected"""
+        # if the socket isn't connected, just return None
+        try:
+            return self.__s.getsockname()[1]
+        except OSError:
+            return None
+
+################################################################################
+class TCPClient(BaseTCP):
+    # --------------------------------------------------------------------------
+    def connect(self, host, port):
+        """connects and binds the socket to the given host and port
+
+        Args:
+            host(str): ip address to connect to
+            port(int): port to connect to
+        """
+        self.__s.connect( (host,port) )  # <-- bind socket server to host & port
+        self.__s.setblocking(0)
+
+
+################################################################################
+class TCPServer(BaseTCP):
+    """
+    NOTE:
+        TCP Server has no explicit implementation of accepting/closing client
+        connections. That is up to the implementation as needed. Socket object
+        can be retrieved via:
+            self.sock
+    """
+    def __init__(self):
+        super().__init__()
+        self.__s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    # --------------------------------------------------------------------------
+    def connect(self, host, port=0):
+        """connects and binds the socket to the given host and port
+
+        Args:
+            host(str): ip address to host on
+            port(int): port to host on, leave as 0 for the OS to choose
+                a port for you
+        """
+        self.__s.bind( (host,port) )  # <-- bind socket server to host & port
+        self.__s.setblocking(0)
+        self.__s.listen(MAX_UNACCEPTED_CONNECTIONS)  # <-- max of 10 unaccepted connections before not accepting anymore
+
+        return self
+
+
+# ------------------------------------------------------------------------------
+def sockspeak(msg):
+    if type(msg) is str:
+        msg = msg.encode()
+    return msg
+
+# ------------------------------------------------------------------------------
+def normalspeak(msg):
+    if type(msg) is bytes:
+        msg = msg.decode()
+    return msg.rstrip()
+
+# ------------------------------------------------------------------------------
+def create_non_blocking_udp_client(host, port):
+    c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #<-- UDP SOCKET
+    c.setblocking(0)
+    c.connect((host,port))
+    return c
+
+# ------------------------------------------------------------------------------
+def create_non_blocking_udp_server(host, port):
+    c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # <-- UDP SOCKET
+    c.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # <-- Reuse addr
+    c.bind((host,port))  # <-- bind socket server to host & port
+    c.setblocking(0)
+    return c
+
+# ------------------------------------------------------------------------------
+def create_non_blocking_tcp_client(host, port):
+    c = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #<-- UDP SOCKET
+    c.connect((host,port))
+    c.setblocking(0)
+    return c
+
+# ------------------------------------------------------------------------------
+def create_non_blocking_tcp_server(host, port):
+    c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # <-- UDP SOCKET
+    c.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # <-- Reuse addr
+    c.setblocking(0)
+    c.bind((host,port))  # <-- bind socket server to host & port
+    c.listen(10)  # <-- max of 10 unaccepted connections before not accepting anymore
+    return c
+
+################################################################################
+#                                 Thread Helpers
+################################################################################
+class BaseCommThread(threading.Thread):
+    '''
+    Parent Class to all thread manager classes.
+    '''
+    def __init__(self):
+        super().__init__(name=self.__class__.__name__)
+        self.logger = get_master_logger()
+        self.daemon = True
+
+    def __enter__(self):
+        '''
+        Starts the thread in its own context manager block.
+        Note: If the running thread is meant to be run indefinitely it is not
+              recommended to use it as a context manager as once you exit the
+              context manager, the thread will safely shut down via the
+              __exit__() method.
+        '''
+        self.run()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        '''
+        Is called once the context leaves the manager, safely signals the
+        running thread to shutdown.
+        '''
+        self.stop_thread()
+
+    # ____ Run Function ______________________________________________________
+    def run(self):
+        '''
+        This function is to be overloaded in the child class. If the thread is
+        to be run indefinitely (as in not for a fixed duration), you MUST
+        structure this function as follows:
+
+        --[START]--------------------------------------------------------------
+        self.t = threading.current_thread()  # Grab current threading context
+        ...
+        while getattr(self.t, 'running', True):
+            ...
+        ...
+        --[END]--------------------------------------------------------------
+
+        This is necessary as the classes stop_thread() method can safely shut
+        down the running thread by changing self.running to False, thus
+        invalidating the while loop's condition.
+        '''
+        pass
+
+    # ____ Thread Killer _____________________________(Kills with kindness)___
+    def stop_thread(self):
+        '''
+        This is a convenience function used to safely end the running thread.
+        Note: This will only end the running thread if the run() function
+              checks for the classes 'running' attribute (as demonstrated in
+              the docstring of the run() function above).
+              This only works if the running thread is not hanging, this will
+              prevent the while loop from re-evaluating its condition
+        '''
+        self.logger.warning("Closing Thread " + self.name)
+        self.running = False
+        self.join()
+        self.logger.warning(f"{self.name} has stopped")
+
+
+################################################################################
+#                                 Event Helpers
+################################################################################
+class EventQueue:
+    '''
+    This Class is meant to be a simple task scheduler that runs tasks in any
+    of the following ways:
+        * Immediately
+        * After a delay (seconds)
+        * After a delay & repeatedly every specified interval of time (seconds)
+    '''
+    ScheduledEvent = collections.namedtuple('ScheduleEvent',
+                                            ['event_time', 'task'])
+
+    def __init__(self):
+        self.events = []
+
+    def run_scheduled_tasks(self):
+        ''' Runs all tasks that are scheduled to run at the current time '''
+        t = time.monotonic()
+        while self.events and self.events[0].event_time <= time.monotonic():
+            event = heappop(self.events)
+            event.task()
+
+    def add_task(self, event_time, task):
+        'Helper function to schedule one-time tasks at specific time'
+        heappush(self.events, EventQueue.ScheduledEvent(event_time, task))
+
+    def call_later(self, delay, task):
+        'Helper function to schedule one-time tasks after a given delay'
+        self.add_task(time.monotonic() + delay, task)
+
+    def call_periodic(self, delay, interval, task):
+        'Helper function to schedule recurring tasks'
+        def inner():
+            task()
+            self.call_later(interval, inner)
+        self.call_later(delay, inner)
 
 
 ################################################################################
@@ -216,6 +477,7 @@ class Summarizer(dict):
 #                                 TIMING
 ################################################################################
 
+################################################################################
 def timer(func):
     """Decorator to time how long a func takes to run in milliseconds
 
@@ -243,6 +505,7 @@ def timer(func):
     return _timer
 
 
+################################################################################
 def timer_ms(func):
     """Decorator to time how long a func takes to run in milliseconds
 
@@ -269,8 +532,7 @@ def timer_ms(func):
 
     return _timer_ms
 
-
-
+################################################################################
 class Timer(object):
     """
     Timer which can be used to time processes
