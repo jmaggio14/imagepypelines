@@ -147,8 +147,6 @@ class Pipeline(object):
             tasks = tasks.get_tasks()
 
 
-        # start the communication thread for the
-
         self.update(tasks)
 
 
@@ -505,7 +503,7 @@ class Pipeline(object):
         # --------------------------------------------------------------
         # PROCESS
         # --------------------------------------------------------------
-        self._compute(skip_enforcement)
+        self.__compute(skip_enforcement)
 
         # populate the output dictionary
         fetch_dict = {}
@@ -709,65 +707,79 @@ class Pipeline(object):
     ############################################################################
     #                               internal
     ############################################################################
-    def _compute(self, skip_enforcement=False):
+    def __compute_block(self, node_id, skip_enforcement=False):
+        """
+
+        WARNING:
+            this function should only be called if all incoming edges are
+            populated with data. Ideally it should not be used outside the
+            __compute function
+        """
+        # fetch the block for this node
+        block = self.graph.nodes[node_id]['block']
+
+        # ORGANIZE INPUT DATA FOR COMPUTATION
+        # -----------------------------------
+        # fetch input data for this node
+        in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
+        arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
+        args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
+
+        # assign the task outputs to their appropriate edge
+        analytics = {}
+
+        # COMPUTE DATA IN THE BLOCK
+        # -----------------------------------
+        # (args will be empty for root blocks)
+        outputs = block._pipeline_process(*args,
+                                                logger=self.logger,
+                                                force_skip=skip_enforcement,
+                                                analytics=analytics)
+
+        # POPULATE OUTPUT EDGES FOR THIS NODE
+        # -----------------------------------
+        # update the graph with analytics for this block
+        self.graph.nodes[node_id].update(analytics)
+
+        # populate upstream edges with the data we need
+        # get the output edges
+        out_edges = [e[2] for e in self.graph.out_edges(node_id, data=True)]
+        # NEED ERROR CHECKING HERE
+        # (psuedo) if n_out == n_expected_out
+        if block_b.void:
+            # there's no output for this block, so we write None to the edges
+            for out_edge in out_edges:
+                out_edge['data'] = None
+        else:
+            for out_edge in out_edges:
+                out_edge['data'] = Data( outputs[out_edge['out_index']] )
+
+        # UPDATE THE DASHBOARD
+        # -----------------------------------
+
+
+    def __compute(self, skip_enforcement=False):
         """executes the graph tasks. Relies on Input data being preloaded"""
         ## NOTE:
         # add warning that for edges that are non-computable
         ###
         for node_a, node_b, edge_idx in self.execution_order:
-            # get actual objects instead of just graph ids
-            block_a = self.graph.nodes[node_a]['block']
-            block_b = self.graph.nodes[node_b]['block']
-            edge = self.graph.edges[node_a, node_b, edge_idx]
-
             # check if node_a is a root node (no incoming edges)
             # these nodes can be computed and the edge populated
             # immmediately because they have no predecessors
             # NOTE: this will currently break if a root has more than one
             # output - JM
+            # ROOT BLOCKS
             if self.graph.in_degree(node_a) == 0:
-                # no arg data is needed
-                # import pdb; pdb.set_trace()
-                analytics = {}
-                edge['data'] = Data( block_a._pipeline_process(logger=self.logger,
-                                                                force_skip=skip_enforcement,
-                                                                analytics=analytics)[0])
-                self.graph.nodes[node_a].update(analytics)
+                self.__compute_block(node_a, skip_enforcement)
 
+
+            # NON-ROOT BLOCKS
             # compute this node if all the data is queued
             in_edges = self.graph.in_edges(node_b, data=True)
+            data_is_queued = all((e[2]['data'] is not None) for e in in_edges)
             if all((e[2]['data'] is not None) for e in in_edges):
-                # fetch input data for this node
-                in_edges = [e[2] for e in self.graph.in_edges(node_b, data=True)]
-                arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
-                args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
-
-                # assign the task outputs to their appropriate edge
-                analytics = {}
-                outputs = block_b._pipeline_process(*args,
-                                                        logger=self.logger,
-                                                        force_skip=skip_enforcement,
-                                                        analytics=analytics)
-                # TODO: Implement below
-                # self.dashboard_comm.write(update_json)
-
-                # track computational time for this block
-                self.graph.nodes[node_b].update(analytics)
-
-                # populate upstream edges with the data we need
-                # get the output edges
-                out_edges = [e[2] for e in self.graph.out_edges(node_b, data=True)]
-                # NEED ERROR CHECKING HERE
-                # (psuedo) if n_out == n_expected_out
-                if block_b.void:
-                    # there's no output for this block, so we write None to the
-                    # edges
-                    for out_edge in out_edges:
-                        out_edge['data'] = None
-                else:
-                    for out_edge in out_edges:
-                        out_edge['data'] = Data( outputs[out_edge['out_index']] )
-
+                self.__compute_block(node_b, skip_enforcement)
 
     ############################################################################
     #                               util
