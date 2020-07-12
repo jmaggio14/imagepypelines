@@ -39,7 +39,7 @@ class DashboardComm(object):
     clients = []
     """list of :obj:`TCPClient`: class level variable containing a list of all
     TCPclients that are connected"""
-    graphs_reps = {}
+    graphs_msg_cache = {}
     """cache of pipeline update messages, these are messages that the dashboard
     needs to interpret the pipeline status messages"""
 
@@ -58,7 +58,7 @@ class DashboardComm(object):
         # send the pipeline graph messages to new clients so they can interpret new
         # status and reset messages
         # (@Jai, will these work being send one after another like this????)
-        for rep in self.graphs_reps.values():
+        for rep in self.graphs_msg_cache.values():
             new_client.write(rep)
 
     # --------------------------------------------------------------------------
@@ -77,7 +77,7 @@ class DashboardComm(object):
     def write_graph(self, pipeline_id, graph_json):
         """send pipeline graph or task changes to the Dashboard"""
         # update internal variable tracking pipeline graph messages
-        self.graphs_reps[pipeline_id] = graph_json
+        self.graphs_msg_cache[pipeline_id] = graph_json
         # send messages to all servers
         self.write(graph_json)
 
