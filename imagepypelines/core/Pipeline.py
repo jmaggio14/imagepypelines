@@ -764,8 +764,8 @@ class Pipeline(object):
         This includes the graph structure and documentation for all blocks
         """
         msg = {}
-        msg['type'] = MSG_GRAPH
         # general variables
+        msg['type'] = MSG_GRAPH
         msg['name'] = self.name
         msg['id'] = self.id
         msg['uuid'] = self.uuid
@@ -810,7 +810,11 @@ class Pipeline(object):
     def __send_status_msg_to_dash(self, node_id):
         """builds and sends a status message to the dashboards"""
         msg = {}
+        # general variables
         msg['type'] = MSG_STATUS
+        msg['name'] = self.name
+        msg['id'] = self.id
+        msg['uuid'] = self.uuid
 
         # fetch pertinent metadata from the node
         node_info = self.graph.nodes[node_id].copy()
@@ -834,7 +838,11 @@ class Pipeline(object):
     def __send_reset_msg_to_dash(self):
         """builds and sends a reset message to the dashboards"""
         msg = {}
+        # general variables
         msg['type'] = MSG_RESET
+        msg['name'] = self.name
+        msg['id'] = self.id
+        msg['uuid'] = self.uuid
         self.dashcomm.write_reset( json.dumps(msg) )
 
     ############################################################################

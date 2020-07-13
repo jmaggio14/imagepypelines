@@ -5,20 +5,35 @@
 #
 # Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell
 #
-"""
-# this is an example use case:
-
-ip.connect_to_dash(host, port)
-# --> would modify a class variable in the DashboardComm
-
-ip.Pipeline(tasks={})
-# --> creates instance of DashboardComm
-# self.dashcomm.update(update_params)
-    --> for host,port in self.dashes:
-        send_update(update_params)
-"""
 from .util import TCPClient
 
+
+"""
+Graph message key structure
+    type : <'graph','status','reset'>
+    name : <user-defined name>
+    id   : <human-readable id>
+    uuid : <hex uuid>
+    args : <argument names in order>
+    block_docs : <dictionary of block summaries (docstrings)
+    nodes : <dict of node_ids & metadata>
+    edges : <dict of edge_ids & metadata>
+    node-link : <note-link format of graph connections>
+
+status message key structure
+    type : <'graph','status','reset'>
+    name : <user-defined name>
+    id   : <human-readable id>
+    uuid : <hex uuid>
+    nodes : <dict of updated node metadata>
+    edges : <dict of edge metadata>
+
+reset message key structure
+    type : <'graph','status','reset'>
+    name : <user-defined name>
+    id   : <human-readable id>
+    uuid : <hex uuid>
+"""
 
 
 def connect_to_dash(host, port):
