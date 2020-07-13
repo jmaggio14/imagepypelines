@@ -7,7 +7,6 @@
 #
 from .util import TCPClient
 
-
 """
 Graph message key structure
     type : <'graph','status','reset'>
@@ -35,11 +34,10 @@ reset message key structure
     uuid : <hex uuid>
 """
 
-
-def connect_to_dash(host, port):
+def connect_to_dash(name, host, port):
     """Connects every pipeline in this session to
     """
-    DashboardComm.connect(host, port)
+    DashboardComm.connect(name, host, port)
 
     # TODO: update the logging handler to send logging messages to the dashboard
 
@@ -51,7 +49,7 @@ def connect_to_dash(host, port):
 class DashboardComm(object):
     """Object to send messages from the pipelines to dashboard(s)
     """
-    clients = []
+    clients = {}
     """list of :obj:`TCPClient`: class level variable containing a list of all
     TCPclients that are connected"""
     graphs_msg_cache = {}
@@ -60,15 +58,19 @@ class DashboardComm(object):
 
     # --------------------------------------------------------------------------
     @classmethod
-    def connect(cls, host, port):
+    def connect(cls, name, host, port):
         """establishes a connection with the Dashboard Chatroom at the given
         host and port
 
         Args:
+            name(str): human readable name of
+
             host(str): ip address for the dashboard
+
+            port(int): port on host for the dashboard
         """
         new_client = TCPClient().connect(host, port)
-        cls.clients.append( new_client )
+        cls.clients[name] = new_client
 
         # send the pipeline graph messages to new clients so they can interpret new
         # status and reset messages
@@ -80,13 +82,31 @@ class DashboardComm(object):
     @classmethod
     def disconnect_all(cls):
         """disconnects from all dashboard servers"""
-        cls.clients = []
+        for cli in cls.clients.values():
+            cli.disconnect()
+
+        cls.clients.empty()
 
     # --------------------------------------------------------------------------
-    def write(self, msg):
-        """sends the given message to all connected dashboard servers"""
-        for cli in self.clients:
-            cli.write(msg)
+    def disconnect(cls, name):
+        """disconnects from an individual dashboard server"""
+        cls.clients[name].disconnect()
+        cls.clients.pop(name)
+
+    # --------------------------------------------------------------------------
+    def write(self, msg, names=None):
+        """sends the given message to all connected dashboard servers
+
+        Args:
+            msg(str): a string to send
+
+            names(tuple(str)): iterable of names specifying a whitelist
+        """
+        if names is None:
+            names = self.clients.keys()
+
+        for name in names:
+            self.clients[name].write(msg)
 
     # --------------------------------------------------------------------------
     def write_graph(self, pipeline_id, graph_msg):
