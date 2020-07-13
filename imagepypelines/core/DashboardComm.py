@@ -94,6 +94,12 @@ class DashboardComm(object):
         cls.clients.pop(name)
 
     # --------------------------------------------------------------------------
+    @property
+    def total(self):
+        """returns total number of connected dashboards"""
+        return len(self.clients)
+        
+    # --------------------------------------------------------------------------
     def write(self, msg, names=None):
         """sends the given message to all connected dashboard servers
 
