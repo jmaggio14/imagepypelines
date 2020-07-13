@@ -74,22 +74,22 @@ class DashboardComm(object):
             cli.write(msg)
 
     # --------------------------------------------------------------------------
-    def write_graph(self, pipeline_id, graph_json):
+    def write_graph(self, pipeline_id, graph_msg):
         """send pipeline graph or task changes to the Dashboard"""
         # update internal variable tracking pipeline graph messages
-        self.graphs_msg_cache[pipeline_id] = graph_json
+        self.graphs_msg_cache[pipeline_id] = graph_msg
         # send messages to all servers
-        self.write(graph_json)
+        self.write(graph_msg)
 
     # --------------------------------------------------------------------------
-    def write_status(self, status_json):
+    def write_status(self, status_msg):
         """send status changes to all Dashboards"""
-        self.write(status_json)
+        self.write(status_msg)
 
     # --------------------------------------------------------------------------
-    def write_reset(self, reset_json):
+    def write_reset(self, reset_msg):
         """send reset messages to all dashboard servers"""
-        self.write(reset_json)
+        self.write(reset_msg)
 
 
     # IN THE FUTURE

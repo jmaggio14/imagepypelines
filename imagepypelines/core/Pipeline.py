@@ -26,6 +26,24 @@ import itertools
 import dill
 import json
 
+STATUS_NOT_STARTED = "not started"
+"""status constant for nodes that haven't yet been started"""
+
+STATUS_PROCESSING  = "processing"
+"""status constant for nodes that are currently processing"""
+
+STATUS_COMPLETE    = "done"
+"""status constant for nodes that have completed their work"""
+
+MSG_GRAPH  = "graph"
+"""message type for graph messages"""
+
+MSG_STATUS = "status"
+"""message type for statu messages"""
+
+MSG_RESET  = "reset"
+"""message type for reset messages"""
+
 ILLEGAL_VAR_NAMES = ['fetch','skip_enforcement']
 """illegal or reserved names for variables in the graph"""
 
@@ -68,6 +86,7 @@ class Pipeline(object):
             'num_in' : number of datums coming into this node
             'n_batches' : number of batches for this node
             'pid' : process id for this node
+            'status': processing status. one of: ('not started', 'processing', 'done')
             <plus other attributes defined by the user in Block.get_default_node_attrs()>
 
         Pipeline edges are dictionaries containing the following:
@@ -75,7 +94,12 @@ class Pipeline(object):
             'out_index'       : output index from the source node,
             'in_index'        : input index for the target node,
             'name'            : name target block's argument at the in_index
+            'is_homogenus'    : whether or not this data is a homogenus container
+            'n_items'         : number of items of data in this edge
+            'datatype'        : the type of data contained, this is only
+                                guarenteed to be accurate is is_homogenus is True
             'data'            : data for this edge
+
 
 
 
@@ -274,6 +298,7 @@ class Pipeline(object):
                                     num_in=None,
                                     n_batches=None,
                                     pid=None,
+                                    status=STATUS_NOT_STARTED,
                                     **block.get_default_node_attrs(),
                                     )
 
@@ -311,6 +336,9 @@ class Pipeline(object):
                                         out_index = out_index,
                                         in_index = in_index,
                                         name = block_arg_name, # name of node_b's process argument at the index
+                                        is_homogenus="unknown",
+                                        n_items=0,
+                                        datatype=None,
                                         data = None, # none is a placeholder value. it will be populated
                                         )
 
@@ -352,6 +380,7 @@ class Pipeline(object):
                                     num_in=None,
                                     n_batches=None,
                                     pid=None,
+                                    status=STATUS_NOT_STARTED,
                                     **leaf.get_default_node_attrs()
                                     )
 
@@ -361,10 +390,14 @@ class Pipeline(object):
                 # no need to check if it exists, because we just created the Leaf
                 self.graph.add_edge(node,
                                     leaf_uuid,
+                                    key=edge_key,
                                     var_name=end_name, # name assigned in graph definition
                                     out_index=i,
                                     in_index=0,
                                     name=end_name, # name of node_b's process argument at the index
+                                    is_homogenus="unknown",
+                                    n_items=0,
+                                    datatype=None,
                                     data=None)
 
 
@@ -448,11 +481,8 @@ class Pipeline(object):
             msg.format(vars=noncomputable)
             self.logger.warning(msg)
 
-
-        # send along the new graph message to the Dashboards
-        # TODO: format and build the graph message ( derivation of get_vis() )
-        graph_msg = json.dumps({})
-        self.dashcomm.write_graph(self.id, graph_msg)
+        # send along the new graph in a message to the Dashboards
+        self.__send_graph_msg_to_dash()
 
 
     ############################################################################
@@ -470,6 +500,9 @@ class Pipeline(object):
         # setup fetches
         if fetch is None:
             fetch = self.vars.keys()
+
+        # clear any data already in the graph, and send a message to the dashboard(s)
+        self.reset()
 
         # --------------------------------------------------------------
         # STORING INPUTS - inside the input nodes
@@ -543,7 +576,8 @@ class Pipeline(object):
 
     ############################################################################
     def clear(self):
-        """resets all edges in the graph, clears the inputs (and updates the dashboards)"""
+        """clears all edges in the graph and unloads the input nodes. Does not
+        update the remote dashboard"""
         # unload all edge data
         for _,_,edge in self.graph.edges(data=True):
             edge['data'] = None
@@ -552,10 +586,12 @@ class Pipeline(object):
         for inpt in self._inputs.values():
             inpt.unload()
 
+    ############################################################################
+    def reset(self):
+        """resets all edges in the graph, resets the inputs (and updates the dashboards)"""
+        self.clear()
         # send a message to the dashboards saying the pipeline has been reset
-        # TODO: decide on and build the reset message
-        reset_msg = json.dumps({})
-        self.dashcomm.write_reset(reset_msg)
+        self.__send_reset_msg_to_dash()
 
     ############################################################################
     def draw(self, show=True, ax=None):
@@ -722,6 +758,86 @@ class Pipeline(object):
     ############################################################################
     #                               internal
     ############################################################################
+    def __send_graph_msg_to_dash(self):
+        """sends a full description of the graph to the dashboard
+
+        This includes the graph structure and documentation for all blocks
+        """
+        msg = {}
+        msg['type'] = MSG_GRAPH
+        # general variables
+        msg['name'] = self.name
+        msg['id'] = self.id
+        msg['uuid'] = self.uuid
+        msg['args'] = self.args
+
+        # commented out as redundant on 07/12/20 - JM
+        # # variables and the node id that creates them
+        # vars = {key : val['block_node_id'] for key,val in self.vars.items()}
+        # msg["vars"] = vars
+
+        # create a dictionary containing block summaries
+        msg['block_docs'] = {}
+        for block in self.blocks:
+            msg['block_docs'][block.id] = block._summary()
+
+        # copy the graph so we can modify it safely
+        graph_copy = self.graph.copy()
+
+        # populate the nodes metadata
+        msg['nodes'] = {}
+        for node_id,node_info in graph_copy.nodes(data=True):
+            # delete the block from this copy - we don't need it
+            del node_info['block']
+            msg['nodes'][node_id] = node_info
+
+        # populate the edge metadata
+        msg['edges'] = {}
+        for node_a,node_b,key,e_data in graph_copy.edges(keys=True, data=True):
+            # delete the data from edge - we don't need it
+            del e_data['data']
+            e_data['datatype'] = str(e_data['datatype'])
+            msg['edges']['|'.join((node_a,node_b,key))] = e_data
+
+
+        # jsonify the graph in node-link format. see:
+        # https://networkx.github.io/documentation/stable/reference/readwrite/json_graph.html
+        msg['node-link'] = json_graph.node_link_data(graph_copy)
+
+        self.dashcomm.write_graph(self.id, json.dumps(msg))
+
+    ############################################################################
+    def __send_status_msg_to_dash(self, node_id):
+        """builds and sends a status message to the dashboards"""
+        msg = {}
+        msg['type'] = MSG_STATUS
+
+        # fetch pertinent metadata from the node
+        node_info = self.graph.nodes[node_id].copy()
+        del node_info['block'] # delete the block from this copy
+        msg['nodes'] = {node_id : node_info}
+
+        # fetch metadata for the incoming edges
+        msg['edges'] = {}
+        for node_a,node_b,key,e_data in self.graph.in_edges(node_id, keys=True, data=True):
+            # delete the data object from this copy
+            e_data = e_data.copy()
+            del e_data['data']
+            e_data['datatype'] = str(e_data['datatype'])
+            # update the edges dict
+            msg['edges']['|'.join((node_a,node_b,key))] = e_data
+
+        # encode the message as json and send it
+        self.dashcomm.write_status( json.dumps(msg) )
+
+    ############################################################################
+    def __send_reset_msg_to_dash(self):
+        """builds and sends a reset message to the dashboards"""
+        msg = {}
+        msg['type'] = MSG_RESET
+        self.dashcomm.write_reset( json.dumps(msg) )
+
+    ############################################################################
     def __compute_block(self, node_id, skip_enforcement=False):
         """
 
@@ -730,6 +846,12 @@ class Pipeline(object):
             populated with data. Ideally it should not be used outside the
             __compute function
         """
+        self.graph.nodes[node_id]['status'] = STATUS_PROCESSING
+
+        # UPDATE THE DASHBOARD
+        # -----------------------------------
+        self.__send_status_msg_to_dash(node_id)
+
         # fetch the block for this node
         block = self.graph.nodes[node_id]['block']
 
@@ -767,15 +889,20 @@ class Pipeline(object):
                 out_edge['data'] = None
         else:
             for out_edge in out_edges:
-                out_edge['data'] = Data( outputs[out_edge['out_index']] )
+                data = Data( outputs[out_edge['out_index']] )
+                out_edge['data'] = data
+                out_edge['is_homogenus'] = data.is_homogenus_container()
+                out_edge['n_items'] = data.n_items
+                out_edge['datatype'] = data.datatype
 
-        # UPDATE THE DASHBOARD
-        # -----------------------------------
-        # TODO: decide on and build the status messages
-        update_msg = json.dumps({})
-        self.dashcomm.write_status(update_msg)
+        # update node status
+        self.graph.nodes[node_id]['status'] = STATUS_COMPLETE
 
 
+        # update the dashboard
+        self.__send_status_msg_to_dash(node_id)
+
+    ############################################################################
     def __compute(self, skip_enforcement=False):
         """executes the graph tasks. Relies on Input data being preloaded"""
         ## NOTE:
@@ -1088,101 +1215,6 @@ class Pipeline(object):
                                             )
 
         return dom_containers
-
-    ############################################################################
-    def get_vis(self):
-        """retreives a pipeline summary for use in visualization purpores
-
-
-        top level:
-            name
-            id
-            uuid
-            args
-            vars (list of variable names)
-            graph_structure:
-                nodes:
-                    'args'
-                    'outputs'
-                    'name'
-                    'color'
-                    'shape'
-                    'class_name'
-                    'validation_time
-                    'processing_time'
-                    'avg_time_per_datum
-                    'num_in'
-                    'n_batches'
-                    'pid'
-                    <plus other attributes defined by the user in Block.get_default_node_attrs()>
-
-                edges:
-                    'var_name'
-                    'out_index'
-                    'in_index'
-                    'name'
-
-            BLOCKS:
-                'name'
-                'id'
-                'uuid'
-                'args'
-                'types'
-                'shapes'
-                'skip_enforcement'
-                'batch_type'
-                'tags'
-                'class_name'
-
-                # method documentation
-                DOCS:
-                    class_docstring
-                    __init___docstring
-                    process_docstring
-
-
-
-        """
-        vis = {}
-
-        # ----------------------------------------------------------------------
-        #                       instance variables
-        # ----------------------------------------------------------------------
-
-        # general variables
-        vis['name'] = self.name
-        vis['id'] = self.id
-        vis['uuid'] = self.uuid
-        vis['args'] = self.args
-
-        # variables and the node id that creates them
-        VARS = {key : val['block_node_id'] for key,val in self.vars.items()}
-        vis["VARS"] = VARS
-
-        # ----------------------------------------------------------------------
-        #                       visualization graph
-        # ----------------------------------------------------------------------
-        # copy the graph
-        graph_copy = self.graph.copy()
-
-        # create a dictionary containing block summaries
-        vis['BLOCKS'] = {}
-        for node_id,attrs in graph_copy.nodes(data=True):
-            # add block summaries to the BLOCKS dict, with the node
-            vis['BLOCKS'][node_id] = attrs['block']._summary()
-            # delete the block from the copy bc it can't be jsonified
-            del attrs['block']
-
-        # delete data in the edge dict
-        for _,_,edge_attrs in self.graph.edges(data=True):
-            del edge_attrs['data']
-
-        # jsonify the graph in node-link format. see:
-        # https://networkx.github.io/documentation/stable/reference/readwrite/json_graph.html
-
-        vis['JSON_GRAPH'] = json_graph.node_link_data(graph_copy)
-
-        return vis
 
     ############################################################################
     def assign_input_index(self, var, index):

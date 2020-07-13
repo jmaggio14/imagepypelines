@@ -5,6 +5,8 @@
 #
 # Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell
 #
+from .arg_checking import HOMOGENUS_CONTAINERS
+
 import numpy as np
 
 CONTAINER_REQUIRES = ['__getitem__', '__iter__', '__len__']
@@ -68,6 +70,11 @@ class Data(object):
         return self.data
 
     ############################################################################
+    def is_homogenus_container(self):
+        """returns whether or not this container is homogenus"""
+        is_homogenus = (type(self.data) in HOMOGENUS_CONTAINERS)
+
+    ############################################################################
     def __len__(self):
         return len(self.data)
 
@@ -78,3 +85,8 @@ class Data(object):
     def n_items(self):
         """int: number of items loaded into the pipeline"""
         return len(self)
+
+    ############################################################################
+    @property
+    def datatype(self):
+        return type(self.data[0])
