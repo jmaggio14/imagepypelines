@@ -96,6 +96,8 @@ class TCPClient(BaseTCP):
         self.__s.connect( (host,port) )  # <-- bind socket server to host & port
         self.__s.setblocking(0)
 
+        return self
+
 
 ################################################################################
 class TCPServer(BaseTCP):
@@ -124,50 +126,6 @@ class TCPServer(BaseTCP):
         self.__s.listen(MAX_UNACCEPTED_CONNECTIONS)  # <-- max of 10 unaccepted connections before not accepting anymore
 
         return self
-
-
-# ------------------------------------------------------------------------------
-def sockspeak(msg):
-    if type(msg) is str:
-        msg = msg.encode()
-    return msg
-
-# ------------------------------------------------------------------------------
-def normalspeak(msg):
-    if type(msg) is bytes:
-        msg = msg.decode()
-    return msg.rstrip()
-
-# ------------------------------------------------------------------------------
-def create_non_blocking_udp_client(host, port):
-    c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) #<-- UDP SOCKET
-    c.setblocking(0)
-    c.connect((host,port))
-    return c
-
-# ------------------------------------------------------------------------------
-def create_non_blocking_udp_server(host, port):
-    c = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # <-- UDP SOCKET
-    c.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # <-- Reuse addr
-    c.bind((host,port))  # <-- bind socket server to host & port
-    c.setblocking(0)
-    return c
-
-# ------------------------------------------------------------------------------
-def create_non_blocking_tcp_client(host, port):
-    c = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #<-- UDP SOCKET
-    c.connect((host,port))
-    c.setblocking(0)
-    return c
-
-# ------------------------------------------------------------------------------
-def create_non_blocking_tcp_server(host, port):
-    c = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # <-- UDP SOCKET
-    c.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # <-- Reuse addr
-    c.setblocking(0)
-    c.bind((host,port))  # <-- bind socket server to host & port
-    c.listen(10)  # <-- max of 10 unaccepted connections before not accepting anymore
-    return c
 
 ################################################################################
 #                                 Thread Helpers
