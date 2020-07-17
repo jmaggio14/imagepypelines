@@ -26,11 +26,11 @@ MAX_UNACCEPTED_CONNECTIONS = 10
 ################################################################################
 class BaseTCP:
     def __init__(self):
-        self.__s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #<-- TCP SOCKET
+        self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #<-- TCP SOCKET
 
     # --------------------------------------------------------------------------
     def disconnect(self):
-        self.__s.close()
+        self._s.close()
 
     # --------------------------------------------------------------------------
     @staticmethod
@@ -46,22 +46,22 @@ class BaseTCP:
     def write(self, msg):
         msg_b = msg.encode()
         length = pack('>Q', len(msg_b))
-        self.__s.sendall(length) # send length of the message as 64bit integer
-        self.__s.sendall(msg_b) # send the message itself
+        self._s.sendall(length) # send length of the message as 64bit integer
+        self._s.sendall(msg_b) # send the message itself
 
     # --------------------------------------------------------------------------
     def read(self):
         """
         """
-        line = self.__s.recv(8) # 8 bytes for 64bit integer
+        line = self._s.recv(8) # 8 bytes for 64bit integer
         length, _ = unpack('>Q', line)
-        return recvall(self.__s, length)
+        return recvall(self._s, length)
 
     # --------------------------------------------------------------------------
     @property
     def sock(self):
         """:obj:`socket.Socket`: socket for this TCP connection"""
-        return self.__s
+        return self._s
 
     # --------------------------------------------------------------------------
     @property
@@ -69,7 +69,7 @@ class BaseTCP:
         """str: ip address for this socket, or None if not connected"""
         # if the socket isn't connected, just return None
         try:
-            return self.__s.getsockname()[0]
+            return self._s.getsockname()[0]
         except OSError:
             return None
 
@@ -79,7 +79,7 @@ class BaseTCP:
         """int: port for this socket, or None if not connected"""
         # if the socket isn't connected, just return None
         try:
-            return self.__s.getsockname()[1]
+            return self._s.getsockname()[1]
         except OSError:
             return None
 
@@ -93,8 +93,8 @@ class TCPClient(BaseTCP):
             host(str): ip address to connect to
             port(int): port to connect to
         """
-        self.__s.connect( (host,port) )  # <-- bind socket server to host & port
-        self.__s.setblocking(0)
+        self._s.connect( (host,port) )  # <-- bind socket server to host & port
+        self._s.setblocking(0)
 
         return self
 
@@ -110,7 +110,7 @@ class TCPServer(BaseTCP):
     """
     def __init__(self):
         super().__init__()
-        self.__s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self._s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     # --------------------------------------------------------------------------
     def connect(self, host, port=0):
@@ -121,9 +121,9 @@ class TCPServer(BaseTCP):
             port(int): port to host on, leave as 0 for the OS to choose
                 a port for you
         """
-        self.__s.bind( (host,port) )  # <-- bind socket server to host & port
-        self.__s.setblocking(0)
-        self.__s.listen(MAX_UNACCEPTED_CONNECTIONS)  # <-- max of 10 unaccepted connections before not accepting anymore
+        self._s.bind( (host,port) )  # <-- bind socket server to host & port
+        self._s.setblocking(0)
+        self._s.listen(MAX_UNACCEPTED_CONNECTIONS)  # <-- max of 10 unaccepted connections before not accepting anymore
 
         return self
 

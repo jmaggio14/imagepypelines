@@ -98,7 +98,7 @@ class DashboardComm(object):
     def total(self):
         """returns total number of connected dashboards"""
         return len(self.clients)
-        
+
     # --------------------------------------------------------------------------
     def write(self, msg, names=None):
         """sends the given message to all connected dashboard servers
@@ -117,6 +117,10 @@ class DashboardComm(object):
     # --------------------------------------------------------------------------
     def write_graph(self, pipeline_id, graph_msg):
         """send pipeline graph or task changes to the Dashboard"""
+        # # DEBUG ONLY
+        # with open("graph.json",'w') as f:
+        #     f.write(graph_msg)
+        # # END DEBUG
         # update internal variable tracking pipeline graph messages
         self.graphs_msg_cache[pipeline_id] = graph_msg
         # send messages to all servers
@@ -125,12 +129,22 @@ class DashboardComm(object):
     # --------------------------------------------------------------------------
     def write_status(self, status_msg):
         """send status changes to all Dashboards"""
+        # # DEBUG ONLY
+        # with open("status.json",'w') as f:
+        #     f.write(status_msg)
+        # # END DEBUG
         self.write(status_msg)
 
     # --------------------------------------------------------------------------
     def write_reset(self, reset_msg):
         """send reset messages to all dashboard servers"""
+        # # DEBUG ONLY
+        # with open("reset.json",'w') as f:
+        #     f.write(reset_msg)
+        # # END DEBUG
         self.write(reset_msg)
+
+
 
 
     # IN THE FUTURE
