@@ -6,6 +6,8 @@
 # Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell
 #
 from .util import TCPClient
+from ..Logger import get_master_logger
+from .Exceptions import DashboardWarning
 
 """
 Graph message key structure
@@ -39,6 +41,9 @@ def connect_to_dash(name, host, port):
     """
     DashboardComm.connect(name, host, port)
 
+def n_dashboards():
+    return len(DashboardComm.clients)
+
     # TODO: update the logging handler to send logging messages to the dashboard
 
 ################################################################################
@@ -69,14 +74,24 @@ class DashboardComm(object):
 
             port(int): port on host for the dashboard
         """
-        new_client = TCPClient().connect(host, port)
-        cls.clients[name] = new_client
+        raise_warning = False
+        try:
+            new_client = TCPClient().connect(host, port)
+            cls.clients[name] = new_client
 
-        # send the pipeline graph messages to new clients so they can interpret new
-        # status and reset messages
-        # (@Jai, will these work being send one after another like this????)
-        for rep in self.graphs_msg_cache.values():
-            new_client.write(rep)
+            # send the pipeline graph messages to new clients so they can interpret new
+            # status and reset messages
+            # (@Jai, will these work being send one after another like this????)
+            for rep in self.graphs_msg_cache.values():
+                new_client.write(rep)
+
+        except ConnectionRefusedError:
+            msg = f"unable to connect to Dashboard at {host}:{port}"
+            get_master_logger().error(msg)
+            raise_warning = True
+
+        # if raise_warning:
+        #     raise DashboardWarning(msg)
 
     # --------------------------------------------------------------------------
     @classmethod
@@ -88,6 +103,7 @@ class DashboardComm(object):
         cls.clients.empty()
 
     # --------------------------------------------------------------------------
+    @classmethod
     def disconnect(cls, name):
         """disconnects from an individual dashboard server"""
         cls.clients[name].disconnect()

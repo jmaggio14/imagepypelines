@@ -15,3 +15,8 @@ class PipelineError(RuntimeError):
 class BlockError(RuntimeError):
     """Error raised within a Block"""
     pass
+
+
+class DashboardWarning(RuntimeWarning):
+    """Warning for connection failure to dashboard"""
+    pass

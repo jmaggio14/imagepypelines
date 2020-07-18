@@ -17,6 +17,7 @@ from .Block import Block
 # DashboardComm.py
 from .DashboardComm import DashboardComm
 from .DashboardComm import connect_to_dash
+from .DashboardComm import n_dashboards
 
 # Data.py
 from .Data import Data
@@ -30,6 +31,7 @@ from .block_subclasses import PipelineBlock
 # Exceptions.py
 from .Exceptions import PipelineError
 from .Exceptions import BlockError
+from .Exceptions import DashboardWarning
 
 # imports.py
 # from .imports import import_tensorflow
