@@ -158,7 +158,8 @@ def get_logger(name, log_level=logging.INFO):
 
 def set_log_level(log_level):
     """sets the global master logger level"""
+    global MASTER_LOGGER
     log_level = LOG_LEVELS.get(log_level, log_level)
-    make_master(log_level)
+    MASTER_LOGGER.setLevel(log_level)
 
 # END
