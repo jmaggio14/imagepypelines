@@ -51,7 +51,7 @@ def load_plugins():
         ip_module = sys.modules[__name__]
         plugin_module = plugins[plugin_name]
 
-        MASTER_LOGGER.info(
+        MASTER_LOGGER.debug(
             "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
             .format(plugin_name))
 
