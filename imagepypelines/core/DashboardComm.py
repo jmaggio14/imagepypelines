@@ -82,7 +82,7 @@ class DashboardComm(object):
             # send the pipeline graph messages to new clients so they can interpret new
             # status and reset messages
             # (@Jai, will these work being send one after another like this????)
-            for rep in self.graphs_msg_cache.values():
+            for rep in cls.graphs_msg_cache.values():
                 new_client.write(rep)
 
         except ConnectionRefusedError:

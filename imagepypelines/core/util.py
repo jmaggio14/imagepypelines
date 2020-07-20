@@ -24,7 +24,7 @@ MAX_UNACCEPTED_CONNECTIONS = 10
 ################################################################################
 #                                 Socket Helpers
 ################################################################################
-class BaseTCP:
+class BaseTCP(object):
     def __init__(self):
         self._s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #<-- TCP SOCKET
 
@@ -54,8 +54,8 @@ class BaseTCP:
         """
         """
         line = self._s.recv(8) # 8 bytes for 64bit integer
-        length, _ = unpack('>Q', line)
-        return recvall(self._s, length)
+        length, _ = unpack('>Q', line)[0]
+        return self.recvall(self._s, length)
 
     # --------------------------------------------------------------------------
     @property
@@ -121,6 +121,7 @@ class TCPServer(BaseTCP):
             port(int): port to host on, leave as 0 for the OS to choose
                 a port for you
         """
+        print(host, port)
         self._s.bind( (host,port) )  # <-- bind socket server to host & port
         self._s.setblocking(0)
         self._s.listen(MAX_UNACCEPTED_CONNECTIONS)  # <-- max of 10 unaccepted connections before not accepting anymore
