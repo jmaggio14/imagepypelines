@@ -54,7 +54,9 @@ class BaseTCP(object):
         """
         """
         line = self._s.recv(8) # 8 bytes for 64bit integer
-        length, _ = unpack('>Q', line)[0]
+        if line == b'':
+            return None
+        length = unpack('>Q', line)[0]
         return self.recvall(self._s, length)
 
     # --------------------------------------------------------------------------
@@ -93,7 +95,7 @@ class TCPClient(BaseTCP):
             host(str): ip address to connect to
             port(int): port to connect to
         """
-        self._s.connect( (host,port) )  # <-- bind socket server to host & port
+        self._s.connect( (host,port) )  # <-- connect socket server to host & port
         self._s.setblocking(0)
 
         return self
