@@ -18,7 +18,7 @@ import sys
 import sphinx_bootstrap_theme
 
 sys.path.insert(0, os.path.abspath('../..'))
-sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath('.')) # add current dir as a module so we grab the sytle class
 
 # load in version variables into 'version_info' dict
 CURRENT_DIR = os.path.dirname(__file__)
