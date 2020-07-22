@@ -16,7 +16,9 @@ import os
 import sys
 
 import sphinx_bootstrap_theme
+
 sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('.'))
 
 # load in version variables into 'version_info' dict
 CURRENT_DIR = os.path.dirname(__file__)
@@ -26,9 +28,16 @@ with open(VERSION_FILE,'r') as f:
 version_info = {}
 exec(raw,{},version_info)
 
+
 # fetch the git branch sha for a permalink
 import subprocess
 
+
+# reference the pygments style defined in style.py
+pygments_style = "style.ImagePypelinesStyle"
+
+# see Sphinx: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-pygments_style
+################################################################################
 # # JM: GET THE GIT SHA FOR PERMALINKS (this should be replaced down the line with tagged releases)
 # # for travis builds
 # if 'TRAVIS' in os.environ:
@@ -182,7 +191,7 @@ sphinx_gallery_conf = {
 
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'abap'
+# pygments_style = 'abap'
 
 
 # -- Options for HTML output -------------------------------------------------
