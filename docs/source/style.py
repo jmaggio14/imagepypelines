@@ -8,12 +8,12 @@ from pygments.token import Keyword, Name, Comment, String, Error, \
 class ImagePypelinesStyle(Style):
     default_style = ""
     styles = {
-            Comment: 'italic #080808',
-            Keyword: 'bold #000005',
-            Name: '#0000ff',
-            Name.Function: '#00ff00',
-            Name.Class: 'bold #00ff00',
-            String: '#E95420 bg: '
+            Comment: 'italic #FF5D00',
+            Keyword: 'bold #AED9E8',
+            Name: '#FF4D00',
+            Name.Function: '#FF5D00',
+            Name.Class: 'bold #191C3A',
+            String: '#AED9E8 bg: '
             }
 
 # see Sphinx: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-pygments_style
