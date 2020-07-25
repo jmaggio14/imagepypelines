@@ -19,6 +19,10 @@ python:
 services:
   - xvfb
 
+env:
+    # set matplotlibrc with changes to set the nongraphical backend
+    - MATPLOTLIBRC="$TRAVIS_BUILD_DIR"/imagepypelines/tests/matplotlibrc
+
 addons:
   apt:
     packages:
