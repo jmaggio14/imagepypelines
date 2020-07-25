@@ -8,13 +8,13 @@ from pygments.token import Keyword, Name, Comment, String, Error, \
 class ImagePypelinesStyle(Style):
     default_style = ""
     styles = {
-            Comment: 'italic #FF5D00',
+            Comment: 'italic #BF0000',
             Keyword: 'bold #BF0000',
             Name: '#FF4D00',
             Name.Function: '#380915',
             Name.Class: 'bold #191C3A',
-            String: '#AED9E8',
-            Number: '#AED9E8',
+            String: '#7BABE0',
+            Number: '#7BABE0',
             Operator: '#BF0000',
             Generic: '#FF5D00 bg: #EBDCC1',
             Error: '#380915 bg: #191C3A'
