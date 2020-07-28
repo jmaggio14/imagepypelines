@@ -35,12 +35,16 @@ LOADED_PLUGINS = OrderedDict()
 which they were loaded"""
 
 
-def add_plugin(plugin_name, plugin_module):
+def add_plugin(plugin_name, plugin_module, add_to_namespace=True):
     """adds the given plugin to ImagePypelines
 
     Args:
         plugin_name(str): the name of the desired plugin namespace
         plugin_module(module): the valid module object for the plugin
+        add_to_namespace(bool): whether or not to add the plugin to the
+            ImagePypelines namespace so it's available as `ip.plugin_name`.
+            If False, then you will only be access your plugin namespace using
+            `ip.get_plugin_by_name`. Defaults to True.
 
     Returns:
         None
@@ -80,7 +84,7 @@ def load_plugins():
 
     for plugin_name in sorted( plugins.keys() ):
         plugin_module = plugins[plugin_name]
-        add_plugin(plugin_name, plugin_module)
+        add_plugin(plugin_name, plugin_module, True)
 
 # load all of our plugins
 load_plugins()

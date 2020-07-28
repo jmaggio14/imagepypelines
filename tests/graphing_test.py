@@ -440,7 +440,9 @@ def test_get_plugin_by_name():
     from types import SimpleNamespace
 
     test = SimpleNamespace()
-    ip.add_plugin('test', test)
+    ip.add_plugin('test', test, False)
+
+    assert not hasattr(ip, 'test')
 
     fetched = ip.get_plugin_by_name('test')
 
