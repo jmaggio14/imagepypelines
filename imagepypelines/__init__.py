@@ -55,8 +55,9 @@ def add_plugin(plugin_name, plugin_module, add_to_namespace=True):
         "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
         .format(plugin_name))
 
-    # add the plugin to the current namespace
-    setattr(ip_module, plugin_name, plugin_module)
+    if add_to_namespace:
+        # add the plugin to the current namespace
+        setattr(ip_module, plugin_name, plugin_module)
 
     # update the default shape functions if the plugin provides new ones
     SHAPE_FUNCS.update( getattr(plugin_module, 'SHAPE_FUNCS', {}) )
