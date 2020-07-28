@@ -435,6 +435,17 @@ def test_bad_plugin():
     except RuntimeError:
         pass
 
+def test_get_plugin_by_name():
+    import imagepypelines as ip
+    from types import SimpleNamespace
+
+    test = SimpleNamespace()
+    ip.add_plugin('test', test)
+
+    fetched = ip.get_plugin_by_name('test')
+
+    assert test == fetched
+
 
 ################################################################################
 def test_Logger():

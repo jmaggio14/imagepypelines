@@ -35,10 +35,41 @@ LOADED_PLUGINS = OrderedDict()
 which they were loaded"""
 
 
+def add_plugin(plugin_name, plugin_module):
+    """adds the given plugin to ImagePypelines
+
+    Args:
+        plugin_name(str): the name of the desired plugin namespace
+        plugin_module(module): the valid module object for the plugin
+
+    Returns:
+        None
+    """
+    import sys
+    ip_module = sys.modules[__name__]
+    MASTER_LOGGER.debug(
+        "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
+        .format(plugin_name))
+
+    # add the plugin to the current namespace
+    setattr(ip_module, plugin_name, plugin_module)
+
+    # update the default shape functions if the plugin provides new ones
+    SHAPE_FUNCS.update( getattr(plugin_module, 'SHAPE_FUNCS', {}) )
+
+    # update the default homogenus containers if the plugin provides new ones
+    HOMOGENUS_CONTAINERS.extend( getattr(plugin_module, 'HOMOGENUS_CONTAINERS', []) )
+
+    # add the plugin name to a global list for debugging
+    LOADED_PLUGINS[plugin_name] = plugin_module
+
 # define a function to load all the plugins so it's easier to keep the namespace
 # clean
 def load_plugins():
     """Load all installed plugins to the imagepypelines namespace"""
+    # import these again in case this function is called multiple times and it's
+    # deleted from the global namespace
+    import pkg_resources
     # load in all installed python packages with our plugin entry_point
     required_objects = []
     plugins = {
@@ -48,24 +79,8 @@ def load_plugins():
                 }
 
     for plugin_name in sorted( plugins.keys() ):
-        ip_module = sys.modules[__name__]
         plugin_module = plugins[plugin_name]
-
-        MASTER_LOGGER.debug(
-            "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
-            .format(plugin_name))
-
-        # add the plugin to the current namespace
-        setattr(ip_module, plugin_name, plugin_module)
-
-        # update the default shape functions if the plugin provides new ones
-        SHAPE_FUNCS.update( getattr(plugin_module, 'SHAPE_FUNCS', {}) )
-
-        # update the default homogenus containers if the plugin provides new ones
-        HOMOGENUS_CONTAINERS.extend( getattr(plugin_module, 'HOMOGENUS_CONTAINERS', []) )
-
-        # add the plugin name to a global list for debugging
-        LOADED_PLUGINS[plugin_name] = plugin_module
+        add_plugin(plugin_name, plugin_module)
 
 # load all of our plugins
 load_plugins()
@@ -79,6 +94,13 @@ def require(plugin_name):
 
     if not plugin_name in LOADED_PLUGINS.keys():
         raise RuntimeError('unable to find required plugin "%s"' % plugin_name)
+
+
+def get_plugin_by_name(plugin_name):
+    """fetches the plugin module using its name"""
+    require(plugin_name)
+    return LOADED_PLUGINS[plugin_name]
+
 
 # ---------- delete namespace pollutants ----------
 del pkg_resources, os, uuid4, time, OrderedDict, sys
