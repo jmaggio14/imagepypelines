@@ -160,6 +160,24 @@ class DashboardComm(object):
         # # END DEBUG
         self.write(reset_msg)
 
+    # --------------------------------------------------------------------------
+    def write_error(self, error_msg):
+        """send error messages to all dashboard servers"""
+        # # DEBUG ONLY
+        # with open("error.json",'w') as f:
+        #     f.write(error_msg)
+        # # END DEBUG
+        self.write(error_msg)
+
+    # --------------------------------------------------------------------------
+    def write_delete(self, delete_msg):
+        """send delete messages to all dashboard servers"""
+        # # DEBUG ONLY
+        # with open("delete.json",'w') as f:
+        #     f.write(delete_msg)
+        # # END DEBUG
+        self.write(delete_msg)
+
 
 
 

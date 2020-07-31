@@ -39,10 +39,18 @@ MSG_GRAPH  = "graph"
 """message type for graph messages"""
 
 MSG_STATUS = "status"
-"""message type for statu messages"""
+"""message type for status messages"""
 
 MSG_RESET  = "reset"
 """message type for reset messages"""
+
+MSG_ERROR  = "block_error"
+"""message type for error messages"""
+
+MSG_DELETE  = "delete"
+"""message type for delete messages"""
+
+PIPELINE_SOURCE_TYPE = "pipeline"
 
 ILLEGAL_VAR_NAMES = ['fetch','skip_enforcement']
 """illegal or reserved names for variables in the graph"""
@@ -763,87 +771,123 @@ class Pipeline(object):
 
         This includes the graph structure and documentation for all blocks
         """
-        msg = {}
-        # general variables
-        msg['type'] = MSG_GRAPH
-        msg['name'] = self.name
-        msg['id'] = self.id
-        msg['uuid'] = self.uuid
-        msg['args'] = self.args
+        payload = {}
+        payload['args'] = self.args
 
         # commented out as redundant on 07/12/20 - JM
         # # variables and the node id that creates them
         # vars = {key : val['block_node_id'] for key,val in self.vars.items()}
-        # msg["vars"] = vars
+        # payload["vars"] = vars
 
         # create a dictionary containing block summaries
-        msg['block_docs'] = {}
+        payload['block_docs'] = {}
         for block in self.blocks:
-            msg['block_docs'][block.id] = block._summary()
+            payload['block_docs'][block.id] = block._summary()
 
         # copy the graph so we can modify it safely
         graph_copy = self.graph.copy()
 
         # populate the nodes metadata
-        msg['nodes'] = {}
+        payload['nodes'] = {}
         for node_id,node_info in graph_copy.nodes(data=True):
             # delete the block from this copy - we don't need it
             del node_info['block']
-            msg['nodes'][node_id] = node_info
+            payload['nodes'][node_id] = node_info
 
         # populate the edge metadata
-        msg['edges'] = {}
+        payload['edges'] = {}
         for node_a,node_b,key,e_data in graph_copy.edges(keys=True, data=True):
             # delete the data from edge - we don't need it
             del e_data['data']
             e_data['datatype'] = str(e_data['datatype'])
-            msg['edges']['|'.join((node_a,node_b,key))] = e_data
+            payload['edges']['|'.join((node_a,node_b,key))] = e_data
 
 
         # jsonify the graph in node-link format. see:
         # https://networkx.github.io/documentation/stable/reference/readwrite/json_graph.html
-        msg['node-link'] = json_graph.node_link_data(graph_copy)
-
+        payload['node-link'] = json_graph.node_link_data(graph_copy)
+        msg = {'type' : MSG_GRAPH,
+                'name' : self.name,
+                'id' : self.id,
+                'uuid' : self.uuid,
+                'source_type' : PIPELINE_SOURCE_TYPE,
+                'payload' : payload,
+                }
         self.dashcomm.write_graph(self.id, json.dumps(msg))
 
     ############################################################################
     def __send_status_msg_to_dash(self, node_id):
         """builds and sends a status message to the dashboards"""
-        msg = {}
-        # general variables
-        msg['type'] = MSG_STATUS
-        msg['name'] = self.name
-        msg['id'] = self.id
-        msg['uuid'] = self.uuid
-
+        payload = {}
         # fetch pertinent metadata from the node
         node_info = self.graph.nodes[node_id].copy()
         del node_info['block'] # delete the block from this copy
-        msg['nodes'] = {node_id : node_info}
+        payload['nodes'] = {node_id : node_info}
 
         # fetch metadata for the incoming edges
-        msg['edges'] = {}
+        payload['edges'] = {}
         for node_a,node_b,key,e_data in self.graph.in_edges(node_id, keys=True, data=True):
             # delete the data object from this copy
             e_data = e_data.copy()
             del e_data['data']
             e_data['datatype'] = str(e_data['datatype'])
             # update the edges dict
-            msg['edges']['|'.join((node_a,node_b,key))] = e_data
+            payload['edges']['|'.join((node_a,node_b,key))] = e_data
 
         # encode the message as json and send it
-        self.dashcomm.write_status( json.dumps(msg) )
+        msg = {'type' : MSG_GRAPH,
+                'name' : self.name,
+                'id' : self.id,
+                'uuid' : self.uuid,
+                'source_type' : PIPELINE_SOURCE_TYPE,
+                'payload' : payload,
+                }
+        self.dashcomm.write_status( json.dumps(payload) )
 
     ############################################################################
     def __send_reset_msg_to_dash(self):
         """builds and sends a reset message to the dashboards"""
-        msg = {}
-        # general variables
-        msg['type'] = MSG_RESET
-        msg['name'] = self.name
-        msg['id'] = self.id
-        msg['uuid'] = self.uuid
+        msg = {'type' : MSG_RESET,
+                'name' : self.name,
+                'id' : self.id,
+                'uuid' : self.uuid,
+                'source_type' : PIPELINE_SOURCE_TYPE,
+                'payload' : {},
+                }
         self.dashcomm.write_reset( json.dumps(msg) )
+
+    ############################################################################
+    def __send_block_error_msg_to_dash(self, node_id, error):
+        """builds and sends an error message to the dashboards"""
+        block = self.graph.nodes[node_id]['block']
+
+        msg = {'type' : MSG_ERROR,
+                'name' : self.name,
+                'id' : self.id,
+                'uuid' : self.uuid,
+                'source_type' : PIPELINE_SOURCE_TYPE,
+                'payload' : {
+                            'node_id' : node_id,
+                            'block_name' : block.name,
+                            'block_id'   : block.id,
+                            'block_uuid' : block.uuid,
+                            'error_type' : str(type(error)),
+                            'error_msg'  : str(error),
+                            },
+                }
+        self.dashcomm.write_error( json.dumps(msg) )
+
+    ############################################################################
+    def __send_delete_msg_to_dash(self):
+        """builds and sends a delete message to the dashboards"""
+        msg = {'type' : MSG_DELETE,
+                'name' : self.name,
+                'id' : self.id,
+                'uuid' : self.uuid,
+                'source_type' : PIPELINE_SOURCE_TYPE,
+                'payload' : {},
+                }
+        self.dashcomm.write_delete( json.dumps(msg) )
 
     ############################################################################
     def __compute_block(self, node_id, skip_enforcement=False):
@@ -854,61 +898,66 @@ class Pipeline(object):
             populated with data. Ideally it should not be used outside the
             __compute function
         """
-        self.graph.nodes[node_id]['status'] = STATUS_PROCESSING
+        try:
+            self.graph.nodes[node_id]['status'] = STATUS_PROCESSING
 
-        # UPDATE THE DASHBOARD
-        # -----------------------------------
-        self.__send_status_msg_to_dash(node_id)
+            # UPDATE THE DASHBOARD
+            # -----------------------------------
+            self.__send_status_msg_to_dash(node_id)
 
-        # fetch the block for this node
-        block = self.graph.nodes[node_id]['block']
+            # fetch the block for this node
+            block = self.graph.nodes[node_id]['block']
 
-        # ORGANIZE INPUT DATA FOR COMPUTATION
-        # -----------------------------------
-        # fetch input data for this node
-        in_edges = [e[2] for e in self.graph.in_edges(node_id, data=True)]
-        arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
-        args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
+            # ORGANIZE INPUT DATA FOR COMPUTATION
+            # -----------------------------------
+            # fetch input data for this node
+            in_edges = [e[2] for e in self.graph.in_edges(node_id, data=True)]
+            arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
+            args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
-        # assign the task outputs to their appropriate edge
-        analytics = {}
+            # assign the task outputs to their appropriate edge
+            analytics = {}
 
-        # COMPUTE DATA IN THE BLOCK
-        # -----------------------------------
-        # (args will be empty for root blocks)
-        outputs = block._pipeline_process(*args,
-                                                logger=self.logger,
-                                                force_skip=skip_enforcement,
-                                                analytics=analytics)
+            # COMPUTE DATA IN THE BLOCK
+            # -----------------------------------
+            # (args will be empty for root blocks)
+            outputs = block._pipeline_process(*args,
+                                                    logger=self.logger,
+                                                    force_skip=skip_enforcement,
+                                                    analytics=analytics)
 
-        # POPULATE OUTPUT EDGES FOR THIS NODE
-        # -----------------------------------
-        # update the graph with analytics for this block
-        self.graph.nodes[node_id].update(analytics)
+            # POPULATE OUTPUT EDGES FOR THIS NODE
+            # -----------------------------------
+            # update the graph with analytics for this block
+            self.graph.nodes[node_id].update(analytics)
 
-        # populate upstream edges with the data we need
-        # get the output edges
-        out_edges = [e[2] for e in self.graph.out_edges(node_id, data=True)]
-        # NEED ERROR CHECKING HERE
-        # (psuedo) if n_out == n_expected_out
-        if block.void:
-            # there's no output for this block, so we write None to the edges
-            for out_edge in out_edges:
-                out_edge['data'] = None
-        else:
-            for out_edge in out_edges:
-                data = Data( outputs[out_edge['out_index']] )
-                out_edge['data'] = data
-                out_edge['is_homogenus'] = data.is_homogenus_container()
-                out_edge['n_items'] = data.n_items
-                out_edge['datatype'] = data.datatype
+            # populate upstream edges with the data we need
+            # get the output edges
+            out_edges = [e[2] for e in self.graph.out_edges(node_id, data=True)]
+            # NEED ERROR CHECKING HERE
+            # (psuedo) if n_out == n_expected_out
+            if block.void:
+                # there's no output for this block, so we write None to the edges
+                for out_edge in out_edges:
+                    out_edge['data'] = None
+            else:
+                for out_edge in out_edges:
+                    data = Data( outputs[out_edge['out_index']] )
+                    out_edge['data'] = data
+                    out_edge['is_homogenus'] = data.is_homogenus_container()
+                    out_edge['n_items'] = data.n_items
+                    out_edge['datatype'] = data.datatype
 
-        # update node status
-        self.graph.nodes[node_id]['status'] = STATUS_COMPLETE
+            # update node status
+            self.graph.nodes[node_id]['status'] = STATUS_COMPLETE
 
 
-        # update the dashboard
-        self.__send_status_msg_to_dash(node_id)
+            # update the dashboard
+            self.__send_status_msg_to_dash(node_id)
+
+        except Exception as error:
+            self.__send_block_error_msg_to_dash(node_id, error)
+            raise
 
     ############################################################################
     def __compute(self, skip_enforcement=False):
@@ -1272,7 +1321,7 @@ class Pipeline(object):
 
 
     ############################################################################
-    #                               special
+    #                               magic
     ############################################################################
     # COPYING & PICKLING
     def __getstate__(self):
@@ -1286,6 +1335,11 @@ class Pipeline(object):
         # updates the logger for the new state
         self.logger = get_logger(self.id)
 
+    ############################################################################
+    def __del__(self):
+        """deletes pipeline and sends a delete message to the dashboard"""
+        self.__send_delete_msg_to_dash()
+        super().__del__()
 
     ############################################################################
     #                               properties
