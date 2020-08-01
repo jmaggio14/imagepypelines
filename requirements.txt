@@ -2,7 +2,6 @@ setuptools>=39.0
 colorama>=0.4.0
 numpy>=1.14
 termcolor>=1.0
-imagepypelines-tools
 networkx>=2.4
 cryptography
 dill>=0.3.1.1
