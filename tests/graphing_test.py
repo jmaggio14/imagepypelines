@@ -2,7 +2,41 @@ import numpy as np
 
 def test_del_pipeline():
     import imagepypelines as ip
-    p = ip.Pipeline()
+
+    @ip.blockify()
+    def error_block(a):
+        raise TypeError('this is the error message')
+
+    @ip.blockify( types={'a':int, 'b':int}, kwargs=dict(value=10) )
+    def add_val(a,b,value):
+        return a+value, b+value
+
+    @ip.blockify( types={'a':int, 'b':int}, kwargs=dict(value=5) )
+    def minus_val(a,b,value):
+        return a-value, b-value
+
+
+    tasks = {
+            # inputs
+            'zero' : ip.Input(0),
+            'one' : ip.Input(1),
+            # operations
+            ('ten','eleven') : (add_val, 'zero', 'one'),
+            ('twenty','eleven2') : (add_val, 'ten', 'one'),
+            ('fifteen', 'six') : (minus_val, 'twenty', 'eleven'),
+            ('twentyfive','twentyone') : (add_val, 'fifteen','eleven2'),
+            ('negativefour', 'negativefive') : (minus_val, 'one', 'zero'),
+            'out' : (error_block, 'zero'),
+            }
+
+    p = ip.Pipeline({'a' : ip.Input(0),
+                        })
+
+    try:
+        p.process([1])
+    except TypeError:
+        pass
+
     del p
 
 def test_Pipeline():
