@@ -871,7 +871,7 @@ class Pipeline(object):
                             'block_name' : block.name,
                             'block_id'   : block.id,
                             'block_uuid' : block.uuid,
-                            'error_type' : str(type(error)),
+                            'error_type' : error.__class__.__name__,
                             'error_msg'  : str(error),
                             },
                 }

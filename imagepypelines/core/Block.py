@@ -503,9 +503,7 @@ class Block(metaclass=ABCMeta):
     def get_default_node_attrs(self):
         """all values must be json serializable"""
         attrs = { 'name':self.name,
-                'color': 'orange',
-                'shape':'square',
-                'class_name': str( type(self) ),
+                'class_name': self.__class__.__name__,
                 'batch_type': self.batch_type,
                 }
         return attrs
