@@ -67,6 +67,6 @@ Pipeline was deleted
     name : <user-defined name>
     id   : <human-readable id>
     uuid : <hex uuid>
-    source_type : <source str>
+    source_type : <source>
     payload :
         <empty>

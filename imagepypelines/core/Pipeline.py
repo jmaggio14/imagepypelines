@@ -1338,8 +1338,7 @@ class Pipeline(object):
     ############################################################################
     def __del__(self):
         """deletes pipeline and sends a delete message to the dashboard"""
-        self.__send_delete_msg_to_dash()
-        super().__del__()
+        # self.__send_delete_msg_to_dash()
 
     ############################################################################
     #                               properties

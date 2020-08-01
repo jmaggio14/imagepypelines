@@ -1,6 +1,9 @@
 import numpy as np
 
-
+def test_del_pipeline():
+    import imagepypelines as ip
+    p = ip.Pipeline()
+    del p
 
 def test_Pipeline():
     import imagepypelines as ip
