@@ -39,15 +39,16 @@ Large message indicating the node links and Block documentation
             n_batches : number of batches for this node
             pid : process id for this node
             status: processing status. one of: ('not started', 'processing', 'done')
+            display_as: indicator for how to display this node (as an "input", "sub_pipeline", "leaf", or "block")
         edges : <dict of edge_ids & metadata>
             var_name        : name of the variable in task definition
             out_index       : output index from the source node,
             in_index        : input index for the target node,
             name            : name target block's argument at the in_index
-            is_homogenus    : whether or not this data is a homogenus container
+            is_homogenus    : whether or not this data is in a homogenus container
             n_items         : number of items of data in this edge
             datatype        : the type of data contained, this is only
-                                guaranteed to be accurate is is_homogenus is True
+                                guaranteed to be accurate if is_homogenus is True
         node-link : <note-link format of graph connections https://networkx.github.io/documentation/stable/reference/readwrite/generated/networkx.readwrite.json_graph.node_link_data.html>
 
 ## Status

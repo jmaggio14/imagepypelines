@@ -65,6 +65,11 @@ class PipelineBlock(Block):
         """:obj:`list` of :obj:`str`: arg names for the pipeline"""
         return self.pipeline.args
 
+    def get_default_node_attrs(self):
+        attrs = super().get_default_node_attrs()
+        attrs['display_as'] = 'sub_pipeline'
+        return attrs
+
 
 ################################################################################
 class FuncBlock(Block):
@@ -182,8 +187,7 @@ class Input(Block):
     def get_default_node_attrs(self):
         """retrieves default node attributes for the Input"""
         attrs = super().get_default_node_attrs()
-        attrs['color'] = 'blue'
-        attrs['shape'] = 'pentagon'
+        attrs['display_as'] = 'input'
         return attrs
 
     ############################################################################
@@ -232,8 +236,7 @@ class Leaf(Block):
     def get_default_node_attrs(self):
         """retrieves default node attributes for the Leaf"""
         attrs = super().get_default_node_attrs()
-        attrs['color'] = 'green'
-        attrs['shape'] = 'ellipsis'
+        attrs['display_as'] = 'leaf'
         return attrs
 
     ############################################################################
