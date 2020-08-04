@@ -300,13 +300,13 @@ class Block(metaclass=ABCMeta):
         self._pair_logger(logger)
         # NOTE: add type checking here
 
-        # check data partity (same n_items for every data)
+        # check data partity (same n_datums for every data)
         # this still works even if len(data) is 0
-        if not all(data[0].n_items == d.n_items for d in data):
+        if not all(data[0].n_datums == d.n_datums for d in data):
             msg = "Invalid data lengths! all data must have the same"\
                     + "number of items. {}"
-            # this adds a list ("input_name.n_items"=)
-            msg.format(",".join("{}.n_items={}".format(d.n_items) for i,d in zip(self.inputs,data)))
+            # this adds a list ("input_name.n_datums"=)
+            msg.format(",".join("{}.n_datums={}".format(d.n_datums) for i,d in zip(self.inputs,data)))
             self.logger.error(msg)
             raise RuntimeError(msg)
 
@@ -379,7 +379,7 @@ class Block(metaclass=ABCMeta):
         analytics['processing_time'] = timer.time_ms()
         # track the number of incoming datums to this block
         if len(data) > 0:
-            analytics["num_in"] = data[0].n_items
+            analytics["num_in"] = data[0].n_datums
             analytics["n_batches"] = data[0].n_batches_with(self.batch_type)
             analytics['avg_time_per_datum'] = analytics['processing_time'] / analytics['num_in']
 

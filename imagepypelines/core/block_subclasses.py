@@ -70,7 +70,6 @@ class PipelineBlock(Block):
         attrs['display_as'] = 'sub_pipeline'
         return attrs
 
-
 ################################################################################
 class FuncBlock(Block):
     """Block that will run any function you give it, either unfettered through

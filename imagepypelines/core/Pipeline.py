@@ -102,10 +102,11 @@ class Pipeline(object):
             'out_index'       : output index from the source node,
             'in_index'        : input index for the target node,
             'name'            : name target block's argument at the in_index
-            'is_homogenus'    : whether or not this data is a homogenus container
-            'n_items'         : number of items of data in this edge
-            'datatype'        : the type of data contained, this is only
-                                guarenteed to be accurate is is_homogenus is True
+            'same_type_for_all_datums'    : whether or not this data is a homogenus container
+            'data_stored_in'  : the type of the container used to house the data (list, ndarray, etc)
+            'n_datums'         : number of items of data in this edge
+            'datum_type'        : the type of data contained, this is only
+                                guarenteed to be accurate is same_type_for_all_datums is True
             'data'            : data for this edge
 
 
@@ -344,9 +345,10 @@ class Pipeline(object):
                                         out_index = out_index,
                                         in_index = in_index,
                                         name = block_arg_name, # name of node_b's process argument at the index
-                                        is_homogenus="unknown",
-                                        n_items=0,
-                                        datatype=None,
+                                        same_type_for_all_datums="unknown",
+                                        n_datums=0,
+                                        datum_type=None,
+                                        data_stored_in="unknown",
                                         data = None, # none is a placeholder value. it will be populated
                                         )
 
@@ -403,9 +405,10 @@ class Pipeline(object):
                                     out_index=i,
                                     in_index=0,
                                     name=end_name, # name of node_b's process argument at the index
-                                    is_homogenus="unknown",
-                                    n_items=0,
-                                    datatype=None,
+                                    same_type_for_all_datums="unknown",
+                                    n_datums=0,
+                                    datum_type=None,
+                                    data_stored_in="unknown",
                                     data=None)
 
 
@@ -766,6 +769,19 @@ class Pipeline(object):
     ############################################################################
     #                               internal
     ############################################################################
+    def __format_edge_data_for_dash_msg(self, edge_data):
+        """formats data for an edge to a sendable form,
+
+        Relies on a copy of the edge being passed in so permanent changes to
+        the graph aren't made
+        """
+        # delete the data from edge - we don't need it
+        del edge_data['data']
+        # convert classes to their strings names
+        edge_data['datum_type'] = edge_data['datum_type'].__class__.__name__
+        edge_data['data_stored_in'] = edge_data['data_stored_in'].__class__.__name__
+        return edge_data
+
     def __send_graph_msg_to_dash(self):
         """sends a full description of the graph to the dashboard
 
@@ -797,9 +813,7 @@ class Pipeline(object):
         # populate the edge metadata
         payload['edges'] = {}
         for node_a,node_b,key,e_data in graph_copy.edges(keys=True, data=True):
-            # delete the data from edge - we don't need it
-            del e_data['data']
-            e_data['datatype'] = str(e_data['datatype'])
+            e_data = self.__format_edge_data_for_dash_msg(e_data)
             payload['edges']['|'.join((node_a,node_b,key))] = e_data
 
 
@@ -828,11 +842,10 @@ class Pipeline(object):
         payload['edges'] = {}
         for node_a,node_b,key,e_data in self.graph.in_edges(node_id, keys=True, data=True):
             # delete the data object from this copy
-            e_data = e_data.copy()
-            del e_data['data']
-            e_data['datatype'] = str(e_data['datatype'])
+            formatted_edge_data = self.__format_edge_data_for_dash_msg(e_data.copy())
+
             # update the edges dict
-            payload['edges']['|'.join((node_a,node_b,key))] = e_data
+            payload['edges']['|'.join((node_a,node_b,key))] = formatted_edge_data
 
         # encode the message as json and send it
         msg = {'type' : MSG_GRAPH,
@@ -944,9 +957,10 @@ class Pipeline(object):
                 for out_edge in out_edges:
                     data = Data( outputs[out_edge['out_index']] )
                     out_edge['data'] = data
-                    out_edge['is_homogenus'] = data.is_homogenus_container()
-                    out_edge['n_items'] = data.n_items
-                    out_edge['datatype'] = data.datatype
+                    out_edge['same_type_for_all_datums'] = data.is_homogenus_container()
+                    out_edge['data_stored_in'] = data.container_type
+                    out_edge['n_datums'] = data.n_datums
+                    out_edge['datum_type'] = data.datum_type
 
             # update node status
             self.graph.nodes[node_id]['status'] = STATUS_COMPLETE

@@ -42,7 +42,7 @@ class Data(object):
     def n_batches_with(self, batch_type):
         """calculates the number of batches generated with the given batch_type"""
         if batch_type == "each":
-            return self.n_items
+            return self.n_datums
         elif batch_type == "all":
             return 1
 
@@ -82,11 +82,16 @@ class Data(object):
     #                               properties
     ############################################################################
     @property
-    def n_items(self):
+    def n_datums(self):
         """int: number of items loaded into the pipeline"""
         return len(self)
 
     ############################################################################
     @property
-    def datatype(self):
+    def datum_type(self):
         return type(self.data[0])
+
+    ############################################################################
+    @property
+    def container_type(self):
+        return type(self.data)
