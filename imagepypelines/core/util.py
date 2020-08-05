@@ -213,22 +213,34 @@ class EventQueue:
     def __init__(self):
         self.events = []
 
+    def funcify(obj):
+        if callable(obj):
+            return obj
+        else:
+            return lambda: obj
+
     def run_scheduled_tasks(self):
         ''' Runs all tasks that are scheduled to run at the current time '''
         t = time.monotonic()
+        task_returns = []
         while self.events and self.events[0].event_time <= time.monotonic():
             event = heappop(self.events)
-            event.task()
+            task_return = event.task()
+            task_returns.append(task_return)
+        return [t for t in task_returns if t is not None]
 
     def add_task(self, event_time, task):
+        task = funcify(task)
         'Helper function to schedule one-time tasks at specific time'
         heappush(self.events, EventQueue.ScheduledEvent(event_time, task))
 
     def call_later(self, delay, task):
+        task = funcify(task)
         'Helper function to schedule one-time tasks after a given delay'
         self.add_task(time.monotonic() + delay, task)
 
     def call_periodic(self, delay, interval, task):
+        task = funcify(task)
         'Helper function to schedule recurring tasks'
         def inner():
             task()
