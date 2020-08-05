@@ -234,18 +234,18 @@ class EventQueue:
         'Helper function to schedule one-time tasks at specific time'
         heappush(self.events, EventQueue.ScheduledEvent(event_time, task))
 
-    def call_later(self, delay, task):
+    def call_later(self, task, delay):
         task = funcify(task)
         'Helper function to schedule one-time tasks after a given delay'
         self.add_task(task, time.monotonic() + delay)
 
-    def call_periodic(self, delay, interval, task):
+    def call_periodic(self, task, delay, interval):
         task = funcify(task)
         'Helper function to schedule recurring tasks'
         def inner():
-            self.call_later(interval, inner)
+            self.call_later(inner, interval)
             return task()
-        self.call_later(delay, inner)
+        self.call_later(inner, delay)
 
 
 ################################################################################
