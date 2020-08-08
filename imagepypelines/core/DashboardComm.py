@@ -131,6 +131,19 @@ class DashboardComm(object):
             self.clients[name].write(msg)
 
     # --------------------------------------------------------------------------
+    def read(self, names=None):
+        """send delete messages to all dashboard servers"""
+        if names is None:
+            names = self.clients.keys()
+
+        for name in names:
+            try:
+                msg = self.clients[name].read()
+            except BlockingIOError:  # Case for no data ready
+                msg = None
+            return msg
+
+    # --------------------------------------------------------------------------
     def write_graph(self, pipeline_id, graph_msg):
         """send pipeline graph or task changes to the Dashboard"""
         # # DEBUG ONLY
@@ -177,6 +190,8 @@ class DashboardComm(object):
         #     f.write(delete_msg)
         # # END DEBUG
         self.write(delete_msg)
+
+
 
 
 

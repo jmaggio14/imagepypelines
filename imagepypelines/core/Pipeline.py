@@ -830,6 +830,13 @@ class Pipeline(object):
         self.dashcomm.write_graph(self.id, json.dumps(msg))
 
     ############################################################################
+    def __read_msg_from_dash(self):
+        """Receives any messages sent from the dashboards"""
+        msg = self.dashcomm.read()
+        if msg:
+            print(msg)
+
+    ############################################################################
     def __send_status_msg_to_dash(self, node_id):
         """builds and sends a status message to the dashboards"""
         payload = {}
@@ -916,6 +923,7 @@ class Pipeline(object):
 
             # UPDATE THE DASHBOARD
             # -----------------------------------
+            self.__read_msg_from_dash()
             self.__send_status_msg_to_dash(node_id)
 
             # fetch the block for this node
