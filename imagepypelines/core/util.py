@@ -213,6 +213,7 @@ class EventQueue:
     def __init__(self):
         self.events = []
 
+    @staticmethod
     def funcify(obj):
         if callable(obj):
             return obj
@@ -229,18 +230,21 @@ class EventQueue:
             task_returns.append(task_return)
         return [t for t in task_returns if t is not None]
 
-    def add_task(self, task, event_time=time.monotonic()):
-        task = funcify(task)
+    def add_task(self, task, event_time=None):
+        print(f"task = {task}")
+        task = self.funcify(task)
         'Helper function to schedule one-time tasks at specific time'
+        if event_time is None:
+            event_time = time.monotonic()
         heappush(self.events, EventQueue.ScheduledEvent(event_time, task))
 
     def call_later(self, task, delay):
-        task = funcify(task)
+        task = self.funcify(task)
         'Helper function to schedule one-time tasks after a given delay'
         self.add_task(task, time.monotonic() + delay)
 
     def call_periodic(self, task, delay, interval):
-        task = funcify(task)
+        task = self.funcify(task)
         'Helper function to schedule recurring tasks'
         def inner():
             self.call_later(inner, interval)
