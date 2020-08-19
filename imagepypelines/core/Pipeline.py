@@ -855,14 +855,14 @@ class Pipeline(object):
             payload['edges']['|'.join((node_a,node_b,key))] = formatted_edge_data
 
         # encode the message as json and send it
-        msg = {'type' : MSG_GRAPH,
+        msg = {'type' : MSG_STATUS,
                 'name' : self.name,
                 'id' : self.id,
                 'uuid' : self.uuid,
                 'source_type' : PIPELINE_SOURCE_TYPE,
                 'payload' : payload,
                 }
-        self.dashcomm.write_status( json.dumps(payload) )
+        self.dashcomm.write_status( json.dumps(msg) )
 
     ############################################################################
     def __send_reset_msg_to_dash(self):
