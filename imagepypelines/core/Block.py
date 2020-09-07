@@ -524,6 +524,10 @@ class Block(metaclass=ABCMeta):
     ############################################################################
     #                            special
     ############################################################################
+    def __call__(self, *args):
+        """Allows any block to act as a callable, aliasing the process method"""
+        return self.process(*args)
+
     def __str__(self):
         return self.id
 

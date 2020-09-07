@@ -22,7 +22,11 @@ tasks = {'msg':ip.Input(),
 msg_printer = ip.Pipeline(tasks)
 
 ###############################################################################
+# We can do this by calling process directly...
 processed = msg_printer.process(["Hello World!"])
+
+# Or we can do this more naturally!
+processed = msg_printer(["Hello World... but callable!"])
 
 ###############################################################################
 # We can pass in any data we want! In this example, we call this function

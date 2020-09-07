@@ -151,7 +151,7 @@ class Pipeline(object):
 
 
     """
-    def __init__(self, tasks={}, name=None):
+    def __init__(self, tasks=None, name=None):
         """initializes the pipeline with a user-provided graph (tasks)
 
         Args:
@@ -180,6 +180,12 @@ class Pipeline(object):
         # pipeline
         if isinstance(tasks, Pipeline):
             tasks = tasks.get_tasks()
+        elif isinstance(tasks, dict):
+            tasks = tasks
+        elif tasks is None:
+            tasks = {}
+        else:
+            raise TypeError("'tasks' not a valid Pipeline, task graph dictionary, nor 'None'.")
 
         # build the dashboard comm object
         self.dashcomm = DashboardComm()
@@ -191,7 +197,7 @@ class Pipeline(object):
     ############################################################################
     #                       primary frontend functions
     ############################################################################
-    def update(self, tasks={}, predict_compatibility=True):
+    def update(self, tasks=None, predict_compatibility=True):
         """updates the pipeline's graph with a dict of tasks
 
         `update` will modify and change many instance variables of the pipeline.
@@ -244,7 +250,8 @@ class Pipeline(object):
         #                           GRAPH CONSTRUCTION
         # ======================================================================
 
-
+        if tasks is None:
+            tasks = {}
 
         ########################################################################
         #           Define the variables we'll be using for these tasks
@@ -1344,6 +1351,12 @@ class Pipeline(object):
 
     ############################################################################
     #                               magic
+    ############################################################################
+    def __call__(self, *pos_data, fetch=None, skip_enforcement=False, **kwdata):
+        """aliases self.process with same signature for more natural use"""
+        return self.process(*pos_data, fetch=None, skip_enforcement=False,
+                                                   **kwdata)
+
     ############################################################################
     # COPYING & PICKLING
     def __getstate__(self):
