@@ -9,11 +9,17 @@ current_dir = os.path.dirname(__file__)
 with open(os.path.join(current_dir,'imagepypelines/version_info.py')) as f:
     exec(f.read())
 
+# load in list of requirements
 requirements_path = os.path.join(current_dir,'requirements.txt')
 with open(requirements_path,'r') as f:
-    requirements = f.readlines()
+    requirements = f.read().splitlines()
 
-long_description = ''
+# load in list of dev requirements
+dev_requirements_path = os.path.join(current_dir,'requirements-dev.txt')
+with open(dev_requirements_path,'r') as f:
+    requirements_dev = f.read().splitlines()
+
+    long_description = ''
 if os.path.exists(os.path.join(current_dir,'README.rst')):
     with open(os.path.join(current_dir,'README.rst'), 'r') as f:
         long_description = f.read()
@@ -37,4 +43,7 @@ setup(name='imagepypelines',
       packages=find_packages(),
       include_package_data=True,
       install_requires=requirements,
+      extras_require = {
+                    'dev' : requirements_dev,
+                    }
       )

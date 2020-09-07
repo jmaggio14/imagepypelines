@@ -39,8 +39,7 @@ before_install:
 
 install:
   # install imagepypelines core
-  - pip install -r requirements.txt
-  - pip install .
+  - pip install .[dev]
 
   # install official plugins so we can have their docs on the site as well
   # NOTE: temporary until plugins are on pypi
@@ -51,13 +50,6 @@ install:
   # astro
   - git clone https://github.com/jmaggio14/imagepypelines_astro.git
   - cd imagepypelines_astro && python setup.py install && cd ..
-
-
-  # Sphinx requirements
-  - pip install Sphinx==2.4.4 sphinx_bootstrap_theme==0.7.1 sphinx-automodapi sphinx_copybutton
-  - pip install jupyter notebook sphinx-gallery matplotlib Pillow # for auto example generation
-  # codecov and auto-testing requirements
-  - pip install pytest sybil pytest-cov coverage codecov pytest-doctest-ellipsis-markers --upgrade
 
 script:
   # license enforcer

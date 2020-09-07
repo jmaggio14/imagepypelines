@@ -1,0 +1,15 @@
+Sphinx==2.4.4
+sphinx_bootstrap_theme==0.7.1
+sphinx-automodapi
+sphinx_copybutton
+jupyter
+notebook
+sphinx-gallery
+matplotlib
+Pillow
+pytest
+sybil
+pytest-cov
+coverage
+codecov
+pytest-doctest-ellipsis-markers
