@@ -35,7 +35,7 @@ tasks_verbose = {"x": ip.Input(),
          "blue": (line_plot_blue, "x", "y")
         }
 
-tasks_succinct = {"x": ip.Input(),
+tasks_tweaked = {"x": ip.Input(),
          "y": ip.Input(),
          "red": (line_plot.tweak(color='r'), "x", "y"),
          "green": (line_plot.tweak(color='g'), "x", "y"),
@@ -50,5 +50,5 @@ plotting = ip.Pipeline(tasks_verbose)
 plotting([1,2,3],[2,4,6])
 
 # Pipeline functionality - defining in place
-plotting = ip.Pipeline(tasks_verbose)
+plotting = ip.Pipeline(tasks_tweaked)
 plotting([1,2,3],[2,4,6])

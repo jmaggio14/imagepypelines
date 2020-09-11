@@ -141,7 +141,7 @@ class FuncBlock(Block):
     def tweak(self, **kwargs):
         """Returns a mutated copy of the block instance with the new kwargs"""
         if kwargs:
-            new_inst = self.copy() # may want this to be deep
+            new_inst = self.deepcopy()
             new_inst.preset_kwargs.update(**kwargs)
             return new_inst
         else:
