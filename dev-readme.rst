@@ -41,12 +41,14 @@ How to run tests
 ----------------
 
 *in top-level project directory*
+
 .. code-block:: console
 
    py.test --verbose
 
 
 **with code coverage tracking**
+
 .. code-block:: console
 
    py.test --cov=./imagepypelines --ignore=setup.py --verbose
@@ -61,16 +63,17 @@ manually with docker
 Build the image
 ###############
 
-```bash
-cd imagepypelines-tools\imagepypelines_tools\dockerfiles
-docker build --tag dashboard -f .\dashboard.Dockerfile .
-```
+.. code-block:: shell
+
+    cd imagepypelines-tools\imagepypelines_tools\dockerfiles
+    docker build --tag dashboard -f .\dashboard.Dockerfile .
 
 Run the image
 #############
-```bash
-docker run --rm -p 5000:5000 -p 9000:9000 dashboard:latest
-```
+
+.. code-block:: shell
+
+   docker run --rm -p 5000:5000 -p 9000:9000 dashboard:latest
 
 
 How to push to pypi manually
