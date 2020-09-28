@@ -25,6 +25,18 @@ How to build website locally
    .\make.bat html
 
 
+How to build angular template files
+-----------------------------------
+
+1. Install NodeJS 12.X.X
+
+*in imagepypelines-tools/ip-client*
+
+.. code-block:: shell
+
+    npm i && ng build:prod
+
+
 How to run tests
 ----------------
 
@@ -40,10 +52,25 @@ How to run tests
    py.test --cov=./imagepypelines --ignore=setup.py --verbose
 
 
-How to build docker images
---------------------------
+How to build/run dashboard docker image
+---------------------------------------
 
+manually with docker
+********************
 
+Build the image
+###############
+
+```bash
+cd imagepypelines-tools\imagepypelines_tools\dockerfiles
+docker build --tag dashboard -f .\dashboard.Dockerfile .
+```
+
+Run the image
+#############
+```bash
+docker run --rm -p 5000:5000 -p 9000:9000 dashboard:latest
+```
 
 
 How to push to pypi manually
