@@ -2,6 +2,7 @@ How to add licenses to our files (required for our CI to deploy to pypi)
 ------------------------------------------------------
 
 *in top-level project directory*
+
 .. code-block:: shell
 
    python enforcer.py --modify
@@ -115,4 +116,4 @@ to verify things worked
 
 .. code-block:: shell
 
-  twine upload -r testpypi -u <pypi username> -p <pypi pass> dist/*
+  twine upload -u <pypi username> -p <pypi pass> dist/*
