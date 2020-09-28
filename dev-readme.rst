@@ -7,6 +7,7 @@ How to add licenses to our files (required for our CI to deploy to pypi)
 
    python enforcer.py --modify
 
+.. _____________________________________________________________________________
 
 How to build website locally
 ----------------------------
@@ -25,6 +26,8 @@ How to build website locally
 
    .\make.bat html
 
+.. _____________________________________________________________________________
+
 
 How to build angular template files
 -----------------------------------
@@ -37,6 +40,7 @@ How to build angular template files
 
     npm i && ng build:prod
 
+.. _____________________________________________________________________________
 
 How to run tests
 ----------------
@@ -54,52 +58,48 @@ How to run tests
 
    py.test --cov=./imagepypelines --ignore=setup.py --verbose
 
+.. _____________________________________________________________________________
 
 How to build/run dashboard docker image
 ---------------------------------------
 
-manually with docker
-********************
-
-Build the image
-###############
+1. Build the image
 
 .. code-block:: shell
 
     cd imagepypelines-tools\imagepypelines_tools\dockerfiles
     docker build --tag dashboard -f .\dashboard.Dockerfile .
 
-Run the image
-#############
+
+2. Run the image
 
 .. code-block:: shell
 
    docker run --rm -p 5000:5000 -p 9000:9000 dashboard:latest
 
 
+
 How to push to pypi manually
 ----------------------------
 
-Install Dependencies
-********************
+1. Install Dependencies
 
 .. code-block:: shell
 
    pip install wheel twine
 
 
-Create Distrobutions
-********************
+2. Create Distributions
+
 
 .. code-block:: shell
 
    python setup.py sdist bdist_wheel
 
 
-Upload to testpypi
-******************
+3. Upload to testpypi
 
-to verify things worked
+(to verify things worked)
 
 
 .. code-block:: shell
@@ -108,8 +108,7 @@ to verify things worked
 
 
 
-Upload to pipy
-******************
+4. Upload to pypi
 
 to verify things worked
 
