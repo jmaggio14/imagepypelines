@@ -67,8 +67,8 @@ How to build/run dashboard docker image
 
 .. code-block:: shell
 
-    cd imagepypelines-tools\imagepypelines_tools\dockerfiles
-    docker build --tag dashboard -f .\dashboard.Dockerfile .
+    cd imagepypelines-tools\
+    docker build --tag dashboard -f imagepypelines_tools\dockerfiles\dashboard.Dockerfile .
 
 
 2. Run the image

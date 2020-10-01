@@ -13,8 +13,8 @@ dist: xenial
 python:
   # - 3.5
   - 3.6
-  # - 3.7 # until imagepypelines-tools is updated
-  # - 3.8 # until imagepypelines-tools is updated
+  - 3.7 # until imagepypelines-tools is updated
+  - 3.8 # until imagepypelines-tools is updated
 
 services:
   - xvfb
@@ -88,6 +88,8 @@ deploy:
   - provider: pypi
     user: jmaggio14
     password: $PYPI_PASS
+    distributions: "sdist bdist_wheel"
+    skip_existing: true
     on:
       branch: master
       tags: true
