@@ -97,7 +97,7 @@ How to push to pypi manually
    python setup.py sdist bdist_wheel
 
 
-3. Upload to testpypi
+3. (optional) Upload to testpypi
 
 (to verify things worked)
 
@@ -109,9 +109,6 @@ How to push to pypi manually
 
 
 4. Upload to pypi
-
-to verify things worked
-
 
 .. code-block:: shell
 
