@@ -28,6 +28,25 @@ How to build website locally
 
 .. _____________________________________________________________________________
 
+How to build/run dashboard docker image
+---------------------------------------
+
+1. Build the image
+
+.. code-block:: shell
+
+   imagepypelines build
+
+
+2. Run the image
+
+.. code-block:: shell
+
+  imagepypelines dashboard [host] [post] --containerized
+
+
+.. _____________________________________________________________________________
+
 
 How to build angular template files
 -----------------------------------
@@ -58,26 +77,8 @@ How to run tests
 
    py.test --cov=./imagepypelines --ignore=setup.py --verbose
 
+
 .. _____________________________________________________________________________
-
-How to build/run dashboard docker image
----------------------------------------
-
-1. Build the image
-
-.. code-block:: shell
-
-    cd imagepypelines-tools\
-    docker build --tag dashboard -f imagepypelines_tools\dockerfiles\dashboard.Dockerfile .
-
-
-2. Run the image
-
-.. code-block:: shell
-
-   docker run --rm -p 5000:5000 -p 9000:9000 dashboard:latest
-
-
 
 How to push to pypi manually
 ----------------------------
