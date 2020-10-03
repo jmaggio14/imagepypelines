@@ -104,9 +104,11 @@ class Pipeline(object):
             'name'            : name target block's argument at the in_index
             'same_type_for_all_datums'    : whether or not this data is a homogenus container
             'data_stored_in'  : the type of the container used to house the data (list, ndarray, etc)
-            'n_datums'         : number of items of data in this edge
-            'datum_type'        : the type of data contained, this is only
+            'n_datums'        : number of items of data in this edge
+            'datum_type'      : the type of data contained, this is only
                                 guarenteed to be accurate is same_type_for_all_datums is True
+            'node_a'          : source node uuid
+            'node_b'          : target node uuid
             'data'            : data for this edge
 
 
@@ -356,6 +358,8 @@ class Pipeline(object):
                                         n_datums=0,
                                         datum_type=None,
                                         data_stored_in="unknown",
+                                        node_a = node_a,
+                                        node_b = node_b,
                                         data = None, # none is a placeholder value. it will be populated
                                         )
 
@@ -416,6 +420,8 @@ class Pipeline(object):
                                     n_datums=0,
                                     datum_type=None,
                                     data_stored_in="unknown",
+                                    node_a = node,
+                                    node_b = leaf_uuid,
                                     data=None)
 
 

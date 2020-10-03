@@ -13,3 +13,4 @@ pytest-cov
 coverage
 codecov
 pytest-doctest-ellipsis-markers
+wheel

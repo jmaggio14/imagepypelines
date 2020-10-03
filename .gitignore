@@ -11,6 +11,9 @@ output_dir/*
 *.pickle
 docs/source/examples/*
 docs/source/examples
+# custom
+venv_ip/
+venv*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
