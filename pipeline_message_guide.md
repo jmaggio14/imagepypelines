@@ -51,6 +51,8 @@ Large message indicating the node links and Block documentation
             n_datums        : number of items of data in this edge
             datum_type      : the type of data contained, this is only
                                 guaranteed to be accurate if same_type_for_all_datums is True
+            node_a          : source node uuid
+            node_b          : target node uuid
         node-link : <note-link format of graph connections https://networkx.github.io/documentation/stable/reference/readwrite/generated/networkx.readwrite.json_graph.node_link_data.html>
 
 ## Status
