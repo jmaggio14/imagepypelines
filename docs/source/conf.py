@@ -34,7 +34,8 @@ import subprocess
 
 
 # reference the pygments style defined in style.py
-pygments_style = "style.ImagePypelinesStyle"
+pygments_style = "style.ImagePypelinesLight"
+# pygments_style = "style.ImagePypelinesDark"
 
 # see Sphinx: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-pygments_style
 ################################################################################
