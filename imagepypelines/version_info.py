@@ -63,4 +63,6 @@ __classifiers__ = [
 __credits__ = ["Jeff Maggio", "Ryan Hartzell", "Jai Mehra", "Nathan Dileas",]
 __status__ = "Experimental"
 
-__copyright__ = "Copyright (c) 2018-2020 " + __author__
+import datetime
+__copyright__ = f"Copyright (c) 2018-{datetime.datetime.now().year} " + __author__
+del datetime
