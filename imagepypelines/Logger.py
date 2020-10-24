@@ -123,17 +123,18 @@ def make_master(level=logging.INFO):
         return MASTER_LOGGER
 
     # create our ImagePypelines master logger
+    # set our subclass as the root of all child loggers
+    manager = logging.Manager(None)
+    manager.setLoggerClass(ImagepypelinesLogger)
+
+    master = manager.getLogger('ImagePypelines')
     ch = logging.StreamHandler()
     formatter = logging.Formatter(
                         '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
     ch.setFormatter(formatter)
-
-    master = ImagepypelinesLogger('ImagePypelines')
     master.addHandler(ch)
     master.setLevel(level)
 
-    # set our subclass as the root of all child loggers
-    # master.manager.setLoggerClass(ImagepypelinesLogger)
     return master
 
 MASTER_LOGGER = make_master()
