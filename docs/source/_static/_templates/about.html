@@ -30,19 +30,15 @@
     <div class="container">
         <div class="row ">
             <div class="bs-component">
-                <div class="card border-primary text-white">
-                    <h2>We've all been there...</h2>
-                    <p style="font-size:18px color:#E95420">
-                        You're 4 hours into a fruitless debugging session and you want to go home - you don't have time for bourgeois luxeries like logging, type checking, or proper data visualization!
-                        <br>
-                        ...But what if you did?<br>
-                        Would you write better code for your peers?<br>
-                        Would you publish more code online?<br>
-                        Would you finally be able to leave the optics lab for more time than it takes to walk downstairs and grab a stale poptart out of the vending machine?
-                    </p>
-                    <br>
-                    <!-- <p style="max-width: 1000px">ImagePypelines takes care of all this on the backend, has a simple (and customizable) web-client interface for interactive code and visualization, and an incredibly extendible plugin system.</p> -->
-                    <h2 style="max-width:100%">We like to think so, and ImagePypelines can help!</h2>
+                <h1>Imagepypelines makes your script portable</h1>
+
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                      <!-- <h1 class="panel-title">Let's be honest, code in science isn't always the best...</h1> -->
+                  </div>
+                  <div class="panel-body">
+                      Have you ever tried to run a quick script a colleague sent you, but ended up spe 
+                  </div>
                 </div>
             </div>
         </div>
@@ -64,7 +60,7 @@
             </li>
         </ul>
         <!-- PILL CONTENT -->
-        <div class="container tab-content bordered-block">
+        <div class="container tab-content">
             <div id="pip" class="tab-pane active fade in active"><br>
                 ImagePypelines is python3 only, so this might be "pip3" on your machine :p<br>
                 <i>(remove <code>--user</code> to install systemwide)</i>
@@ -79,16 +75,18 @@
             </div>
         </div>
 
+        <br><br>
 
-        <h4>OpenCV</h4>
+
+        <!-- <h4>OpenCV</h4>
         <div class="container">
             The imagepypelines_image plugin also requires OpenCV. You can install this using
             <pre>pip install opencv-python --user</pre>
             or <a href="https://docs.opencv.org/master/da/df6/tutorial_py_table_of_contents_setup.html">build it from source</a>.
         </div>
-    </div>
+    </div> -->
 
-    <div class="container">
+    <!-- <div class="container">
         <h3>Setting up a virtual environment <i>(the quick and dirty way)</i></h3>
         If you have issues installing ImagePypelines (or any python package),
         sometimes setting up a virtual environment can help. A more thorough
@@ -107,7 +105,7 @@
 
         <pre>pip install imagepypelines</pre>
 
-    </div>
+    </div> -->
 
     <!-- end of document block (the html body) -->
     {% endblock %}

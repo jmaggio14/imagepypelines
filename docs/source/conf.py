@@ -89,7 +89,21 @@ extensions = [
     'sphinx_automodapi.automodapi', # makes separate doc pages for every object
     # 'sphinx_automodapi.smart_resolver', # don't think this is needed
     'sphinx_copybutton', # adds a copy button to our examples (NOT THE SAME AS copybutton.js)
+    'ablog',  # blog extension
     ]
+
+
+
+################################################################################
+# BLOG STUFF - using the ablog extension
+blog_authors = {
+    'Jeff': ('Jeff Maggio', 'https://www.jeffmagg.io/'),
+    'Ryan': ('Ryan Hartzell','https://github.com/RyanHartzell'),
+    'Joe': ('Joe Bartelmo','https://github.com/joebartelmo'),
+    'Jai': ('Jai Mehra','https://github.com/RyanHartzell'),
+}
+
+################################################################################
 
 # JM - adds our custom landing page
 html_additional_pages = {'index': 'index.html',
@@ -186,6 +200,7 @@ html_theme_options = {
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
                      ("Examples", 'examples/index.html', 1),
+                     ("Blog", 'blog/archive.html', 1),
                      ("Documentation", 'docs/core'),
                      ("Plugins", 'plugins'),
                      ("Github", version_info['__download_url__'], True),
@@ -241,6 +256,9 @@ html_theme_options = {
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)
     'bootstrap_version': "3",
+
+    # disable the sidebar
+    'nosidebar':True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -256,8 +274,11 @@ html_static_path = ['_static']
 # default: ``['localtoc.html', 'relations.html', 'sourcelink.html',
 # 'searchbox.html']``.
 #
-# html_sidebars = {}
-
+# html_sidebars = {'united':['localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html']}
+# html_sidebars = {
+#    '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
+#    'using/windows': ['windowssidebar.html', 'searchbox.html'],
+# }
 
 # -- Options for HTMLHelp output ---------------------------------------------
 

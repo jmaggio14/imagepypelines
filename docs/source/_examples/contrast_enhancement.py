@@ -49,6 +49,7 @@ def compare_stats(original, equalized):
     fig = plt.figure()
     plt.plot(np.linspace(0,len(original)-1,len(original)), original, color='r')
     plt.plot(np.linspace(0,len(equalized)-1,len(equalized)), equalized, color='b')
+    plt.ion()
     plt.show()
 
 # stats = compute_stats(ip.image.giza())

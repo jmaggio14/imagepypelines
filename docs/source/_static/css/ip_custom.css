@@ -31,12 +31,12 @@ text {
 /* Pygments highlight override - IF ALL ELSE FAILS, THIS WORKS!!! */
 pre {
     /*Light cream */
-    background-color: #FFFDD0;
+    background-color: #ffffe6;
     /* Slate gray */
     /* background-color: #708090; */
     /* Mid Aubergine (purple) */
     /* background-color: #5E2750; */
-    border: 1px solid #77216F;
+    /* border: 1px solid #77216F; */
 }
 
 .bordered-block {
