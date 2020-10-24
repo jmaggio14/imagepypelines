@@ -112,7 +112,7 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
     def __reduce__(self):
         if self.name == 'ImagePypelines':
             return make_master, (self.level,)
-        return self.manager.getLogger, (self.name,)
+        return get_logger, (self.name,)
 
 def get_master_logger():
     return make_master()
@@ -124,10 +124,10 @@ def make_master(level=logging.INFO):
 
     # create our ImagePypelines master logger
     # set our subclass as the root of all child loggers
-    manager = logging.Manager(None)
+    master = ImagepypelinesLogger('ImagePypelines')
+    manager = logging.Manager(master)
     manager.setLoggerClass(ImagepypelinesLogger)
 
-    master = manager.getLogger('ImagePypelines')
     ch = logging.StreamHandler()
     formatter = logging.Formatter(
                         '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
