@@ -133,7 +133,7 @@ def make_master(level=logging.INFO):
     master.setLevel(level)
 
     # set our subclass as the root of all child loggers
-    master.manager.setLoggerClass(ImagepypelinesLogger)
+    # master.manager.setLoggerClass(ImagepypelinesLogger)
     return master
 
 MASTER_LOGGER = make_master()
