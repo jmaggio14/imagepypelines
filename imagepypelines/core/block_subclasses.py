@@ -82,7 +82,7 @@ class FuncBlock(Block):
         preset_kwargs(dict): preset keyword arguments, typically used for
             arguments that are not data to process
     """
-    def __new__(cls, func=None, preset_kwargs={}, **block_kwargs):
+    def __new__(cls, func=None, preset_kwargs=None, **block_kwargs):
         """Generates the new function block
 
         Args:
@@ -91,6 +91,9 @@ class FuncBlock(Block):
                 arguments that are not data to process
             **block_kwargs: keyword arguments for :obj:`Block` instantiation
         """
+        if preset_kwargs is None:
+            preset_kwargs = {}
+
         obj = super().__new__(cls)
 
         # copy the method to avoid and any possible edge-case weirdness
@@ -98,7 +101,7 @@ class FuncBlock(Block):
         obj.func = func
         return obj
 
-    def __init__(self, func, preset_kwargs={}, **block_kwargs):
+    def __init__(self, func, preset_kwargs=None, **block_kwargs):
         """instantiates the function block
 
         Args:
@@ -107,6 +110,8 @@ class FuncBlock(Block):
                 arguments that are not data to process
             **block_kwargs: keyword arguments for :obj:`Block` instantiation
         """
+        if preset_kwargs is None:
+            preset_kwargs = {}
 
         self._arg_spec = inspect.getfullargspec(func)
 
@@ -132,6 +137,20 @@ class FuncBlock(Block):
         interference or interaction with the class
         """
         return self.func(*args,**kwargs)
+
+    def tweak(self, **kwargs):
+        """Returns a mutated copy of the block instance with the new kwargs"""
+        if kwargs:
+            new_inst = self.deepcopy()
+            new_inst.preset_kwargs.update(**kwargs)
+            return new_inst
+        else:
+            raise TypeError("kwargs must take only key word arguments which satisfy the process function of the block")
+
+    @property
+    def kwargs(self):
+        """:obj:`dict` of key word arguments for bound processing function"""
+        return self.preset_kwargs
 
     @property
     def args(self):

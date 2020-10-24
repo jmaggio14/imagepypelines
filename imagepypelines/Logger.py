@@ -53,6 +53,9 @@ MASTER_LOGGER = None
 """logging.Logger subclass that is the root of all loggers instantiated in
 ImagePypelines"""
 
+# LOGGING_MANAGER = None
+# """logging.Manager for all ImagePypelines loggers"""
+
 # Define our new special Logger class that can be pickled
 # (like the loggers of python 3.7)
 class ImagepypelinesLogger( logging.getLoggerClass() ):
@@ -112,7 +115,7 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
     def __reduce__(self):
         if self.name == 'ImagePypelines':
             return make_master, (self.level,)
-        return logging.getLogger, (self.name,)
+        return get_logger, (self.name,)
 
 def get_master_logger():
     return make_master()
@@ -123,17 +126,19 @@ def make_master(level=logging.INFO):
         return MASTER_LOGGER
 
     # create our ImagePypelines master logger
+    # set our subclass as the root of all child loggers
+    master = ImagepypelinesLogger('ImagePypelines')
+    manager = logging.Manager(master)
+    manager.setLoggerClass(ImagepypelinesLogger)
+    master.manager = manager
+
     ch = logging.StreamHandler()
     formatter = logging.Formatter(
                         '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
     ch.setFormatter(formatter)
-
-    master = ImagepypelinesLogger('ImagePypelines')
     master.addHandler(ch)
     master.setLevel(level)
 
-    # set our subclass as the root of all child loggers
-    master.manager.setLoggerClass(ImagepypelinesLogger)
     return master
 
 MASTER_LOGGER = make_master()

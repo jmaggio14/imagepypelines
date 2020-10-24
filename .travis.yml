@@ -80,7 +80,7 @@ deploy:
     # opt into travis's v2 deploy tooling
     edge: true
     on:
-      python: '3.6'
+      python: '3.8'
       branch:
           - develop
           - master

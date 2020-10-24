@@ -21,11 +21,22 @@ text {
     color: white;
 }
 /* code blocks */
-pre code {
+/* pre code {
   background-color: #eee;
   border: 1px solid #999;
   display: block;
   padding: 20px;
+} */
+
+/* Pygments highlight override - IF ALL ELSE FAILS, THIS WORKS!!! */
+pre {
+    /*Light cream */
+    background-color: #ffffe6;
+    /* Slate gray */
+    /* background-color: #708090; */
+    /* Mid Aubergine (purple) */
+    /* background-color: #5E2750; */
+    /* border: 1px solid #77216F; */
 }
 
 .bordered-block {
