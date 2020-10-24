@@ -112,7 +112,7 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
     def __reduce__(self):
         if self.name == 'ImagePypelines':
             return make_master, (self.level,)
-        return logging.getLogger, (self.name,)
+        return self.manager.getLogger, (self.name,)
 
 def get_master_logger():
     return make_master()
