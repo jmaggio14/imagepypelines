@@ -19,7 +19,7 @@ session_uuid = uuid4().hex
 
 # ----------- Setup the Root ImagePypelines Logger ---------------
 # import the master logger
-from .Logger import MASTER_LOGGER, get_logger, get_pipeline_logger, ImagepypelinesLogger, set_log_level, get_master_logger
+from .Logger import MASTER_LOGGER, get_logger, ImagepypelinesLogger, set_log_level, get_master_logger
 # import master logger convienence function
 # NOTE: import logging constants our users can modify to change color behavior
 

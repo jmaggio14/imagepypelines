@@ -143,38 +143,36 @@ def make_master(level=logging.INFO):
 
 MASTER_LOGGER = make_master()
 
-# function to create a new ImagePypelines Logger
-def get_logger(name, log_level=logging.INFO):
-    """Creates a new child logger of the ImagePypelines master logger, by
-    default the new child logger has a log level of logging.INFO
+def get_logger(name, obj=None, parent=MASTER_LOGGER):
+    """Creates a new child logging adapter from the given parent (root logger by
+    default)
 
     Args:
         name(str): the name of the new child logger
+        obj(Block,Pipeline): the Pipeline or Block object for this logger
         log_level(int): the log level of the new logger, see python's logging
             module for more information
+        parent(logging.LoggerAdapter,logging.Logger): parent logger to spawn a
+            new logger off of
 
     Returns:
-        ImagepypelinesLogger: a new child logger object from the ImagePypelines master
-            logger
+        logging.LoggerAdapter: a new child logger adapter with conn ids for
+            id, object from the ImagePypelines
+
     """
-    child = MASTER_LOGGER.getChild(name)
-    return child
+    if isinstance(parent, logging.LoggerAdapter):
+        parent = parent.logger
 
+    logger = parent.getChild(name)
+    if obj:
+        metadata = {'obj_id':obj.id,
+                    'obj_uuid':obj.uuid,
+                    'obj_name':obj.name}
+    else:
+        metadata = {}
 
-import logging
-
-
-def get_pipeline_logger(pipeline):
-    """gets a logging adapter that includes contextual information such as
-        pipeline id and uuid"""
-    logger = get_logger(pipeline.id)
-    metadata = {'pipeline_id':pipeline.id,
-                'pipeline_uuid':pipeline.uuid,
-                'pipeline_name':pipeline.name}
     adapter = logging.LoggerAdapter(logger, metadata)
     return adapter
-
-
 
 def set_log_level(log_level):
     """sets the global master logger level"""

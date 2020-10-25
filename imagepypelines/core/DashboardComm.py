@@ -17,6 +17,7 @@ URL_ENDPOINT = '/api/log'
 def connect_to_dash(name, host, port):
     """Connects every pipeline in this session to
     """
+    add_dash_logging_handler(host,port)
     DashboardComm.connect(name, host, port)
 
 def n_dashboards():
@@ -29,21 +30,21 @@ def n_dashboards():
 def add_dash_logging_handler(host, port):
     # TODO 10/25/20: add secure communication
     handler = logging.HTTPHandler("{host}:{port}",
-                            '/api/log', #
-                            method='POST',
-                            secure=False,
-                            credentials=None,
-                            context=None)
+                                    URL_ENDPOINT,
+                                    method='POST',
+                                    secure=False,
+                                    credentials=None,
+                                    context=None)
 
     formatter = logging.Formatter( json.dumps(
                                 {
                                  'type':'log',
                                  'payload':{
                                      'time':'%(asctime)s', # datetime as YYYY-MM-DD HH:MM:SS, msecs’
-                                     'name':'%(name)s', #{name}.{last 6 chars of uuid}
-                                     'id': '%(pipeline_id)s',
-                                     'uuid': '%(pipeline_uuid)s',
-                                     'name': '%(pipeline_name)s',
+                                     'name':'%(name)s',
+                                     'id': '%(pipeline_id)s', #{name}.{last 6 chars of uuid}
+                                     'uuid': '%(pipeline_uuid)s', # universal unique id for pipeline
+                                     'name': '%(pipeline_name)s', # 
                                      'level':'%(levelname)8s', # INFO, WARNING, ERROR, etc
                                      'message':'%(message)s', # Logging message
                                      }
