@@ -101,7 +101,7 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
         if not len(self.handlers):
             ch = logging.StreamHandler()
             formatter = logging.Formatter(
-                                '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
+                                '%(asctime)s | %(name)s %(id)s [ %(levelname)8s ]: %(message)s')
             ch.setFormatter(formatter)
 
             child.addHandler(ch)
@@ -159,6 +159,21 @@ def get_logger(name, log_level=logging.INFO):
     """
     child = MASTER_LOGGER.getChild(name)
     return child
+
+
+import logging
+
+
+def get_pipeline_logger(pipeline):
+    """gets a logging adapter that includes contextual information such as
+        pipeline id and uuid"""
+    logger = get_logger(pipeline.id)
+    metadata = {'id':pipeline.id,
+                'uuid':pipeline.uuid,
+                'name':pipeline.name}
+    adapter = logging.LoggingAdapter(logger, metadata)
+    return adapter
+
 
 
 def set_log_level(log_level):

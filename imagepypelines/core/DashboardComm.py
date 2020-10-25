@@ -9,32 +9,10 @@ from .util import TCPClient
 from ..Logger import get_master_logger
 from .Exceptions import DashboardWarning
 
-"""
-Graph message key structure
-    type : <'graph','status','reset'>
-    name : <user-defined name>
-    id   : <human-readable id>
-    uuid : <hex uuid>
-    args : <argument names in order>
-    block_docs : <dictionary of block summaries (docstrings)
-    nodes : <dict of node_ids & metadata>
-    edges : <dict of edge_ids & metadata>
-    node-link : <note-link format of graph connections>
+import logging
+import json
 
-status message key structure
-    type : <'graph','status','reset'>
-    name : <user-defined name>
-    id   : <human-readable id>
-    uuid : <hex uuid>
-    nodes : <dict of updated node metadata>
-    edges : <dict of edge metadata>
-
-reset message key structure
-    type : <'graph','status','reset'>
-    name : <user-defined name>
-    id   : <human-readable id>
-    uuid : <hex uuid>
-"""
+URL_ENDPOINT = '/api/log'
 
 def connect_to_dash(name, host, port):
     """Connects every pipeline in this session to
@@ -42,9 +20,41 @@ def connect_to_dash(name, host, port):
     DashboardComm.connect(name, host, port)
 
 def n_dashboards():
+    """returns the number of connected dashboards"""
     return len(DashboardComm.clients)
 
     # TODO: update the logging handler to send logging messages to the dashboard
+
+
+def add_dash_logging_handler(host, port):
+    # TODO 10/25/20: add secure communication
+    handler = logging.HTTPHandler("{host}:{port}",
+                            '/api/log', #
+                            method='POST',
+                            secure=False,
+                            credentials=None,
+                            context=None)
+
+    formatter = logging.Formatter( json.dumps(
+                                {
+                                 'type':'log',
+                                 'payload':{
+                                     'time':'%(asctime)s', # datetime as YYYY-MM-DD HH:MM:SS, msecs’
+                                     'name':'%(name)s', #{name}.{last 6 chars of uuid}
+                                     'id': '%(id)s',
+                                     'uuid': '%(uuid)s',
+                                     'name': '%(name)s',
+                                     'level':'%(levelname)8s', # INFO, WARNING, ERROR, etc
+                                     'message':'%(message)s', # Logging message
+                                     }
+                                 }
+                             ))
+
+    handler.setFormatter(formatter)
+
+    get_master_logger().addHandler(handler)
+
+
 
 ################################################################################
 # TODO: This dashboard system currently relies on the connect_to_dash() being called
