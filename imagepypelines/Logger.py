@@ -134,7 +134,7 @@ def make_master(level=logging.INFO):
 
     ch = logging.StreamHandler()
     formatter = logging.Formatter(
-                        '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
+                        '%(asctime)s | %(name)s %(pipeline_uuid)s [ %(levelname)8s ]: %(message)s')
     ch.setFormatter(formatter)
     master.addHandler(ch)
     master.setLevel(level)
@@ -168,10 +168,10 @@ def get_pipeline_logger(pipeline):
     """gets a logging adapter that includes contextual information such as
         pipeline id and uuid"""
     logger = get_logger(pipeline.id)
-    metadata = {'id':pipeline.id,
-                'uuid':pipeline.uuid,
-                'name':pipeline.name}
-    adapter = logging.LoggingAdapter(logger, metadata)
+    metadata = {'pipeline_id':pipeline.id,
+                'pipeline_uuid':pipeline.uuid,
+                'pipeline_name':pipeline.name}
+    adapter = logging.LoggerAdapter(logger, metadata)
     return adapter
 
 

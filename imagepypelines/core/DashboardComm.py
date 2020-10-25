@@ -41,9 +41,9 @@ def add_dash_logging_handler(host, port):
                                  'payload':{
                                      'time':'%(asctime)s', # datetime as YYYY-MM-DD HH:MM:SS, msecs’
                                      'name':'%(name)s', #{name}.{last 6 chars of uuid}
-                                     'id': '%(id)s',
-                                     'uuid': '%(uuid)s',
-                                     'name': '%(name)s',
+                                     'id': '%(pipeline_id)s',
+                                     'uuid': '%(pipeline_uuid)s',
+                                     'name': '%(pipeline_name)s',
                                      'level':'%(levelname)8s', # INFO, WARNING, ERROR, etc
                                      'message':'%(message)s', # Logging message
                                      }
