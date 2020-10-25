@@ -101,7 +101,7 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
         if not len(self.handlers):
             ch = logging.StreamHandler()
             formatter = logging.Formatter(
-                                '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
+                                '%(asctime)s | %(name)s %(id)s [ %(levelname)8s ]: %(message)s')
             ch.setFormatter(formatter)
 
             child.addHandler(ch)
@@ -134,7 +134,7 @@ def make_master(level=logging.INFO):
 
     ch = logging.StreamHandler()
     formatter = logging.Formatter(
-                        '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
+                        '%(asctime)s | %(name)s %(pipeline_uuid)s [ %(levelname)8s ]: %(message)s')
     ch.setFormatter(formatter)
     master.addHandler(ch)
     master.setLevel(level)
@@ -143,23 +143,36 @@ def make_master(level=logging.INFO):
 
 MASTER_LOGGER = make_master()
 
-# function to create a new ImagePypelines Logger
-def get_logger(name, log_level=logging.INFO):
-    """Creates a new child logger of the ImagePypelines master logger, by
-    default the new child logger has a log level of logging.INFO
+def get_logger(name, obj=None, parent=MASTER_LOGGER):
+    """Creates a new child logging adapter from the given parent (root logger by
+    default)
 
     Args:
         name(str): the name of the new child logger
+        obj(Block,Pipeline): the Pipeline or Block object for this logger
         log_level(int): the log level of the new logger, see python's logging
             module for more information
+        parent(logging.LoggerAdapter,logging.Logger): parent logger to spawn a
+            new logger off of
 
     Returns:
-        ImagepypelinesLogger: a new child logger object from the ImagePypelines master
-            logger
-    """
-    child = MASTER_LOGGER.getChild(name)
-    return child
+        logging.LoggerAdapter: a new child logger adapter with conn ids for
+            id, object from the ImagePypelines
 
+    """
+    if isinstance(parent, logging.LoggerAdapter):
+        parent = parent.logger
+
+    logger = parent.getChild(name)
+    if obj:
+        metadata = {'obj_id':obj.id,
+                    'obj_uuid':obj.uuid,
+                    'obj_name':obj.name}
+    else:
+        metadata = {}
+
+    adapter = logging.LoggerAdapter(logger, metadata)
+    return adapter
 
 def set_log_level(log_level):
     """sets the global master logger level"""
