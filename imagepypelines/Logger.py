@@ -101,7 +101,7 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
         if not len(self.handlers):
             ch = logging.StreamHandler()
             formatter = logging.Formatter(
-                                '%(asctime)s | %(name)s %(id)s [ %(levelname)8s ]: %(message)s')
+                                '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
             ch.setFormatter(formatter)
 
             child.addHandler(ch)
@@ -144,7 +144,7 @@ def make_master(level=logging.INFO):
 
     ch = logging.StreamHandler()
     formatter = logging.Formatter(
-                        '%(asctime)s | %(name)s %(pipeline_uuid)s [ %(levelname)8s ]: %(message)s')
+                        '%(asctime)s | %(name)s [ %(levelname)8s ]: %(message)s')
     ch.setFormatter(formatter)
     master.addHandler(ch)
     master.setLevel(level)
