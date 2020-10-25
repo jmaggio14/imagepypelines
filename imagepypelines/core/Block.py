@@ -513,12 +513,12 @@ class Block(metaclass=ABCMeta):
     ############################################################################
     def _pair_logger(self, pipeline_logger):
         """creates or fetches a new child logger of the pipeline for this block"""
-        self.logger = get_logger(self.id, obj=self, parent=pipeline_logger)
+        self.logger = pipeline_logger.getChild(self.id)
 
     ############################################################################
     def _unpair_logger(self):
         """restores the original block logger"""
-        self.logger = get_logger(self.id, obj=self)
+        self.logger = get_logger(self.id)
 
 
     ############################################################################

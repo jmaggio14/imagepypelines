@@ -42,9 +42,9 @@ def add_dash_logging_handler(host, port):
                                  'payload':{
                                      'time':'%(asctime)s', # datetime as YYYY-MM-DD HH:MM:SS, msecs’
                                      'logger_name':'%(name)s', # name of the logger, often identical to 'id'
-                                     'id': '%(obj_id)s', # {name}.{last 6 chars of uuid}
-                                     'uuid': '%(obj_uuid)s', # universal unique id for obj
-                                     'name': '%(obj_name)s', # obj name
+                                     'id': '%(pipeline_id)s', # {name}.{last 6 chars of uuid}
+                                     'uuid': '%(pipeline_uuid)s', # universal unique id for obj
+                                     'name': '%(pipeline_name)s', # obj name
                                      'level':'%(levelname)8s', # INFO, WARNING, ERROR, etc
                                      'message':'%(message)s', # Logging message
                                      }

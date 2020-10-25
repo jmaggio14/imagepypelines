@@ -167,7 +167,7 @@ class Pipeline(object):
         self.name = name # string name - used to generate the id
 
         # build the logger for this pipeline
-        self.logger = get_logger(self.id, obj=self) # logging object
+        self.logger = get_logger(self.id, pipeline=self) # logging object
 
         # GRAPHING
         self.graph = nx.MultiDiGraph() # networkx graph keeping track of tasks
@@ -1349,7 +1349,7 @@ class Pipeline(object):
         old_name = self.name
         self.name = name
         # reset the logger with the new id
-        self.logger = get_logger(self.id, obj=self)
+        self.logger = get_logger(self.id, pipeline=self)
         # log the new name
         self.logger.warning("renamed from '%s' to '%s'" % (old_name, self.name))
         return self
@@ -1374,7 +1374,7 @@ class Pipeline(object):
         state['uuid'] = uuid4().hex
         self.__dict__.update(state)
         # updates the logger for the new state
-        self.logger = get_logger(self.id, obj=self)
+        self.logger = get_logger(self.id, pipeline=self)
 
     ############################################################################
     def __del__(self):

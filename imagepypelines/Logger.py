@@ -117,6 +117,16 @@ class ImagepypelinesLogger( logging.getLoggerClass() ):
             return make_master, (self.level,)
         return get_logger, (self.name,)
 
+
+class ImagepypelinesLoggerAdapter(logging.LoggerAdapter):
+    def getChild(self, name, *args, **kwargs):
+        logger = self.logger.getChild(name, *args, **kwargs)
+        adapter = ImagepypelinesLoggerAdapter(logger, self.extra)
+        return adapter
+
+
+
+
 def get_master_logger():
     return make_master()
 
@@ -143,35 +153,38 @@ def make_master(level=logging.INFO):
 
 MASTER_LOGGER = make_master()
 
-def get_logger(name, obj=None, parent=MASTER_LOGGER):
+
+
+def get_logger(name, pipeline=None, parent=MASTER_LOGGER):
     """Creates a new child logging adapter from the given parent (root logger by
     default)
 
     Args:
         name(str): the name of the new child logger
-        obj(Block,Pipeline): the Pipeline or Block object for this logger
-        log_level(int): the log level of the new logger, see python's logging
-            module for more information
+        pipeline(Block,Pipeline): the Pipeline object associated with this logger
+            (optional)
         parent(logging.LoggerAdapter,logging.Logger): parent logger to spawn a
             new logger off of
 
     Returns:
-        logging.LoggerAdapter: a new child logger adapter with conn ids for
-            id, object from the ImagePypelines
+        ImagepypelinesLoggerAdapter: a new child logger adapter with conn ids for
+            id, uuid, and name of the Pipeline (if applicable)
 
     """
     if isinstance(parent, logging.LoggerAdapter):
         parent = parent.logger
 
     logger = parent.getChild(name)
-    if obj:
-        metadata = {'obj_id':obj.id,
-                    'obj_uuid':obj.uuid,
-                    'obj_name':obj.name}
+    if pipeline:
+        metadata = {'pipeline_id':pipeline.id,
+                    'pipeline_uuid':pipeline.uuid,
+                    'pipeline_name':pipeline.name}
     else:
-        metadata = {}
+        metadata = {'pipeline_id':None,
+                    'pipeline_uuid':None,
+                    'pipeline_name':None}
 
-    adapter = logging.LoggerAdapter(logger, metadata)
+    adapter = ImagepypelinesLoggerAdapter(logger, metadata)
     return adapter
 
 def set_log_level(log_level):
