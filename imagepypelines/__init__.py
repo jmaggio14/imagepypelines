@@ -51,7 +51,7 @@ def add_plugin(plugin_name, plugin_module, add_to_namespace=True):
     """
     import sys
     ip_module = sys.modules[__name__]
-    MASTER_LOGGER.debug(
+    get_master_logger().debug(
         "loading plugin '{0}' - it will be available as imagepypelines.{0}"\
         .format(plugin_name))
 

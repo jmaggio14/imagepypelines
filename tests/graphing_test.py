@@ -497,6 +497,10 @@ def test_Logger():
 
     assert id(ip.MASTER_LOGGER) == id(master)
 
+    pickled = pickle.dumps( ip.get_master_logger() )
+    master = pickle.loads(pickled)
+    assert ip.get_master_logger().logger == master.logger
+
     # test every function with color
     master.debug('color debug test')
     master.info('color info test')

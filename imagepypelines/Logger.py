@@ -53,6 +53,8 @@ MASTER_LOGGER = None
 """logging.Logger subclass that is the root of all loggers instantiated in
 ImagePypelines"""
 
+MASTER_ADAPTER = None
+"""logging.LoggerAdapter subclass that wraps the master logger"""
 # LOGGING_MANAGER = None
 # """logging.Manager for all ImagePypelines loggers"""
 
@@ -125,10 +127,14 @@ class ImagepypelinesLoggerAdapter(logging.LoggerAdapter):
         return adapter
 
 
-
-
 def get_master_logger():
-    return make_master()
+    if MASTER_ADAPTER:
+        return MASTER_ADAPTER
+        
+    metadata = {'pipeline_id':'master',
+                'pipeline_uuid':'master',
+                'pipeline_name':'master'}
+    return ImagepypelinesLoggerAdapter(make_master(),metadata)
 
 def make_master(level=logging.INFO):
     """creates the master logger if it doesn't exist, returns it if it does"""
@@ -152,6 +158,7 @@ def make_master(level=logging.INFO):
     return master
 
 MASTER_LOGGER = make_master()
+MASTER_ADAPTER = get_master_logger()
 
 
 

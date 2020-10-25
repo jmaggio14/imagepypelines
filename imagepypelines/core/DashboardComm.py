@@ -44,13 +44,14 @@ def initialize_dash_logging():
     formatter = logging.Formatter( json.dumps(
                                 {
                                  'type':'log',
+                                 'id': '%(pipeline_id)s', # {name}.{last 6 chars of uuid}
+                                 'uuid': '%(pipeline_uuid)s', # universal unique id for obj
+                                 'name': '%(pipeline_name)s', # obj name
+                                 'source_type':'logger',
                                  'payload':{
+                                     'level':'%(levelname)8s', # INFO, WARNING, ERROR, etc
                                      'time':'%(asctime)s', # datetime as YYYY-MM-DD HH:MM:SS, msecs’
                                      'logger_name':'%(name)s', # name of the logger, often identical to 'id'
-                                     'id': '%(pipeline_id)s', # {name}.{last 6 chars of uuid}
-                                     'uuid': '%(pipeline_uuid)s', # universal unique id for obj
-                                     'name': '%(pipeline_name)s', # obj name
-                                     'level':'%(levelname)8s', # INFO, WARNING, ERROR, etc
                                      'message':'%(message)s', # Logging message
                                      }
                                  }
@@ -58,7 +59,7 @@ def initialize_dash_logging():
 
     handler.setFormatter(formatter)
 
-    get_master_logger().addHandler(handler)
+    get_master_logger().logger.addHandler(handler)
 
 
 
