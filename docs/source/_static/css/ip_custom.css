@@ -1,5 +1,14 @@
 /* d3 Graphing on home page */
 
+body{
+    font-family:"Arial", Helvetica, sans-serif;
+    font-size: 18px;
+}
+
+p {
+    line-height: 1.5;
+}
+
 .links line {
   stroke: #999;
   stroke-opacity: 0.6;
@@ -30,8 +39,9 @@ text {
 
 /* Pygments highlight override - IF ALL ELSE FAILS, THIS WORKS!!! */
 pre {
+    font-size: 16px;
     /*Light cream */
-    background-color: #ffffe6;
+    /* background-color: #ffffe6;  */
     /* Slate gray */
     /* background-color: #708090; */
     /* Mid Aubergine (purple) */

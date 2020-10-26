@@ -174,6 +174,19 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 #
 html_logo = "./_static/images/ip_logo.svg"
 
+
+html_sidebars = {
+   '**': [
+            'postcard.html',
+            # 'recentposts.html',
+            'categories.html',
+            # 'tagcloud.html',
+            # 'archives.html',
+            # 'authors.html',
+              ]
+        }
+
+
 # timestamp on bottom of page
 html_last_updated_fmt = '%b %d, %Y'
 
@@ -200,7 +213,7 @@ html_theme_options = {
                      ("About", 'about.html', True),
                      # ("Readme", 'readme.html', True),
                      ("Examples", 'examples/index.html', 1),
-                     ("Blog", 'blog/archive.html', 1),
+                     ("Blog", 'blog/2020.html', 1),
                      ("Documentation", 'docs/core'),
                      ("Plugins", 'plugins'),
                      ("Github", version_info['__download_url__'], True),
@@ -208,6 +221,13 @@ html_theme_options = {
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': False,
+
+
+    'content_fixed': False,
+     # Set the width of the content area. Defaults to '900px'
+    'content_width': '900px',
+    # Fix the width of the row. Defaults to false
+    'row_fixed': False,
 
     # Render the current pages TOC in the navbar. (Default: true)
     'navbar_pagenav': False,
@@ -258,7 +278,7 @@ html_theme_options = {
     'bootstrap_version': "3",
 
     # disable the sidebar
-    'nosidebar':True,
+    'nosidebar':False,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
