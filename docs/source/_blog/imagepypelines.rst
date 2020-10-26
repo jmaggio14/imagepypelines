@@ -58,8 +58,8 @@ Let's imagine a short messy script where we want to read in fits files, and perf
     import numpy as np
     import astropy
 
-    WIP in progress
 
+*work in progress*
 
 You can imagine how this may be difficult to read or reuse.
 
