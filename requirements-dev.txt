@@ -1,3 +1,4 @@
+wheel
 Sphinx==2.4.4
 sphinx_bootstrap_theme==0.7.1
 sphinx-automodapi
@@ -14,4 +15,3 @@ pytest-cov
 coverage
 codecov
 pytest-doctest-ellipsis-markers
-wheel
