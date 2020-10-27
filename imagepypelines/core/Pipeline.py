@@ -519,6 +519,7 @@ class Pipeline(object):
         Note:
             The argument list for the Pipeline can be found with `Pipeline.args`
 
+        Warning:
             MUST ADD FETCHES DOCUMENTATIONS
         """
         # setup fetches
@@ -583,6 +584,27 @@ class Pipeline(object):
         self.clear()
 
         return fetch_dict
+
+    ############################################################################
+    def process_and_grab(self, *pos_data, fetch, skip_enforcement=False, **kwdata):
+        """processes input data through the pipeline, but returns a tuple with
+        the specified fetches
+
+        process first resets this pipeline, before loading input data into the
+        graph and processing it.
+
+        Note:
+            The argument list for the Pipeline can be found with `Pipeline.args`
+
+        Warning:
+            MUST ADD FETCHES DOCUMENTATIONS
+        """
+
+        fetch_dict = self.process(*pos_data,
+                                    fetch=fetch,
+                                    skip_enforcement=skip_enforcement,
+                                    **kwdata)
+        return tuple( fetch_dict[k] for k in fetch )
 
     ############################################################################
     def asblock(self, *fetches):

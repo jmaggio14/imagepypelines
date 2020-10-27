@@ -51,7 +51,7 @@ Turn a script into a powerful tool
 
 ImagePypelines is a library to turn scripts into a robust processing pipeline. **It was designed by scientists, for scientists.**
 
-Let's imagine a short messy script where we want to read in fits files, and perform image reduction on them. *(I'm an aspiring astronomer... just saying for anyone on the lookout for PhD students)*
+Let's imagine a short messy script where we want to read in fits files, and perform image reduction on them. *(I'm an aspiring astronomer... just saying for anyone on the lookout for graduate students)*
 
 .. code-block:: python
 
