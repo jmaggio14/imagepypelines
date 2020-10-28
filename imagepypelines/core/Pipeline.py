@@ -433,6 +433,15 @@ class Pipeline(object):
 
 
 
+        # CHECK to make sure the graph isn't cyclic (this is impossible to compute)
+        if not nx.is_directed_acyclic_graph(self.graph):
+            msg = "Cyclic variable dependency detected! Make sure" \
+                        " two variables don't depend on each other - these" \
+                        " aren't possible to compute"
+            self.logger.error(msg)
+            raise PipelineError(msg)
+
+
         ########################################################################
         #                   create input list & requirements
         ########################################################################
