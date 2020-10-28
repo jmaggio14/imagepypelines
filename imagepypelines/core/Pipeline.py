@@ -217,19 +217,19 @@ class Pipeline(object):
         def _add_to_vars(var):
             # make sure variable name is a string
             if not isinstance(var,str):
-                msg = "graph vars must be a string, not %s" % type(var)
+                msg = f"graph vars must be a string, not {type(var)}"
                 self.logger.error(msg)
                 raise TypeError(msg)
 
             # check if variable name already exists
             if var in self.vars.keys():
-                msg = "\"%s\" cannot be defined more than once" % var
+                msg = f"variable \"{var}\" cannot be defined more than once"
                 self.logger.error(msg)
                 raise ValueError(msg)
 
             # check if variable name is illegal
             if var in ILLEGAL_VAR_NAMES:
-                msg = "var cannot be named one of %s" % ILLEGAL_VAR_NAMES
+                msg = f"{var} cannot be named one of {ILLEGAL_VAR_NAMES}"
                 self.logger.error(msg)
                 raise PipelineError(msg)
 
@@ -260,6 +260,7 @@ class Pipeline(object):
         ########################################################################
         # add all variables defined in the graph to a dictionary
         for var in tasks.keys():
+            print(var)
             # for tuple defined dict keys like ('x','y') : (block, 'a', 'b')
             if isinstance(var,(tuple,list)):
                 for v in var:
@@ -374,20 +375,26 @@ class Pipeline(object):
 
         # make a list of nodes without outgoing edges
         end_nodes = []
-        for node,attrs in self.graph.nodes(data=True):
+        for node_id,attrs in self.graph.nodes(data=True):
             # if the node already has outputs, we don't need a leaf out of it
-            if self.graph.out_degree(node) > 0:
+            if self.graph.out_degree(node_id) == len(attrs['outputs']):
                 continue
             # if the end node is a Leaf already, then we don't need another leaf
             elif isinstance(attrs['block'],Leaf):
                     continue
             else:
-                end_nodes.append( (node,attrs) )
+                bad_edges = []
+                drawn_edges = tuple(self.graph.out_edges(node_id, data='var_name'))
+                for var_name in attrs['outputs']:
+                    if var_name not in drawn_edges:
+                        bad_edges.append(var_name)
 
-        for node,node_attrs in end_nodes:
+                end_nodes.append( (node_id,attrs,bad_edges) )
+
+        for node_id,node_attrs,bad_edges in end_nodes:
             # this is a final node of the pipeline, so we need to draw a
             # leaf for each of its output edges
-            for i,end_name in enumerate(node_attrs['outputs']):
+            for i,end_name in enumerate(bad_edges):
                 # add the leaf
                 leaf = Leaf(end_name)
                 leaf_uuid = leaf.name + uuid4().hex + '-node'
@@ -409,7 +416,7 @@ class Pipeline(object):
                 edge_key = "{}:{}-->{}".format(end_name, i, 0)
                 # draw the edge to the leaf
                 # no need to check if it exists, because we just created the Leaf
-                self.graph.add_edge(node,
+                self.graph.add_edge(node_id,
                                     leaf_uuid,
                                     key=edge_key,
                                     var_name=end_name, # name assigned in graph definition
@@ -420,7 +427,7 @@ class Pipeline(object):
                                     n_datums=0,
                                     datum_type=None,
                                     data_stored_in="unknown",
-                                    node_a = node,
+                                    node_a = node_id,
                                     node_b = leaf_uuid,
                                     data=None)
 
@@ -463,7 +470,7 @@ class Pipeline(object):
                 raise PipelineError(msg)
 
         # log the current pipeline status
-        msg = "{} tasks set up; process arguments are ({})".format(len(tasks), ', '.join(self.args))
+        msg = "{} tasks set up; process arguments are ({},)".format(len(tasks), ', '.join(self.args))
         self.logger.info(msg)
 
         ########################################################################
@@ -501,8 +508,7 @@ class Pipeline(object):
         # print warning for vars that won't be computed
         noncomputable = self.noncomputable
         if len(noncomputable) > 0:
-            msg = "{vars} won't be computed because they rely on data from void blocks (blocks that don't return data)"
-            msg.format(vars=noncomputable)
+            msg = f"{noncomputable} won't be computed because they rely on data from void blocks (blocks that don't return data)"
             self.logger.warning(msg)
 
         # send along the new graph in a message to the Dashboards
@@ -574,6 +580,7 @@ class Pipeline(object):
         # populate the output dictionary
         fetch_dict = {}
         for _,_,edge in self.graph.edges(data=True):
+            print(edge['var_name'])
             if edge['var_name'] in fetch:
                 if edge['data'] is None:
                     fetch_dict[ edge['var_name'] ] = None #Could eventually be ip.Void or ip.NULL type
