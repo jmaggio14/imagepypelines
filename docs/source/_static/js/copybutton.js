@@ -63,5 +63,5 @@ $(document).ready(function() {
             button.attr('title', hide_text);
             button.data('hidden', 'false');
         }
-    });
+    }).click();
 });

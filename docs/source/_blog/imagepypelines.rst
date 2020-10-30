@@ -7,7 +7,7 @@
 
 .. _XKCD: https://xkcd.com/054/
 
-Let's by honest, code in science isn't portable
+Let's be honest, code in science isn't portable
 ===============================================
 
 

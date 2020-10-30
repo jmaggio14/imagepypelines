@@ -92,8 +92,6 @@ extensions = [
     'ablog',  # blog extension
     ]
 
-
-
 ################################################################################
 # BLOG STUFF - using the ablog extension
 blog_authors = {
@@ -221,13 +219,6 @@ html_theme_options = {
 
     # Render the next and previous page links in navbar. (Default: true)
     'navbar_sidebarrel': False,
-
-
-    'content_fixed': False,
-     # Set the width of the content area. Defaults to '900px'
-    'content_width': '900px',
-    # Fix the width of the row. Defaults to false
-    'row_fixed': False,
 
     # Render the current pages TOC in the navbar. (Default: true)
     'navbar_pagenav': False,

@@ -12,12 +12,12 @@ class ImagePypelinesLight(Style):
 
     # define colors as variables
     cream = "#FFFDD0"
-    gray = "#191C3A"
+    gray = "#9ea6a8"
 
     bright_orange = "#FF5D00"
     orange = "#FF4D00"
     red = "#FF0000"
-    blue = "#3195B7"
+    blue = "#09aee6"
     purple = "#77216F"
 
     dark_orange = "#E95420" # ubuntu orange
@@ -30,15 +30,18 @@ class ImagePypelinesLight(Style):
     light_purple = "#BB94A9"
     light_orange = "#F4AA90"
 
+    decorator = "bold #af7dff"
+
 
     styles = {
-            Comment: 'italic '+red,
+            Comment: 'italic '+ gray,
             Keyword: 'bold '+orange,
             Name: purple,
             Name.Function: 'bold '+dark_red,
-            Name.Decorator: dark_red,
+            Name.Decorator: decorator,
+            # Name.Namespace: light_orange,
             Name.Class: 'bold '+red,
-            String: blue,
+            String: 'bold ' +blue,
             Number: blue,
             Operator: 'bold '+orange,
             Generic: orange,
