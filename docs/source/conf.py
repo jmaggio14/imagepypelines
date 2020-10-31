@@ -105,7 +105,7 @@ blog_authors = {
 
 # JM - adds our custom landing page
 html_additional_pages = {'index': 'index.html',
-                          'about' : 'about.html',
+                          # 'getting_started' : 'getting_started.html',
                           }
 master_doc = 'index'
 
@@ -174,14 +174,54 @@ html_logo = "./_static/images/ip_logo.svg"
 
 
 html_sidebars = {
-   '**': [
+   '_blog/**': [
             'postcard.html',
-            # 'recentposts.html',
-            'categories.html',
+            'recentposts.html',
+            # 'categories.html',
             # 'tagcloud.html',
             # 'archives.html',
             # 'authors.html',
-              ]
+            # 'localtoc.html',
+              ],
+  'blog/**': [
+           # 'postcard.html',
+           'recentposts.html',
+           # 'categories.html',
+           # 'tagcloud.html',
+           # 'archives.html',
+           'authors.html',
+           'localtoc.html',
+             ],
+
+    'examples/**': [
+             # 'postcard.html',
+             # 'recentposts.html',
+             # 'categories.html',
+             # 'tagcloud.html',
+             # 'archives.html',
+             # 'authors.html',
+             'localtoc.html',
+             'globaltoc.html',
+             'searchbox.html',
+             'sourcelink.html',
+               ],
+
+    'docs/**': [
+             # 'postcard.html',
+             # 'recentposts.html',
+             # 'categories.html',
+             # 'tagcloud.html',
+             # 'archives.html',
+             # 'authors.html',
+             'localtoc.html',
+             # 'globaltoc.html',
+             'searchbox.html',
+             # 'sourcelink.html',
+              'relations.html',
+               ],
+
+       # '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
+       # 'using/windows': ['windowssidebar.html', 'searchbox.html'],
         }
 
 
@@ -208,7 +248,7 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-                     ("About", 'about.html', True),
+                     ("Getting Started", 'getting_started', True),
                      # ("Readme", 'readme.html', True),
                      ("Examples", 'examples/index.html', 1),
                      ("Blog", 'blog/2020.html', 1),
