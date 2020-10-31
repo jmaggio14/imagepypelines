@@ -52,7 +52,7 @@ which can be visualized, saved, copied, or deployed to a server easily.
 
 Installation
 ************
-more options for installation can be found `here <http://www.imagepypelines.org/about.html>`_.
+more options for installation can be found `here <http://www.imagepypelines.org/getting_started.html>`_.
 
 **Python compatibility:** 3.6+ 64bit
 

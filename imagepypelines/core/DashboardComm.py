@@ -19,7 +19,8 @@ def connect_to_dash(name, host, port):
     if n_dashboards() == 0:
         # if this is our first dashboard
         # add a logging handler to support log messages
-        initialize_dash_logging()
+        # initialize_dash_logging()
+        pass
     DashboardComm.connect(name, host, port)
 
 def n_dashboards():

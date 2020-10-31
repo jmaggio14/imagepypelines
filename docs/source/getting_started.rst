@@ -1,11 +1,51 @@
 :orphan:
 
+.. _opencv-python: https://pypi.org/project/opencv-python/
+
 ===============
 Getting Started
 ===============
 
+The `imagepypelines` package is a pipeline processing library for scientists who
+want to make their code more scalable and sharable with their colleagues.
+**It’s designed with scientists in mind, not software engineers.**
+
+.. It’s designed with scientists in mind, not software engineers.
+.. Scientific simplicity over software complexity
+
+ImagePypelines contains tools to turn scripts into robust processing pipelines
+which can be visualized, saved, copied, or deployed to a server easily.
+
 Installation
-------------
+************
+
+.. Add badges for version, build, etc
+.. image:: https://www.travis-ci.com/jmaggio14/imagepypelines.svg?branch=master
+  :target: https://www.travis-ci.com/jmaggio14/imagepypelines
+  :alt: build
+
+.. image:: https://img.shields.io/pypi/l/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+
+.. image:: https://codecov.io/gh/jmaggio14/imagepypelines/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/jmaggio14/imagepypelines
+  :alt: coverage
+
+.. image:: https://img.shields.io/pypi/pyversions/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+  :alt: python versions
+
+.. image:: https://badge.fury.io/py/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+  :alt: pypi package
+
+.. image:: https://img.shields.io/pypi/status/imagepypelines.svg
+  :target: https://badge.fury.io/py/imagepypelines
+  :alt: status
+
+.. raw:: html
+
+    <br><br>
 
 .. raw:: html
 
@@ -27,12 +67,14 @@ Installation
             <i>(remove <code>--user</code> to install systemwide)</i>
             <div class='highlight-shell notranslate'>
                 <div class='highlight'>
-                    <pre>pip install imagepypelines --user</pre>
+                    <pre>pip install imagepypelines[all] --user</pre>
                     <a class="copybtn o-tooltip--left" style="background-color: rgb(245, 245, 245)" data-tooltip="Copy" data-clipboard-target="#codecell0">
                       <img src="./_static/copy-button.svg" alt="Copy to clipboard">
                     </a>
                 </div>
             </div>
+            <br/>
+            **Note: remove the <code>[all]</code> if you don't wish to install default plugins or <a href='https://pypi.org/project/opencv-python/'>opencv-python</a>.
         </div>
         <div id="conda" class="tab-pane fade"><br>
             <div class='highlight-shell notranslate'>
@@ -54,8 +96,42 @@ Installation
                     </a>
                 </div>
             </div>
+            <br/>
+            **Note: This will not install the official ImagePypelines plugins. See the <b>Advanced Startup</b> section below to manually install the Image and Astro plugins.
         </div>
+
     </div>
+
+.. raw:: html
+
+    <br/>
+
+
+You may want to verify your installation by running the hello-world test pipeline:
+
+.. code-block:: shell
+
+    imagepypelines hello-world
+
+    # Output: Hello World!
+
+If your output matches then you're ready to code! See our `Examples <examples/index.html>`_ for help converting your script.
+
+
+Using the Dashboard
+-------------------
+**<include video here>**
+
+
+.. raw:: html
+
+    <br/>
+
+
+------------
+
+Advanced
+********
 
 Setting up a Virtual Environment
 --------------------------------
@@ -74,7 +150,11 @@ And activate it with:
 
 .. code-block:: shell
 
+    # Windows
     venv/Scripts/activate
+
+    # Linux
+    venv/bin/activate
 
 
 You should now be able to follow the installation steps above without issue. Deactivate your virtual environment with:
@@ -83,6 +163,77 @@ You should now be able to follow the installation steps above without issue. Dea
 
     deactivate
 
+
+Configuring Your ImagePypelines Installation
+--------------------------------------------
+
+--------
+
+Image Plugin
+############
+
+ImagePypelines requires OpenCV bindings
+by default for use in the official `image <https://www.github.com/jmaggio14/imagepypelines_image>`_ plugin.
+If you do not have a local OpenCV installation compiled from source, you may install opencv-python_
+on your system or in a virtual environment alongside imagepypelines. Careful though! opencv-python_
+WILL overwrite your own local OpenCV bindings, so proceed with caution!
+
+*without opencv*
+
+.. code-block:: shell
+
+    pip install imagepypelines_image
+
+*with opencv*
+
+.. code-block:: shell
+
+    pip install imagepypelines_image[cv]
+
+
+--------
+
+Astro Plugin
+############
+
+
+Likewise, install our official `astronomy <https://www.github.com/jmaggio14/imagepypelines_astro>`_ plugin via
+
+*this is installed by default with imagepypelines[all]*
+
+.. code-block:: shell
+
+    pip install imagepypelines_astro
+
+--------
+
+Backends
+########
+
+Brief overview of our various messaging, dashboard, and runtime backends.
+Currently not a very long list and should reflect vanilla IP. As example redis vs current TCP implementation for messaging
+
+
+ImagePypelines Command Line Interface Overview
+----------------------------------------------
+
+More in depth than above. Go over all commands in great detail with example use cases
+
+
+For Developers
+--------------
+
+All the developer centric goodies relating to ImagePypelines. Installation, Contribution Guidelines, etc
+
+Installing Docker
+-----------------
+
+While not required, installing `Docker <https://docs.docker.com/get-docker/>`_
+will make it easier to run our Dashboard.
+
+You can invoke this containerized version with
+
+:code:``
 
 
 .. raw:: html

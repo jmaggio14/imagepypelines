@@ -19,10 +19,27 @@ dev_requirements_path = os.path.join(current_dir,'requirements-dev.txt')
 with open(dev_requirements_path,'r') as f:
     requirements_dev = f.read().splitlines()
 
-    long_description = ''
+
+## PLUGINS
+# load in list of image requirements
+image_requirements_path = os.path.join(current_dir,'requirements-image.txt')
+with open(image_requirements_path,'r') as f:
+    requirements_image = f.read().splitlines()
+
+# load in list of astro requirements
+astro_requirements_path = os.path.join(current_dir,'requirements-astro.txt')
+with open(astro_requirements_path,'r') as f:
+    requirements_astro = f.read().splitlines()
+
+requirements_all = requirements_astro + requirements_image
+
+# fetch the readme
+long_description = ''
 if os.path.exists(os.path.join(current_dir,'README.rst')):
     with open(os.path.join(current_dir,'README.rst'), 'r') as f:
         long_description = f.read()
+
+
 
 setup(name='imagepypelines',
       version=__version__,
@@ -42,8 +59,11 @@ setup(name='imagepypelines',
       classifiers=__classifiers__,
       packages=find_packages(),
       include_package_data=True,
-      install_requires=requirements,
+      install_requires=requirements, # these are always installed - ipimage is here
       extras_require = {
                     'dev' : requirements_dev,
+                    'all' : requirements_all,
+                    'astro' : requirements_astro,
+                    'image' : requirements_image,
                     }
       )

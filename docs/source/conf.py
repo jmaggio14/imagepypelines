@@ -220,11 +220,11 @@ html_sidebars = {
               'relations.html',
                ],
 
-    # '*': [
-    #          'localtoc.html',
-    #          'globaltoc.html',
-    #          'relations.html',
-    #            ],
+    '*': [
+             'localtoc.html',
+             'globaltoc.html',
+             'relations.html',
+               ],
 
        # '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
        # 'using/windows': ['windowssidebar.html', 'searchbox.html'],
