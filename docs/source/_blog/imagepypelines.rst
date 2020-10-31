@@ -53,11 +53,6 @@ ImagePypelines is a library to turn scripts into a robust processing pipeline. *
 
 Let's imagine a short messy script where we want to read in fits files, and perform image reduction on them. *(I'm an aspiring astronomer... just saying for anyone on the lookout for graduate students)*
 
-.. code-block:: python
-
-    import numpy as np
-    import astropy
-
 
 *work in progress*
 
