@@ -56,7 +56,6 @@ Installation
             </div>
         </div>
     </div>
-    <br><br>
 
 Setting up a Virtual Environment
 --------------------------------
@@ -83,3 +82,9 @@ You should now be able to follow the installation steps above without issue. Dea
 .. code-block:: shell
 
     deactivate
+
+
+
+.. raw:: html
+
+    <br><br>
