@@ -220,6 +220,12 @@ html_sidebars = {
               'relations.html',
                ],
 
+    # '*': [
+    #          'localtoc.html',
+    #          'globaltoc.html',
+    #          'relations.html',
+    #            ],
+
        # '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
        # 'using/windows': ['windowssidebar.html', 'searchbox.html'],
         }
@@ -248,7 +254,7 @@ html_theme_options = {
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
     'navbar_links': [
-                     ("Getting Started", 'getting_started', True),
+                     ("Getting Started", 'getting_started'),
                      # ("Readme", 'readme.html', True),
                      ("Examples", 'examples/index.html', 1),
                      ("Blog", 'blog/2020.html', 1),
