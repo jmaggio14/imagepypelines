@@ -2,6 +2,8 @@
 
 .. _opencv-python: https://pypi.org/project/opencv-python/
 
+.. include:: isoamsa.txt
+
 ===============
 Getting Started
 ===============
@@ -107,15 +109,91 @@ Installation
     <br/>
 
 
-You may want to verify your installation by running the hello-world test pipeline:
+ImagePypelines Makes Your Scripts More Powerful
+***********************************************
 
-.. code-block:: shell
+.. table::
+    :widths: auto
+    :align: center
 
-    imagepypelines hello-world
+    +-------------------------------------+----------------------------------------------------+
+    |        Without ImagePypelines       |                 With ImagePypelines                |
+    +=====================================+====================================================+
+    | .. code-block:: python              | .. code-block:: python                             |
+    |                                     |                                                    |
+    |     import numpy as np              |     import numpy as np                             |
+    |                                     |     import imagepypelines as ip                    |
+    |                                     |                                                    |
+    |     # let's build a linear function |     # let's build a linear function                |
+    |     def y(m,x,b):                   |     @ip.blockify()                                 |
+    |         return m*x + b              |     def y(m,x,b):                                  |
+    |                                     |         return m*x + b                             |
+    |                                     |                                                    |
+    |     m = np.ones(500) * 5            |     m = np.ones(500) * 5                           |
+    |     x = np.arange(500)              |     x = np.arange(500)                             |
+    |     b = np.ones(500) * 12           |     b = np.ones(500) * 12                          |
+    |                                     |                                                    |
+    |     y = y(m,x,b)                    |     tasks = {                                      |
+    |                                     |             # inputs                               |
+    |                                     |             'm' : ip.Input(0),                     |
+    |                                     |             'x' : ip.Input(1),                     |
+    |                                     |             'b' : ip.Input(2),                     |
+    |                                     |             # linear transformer                   |
+    |                                     |             'y' : (y, 'm','x','b'),                |
+    |                                     |             }                                      |
+    |                                     |     pipeline = ip.Pipeline(tasks)                  |
+    |                                     |                                                    |
+    |                                     |     y = pipeline.process_and_grab(m,x,b,fetch='y') |
+    +-------------------------------------+----------------------------------------------------+
+    |    *I'm a boring normal script*     |    *I can be saved to disk, deployed to a server,* |
+    |                                     |               *or monitored remotely!*             |
+    +-------------------------------------+----------------------------------------------------+
 
-    # Output: Hello World!
 
-If your output matches then you're ready to code! See our `Examples <examples/index.html>`_ for help converting your script.
+.. .. code-block:: python
+..
+..     import imagepypelines as ip
+..     import numpy as np
+..
+..     # let's build a linear function
+..     @ip.blockify()
+..     def y(m,x,b):
+..         return m*x + b
+..
+..     m = np.ones(500) * 5
+..     x = np.arange(500)
+..     b = np.ones(500) * 12
+..
+..     tasks = {
+..             # inputs
+..             'm' : ip.Input(0),
+..             'x' : ip.Input(1),
+..             'b' : ip.Input(2),
+..             # linear transformer
+..             'y' : (y, 'm','x','b'),
+..             }
+..     pipeline = ip.Pipeline(tasks)
+..
+..     y = pipeline.process_and_grab(m,x,b,fetch='y')
+
+
+..
+.. .. code-block:: python
+..
+..     import numpy as np
+..
+..
+..     # let's build a linear function
+..     def y(m,x,b):
+..         return m*x + b
+..
+..
+..     m = np.ones(500) * 5
+..     x = np.arange(500)
+..     b = np.ones(500) * 12
+..
+..     y = m*x + b
+
 
 
 Using the Dashboard
@@ -167,6 +245,7 @@ You should now be able to follow the installation steps above without issue. Dea
 Configuring Your ImagePypelines Installation
 --------------------------------------------
 
+
 --------
 
 Image Plugin
@@ -212,6 +291,20 @@ Backends
 
 Brief overview of our various messaging, dashboard, and runtime backends.
 Currently not a very long list and should reflect vanilla IP. As example redis vs current TCP implementation for messaging
+
+
+Testing
+--------
+
+You may want to verify your installation by running the hello-world test pipeline:
+
+.. code-block:: shell
+
+    imagepypelines hello-world
+
+    # Output: Hello World!
+
+If your output matches then you're ready to code! See our `Examples <examples/index.html>`_ for help converting your script.
 
 
 ImagePypelines Command Line Interface Overview
