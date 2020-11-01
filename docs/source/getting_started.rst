@@ -112,6 +112,9 @@ Installation
 ImagePypelines Makes Your Scripts More Powerful
 ***********************************************
 
+
+**placeholder until my capstone code is done**
+
 .. table::
     :widths: auto
     :align: center
