@@ -260,7 +260,6 @@ class Pipeline(object):
         ########################################################################
         # add all variables defined in the graph to a dictionary
         for var in tasks.keys():
-            print(var)
             # for tuple defined dict keys like ('x','y') : (block, 'a', 'b')
             if isinstance(var,(tuple,list)):
                 for v in var:
@@ -589,7 +588,6 @@ class Pipeline(object):
         # populate the output dictionary
         fetch_dict = {}
         for _,_,edge in self.graph.edges(data=True):
-            print(edge['var_name'])
             if edge['var_name'] in fetch:
                 if edge['data'] is None:
                     fetch_dict[ edge['var_name'] ] = None #Could eventually be ip.Void or ip.NULL type
