@@ -98,15 +98,11 @@ def require(*plugins):
     Args:
         *plugins: names of plugins
     """
-    for plugin in plugins:
-        if not plugin in LOADED_PLUGINS.keys():
-            not_found.append(plugin)
-
     master = get_master_logger()
 
     not_loaded = []
     for plg in plugins:
-        if not (plg in LOADED_PLUGINS.keys()):
+        if not (plg in LOADED_PLUGINS):
             not_loaded.append(plg)
 
     if not_loaded:
