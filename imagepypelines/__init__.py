@@ -98,14 +98,23 @@ def require(*plugins):
     Args:
         *plugins: names of plugins
     """
-    not_found = []
-
     for plugin in plugins:
         if not plugin in LOADED_PLUGINS.keys():
             not_found.append(plugin)
 
-    if not_found:
-        raise RuntimeError('unable to find required plugin(s) "%s"' % not_found)
+    master = get_master_logger()
+
+    not_loaded = []
+    for plg in plugins:
+        if not (plg in LOADED_PLUGINS.keys()):
+            not_loaded.append(plg)
+
+    if not_loaded:
+        for plg in not_loaded:
+            master.error(f'unable to find "{plg}"')
+        raise RuntimeError(f"unable to find the required plugin(s): {not_loaded}")
+
+
 
 
 def get_plugin_by_name(plugin_name):
