@@ -1,0 +1,49 @@
+DisplaySafe
+===========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: DisplaySafe
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DisplaySafe.args
+      ~DisplaySafe.id
+      ~DisplaySafe.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~DisplaySafe.__call__
+      ~DisplaySafe.check_setup
+      ~DisplaySafe.copy
+      ~DisplaySafe.deepcopy
+      ~DisplaySafe.enforce
+      ~DisplaySafe.get_default_node_attrs
+      ~DisplaySafe.postprocess
+      ~DisplaySafe.preprocess
+      ~DisplaySafe.process
+      ~DisplaySafe.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>FrameSize &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../getting_started.html">Getting Started</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../blog/2020.html">Blog</a></li>
+                <li><a href="../docs/core.html">Documentation</a></li>
+                <li><a href="../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <div class="section" id="framesize">
+<h1>FrameSize<a class="headerlink" href="#framesize" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="imagepypelines_image.FrameSize">
+<em class="property">class </em><code class="sig-prename descclassname">imagepypelines_image.</code><code class="sig-name descname">FrameSize</code><span class="sig-paren">(</span><em class="sig-param">order='HWC'</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">imagepypelines_image.blocks.ImageBlock</span></code></p>
+<p>Retrieves the size of the image frame</p>
+<dl class="simple">
+<dt>Default Enforcement:</dt><dd><ol class="arabic simple">
+<li><dl class="simple">
+<dt>image</dt><dd><p>type: np.ndarray
+shapes: [(None,None), (None,None,None)]</p>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+<dt>Batch Size:</dt><dd><p>“each”</p>
+</dd>
+</dl>
+<p class="rubric">Attributes Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.args" title="imagepypelines_image.FrameSize.args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">args</span></code></a></p></td>
+<td><p>arguments in the order they are expected</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.id" title="imagepypelines_image.FrameSize.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></a></p></td>
+<td><p>A unique id for this block</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.n_args" title="imagepypelines_image.FrameSize.n_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_args</span></code></a></p></td>
+<td><p>Number of arguments for the process function</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.__call__" title="imagepypelines_image.FrameSize.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(*args)</p></td>
+<td><p>Allows any block to act as a callable, aliasing the process method</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.check_setup" title="imagepypelines_image.FrameSize.check_setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_setup</span></code></a>(task_args)</p></td>
+<td><p>briefly checks setup with the provided task inputs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.copy" title="imagepypelines_image.FrameSize.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</p></td>
+<td><p>fetches a shallow copy of this block with the UUID updated</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.deepcopy" title="imagepypelines_image.FrameSize.deepcopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deepcopy</span></code></a>()</p></td>
+<td><p>fetches a deep copy of this block with the UUID updated</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.enforce" title="imagepypelines_image.FrameSize.enforce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">enforce</span></code></a>(arg[, types, shapes, containers])</p></td>
+<td><p>sets the block up to make sure the given arg is the assigned type and shapes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.get_default_node_attrs" title="imagepypelines_image.FrameSize.get_default_node_attrs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_node_attrs</span></code></a>()</p></td>
+<td><p>all values must be json serializable</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.postprocess" title="imagepypelines_image.FrameSize.postprocess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">postprocess</span></code></a>()</p></td>
+<td><p>runs after</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.preprocess" title="imagepypelines_image.FrameSize.preprocess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">preprocess</span></code></a>()</p></td>
+<td><p>runs before all batches are processed</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.process" title="imagepypelines_image.FrameSize.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>(image)</p></td>
+<td><p>Retrieves the height and width of the image.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines_image.FrameSize.rename" title="imagepypelines_image.FrameSize.rename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename</span></code></a>(name)</p></td>
+<td><p>renames the block to the given name.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="attribute">
+<dt id="imagepypelines_image.FrameSize.args">
+<code class="sig-name descname">args</code><a class="headerlink" href="#imagepypelines_image.FrameSize.args" title="Permalink to this definition">¶</a></dt>
+<dd><p>arguments in the order they are expected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines_image.FrameSize.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#imagepypelines_image.FrameSize.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unique id for this block</p>
+<p>This id is a combination of the block’s non-unique name and
+part of it’s uuid (last 6 characters by default).
+The entropy of this id can be increased by increasing ImagePypelines
+UUID_ORDER variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines_image.FrameSize.n_args">
+<code class="sig-name descname">n_args</code><a class="headerlink" href="#imagepypelines_image.FrameSize.n_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of arguments for the process function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">*args</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allows any block to act as a callable, aliasing the process method</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.check_setup">
+<code class="sig-name descname">check_setup</code><span class="sig-paren">(</span><em class="sig-param">task_args</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.check_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>briefly checks setup with the provided task inputs.</p>
+<p>This function can be overloaded to add additional functionality if
+desired. By default it simply checks if too many or too few arguments
+were provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>task_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>) – Arguments for this task</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Be very careful making task-specific modifications to the block
+setup in this function. It’s called once for every task this block
+is in. Changes made for one task may not apply to another task.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetches a shallow copy of this block with the UUID updated</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.deepcopy">
+<code class="sig-name descname">deepcopy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.deepcopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetches a deep copy of this block with the UUID updated</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.enforce">
+<code class="sig-name descname">enforce</code><span class="sig-paren">(</span><em class="sig-param">arg</em>, <em class="sig-param">types=None</em>, <em class="sig-param">shapes=None</em>, <em class="sig-param">containers=None</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.enforce" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets the block up to make sure the given arg is the assigned type
+and shapes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – name the process function argument you want to enforce
+checking on</p></li>
+<li><p><strong>types</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a>) – the types to restrict this
+argument to. If left as None, then no type checking will be
+done</p></li>
+<li><p><strong>shapes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a>) – the shapes to restrict this
+argument to. If left as None, then no shape checking will be
+done</p></li>
+<li><p><strong>containers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a>) – the containers to restrict
+this argument to. If left as None, then no container checking
+will be done.
+<em>if batch_type is “each”, then the container is irrelevant and
+can be safely ignored!</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>self</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Block</span></code></p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function must be called after the parent block is instantiated!</p>
+<p>That is, in your <cite>__init__</cite> function, you must call
+<cite>super().__init__</cite> before calling <cite>self.enforce</cite></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.get_default_node_attrs">
+<code class="sig-name descname">get_default_node_attrs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.get_default_node_attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>all values must be json serializable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.postprocess">
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.postprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>runs after</p>
+<p>all batches are processed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.preprocess">
+<code class="sig-name descname">preprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.preprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>runs before all batches are processed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">image</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the height and width of the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<em>np.ndarray</em>) – the input image</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>tuple containing:</p>
+<blockquote>
+<div><p>height(int): number of rows in image
+width(int): number of columns in image</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines_image.FrameSize.rename">
+<code class="sig-name descname">rename</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines_image.FrameSize.rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>renames the block to the given name. The id is reset in this process</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/api/imagepypelines_image.FrameSize.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

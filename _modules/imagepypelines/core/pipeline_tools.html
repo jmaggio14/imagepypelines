@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines.core.pipeline_tools &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../../examples/index.html">Examples</a></li>
+                <li><a href="../../../blog/2020.html">Blog</a></li>
+                <li><a href="../../../docs/core.html">Documentation</a></li>
+                <li><a href="../../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines.core.pipeline_tools</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Email: jmaggio14@gmail.com</span>
+<span class="c1"># @Website: https://www.imagepypelines.org/</span>
+<span class="c1"># @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE</span>
+<span class="c1"># @github: https://github.com/jmaggio14/imagepypelines</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">.block_subclasses</span> <span class="kn">import</span> <span class="n">FuncBlock</span>
+
+<span class="c1">################################################################################</span>
+<div class="viewcode-block" id="blockify"><a class="viewcode-back" href="../../../api/imagepypelines.blockify.html#imagepypelines.blockify">[docs]</a><span class="k">def</span> <span class="nf">blockify</span><span class="p">(</span><span class="n">kwargs</span><span class="o">=</span><span class="p">{},</span>
+                <span class="n">batch_type</span><span class="o">=</span><span class="s2">&quot;each&quot;</span><span class="p">,</span>
+                <span class="n">types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">shapes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">containers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">void</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;decorator which converts a normal function into a un-trainable</span>
+<span class="sd">    block which can be added to a pipeline. The function can still be used</span>
+<span class="sd">    as normal after blockification (the __call__ method is setup such that</span>
+<span class="sd">    unfettered access to the function is permitted)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: hardcode keyword arguments for a function, these arguments</span>
+<span class="sd">            will not have to be used to. defaults to {}</span>
+<span class="sd">        types(:obj:`dict`,None): Dictionary of input types. If arg doesn&#39;t</span>
+<span class="sd">            exist as a key, or if the value is None, then no checking is</span>
+<span class="sd">            done. If not provided, then will default to args as keys, None</span>
+<span class="sd">            as values.</span>
+<span class="sd">        shapes(:obj:`dict`,None): Dictionary of input shapes. If arg doesn&#39;t</span>
+<span class="sd">            exist as a key, or if the value is None, then no checking is</span>
+<span class="sd">            done. If not provided, then will default to args as keys, None</span>
+<span class="sd">            as values.</span>
+<span class="sd">        containers(:obj:`dict`,None): Dictionary of input containers. If arg</span>
+<span class="sd">            doesn&#39;t exist as a key, or if the value is None, then no</span>
+<span class="sd">            checking is done. If not provided, then will default to args as</span>
+<span class="sd">            keys, None as values.</span>
+<span class="sd">            *if batch_type is &quot;each&quot;, then the container is irrelevant and can</span>
+<span class="sd">            be safely ignored!*</span>
+<span class="sd">        batch_type(str, int): the type of the batch processing for your</span>
+<span class="sd">            process function. Either &quot;all&quot; or &quot;each&quot;. `all` means that all</span>
+<span class="sd">            argument data will be passed into to your function at once,</span>
+<span class="sd">            `each` means that each argument datum will be passed in</span>
+<span class="sd">            individually</span>
+<span class="sd">        void(bool): Boolean value. By default all blocks return a value or</span>
+<span class="sd">            values as output. However, if printing to screen, plotting, or</span>
+<span class="sd">            saving data to a file, a block may not have a meaningful output</span>
+<span class="sd">            that should be stored in a pipeline&#39;s output dictionary. In this</span>
+<span class="sd">            case, void should be set to True, so that the output of the block</span>
+<span class="sd">            is ignored. The associated var key in the pipeline output will</span>
+<span class="sd">            contain a value of :obj:`None`.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import imagepypelines as ip</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; @ip.blockify( kwargs=dict(value=10) )</span>
+<span class="sd">        &gt;&gt;&gt; def add_value(datum, value):</span>
+<span class="sd">        ...    return datum + value</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; type(add_value)</span>
+<span class="sd">        &lt;class &#39;FuncBlock&#39;&gt;</span>
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_blockify</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FuncBlock</span><span class="p">(</span><span class="n">func</span><span class="p">,</span>
+                        <span class="n">kwargs</span><span class="p">,</span>
+                        <span class="n">batch_type</span><span class="o">=</span><span class="n">batch_type</span><span class="p">,</span>
+                        <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
+                        <span class="n">shapes</span><span class="o">=</span><span class="n">shapes</span><span class="p">,</span>
+                        <span class="n">containers</span><span class="o">=</span><span class="n">containers</span><span class="p">,</span>
+                        <span class="n">void</span><span class="o">=</span><span class="n">void</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_blockify</span></div>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

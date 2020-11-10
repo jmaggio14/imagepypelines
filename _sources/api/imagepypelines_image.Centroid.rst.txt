@@ -1,0 +1,49 @@
+Centroid
+========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: Centroid
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Centroid.args
+      ~Centroid.id
+      ~Centroid.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Centroid.__call__
+      ~Centroid.check_setup
+      ~Centroid.copy
+      ~Centroid.deepcopy
+      ~Centroid.enforce
+      ~Centroid.get_default_node_attrs
+      ~Centroid.postprocess
+      ~Centroid.preprocess
+      ~Centroid.process
+      ~Centroid.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

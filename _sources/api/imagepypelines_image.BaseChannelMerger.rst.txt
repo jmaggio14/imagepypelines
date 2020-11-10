@@ -1,0 +1,49 @@
+BaseChannelMerger
+=================
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: BaseChannelMerger
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~BaseChannelMerger.args
+      ~BaseChannelMerger.id
+      ~BaseChannelMerger.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~BaseChannelMerger.__call__
+      ~BaseChannelMerger.check_setup
+      ~BaseChannelMerger.copy
+      ~BaseChannelMerger.deepcopy
+      ~BaseChannelMerger.enforce
+      ~BaseChannelMerger.get_default_node_attrs
+      ~BaseChannelMerger.postprocess
+      ~BaseChannelMerger.preprocess
+      ~BaseChannelMerger.process
+      ~BaseChannelMerger.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

@@ -1,0 +1,39 @@
+Timer
+=====
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: Timer
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Timer.countdown
+      ~Timer.start
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Timer.lap
+      ~Timer.lap_ms
+      ~Timer.raw_time
+      ~Timer.reset
+      ~Timer.time
+      ~Timer.time_ms
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: countdown
+   .. autoattribute:: start
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: lap
+   .. automethod:: lap_ms
+   .. automethod:: raw_time
+   .. automethod:: reset
+   .. automethod:: time
+   .. automethod:: time_ms

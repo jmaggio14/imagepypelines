@@ -1,0 +1,49 @@
+ImageFFT
+========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: ImageFFT
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~ImageFFT.args
+      ~ImageFFT.id
+      ~ImageFFT.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~ImageFFT.__call__
+      ~ImageFFT.check_setup
+      ~ImageFFT.copy
+      ~ImageFFT.deepcopy
+      ~ImageFFT.enforce
+      ~ImageFFT.get_default_node_attrs
+      ~ImageFFT.postprocess
+      ~ImageFFT.preprocess
+      ~ImageFFT.process
+      ~ImageFFT.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

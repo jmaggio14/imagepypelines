@@ -1,0 +1,6 @@
+panda
+=====
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: panda

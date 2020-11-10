@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines.core.io_tools &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../../examples/index.html">Examples</a></li>
+                <li><a href="../../../blog/2020.html">Blog</a></li>
+                <li><a href="../../../docs/core.html">Documentation</a></li>
+                <li><a href="../../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines.core.io_tools</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Email: jmaggio14@gmail.com</span>
+<span class="c1"># @Website: https://www.imagepypelines.org/</span>
+<span class="c1"># @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE</span>
+<span class="c1"># @github: https://github.com/jmaggio14/imagepypelines</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">FunctionType</span><span class="p">,</span> <span class="n">SimpleNamespace</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">cryptography</span> <span class="kn">import</span> <span class="n">fernet</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.backends</span> <span class="kn">import</span> <span class="n">default_backend</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives</span> <span class="kn">import</span> <span class="n">hashes</span>
+<span class="kn">from</span> <span class="nn">cryptography.hazmat.primitives.kdf.pbkdf2</span> <span class="kn">import</span> <span class="n">PBKDF2HMAC</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                   Constants</span>
+<span class="c1">################################################################################</span>
+
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                   Functions</span>
+<span class="c1">################################################################################</span>
+
+<div class="viewcode-block" id="passgen"><a class="viewcode-back" href="../../../api/imagepypelines.passgen.html#imagepypelines.passgen">[docs]</a><span class="k">def</span> <span class="nf">passgen</span><span class="p">(</span><span class="n">passwd</span><span class="p">,</span> <span class="n">salt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;generate a hashed key from a password</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        passwd (None,str): password to hash</span>
+<span class="sd">        salt (str): optional, salt for your password</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bytes: hashed passkey safe string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># generate a proper key using Fernet library</span>
+    <span class="n">kdf</span> <span class="o">=</span> <span class="n">PBKDF2HMAC</span><span class="p">(</span>
+        <span class="n">algorithm</span><span class="o">=</span><span class="n">hashes</span><span class="o">.</span><span class="n">SHA256</span><span class="p">(),</span>
+        <span class="n">length</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+        <span class="n">salt</span><span class="o">=</span><span class="n">salt</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
+        <span class="n">iterations</span><span class="o">=</span><span class="mi">100000</span><span class="p">,</span>
+        <span class="n">backend</span><span class="o">=</span><span class="n">default_backend</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">urlsafe_b64encode</span><span class="p">(</span> <span class="n">kdf</span><span class="o">.</span><span class="n">derive</span><span class="p">(</span> <span class="n">passwd</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span></div>
+
+
+<span class="c1"># -------------------------------- Input/Output --------------------------------</span>
+
+<div class="viewcode-block" id="prevent_overwrite"><a class="viewcode-back" href="../../../api/imagepypelines.prevent_overwrite.html#imagepypelines.prevent_overwrite">[docs]</a><span class="k">def</span> <span class="nf">prevent_overwrite</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">create_file</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    checks to see if a file or directory already exists and creates a</span>
+<span class="sd">    new filename if it does. It can also create the file if specificed</span>
+
+<span class="sd">    when creating a file, this function assumes that if there is no file</span>
+<span class="sd">    extension then it should create a directory</span>
+
+<span class="sd">    NOTE:</span>
+<span class="sd">        This function creates unique filenames by creating them and</span>
+<span class="sd">        checking their current existence. THIS CAN BE A SLOW</span>
+<span class="sd">        PROCESS -- it is much more efficient to keep track of filenames</span>
+<span class="sd">        internally in your application</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): the full file or directory path to be</span>
+<span class="sd">            overwrite protected</span>
+<span class="sd">        create_file (bool): Default is False</span>
+<span class="sd">            boolean indicating whether or not to create the file</span>
+<span class="sd">            before returning</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: the assuredly unique output filename</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">base_filename</span><span class="p">,</span><span class="n">extension</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">out_filename</span> <span class="o">=</span> <span class="n">filename</span>
+    <span class="n">file_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_filename</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+    <span class="k">while</span> <span class="n">file_exists</span><span class="p">:</span>
+        <span class="n">num</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">out_filename</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{base}</span><span class="s2">(</span><span class="si">{num}</span><span class="s2">)</span><span class="si">{ext}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">base</span><span class="o">=</span><span class="n">base_filename</span><span class="p">,</span>
+                                        <span class="n">num</span><span class="o">=</span><span class="n">make_numbered_prefix</span><span class="p">(</span><span class="n">num</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+                                        <span class="n">ext</span><span class="o">=</span><span class="n">extension</span><span class="p">)</span>
+        <span class="n">file_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">out_filename</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">create_file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">input_is_directory</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">input_is_directory</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">input_is_directory</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">out_filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span> <span class="ow">and</span> <span class="n">base_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+                <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out_filename</span></div>
+
+
+<div class="viewcode-block" id="make_numbered_prefix"><a class="viewcode-back" href="../../../api/imagepypelines.make_numbered_prefix.html#imagepypelines.make_numbered_prefix">[docs]</a><span class="k">def</span> <span class="nf">make_numbered_prefix</span><span class="p">(</span><span class="n">file_number</span><span class="p">,</span><span class="n">number_digits</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    returns a number string designed to be used in the prefix of</span>
+<span class="sd">    systematic outputs.</span>
+
+<span class="sd">    example use case</span>
+<span class="sd">        &quot;00001example_output_file.txt&quot;</span>
+<span class="sd">        &quot;00002example_output_file.txt&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_number (int): the number you want to prefix</span>
+<span class="sd">        number_digits (int): minimum number of digits in the output</span>
+<span class="sd">            string. Default is 5</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str: string of numbers with standard at least</span>
+<span class="sd">            &#39;number_digits&#39; of digits</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span> <span class="n">file_number</span> <span class="p">)</span>
+    <span class="k">if</span> <span class="n">file_number</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">file_number_is_negative</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">file_number_is_negative</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">file_number_string</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span> <span class="nb">abs</span><span class="p">(</span><span class="n">file_number</span><span class="p">)</span> <span class="p">)</span>
+    <span class="n">len_num_string</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_number_string</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">len_num_string</span> <span class="o">&lt;</span> <span class="n">number_digits</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">number_digits</span> <span class="o">-</span> <span class="n">len_num_string</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">file_number_is_negative</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">prefix</span>
+
+    <span class="n">numbered_string</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">file_number_string</span>
+    <span class="k">return</span> <span class="n">numbered_string</span></div>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

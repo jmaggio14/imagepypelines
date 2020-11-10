@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines.core.util &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../../examples/index.html">Examples</a></li>
+                <li><a href="../../../blog/2020.html">Blog</a></li>
+                <li><a href="../../../docs/core.html">Documentation</a></li>
+                <li><a href="../../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines.core.util</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Email: jmaggio14@gmail.com</span>
+<span class="c1"># @Website: https://www.imagepypelines.org/</span>
+<span class="c1"># @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE</span>
+<span class="c1"># @github: https://github.com/jmaggio14/imagepypelines</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell</span>
+<span class="kn">from</span> <span class="nn">..Logger</span> <span class="kn">import</span> <span class="n">get_logger</span><span class="p">,</span> <span class="n">get_master_logger</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">heapq</span> <span class="kn">import</span> <span class="n">heappush</span><span class="p">,</span> <span class="n">heappop</span>
+<span class="kn">from</span> <span class="nn">struct</span> <span class="kn">import</span> <span class="n">pack</span><span class="p">,</span> <span class="n">unpack</span>
+
+
+<span class="n">TIMER_LOGGER</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="s1">&#39;TIMER&#39;</span><span class="p">)</span>
+
+<span class="n">MAX_UNACCEPTED_CONNECTIONS</span> <span class="o">=</span> <span class="mi">10</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                 Socket Helpers</span>
+<span class="c1">################################################################################</span>
+<span class="k">class</span> <span class="nc">BaseTCP</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="c1">#&lt;-- TCP SOCKET</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">recvall</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Convenience function to read large amounts of data (&gt;4096 bytes)&#39;&#39;&#39;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">length</span><span class="p">:</span>
+            <span class="n">remaining</span> <span class="o">=</span> <span class="n">length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">+=</span> <span class="n">c</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">remaining</span><span class="p">,</span> <span class="mi">4096</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">msg_b</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;Q&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">msg_b</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">length</span><span class="p">)</span> <span class="c1"># send length of the message as 64bit integer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">msg_b</span><span class="p">)</span> <span class="c1"># send the message itself</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># 8 bytes for 64bit integer</span>
+        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">length</span> <span class="o">=</span> <span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;Q&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">recvall</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:obj:`socket.Socket`: socket for this TCP connection&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">host</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;str: ip address for this socket, or None if not connected&quot;&quot;&quot;</span>
+        <span class="c1"># if the socket isn&#39;t connected, just return None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">port</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;int: port for this socket, or None if not connected&quot;&quot;&quot;</span>
+        <span class="c1"># if the socket isn&#39;t connected, just return None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+<span class="c1">################################################################################</span>
+<span class="k">class</span> <span class="nc">TCPClient</span><span class="p">(</span><span class="n">BaseTCP</span><span class="p">):</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;connects and binds the socket to the given host and port</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host(str): ip address to connect to</span>
+<span class="sd">            port(int): port to connect to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="n">port</span><span class="p">)</span> <span class="p">)</span>  <span class="c1"># &lt;-- connect socket server to host &amp; port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="k">class</span> <span class="nc">TCPServer</span><span class="p">(</span><span class="n">BaseTCP</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    NOTE:</span>
+<span class="sd">        TCP Server has no explicit implementation of accepting/closing client</span>
+<span class="sd">        connections. That is up to the implementation as needed. Socket object</span>
+<span class="sd">        can be retrieved via:</span>
+<span class="sd">            self.sock</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">setsockopt</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">SOL_SOCKET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SO_REUSEADDR</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;connects and binds the socket to the given host and port</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host(str): ip address to host on</span>
+<span class="sd">            port(int): port to host on, leave as 0 for the OS to choose</span>
+<span class="sd">                a port for you</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="n">port</span><span class="p">)</span> <span class="p">)</span>  <span class="c1"># &lt;-- bind socket server to host &amp; port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="n">MAX_UNACCEPTED_CONNECTIONS</span><span class="p">)</span>  <span class="c1"># &lt;-- max of 10 unaccepted connections before not accepting anymore</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                 Thread Helpers</span>
+<span class="c1">################################################################################</span>
+<span class="k">class</span> <span class="nc">BaseCommThread</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Parent Class to all thread manager classes.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_master_logger</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Starts the thread in its own context manager block.</span>
+<span class="sd">        Note: If the running thread is meant to be run indefinitely it is not</span>
+<span class="sd">              recommended to use it as a context manager as once you exit the</span>
+<span class="sd">              context manager, the thread will safely shut down via the</span>
+<span class="sd">              __exit__() method.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Is called once the context leaves the manager, safely signals the</span>
+<span class="sd">        running thread to shutdown.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_thread</span><span class="p">()</span>
+
+    <span class="c1"># ____ Run Function ______________________________________________________</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This function is to be overloaded in the child class. If the thread is</span>
+<span class="sd">        to be run indefinitely (as in not for a fixed duration), you MUST</span>
+<span class="sd">        structure this function as follows:</span>
+
+<span class="sd">        --[START]--------------------------------------------------------------</span>
+<span class="sd">        self.t = threading.current_thread()  # Grab current threading context</span>
+<span class="sd">        ...</span>
+<span class="sd">        while getattr(self.t, &#39;running&#39;, True):</span>
+<span class="sd">            ...</span>
+<span class="sd">        ...</span>
+<span class="sd">        --[END]--------------------------------------------------------------</span>
+
+<span class="sd">        This is necessary as the classes stop_thread() method can safely shut</span>
+<span class="sd">        down the running thread by changing self.running to False, thus</span>
+<span class="sd">        invalidating the while loop&#39;s condition.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># ____ Thread Killer _____________________________(Kills with kindness)___</span>
+    <span class="k">def</span> <span class="nf">stop_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        This is a convenience function used to safely end the running thread.</span>
+<span class="sd">        Note: This will only end the running thread if the run() function</span>
+<span class="sd">              checks for the classes &#39;running&#39; attribute (as demonstrated in</span>
+<span class="sd">              the docstring of the run() function above).</span>
+<span class="sd">              This only works if the running thread is not hanging, this will</span>
+<span class="sd">              prevent the while loop from re-evaluating its condition</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Closing Thread &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has stopped&quot;</span><span class="p">)</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                 Event Helpers</span>
+<span class="c1">################################################################################</span>
+<span class="k">class</span> <span class="nc">EventQueue</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    This Class is meant to be a simple task scheduler that runs tasks in any</span>
+<span class="sd">    of the following ways:</span>
+<span class="sd">        * Immediately</span>
+<span class="sd">        * After a delay (seconds)</span>
+<span class="sd">        * After a delay &amp; repeatedly every specified interval of time (seconds)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">ScheduledEvent</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;ScheduleEvent&#39;</span><span class="p">,</span>
+                                            <span class="p">[</span><span class="s1">&#39;event_time&#39;</span><span class="p">,</span> <span class="s1">&#39;task&#39;</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">funcify</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">obj</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">run_scheduled_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Runs all tasks that are scheduled to run at the current time &#39;&#39;&#39;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+        <span class="n">task_returns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">event_time</span> <span class="o">&lt;=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">():</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">heappop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+            <span class="n">task_return</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">task</span><span class="p">()</span>
+            <span class="n">task_returns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task_return</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">task_returns</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">add_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">event_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;task = </span><span class="si">{</span><span class="n">task</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcify</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="s1">&#39;Helper function to schedule one-time tasks at specific time&#39;</span>
+        <span class="k">if</span> <span class="n">event_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">event_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span>
+        <span class="n">heappush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">,</span> <span class="n">EventQueue</span><span class="o">.</span><span class="n">ScheduledEvent</span><span class="p">(</span><span class="n">event_time</span><span class="p">,</span> <span class="n">task</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">call_later</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">delay</span><span class="p">):</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcify</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="s1">&#39;Helper function to schedule one-time tasks after a given delay&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_task</span><span class="p">(</span><span class="n">task</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">+</span> <span class="n">delay</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">call_periodic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">funcify</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="s1">&#39;Helper function to schedule recurring tasks&#39;</span>
+        <span class="k">def</span> <span class="nf">inner</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">call_later</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">task</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">call_later</span><span class="p">(</span><span class="n">inner</span><span class="p">,</span> <span class="n">delay</span><span class="p">)</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                 Decorators</span>
+<span class="c1">################################################################################</span>
+
+<span class="c1"># def print_args(func):</span>
+<span class="c1">#     &quot;&quot;&quot;Decorator to print out the arguments that a function is running with,</span>
+<span class="c1">#     this includes: arguments passed in, default values that are unspecified,</span>
+<span class="c1">#     varargs ``(*args)``, and varkwargs ``(**kwargs)``</span>
+<span class="c1">#</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#         func (callable): function or callable to print input arguments of</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     def _print_args(*args,**kwargs):</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         prints the arguments passed into the target</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#         POSITIONAL    = &#39;positional    |&#39;</span>
+<span class="c1">#         KEYWORD       = &#39;keyword       |&#39;</span>
+<span class="c1">#         VARPOSITIONAL = &#39;var-positional|&#39;</span>
+<span class="c1">#         VARKEYWORD    = &#39;var-keyword   |&#39;</span>
+<span class="c1">#         DEFAULT       = &#39;default       |&#39;</span>
+<span class="c1">#</span>
+<span class="c1">#         arg_dict = collections.OrderedDict()</span>
+<span class="c1">#         vtypes = {}</span>
+<span class="c1">#         def __add_to_arg_dict(key,val,vtype):</span>
+<span class="c1">#             if isinstance(val, np.ndarray):</span>
+<span class="c1">#                 val = str( Summarizer(val) )</span>
+<span class="c1">#             arg_dict[key] = val</span>
+<span class="c1">#             vtypes[key] = vtype</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#         spec = inspect.getfullargspec(func)</span>
+<span class="c1">#         specdefaults = [] if spec.defaults is None else spec.defaults</span>
+<span class="c1">#         specargs = [] if spec.args is None else spec.args</span>
+<span class="c1">#         speckwonlyargs = [] if spec.kwonlyargs is None else spec.kwonlyargs</span>
+<span class="c1">#         speckwonlydefaults = {} if spec.kwonlydefaults is None else spec.kwonlydefaults</span>
+<span class="c1">#</span>
+<span class="c1">#         num_positional_passed_in = len(args)</span>
+<span class="c1">#         num_required = len(specargs) - len(specdefaults)</span>
+<span class="c1">#</span>
+<span class="c1">#         # adding default positional args values to the dictionary</span>
+<span class="c1">#         for i,var_name in enumerate(specargs):</span>
+<span class="c1">#             if i &lt; num_required:</span>
+<span class="c1">#                 var = colored(&quot;No argument was passed in!&quot;,attrs=[&#39;bold&#39;])</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 var = specdefaults[i - num_required]</span>
+<span class="c1">#</span>
+<span class="c1">#             vtype = DEFAULT</span>
+<span class="c1">#             __add_to_arg_dict(var_name,var,vtype)</span>
+<span class="c1">#</span>
+<span class="c1">#         # positional arguments passed in and varargs passed in</span>
+<span class="c1">#         for i in range(num_positional_passed_in):</span>
+<span class="c1">#             if i &lt; num_required:</span>
+<span class="c1">#                 var_name = specargs[i]</span>
+<span class="c1">#                 vtype = POSITIONAL</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 var_name = &#39;arg{}&#39;.format(i)</span>
+<span class="c1">#                 vtype = VARPOSITIONAL</span>
+<span class="c1">#             var = args[i]</span>
+<span class="c1">#             __add_to_arg_dict(var_name,var,vtype)</span>
+<span class="c1">#</span>
+<span class="c1">#         # adding keyword only args to the dict</span>
+<span class="c1">#         for var_name in speckwonlyargs:</span>
+<span class="c1">#             var = color.red(&quot;No argument was passed in!&quot;,bold=True)</span>
+<span class="c1">#             vtype = KEYWORD</span>
+<span class="c1">#             __add_to_arg_dict(var_name,var,vtype)</span>
+<span class="c1">#         for var_name,var in speckwonlydefaults.items():</span>
+<span class="c1">#             vtype = DEFAULT</span>
+<span class="c1">#             __add_to_arg_dict(var_name,var,vtype)</span>
+<span class="c1">#</span>
+<span class="c1">#         # keyword arguments passed in</span>
+<span class="c1">#         for var_name in kwargs:</span>
+<span class="c1">#             if var_name in specargs:</span>
+<span class="c1">#                 vtype = KEYWORD</span>
+<span class="c1">#             else:</span>
+<span class="c1">#                 vtype = VARKEYWORD</span>
+<span class="c1">#             var = kwargs[var_name]</span>
+<span class="c1">#             __add_to_arg_dict(var_name,var,vtype)</span>
+<span class="c1">#</span>
+<span class="c1">#         # formatting the actual string to be printed out</span>
+<span class="c1">#         MASTER_LOGGER.info(&quot;running &#39;{}&#39; with the following args:&quot;.format(func.__name__))</span>
+<span class="c1">#         if len(arg_dict) == 0:</span>
+<span class="c1">#             __add_to_arg_dict(&#39;None&#39;,&#39;&#39;,&#39;&#39;)</span>
+<span class="c1">#         longest_arg_name = max(len(k) for k in arg_dict)</span>
+<span class="c1">#         arg_string = &#39;&#39;.join([&quot;\t{} {} : {}\n&quot;.format(vtypes[k], k+(&#39; &#39; * (longest_arg_name-len(k))), v) for k,v in arg_dict.items()])</span>
+<span class="c1">#         print( arg_string )</span>
+<span class="c1">#</span>
+<span class="c1">#         ret = func(*args,**kwargs)</span>
+<span class="c1">#         return ret</span>
+<span class="c1">#     return _print_args</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                 SUMMARY</span>
+<span class="c1">################################################################################</span>
+
+
+<div class="viewcode-block" id="arrsummary"><a class="viewcode-back" href="../../../api/imagepypelines.arrsummary.html#imagepypelines.arrsummary">[docs]</a><span class="k">def</span> <span class="nf">arrsummary</span><span class="p">(</span><span class="n">arr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;returns a Summarizer object for the given array&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Summarizer</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span></div>
+
+<span class="k">class</span> <span class="nc">Summarizer</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Summarization object for numpy array. The primary job of this</span>
+<span class="sd">    object is to streamline and simply printing out numpy array objects</span>
+<span class="sd">    which normally appear as a stream of barely comprehendable data</span>
+
+<span class="sd">    This dictionary subclass will return the following when printed out</span>
+<span class="sd">    or otherwise stringified</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_array (np.ndarray): input array to summarize</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        input_array: original numpy array this object is summarizing</span>
+<span class="sd">        last_summary: last calculated summary dictionary</span>
+<span class="sd">                contains the following: shape, size, max, min, mean, dtype</span>
+<span class="sd">        last_string: last representation string calculated for this array</span>
+
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import imagepypelines as ip</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; np.random.seed(0)</span>
+<span class="sd">        &gt;&gt;&gt; a = np.random.rand(512,512)</span>
+<span class="sd">        &gt;&gt;&gt; a = ip.util.Summarizer(a)</span>
+<span class="sd">        &gt;&gt;&gt; print(a)</span>
+<span class="sd">        [ARRAY SUMMARY | shape: (512, 512) | size: 262144 | max: 1.0 | min: 0.0 | mean: 0.5 | dtype: float64]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiation function</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_array (np.ndarray): input array to summarize</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># ERROR CHECKING</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_array</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="s2">&quot;&#39;input_array&#39; input must be a np.ndarray&quot;</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="c1"># END ERROR CHECKING</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_array</span> <span class="o">=</span> <span class="n">input_array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_summary</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_string</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__update</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns a stringified summary&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__update</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_string</span>
+
+    <span class="k">def</span> <span class="nf">summarize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns an output dictionary of array attributes</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            summary (dict): dict containing the following [shape, size, max,</span>
+<span class="sd">                min, mean, dtype]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__update</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_summary</span>
+
+    <span class="k">def</span> <span class="nf">__update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        updates the last_summary and last_string internal attributes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;shape&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
+        <span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_array</span><span class="o">.</span><span class="n">size</span><span class="p">,</span>
+        <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_array</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_array</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_array</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="s1">&#39;dtype&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_array</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;[ARRAY SUMMARY | &quot;</span>  \
+                <span class="o">+</span> <span class="s2">&quot;shape: </span><span class="si">{shape}</span><span class="s2"> | &quot;</span> \
+                <span class="o">+</span> <span class="s2">&quot;size: </span><span class="si">{size}</span><span class="s2"> | &quot;</span> \
+                <span class="o">+</span> <span class="s2">&quot;max: </span><span class="si">{max}</span><span class="s2"> | &quot;</span> \
+                <span class="o">+</span> <span class="s2">&quot;min: </span><span class="si">{min}</span><span class="s2"> | &quot;</span> \
+                <span class="o">+</span> <span class="s2">&quot;mean: </span><span class="si">{mean}</span><span class="s2"> | &quot;</span> \
+                <span class="o">+</span> <span class="s2">&quot;dtype: </span><span class="si">{dtype}</span><span class="s2">]&quot;</span>
+
+        <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="o">**</span><span class="n">summary</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_summary</span> <span class="o">=</span> <span class="n">summary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_string</span> <span class="o">=</span> <span class="n">string</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_summary</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1">#                                 TIMING</span>
+<span class="c1">################################################################################</span>
+
+<span class="c1">################################################################################</span>
+<div class="viewcode-block" id="timer"><a class="viewcode-back" href="../../../api/imagepypelines.timer.html#imagepypelines.timer">[docs]</a><span class="k">def</span> <span class="nf">timer</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorator to time how long a func takes to run in milliseconds</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import imagepypelines as ip</span>
+<span class="sd">        &gt;&gt;&gt; import time</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; @ip.timer</span>
+<span class="sd">        ... def sleep_for_one_sec():</span>
+<span class="sd">        ...    time.sleep(1) #sleep for 1 second</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; sleep_for_one_sec() # doctest: +ELLIPSIS</span>
+<span class="sd">        ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_timer</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">run_time</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;ran function &#39;</span><span class="si">{name}</span><span class="s2">&#39; in </span><span class="si">{t}</span><span class="s2">sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                                            <span class="n">t</span><span class="o">=</span><span class="n">run_time</span><span class="p">)</span>
+        <span class="n">TIMER_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">return</span> <span class="n">_timer</span></div>
+
+
+<span class="c1">################################################################################</span>
+<div class="viewcode-block" id="timer_ms"><a class="viewcode-back" href="../../../api/imagepypelines.timer_ms.html#imagepypelines.timer_ms">[docs]</a><span class="k">def</span> <span class="nf">timer_ms</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Decorator to time how long a func takes to run in milliseconds</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import imagepypelines as ip</span>
+<span class="sd">        &gt;&gt;&gt; import time</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; @ip.timer_ms</span>
+<span class="sd">        ... def sleep_for_one_sec():</span>
+<span class="sd">        ...    time.sleep(1) #sleep for 1 second</span>
+<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">        &gt;&gt;&gt; sleep_for_one_sec() # doctest: +ELLIPSIS</span>
+<span class="sd">        ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">_timer_ms</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">run_time_ms</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">time_ms</span><span class="p">()</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;ran function &#39;</span><span class="si">{name}</span><span class="s2">&#39; in </span><span class="si">{t}</span><span class="s2">ms&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                                            <span class="n">t</span><span class="o">=</span><span class="n">run_time_ms</span><span class="p">)</span>
+        <span class="n">TIMER_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="k">return</span> <span class="n">_timer_ms</span></div>
+
+<span class="c1">################################################################################</span>
+<div class="viewcode-block" id="Timer"><a class="viewcode-back" href="../../../api/imagepypelines.Timer.html#imagepypelines.Timer">[docs]</a><span class="k">class</span> <span class="nc">Timer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Timer which can be used to time processes</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        _start (float): start time in seconds since the epoch</span>
+<span class="sd">        _last (float): last time the lap timer was called</span>
+<span class="sd">        _countdown (float): countdown time if set (recalculated with</span>
+<span class="sd">                            the countdown property)</span>
+<span class="sd">        _last_countdown (float): last countdown time check</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        #we need to do an action for 10 seconds</span>
+<span class="sd">        timer = Timer()</span>
+<span class="sd">        timer.countdown = 10</span>
+
+<span class="sd">        while timer.countdown:</span>
+<span class="sd">            do_action()</span>
+<span class="sd">            #this action will run for (about) 10 seconds</span>
+
+
+<span class="sd">        # maybe we want to record how long a part of our code runs</span>
+<span class="sd">        timer.reset()</span>
+
+<span class="sd">        do_action()</span>
+<span class="sd">        print( timer.lap() )</span>
+
+<span class="sd">        do_action2()</span>
+<span class="sd">        print( timer.lap() )</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_countdown_timer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_countdown_start</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="Timer.reset"><a class="viewcode-back" href="../../../api/imagepypelines.Timer.html#imagepypelines.Timer.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; resets the timer start time &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Timer.time"><a class="viewcode-back" href="../../../api/imagepypelines.Timer.html#imagepypelines.Timer.time">[docs]</a>    <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns the time in seconds since the timer started or since it was</span>
+<span class="sd">         last reset&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_time</span><span class="p">(),</span><span class="mi">3</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Timer.raw_time"><a class="viewcode-back" href="../../../api/imagepypelines.Timer.html#imagepypelines.Timer.raw_time">[docs]</a>    <span class="k">def</span> <span class="nf">raw_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns the unrounded time in seconds since the timer started&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span></div>
+
+<div class="viewcode-block" id="Timer.lap"><a class="viewcode-back" href="../../../api/imagepypelines.Timer.html#imagepypelines.Timer.lap">[docs]</a>    <span class="k">def</span> <span class="nf">lap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns time in seconds since last time the lap was called&quot;&quot;&quot;</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">lap</span> <span class="o">=</span> <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last</span> <span class="o">=</span> <span class="n">now</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">lap</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Timer.time_ms"><a class="viewcode-back" href="../../../api/imagepypelines.Timer.html#imagepypelines.Timer.time_ms">[docs]</a>    <span class="k">def</span> <span class="nf">time_ms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns the time in milliseonds since the timer started or since it</span>
+<span class="sd">        was last reset&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_time</span><span class="p">()</span><span class="o">*</span><span class="mi">1000</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Timer.lap_ms"><a class="viewcode-back" href="../../../api/imagepypelines.Timer.html#imagepypelines.Timer.lap_ms">[docs]</a>    <span class="k">def</span> <span class="nf">lap_ms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns time in milliseconds since last time the lap was called&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lap</span><span class="p">()</span><span class="o">*</span><span class="mi">1000</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">countdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_countdown_timer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+        <span class="n">countdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_countdown_start</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_countdown_timer</span><span class="o">.</span><span class="n">raw_time</span><span class="p">()</span>
+        <span class="n">countdown</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">countdown</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">countdown</span>
+
+
+    <span class="nd">@countdown</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">countdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;sets the countdown timer&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,(</span><span class="nb">int</span><span class="p">,</span><span class="nb">float</span><span class="p">)):</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="s2">&quot;countdown must be set using a float </span><span class="se">\</span>
+<span class="s2">                        or an int, current type is </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+            <span class="n">TIMER_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_countdown_timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_countdown_start</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start</span>
+
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;Timer @</span><span class="si">{}</span><span class="s2">sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

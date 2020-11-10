@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Module Documentation &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../getting_started.html">Getting Started</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../blog/2020.html">Blog</a></li>
+                <li><a href="#">Documentation</a></li>
+                <li><a href="../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Module Documentation</a><ul>
+<li><a class="reference internal" href="#official-plugins">Official Plugins</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#core">Core</a><ul>
+<li><a class="reference internal" href="#module-imagepypelines">imagepypelines Package</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+       <div class="section" id="module-documentation">
+<h1>Module Documentation<a class="headerlink" href="#module-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="official-plugins">
+<span id="offical-plugins"></span><h2>Official Plugins<a class="headerlink" href="#official-plugins" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plugins/image.html">Official Imaging Science Plugin</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plugins/astro.html">Official Astronomy Plugin</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="plugins/ml.html">Official Machine Learning Plugin</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="core">
+<h2>Core<a class="headerlink" href="#core" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-imagepypelines">
+<span id="imagepypelines-package"></span><h3>imagepypelines Package<a class="headerlink" href="#module-imagepypelines" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="functions">
+<h4>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h4>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.add_plugin.html#imagepypelines.add_plugin" title="imagepypelines.add_plugin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_plugin</span></code></a>(plugin_name, plugin_module[, …])</p></td>
+<td><p>adds the given plugin to ImagePypelines</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.arrsummary.html#imagepypelines.arrsummary" title="imagepypelines.arrsummary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">arrsummary</span></code></a>(arr)</p></td>
+<td><p>returns a Summarizer object for the given array</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.blockify.html#imagepypelines.blockify" title="imagepypelines.blockify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blockify</span></code></a>([kwargs, batch_type, types, …])</p></td>
+<td><p>decorator which converts a normal function into a un-trainable block which can be added to a pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.connect_to_dash.html#imagepypelines.connect_to_dash" title="imagepypelines.connect_to_dash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connect_to_dash</span></code></a>(name, host, port)</p></td>
+<td><p>Connects every pipeline in this session to</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.get_logger.html#imagepypelines.get_logger" title="imagepypelines.get_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger</span></code></a>(name[, pipeline, parent])</p></td>
+<td><p>Creates a new child logging adapter from the given parent (root logger by default)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.get_master_logger.html#imagepypelines.get_master_logger" title="imagepypelines.get_master_logger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_master_logger</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.get_plugin_by_name.html#imagepypelines.get_plugin_by_name" title="imagepypelines.get_plugin_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_plugin_by_name</span></code></a>(plugin_name)</p></td>
+<td><p>fetches the plugin module using its name</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.load_plugins.html#imagepypelines.load_plugins" title="imagepypelines.load_plugins"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_plugins</span></code></a>()</p></td>
+<td><p>Load all installed plugins to the imagepypelines namespace</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.make_numbered_prefix.html#imagepypelines.make_numbered_prefix" title="imagepypelines.make_numbered_prefix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_numbered_prefix</span></code></a>(file_number[, …])</p></td>
+<td><p>returns a number string designed to be used in the prefix of systematic outputs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.n_dashboards.html#imagepypelines.n_dashboards" title="imagepypelines.n_dashboards"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_dashboards</span></code></a>()</p></td>
+<td><p>returns the number of connected dashboards</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.passgen.html#imagepypelines.passgen" title="imagepypelines.passgen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">passgen</span></code></a>(passwd[, salt])</p></td>
+<td><p>generate a hashed key from a password</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.prevent_overwrite.html#imagepypelines.prevent_overwrite" title="imagepypelines.prevent_overwrite"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prevent_overwrite</span></code></a>(filename[, create_file])</p></td>
+<td><p>checks to see if a file or directory already exists and creates a new filename if it does.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.require.html#imagepypelines.require" title="imagepypelines.require"><code class="xref py py-obj docutils literal notranslate"><span class="pre">require</span></code></a>(*plugins)</p></td>
+<td><p>check to make sure the given plugin(s) are loaded and raise an error if they can’t be found</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.set_log_level.html#imagepypelines.set_log_level" title="imagepypelines.set_log_level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_log_level</span></code></a>(log_level)</p></td>
+<td><p>sets the global master logger level</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.timer.html#imagepypelines.timer" title="imagepypelines.timer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timer</span></code></a>(func)</p></td>
+<td><p>Decorator to time how long a func takes to run in milliseconds</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.timer_ms.html#imagepypelines.timer_ms" title="imagepypelines.timer_ms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timer_ms</span></code></a>(func)</p></td>
+<td><p>Decorator to time how long a func takes to run in milliseconds</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="classes">
+<h4>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h4>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.Block.html#imagepypelines.Block" title="imagepypelines.Block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Block</span></code></a>([name, batch_type, types, shapes, …])</p></td>
+<td><p>a contained algorithmic element used to construct pipelines.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.BlockError.html#imagepypelines.BlockError" title="imagepypelines.BlockError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BlockError</span></code></a></p></td>
+<td><p>Error raised within a Block</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm" title="imagepypelines.DashboardComm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DashboardComm</span></code></a></p></td>
+<td><p>Object to send messages from the pipelines to dashboard(s)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.DashboardWarning.html#imagepypelines.DashboardWarning" title="imagepypelines.DashboardWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DashboardWarning</span></code></a></p></td>
+<td><p>Warning for connection failure to dashboard</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.Data.html#imagepypelines.Data" title="imagepypelines.Data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Data</span></code></a>(data)</p></td>
+<td><p>Object to batch lists or arrays as block processable data</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.FuncBlock.html#imagepypelines.FuncBlock" title="imagepypelines.FuncBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FuncBlock</span></code></a>(func[, preset_kwargs])</p></td>
+<td><p>Block that will run any function you give it, either unfettered through the __call__ function, or with optional hardcoded parameters for use in a pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger" title="imagepypelines.ImagepypelinesLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImagepypelinesLogger</span></code></a>(name[, level])</p></td>
+<td><p>subclass of logging.Logger that can be pickled, also adds colored logging outputs if desired.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.Input.html#imagepypelines.Input" title="imagepypelines.Input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Input</span></code></a>([index])</p></td>
+<td><p>An object to inject data into the graph</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.Leaf.html#imagepypelines.Leaf" title="imagepypelines.Leaf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Leaf</span></code></a>(var_name)</p></td>
+<td><p>a block to act as a leaf node in the Pipeline Graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.Pipeline.html#imagepypelines.Pipeline" title="imagepypelines.Pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pipeline</span></code></a>([tasks, name])</p></td>
+<td><p>processing algorithm manager for simple pipeline construction</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.PipelineBlock.html#imagepypelines.PipelineBlock" title="imagepypelines.PipelineBlock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipelineBlock</span></code></a>(pipeline, fetch)</p></td>
+<td><p>Block which runs a pipeline internally (used for nesting pipelines within pipelines)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/imagepypelines.PipelineError.html#imagepypelines.PipelineError" title="imagepypelines.PipelineError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PipelineError</span></code></a></p></td>
+<td><p>Error raised within a Pipeline</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/imagepypelines.Timer.html#imagepypelines.Timer" title="imagepypelines.Timer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Timer</span></code></a>()</p></td>
+<td><p>Timer which can be used to time processes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="class-inheritance-diagram">
+<h4>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h4>
+<div class="graphviz"><img src="../_images/inheritance-8dd15810772e25ff71b3b7a91c70aead018a9d9a.png" alt="Inheritance diagram of imagepypelines.core.Block.Block, imagepypelines.core.Exceptions.BlockError, imagepypelines.core.DashboardComm.DashboardComm, imagepypelines.core.Exceptions.DashboardWarning, imagepypelines.core.Data.Data, imagepypelines.core.block_subclasses.FuncBlock, imagepypelines.Logger.ImagepypelinesLogger, imagepypelines.core.block_subclasses.Input, imagepypelines.core.block_subclasses.Leaf, imagepypelines.core.Pipeline.Pipeline, imagepypelines.core.block_subclasses.PipelineBlock, imagepypelines.core.Exceptions.PipelineError, imagepypelines.core.util.Timer" class="inheritance graphviz" /></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/docs/core.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

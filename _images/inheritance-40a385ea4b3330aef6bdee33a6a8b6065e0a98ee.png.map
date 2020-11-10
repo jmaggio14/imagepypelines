@@ -1,0 +1,23 @@
+<map id="inheritancef077919610" name="inheritancef077919610">
+<area shape="rect" id="node1" title="combines independent channels into one Image" alt="" coords="315,5,465,31"/>
+<area shape="rect" id="node2" title="Special Block made for imagery with a predefined IO inputs and useful" alt="" coords="167,277,263,303"/>
+<area shape="rect" id="node3" title="Image Viewer that uses matplotlib internally. Nearly always guarenteed" alt="" coords="311,55,469,80"/>
+<area shape="rect" id="node6" title="Retrieves the central pixel in the image, rounds down to integer" alt="" coords="352,104,428,129"/>
+<area shape="rect" id="node7" title="splits images into separate component channels" alt="" coords="339,153,441,179"/>
+<area shape="rect" id="node9" title="Retrieves the dimensions of the image, including number of channels. If" alt="" coords="341,203,439,228"/>
+<area shape="rect" id="node12" title="Retrieves the size of the image frame" alt="" coords="345,252,435,277"/>
+<area shape="rect" id="node13" title="Performs an FFT on each Image channel independently" alt="" coords="349,301,431,327"/>
+<area shape="rect" id="node14" title="Performs an IFFT on each Image channel independently" alt="" coords="347,351,433,376"/>
+<area shape="rect" id="node18" title="Numbers incoming images. Resets the number index before every process" alt="" coords="333,400,447,425"/>
+<area shape="rect" id="node20" title="splits images into separate component channels" alt="" coords="354,449,426,475"/>
+<area shape="rect" id="node21" title="Display the given images." alt="" coords="326,499,454,524"/>
+<area shape="rect" id="node8" title="Image Viewer that uses matplotlib internally to compare 2 images." alt="" coords="517,31,628,56"/>
+<area shape="rect" id="node4" title="a contained algorithmic element used to construct pipelines. This class" alt="" coords="26,572,98,597"/>
+<area shape="rect" id="node5" title="casts arrays to a given numpy dtypes" alt="" coords="179,523,251,548"/>
+<area shape="rect" id="node11" title="normalizes to range [a,b] and then casts to given cast_type" alt="" coords="177,572,253,597"/>
+<area shape="rect" id="node22" title="Removes single dimension axes from the array" alt="" coords="175,621,254,647"/>
+<area shape="rect" id="node23" title="Adds single dimension to array at specified &#160;position" alt="" coords="167,671,262,696"/>
+<area shape="rect" id="node10" title="normalizes to [0,255] and bins to a displayable bitdepth" alt="" coords="341,548,439,573"/>
+<area shape="rect" id="node16" title="normalizes to [0,1] and then casts to given cast_type" alt="" coords="353,597,427,623"/>
+<area shape="rect" id="node17" title="normalizes to [dtype_min, dtype_max] and then casts to given cast_type" alt="" coords="342,647,438,672"/>
+</map>

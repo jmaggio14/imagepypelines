@@ -1,0 +1,51 @@
+DashboardComm
+=============
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: DashboardComm
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~DashboardComm.clients
+      ~DashboardComm.graphs_msg_cache
+      ~DashboardComm.total
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~DashboardComm.connect
+      ~DashboardComm.disconnect
+      ~DashboardComm.disconnect_all
+      ~DashboardComm.read
+      ~DashboardComm.write
+      ~DashboardComm.write_delete
+      ~DashboardComm.write_error
+      ~DashboardComm.write_graph
+      ~DashboardComm.write_log
+      ~DashboardComm.write_reset
+      ~DashboardComm.write_status
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: clients
+   .. autoattribute:: graphs_msg_cache
+   .. autoattribute:: total
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: connect
+   .. automethod:: disconnect
+   .. automethod:: disconnect_all
+   .. automethod:: read
+   .. automethod:: write
+   .. automethod:: write_delete
+   .. automethod:: write_error
+   .. automethod:: write_graph
+   .. automethod:: write_log
+   .. automethod:: write_reset
+   .. automethod:: write_status

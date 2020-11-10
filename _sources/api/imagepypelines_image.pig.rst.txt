@@ -1,0 +1,6 @@
+pig
+===
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: pig

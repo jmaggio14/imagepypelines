@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Official Imaging Science Plugin &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../examples/index.html">Examples</a></li>
+                <li><a href="../../blog/2020.html">Blog</a></li>
+                <li><a href="../core.html">Documentation</a></li>
+                <li><a href="../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Official Imaging Science Plugin</a><ul>
+<li><a class="reference internal" href="#module-imagepypelines_image">imagepypelines_image Package</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+<li><a class="reference internal" href="#class-inheritance-diagram">Class Inheritance Diagram</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+       <div class="section" id="official-imaging-science-plugin">
+<h1>Official Imaging Science Plugin<a class="headerlink" href="#official-imaging-science-plugin" title="Permalink to this headline">¶</a></h1>
+<p><em>This plugin is installed alongside imagepypelines by default</em></p>
+<p><strong>Developed by:</strong> <a class="reference external" href="https://www.jeffmagg.io">Jeff Maggio</a> and Ryan Hartzell</p>
+<p><strong>Status:</strong> Alpha</p>
+<p><strong>Version:</strong> 0.1.0</p>
+<p><strong>Licence:</strong> <a class="reference external" href="https://github.com/jmaggio14/imagepypelines_image/blob/master/LICENSE">MIT</a></p>
+<p><strong>Find it on:</strong>
+<a class="reference external" href="https://www.github.com/jmaggio14/imagepypelines_image">Github</a>,
+(todo)pypi</p>
+<div class="section" id="module-imagepypelines_image">
+<span id="imagepypelines-image-package"></span><h2>imagepypelines_image Package<a class="headerlink" href="#module-imagepypelines_image" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="functions">
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.carlenna.html#imagepypelines_image.carlenna" title="imagepypelines_image.carlenna"><code class="xref py py-obj docutils literal notranslate"><span class="pre">carlenna</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for carlenna</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.crowd.html#imagepypelines_image.crowd" title="imagepypelines_image.crowd"><code class="xref py py-obj docutils literal notranslate"><span class="pre">crowd</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for crowd</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.gecko.html#imagepypelines_image.gecko" title="imagepypelines_image.gecko"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gecko</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for gecko</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.get_standard_image.html#imagepypelines_image.get_standard_image" title="imagepypelines_image.get_standard_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_standard_image</span></code></a>(img_name)</p></td>
+<td><p>retrieves the numpy array of standard image given a string key</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.giza.html#imagepypelines_image.giza" title="imagepypelines_image.giza"><code class="xref py py-obj docutils literal notranslate"><span class="pre">giza</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for giza</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.linear.html#imagepypelines_image.linear" title="imagepypelines_image.linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linear</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for linear</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.panda.html#imagepypelines_image.panda" title="imagepypelines_image.panda"><code class="xref py py-obj docutils literal notranslate"><span class="pre">panda</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for panda</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.pig.html#imagepypelines_image.pig" title="imagepypelines_image.pig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pig</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for pig</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.redhat.html#imagepypelines_image.redhat" title="imagepypelines_image.redhat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redhat</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for redhat</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.sparse_checkerboard.html#imagepypelines_image.sparse_checkerboard" title="imagepypelines_image.sparse_checkerboard"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sparse_checkerboard</span></code></a>([img_name])</p></td>
+<td><p>standard image retrieval for sparse_checkerboard</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.standard_image_filenames.html#imagepypelines_image.standard_image_filenames" title="imagepypelines_image.standard_image_filenames"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_image_filenames</span></code></a>()</p></td>
+<td><p>returns a list of standard image filenames on the local machine</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.standard_image_gen.html#imagepypelines_image.standard_image_gen" title="imagepypelines_image.standard_image_gen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_image_gen</span></code></a>()</p></td>
+<td><p>generator function to yield all standard images sequentially useful for testing</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.standard_images.html#imagepypelines_image.standard_images" title="imagepypelines_image.standard_images"><code class="xref py py-obj docutils literal notranslate"><span class="pre">standard_images</span></code></a>()</p></td>
+<td><p>returns a list of all standard image arrays</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.BaseChannelMerger.html#imagepypelines_image.BaseChannelMerger" title="imagepypelines_image.BaseChannelMerger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseChannelMerger</span></code></a>([order])</p></td>
+<td><p>combines independent channels into one Image</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.CastTo.html#imagepypelines_image.CastTo" title="imagepypelines_image.CastTo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CastTo</span></code></a>(cast_type)</p></td>
+<td><p>casts arrays to a given numpy dtypes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.Centroid.html#imagepypelines_image.Centroid" title="imagepypelines_image.Centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Centroid</span></code></a>([order])</p></td>
+<td><p>Retrieves the central pixel in the image, rounds down to integer if an image dimension has an odd length</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.ChannelSplit.html#imagepypelines_image.ChannelSplit" title="imagepypelines_image.ChannelSplit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ChannelSplit</span></code></a>([order])</p></td>
+<td><p>splits images into separate component channels</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.CompareView.html#imagepypelines_image.CompareView" title="imagepypelines_image.CompareView"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CompareView</span></code></a>([pause_for, close_fig, order])</p></td>
+<td><p>Image Viewer that uses matplotlib internally to compare 2 images.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.Dimensions.html#imagepypelines_image.Dimensions" title="imagepypelines_image.Dimensions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dimensions</span></code></a>([channels_none_if_2d, order])</p></td>
+<td><p>Retrieves the dimensions of the image, including number of channels.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.DisplaySafe.html#imagepypelines_image.DisplaySafe" title="imagepypelines_image.DisplaySafe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DisplaySafe</span></code></a>()</p></td>
+<td><p>normalizes to [0,255] and bins to a displayable bitdepth</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.FrameSize.html#imagepypelines_image.FrameSize" title="imagepypelines_image.FrameSize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FrameSize</span></code></a>([order])</p></td>
+<td><p>Retrieves the size of the image frame</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.ImageFFT.html#imagepypelines_image.ImageFFT" title="imagepypelines_image.ImageFFT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImageFFT</span></code></a>([order])</p></td>
+<td><p>Performs an FFT on each Image channel independently</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.ImageIFFT.html#imagepypelines_image.ImageIFFT" title="imagepypelines_image.ImageIFFT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImageIFFT</span></code></a>([order])</p></td>
+<td><p>Performs an IFFT on each Image channel independently</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Merger3</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ChannelMerge3</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Merger4</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ChannelMerge4</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.MergerFactory.html#imagepypelines_image.MergerFactory" title="imagepypelines_image.MergerFactory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MergerFactory</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.Norm01.html#imagepypelines_image.Norm01" title="imagepypelines_image.Norm01"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Norm01</span></code></a>([cast_type])</p></td>
+<td><p>normalizes to [0,1] and then casts to given cast_type</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.NormAB.html#imagepypelines_image.NormAB" title="imagepypelines_image.NormAB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NormAB</span></code></a>(a, b[, cast_type])</p></td>
+<td><p>normalizes to range [a,b] and then casts to given cast_type</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.NormDtype.html#imagepypelines_image.NormDtype" title="imagepypelines_image.NormDtype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NormDtype</span></code></a>([cast_type])</p></td>
+<td><p>normalizes to [dtype_min, dtype_max] and then casts to given cast_type</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.NumberImage.html#imagepypelines_image.NumberImage" title="imagepypelines_image.NumberImage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NumberImage</span></code></a>([start_at, order])</p></td>
+<td><p>Numbers incoming images.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.QuickView.html#imagepypelines_image.QuickView" title="imagepypelines_image.QuickView"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QuickView</span></code></a>([pause_for, close_fig, order])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RGBAMerger</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ChannelMerge4</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RGBMerger</span></code></p></td>
+<td><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ChannelMerge3</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.Resize.html#imagepypelines_image.Resize" title="imagepypelines_image.Resize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Resize</span></code></a>([h, w, scale_h, scale_w, interp])</p></td>
+<td><p>splits images into separate component channels</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.SequenceViewer.html#imagepypelines_image.SequenceViewer" title="imagepypelines_image.SequenceViewer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequenceViewer</span></code></a>([pause_for, order])</p></td>
+<td><p>Display the given images.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../api/imagepypelines_image.Squeeze.html#imagepypelines_image.Squeeze" title="imagepypelines_image.Squeeze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Squeeze</span></code></a>()</p></td>
+<td><p>Removes single dimension axes from the array</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../api/imagepypelines_image.Unsqueeze.html#imagepypelines_image.Unsqueeze" title="imagepypelines_image.Unsqueeze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Unsqueeze</span></code></a>(axis)</p></td>
+<td><p>Adds single dimension to array at specified  position</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="class-inheritance-diagram">
+<h3>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this headline">¶</a></h3>
+<div class="graphviz"><img src="../../_images/inheritance-40a385ea4b3330aef6bdee33a6a8b6065e0a98ee.png" alt="Inheritance diagram of imagepypelines_image.blocks.BaseChannelMerger, imagepypelines_image.blocks.CastTo, imagepypelines_image.blocks.Centroid, imagepypelines_image.blocks.ChannelSplit, imagepypelines_image.blocks.CompareView, imagepypelines_image.blocks.Dimensions, imagepypelines_image.blocks.DisplaySafe, imagepypelines_image.blocks.FrameSize, imagepypelines_image.blocks.ImageFFT, imagepypelines_image.blocks.ImageIFFT, imagepypelines_image.blocks.MergerFactory, imagepypelines_image.blocks.Norm01, imagepypelines_image.blocks.NormAB, imagepypelines_image.blocks.NormDtype, imagepypelines_image.blocks.NumberImage, imagepypelines_image.blocks.QuickView, imagepypelines_image.Resize.Resize, imagepypelines_image.blocks.SequenceViewer, imagepypelines_image.blocks.Squeeze, imagepypelines_image.blocks.Unsqueeze" class="inheritance graphviz" /></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/docs/plugins/image.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

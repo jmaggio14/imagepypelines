@@ -1,0 +1,14 @@
+
+:orphan:
+
+.. _sphx_glr_examples_how-to-use-pipelines_sg_execution_times:
+
+Computation times
+=================
+**00:00.010** total execution time for **examples_how-to-use-pipelines** files:
+
++-----------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_how-to-use-pipelines_add_additional_tasks.py` (``add_additional_tasks.py``) | 00:00.009 | 0.0 MB |
++-----------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_how-to-use-pipelines_data-processing.py` (``data-processing.py``)           | 00:00.000 | 0.0 MB |
++-----------------------------------------------------------------------------------------------------+-----------+--------+

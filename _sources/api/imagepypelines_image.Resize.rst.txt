@@ -1,0 +1,49 @@
+Resize
+======
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: Resize
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Resize.args
+      ~Resize.id
+      ~Resize.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Resize.__call__
+      ~Resize.check_setup
+      ~Resize.copy
+      ~Resize.deepcopy
+      ~Resize.enforce
+      ~Resize.get_default_node_attrs
+      ~Resize.postprocess
+      ~Resize.preprocess
+      ~Resize.process
+      ~Resize.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

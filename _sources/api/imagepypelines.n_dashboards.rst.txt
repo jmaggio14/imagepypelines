@@ -1,0 +1,6 @@
+n_dashboards
+============
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: n_dashboards

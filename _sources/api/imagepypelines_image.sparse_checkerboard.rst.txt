@@ -1,0 +1,6 @@
+sparse_checkerboard
+===================
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: sparse_checkerboard

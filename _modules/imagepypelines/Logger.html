@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines.Logger &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../examples/index.html">Examples</a></li>
+                <li><a href="../../blog/2020.html">Blog</a></li>
+                <li><a href="../../docs/core.html">Documentation</a></li>
+                <li><a href="../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines.Logger</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Email: jmaggio14@gmail.com</span>
+<span class="c1"># @Website: https://www.imagepypelines.org/</span>
+<span class="c1"># @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE</span>
+<span class="c1"># @github: https://github.com/jmaggio14/imagepypelines</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># --------- enable terminal colors if we are in on a windows system ---------</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">colorama</span>
+    <span class="n">colorama</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="k">del</span> <span class="n">colorama</span>
+
+
+<span class="n">LOG_LEVELS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">,</span>
+    <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="s1">&#39;warning&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>
+    <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+    <span class="s1">&#39;critical&#39;</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Log level strings mapped to their numerical values&quot;&quot;&quot;</span>
+
+<span class="n">LOG_COLORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;debug&#39;</span><span class="p">:</span> <span class="s1">&#39;cyan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;warning&#39;</span><span class="p">:</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;critical&#39;</span><span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Module variable controlling the color of our logs, this can be modified to</span>
+<span class="sd">suit the end user&#39;s needs or ignored entirely by setting</span>
+<span class="sd">ip.MASTER_LOGGER.ENABLE_LOG_COLOR = False&quot;&quot;&quot;</span>
+
+<span class="n">LOG_TEXT_ATTRS</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;debug&#39;</span><span class="p">:[</span><span class="s1">&#39;bold&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;info&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;warning&#39;</span><span class="p">:[</span><span class="s1">&#39;bold&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;error&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+            <span class="s1">&#39;critical&#39;</span><span class="p">:[</span><span class="s1">&#39;bold&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;Module variable controlling the text attributes of our logs, this can be</span>
+<span class="sd">modified to suit the end user&#39;s needs or ignored entirely by setting</span>
+<span class="sd">ip.MASTER_LOGGER.ENABLE_LOG_COLOR = False&quot;&quot;&quot;</span>
+
+<span class="c1"># this is defined lower down in this file</span>
+<span class="n">MASTER_LOGGER</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="sd">&quot;&quot;&quot;logging.Logger subclass that is the root of all loggers instantiated in</span>
+<span class="sd">ImagePypelines&quot;&quot;&quot;</span>
+
+<span class="n">MASTER_ADAPTER</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="sd">&quot;&quot;&quot;logging.LoggerAdapter subclass that wraps the master logger&quot;&quot;&quot;</span>
+<span class="c1"># LOGGING_MANAGER = None</span>
+<span class="c1"># &quot;&quot;&quot;logging.Manager for all ImagePypelines loggers&quot;&quot;&quot;</span>
+
+<span class="c1"># Define our new special Logger class that can be pickled</span>
+<span class="c1"># (like the loggers of python 3.7)</span>
+<div class="viewcode-block" id="ImagepypelinesLogger"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger">[docs]</a><span class="k">class</span> <span class="nc">ImagepypelinesLogger</span><span class="p">(</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLoggerClass</span><span class="p">()</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;subclass of logging.Logger that can be pickled, also adds colored logging</span>
+<span class="sd">    outputs if desired. the color, functionality and text attributes can be</span>
+<span class="sd">    controlled by setting the module variables imagepypelines.LOG_COLORS,</span>
+<span class="sd">    imagepypelines.ENABLE_LOG_COLOR, imagepypelines.LOG_TEXT_ATTRS</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        ENABLE_LOG_COLOR(bool): class level variable controlling whether or not</span>
+<span class="sd">            to markup log output with ANSI color codes. True by default</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ENABLE_LOG_COLOR</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">def</span> <span class="nf">_color_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">LEVEL</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isEnabledFor</span><span class="p">(</span><span class="n">LEVEL</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ENABLE_LOG_COLOR</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">colored</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">LOG_COLORS</span><span class="p">[</span><span class="n">level</span><span class="p">],</span> <span class="n">attrs</span><span class="o">=</span><span class="n">LOG_TEXT_ATTRS</span><span class="p">[</span><span class="n">level</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">msg</span>
+
+<div class="viewcode-block" id="ImagepypelinesLogger.debug"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger.debug">[docs]</a>    <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_msg</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;debug&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagepypelinesLogger.info"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_msg</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagepypelinesLogger.warning"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger.warning">[docs]</a>    <span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_msg</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;warning&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagepypelinesLogger.error"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger.error">[docs]</a>    <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_msg</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagepypelinesLogger.critical"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger.critical">[docs]</a>    <span class="k">def</span> <span class="nf">critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_msg</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;critical&#39;</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ImagepypelinesLogger.getChild"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger.getChild">[docs]</a>    <span class="k">def</span> <span class="nf">getChild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># make a formatter for the child logger</span>
+        <span class="n">child</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handlers</span><span class="p">):</span>
+            <span class="n">ch</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+            <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+                                <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> | </span><span class="si">%(name)s</span><span class="s1"> [ </span><span class="si">%(levelname)8s</span><span class="s1"> ]: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+
+            <span class="n">child</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">child</span></div>
+
+<div class="viewcode-block" id="ImagepypelinesLogger.setLevel"><a class="viewcode-back" href="../../api/imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger.setLevel">[docs]</a>    <span class="k">def</span> <span class="nf">setLevel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">LOG_LEVELS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+    <span class="c1"># JEFF: modified from here https://github.com/python/cpython/blob/ca7b504a4d4c3a5fde1ee4607b9501c2bab6e743/Lib/logging/__init__.py</span>
+    <span class="k">def</span> <span class="nf">__reduce__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;ImagePypelines&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">make_master</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">level</span><span class="p">,)</span>
+        <span class="k">return</span> <span class="n">get_logger</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,)</span></div>
+
+
+<span class="k">class</span> <span class="nc">ImagepypelinesLoggerAdapter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">LoggerAdapter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getChild</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">adapter</span> <span class="o">=</span> <span class="n">ImagepypelinesLoggerAdapter</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">extra</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">adapter</span>
+
+
+<div class="viewcode-block" id="get_master_logger"><a class="viewcode-back" href="../../api/imagepypelines.get_master_logger.html#imagepypelines.get_master_logger">[docs]</a><span class="k">def</span> <span class="nf">get_master_logger</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">MASTER_ADAPTER</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MASTER_ADAPTER</span>
+        
+    <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pipeline_id&#39;</span><span class="p">:</span><span class="s1">&#39;master&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;pipeline_uuid&#39;</span><span class="p">:</span><span class="s1">&#39;master&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;pipeline_name&#39;</span><span class="p">:</span><span class="s1">&#39;master&#39;</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">ImagepypelinesLoggerAdapter</span><span class="p">(</span><span class="n">make_master</span><span class="p">(),</span><span class="n">metadata</span><span class="p">)</span></div>
+
+<span class="k">def</span> <span class="nf">make_master</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;creates the master logger if it doesn&#39;t exist, returns it if it does&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">MASTER_LOGGER</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">MASTER_LOGGER</span>
+
+    <span class="c1"># create our ImagePypelines master logger</span>
+    <span class="c1"># set our subclass as the root of all child loggers</span>
+    <span class="n">master</span> <span class="o">=</span> <span class="n">ImagepypelinesLogger</span><span class="p">(</span><span class="s1">&#39;ImagePypelines&#39;</span><span class="p">)</span>
+    <span class="n">manager</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Manager</span><span class="p">(</span><span class="n">master</span><span class="p">)</span>
+    <span class="n">manager</span><span class="o">.</span><span class="n">setLoggerClass</span><span class="p">(</span><span class="n">ImagepypelinesLogger</span><span class="p">)</span>
+    <span class="n">master</span><span class="o">.</span><span class="n">manager</span> <span class="o">=</span> <span class="n">manager</span>
+
+    <span class="n">ch</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span>
+                        <span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> | </span><span class="si">%(name)s</span><span class="s1"> [ </span><span class="si">%(levelname)8s</span><span class="s1"> ]: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">master</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span>
+    <span class="n">master</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">master</span>
+
+<span class="n">MASTER_LOGGER</span> <span class="o">=</span> <span class="n">make_master</span><span class="p">()</span>
+<span class="n">MASTER_ADAPTER</span> <span class="o">=</span> <span class="n">get_master_logger</span><span class="p">()</span>
+
+
+
+<div class="viewcode-block" id="get_logger"><a class="viewcode-back" href="../../api/imagepypelines.get_logger.html#imagepypelines.get_logger">[docs]</a><span class="k">def</span> <span class="nf">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">MASTER_LOGGER</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates a new child logging adapter from the given parent (root logger by</span>
+<span class="sd">    default)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name(str): the name of the new child logger</span>
+<span class="sd">        pipeline(Block,Pipeline): the Pipeline object associated with this logger</span>
+<span class="sd">            (optional)</span>
+<span class="sd">        parent(logging.LoggerAdapter,logging.Logger): parent logger to spawn a</span>
+<span class="sd">            new logger off of</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ImagepypelinesLoggerAdapter: a new child logger adapter with conn ids for</span>
+<span class="sd">            id, uuid, and name of the Pipeline (if applicable)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">LoggerAdapter</span><span class="p">):</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">logger</span>
+
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pipeline</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pipeline_id&#39;</span><span class="p">:</span><span class="n">pipeline</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="s1">&#39;pipeline_uuid&#39;</span><span class="p">:</span><span class="n">pipeline</span><span class="o">.</span><span class="n">uuid</span><span class="p">,</span>
+                    <span class="s1">&#39;pipeline_name&#39;</span><span class="p">:</span><span class="n">pipeline</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pipeline_id&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">&#39;pipeline_uuid&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="s1">&#39;pipeline_name&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span>
+
+    <span class="n">adapter</span> <span class="o">=</span> <span class="n">ImagepypelinesLoggerAdapter</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">adapter</span></div>
+
+<div class="viewcode-block" id="set_log_level"><a class="viewcode-back" href="../../api/imagepypelines.set_log_level.html#imagepypelines.set_log_level">[docs]</a><span class="k">def</span> <span class="nf">set_log_level</span><span class="p">(</span><span class="n">log_level</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;sets the global master logger level&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">MASTER_LOGGER</span>
+    <span class="n">log_level</span> <span class="o">=</span> <span class="n">LOG_LEVELS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">log_level</span><span class="p">,</span> <span class="n">log_level</span><span class="p">)</span>
+    <span class="n">MASTER_LOGGER</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">log_level</span><span class="p">)</span></div>
+
+<span class="c1"># END</span>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

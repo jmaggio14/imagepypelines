@@ -1,0 +1,91 @@
+Pipeline
+========
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: Pipeline
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Pipeline.args
+      ~Pipeline.blocks
+      ~Pipeline.containers
+      ~Pipeline.execution_order
+      ~Pipeline.id
+      ~Pipeline.n_args
+      ~Pipeline.noncomputable
+      ~Pipeline.shapes
+      ~Pipeline.types
+      ~Pipeline.variables
+      ~Pipeline.void_vars
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Pipeline.__call__
+      ~Pipeline.asblock
+      ~Pipeline.assign_input_index
+      ~Pipeline.clear
+      ~Pipeline.copy
+      ~Pipeline.debug_serialization
+      ~Pipeline.deepcopy
+      ~Pipeline.draw
+      ~Pipeline.from_bytes
+      ~Pipeline.get_containers_for
+      ~Pipeline.get_predecessors
+      ~Pipeline.get_shapes_for
+      ~Pipeline.get_successors
+      ~Pipeline.get_tasks
+      ~Pipeline.get_types_for
+      ~Pipeline.load
+      ~Pipeline.process
+      ~Pipeline.process_and_grab
+      ~Pipeline.rename
+      ~Pipeline.reset
+      ~Pipeline.save
+      ~Pipeline.to_bytes
+      ~Pipeline.update
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: blocks
+   .. autoattribute:: containers
+   .. autoattribute:: execution_order
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+   .. autoattribute:: noncomputable
+   .. autoattribute:: shapes
+   .. autoattribute:: types
+   .. autoattribute:: variables
+   .. autoattribute:: void_vars
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: asblock
+   .. automethod:: assign_input_index
+   .. automethod:: clear
+   .. automethod:: copy
+   .. automethod:: debug_serialization
+   .. automethod:: deepcopy
+   .. automethod:: draw
+   .. automethod:: from_bytes
+   .. automethod:: get_containers_for
+   .. automethod:: get_predecessors
+   .. automethod:: get_shapes_for
+   .. automethod:: get_successors
+   .. automethod:: get_tasks
+   .. automethod:: get_types_for
+   .. automethod:: load
+   .. automethod:: process
+   .. automethod:: process_and_grab
+   .. automethod:: rename
+   .. automethod:: reset
+   .. automethod:: save
+   .. automethod:: to_bytes
+   .. automethod:: update

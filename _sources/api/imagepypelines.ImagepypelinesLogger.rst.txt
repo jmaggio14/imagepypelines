@@ -1,0 +1,75 @@
+ImagepypelinesLogger
+====================
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: ImagepypelinesLogger
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~ImagepypelinesLogger.ENABLE_LOG_COLOR
+      ~ImagepypelinesLogger.manager
+      ~ImagepypelinesLogger.root
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~ImagepypelinesLogger.addFilter
+      ~ImagepypelinesLogger.addHandler
+      ~ImagepypelinesLogger.callHandlers
+      ~ImagepypelinesLogger.critical
+      ~ImagepypelinesLogger.debug
+      ~ImagepypelinesLogger.error
+      ~ImagepypelinesLogger.exception
+      ~ImagepypelinesLogger.fatal
+      ~ImagepypelinesLogger.filter
+      ~ImagepypelinesLogger.findCaller
+      ~ImagepypelinesLogger.getChild
+      ~ImagepypelinesLogger.getEffectiveLevel
+      ~ImagepypelinesLogger.handle
+      ~ImagepypelinesLogger.hasHandlers
+      ~ImagepypelinesLogger.info
+      ~ImagepypelinesLogger.isEnabledFor
+      ~ImagepypelinesLogger.log
+      ~ImagepypelinesLogger.makeRecord
+      ~ImagepypelinesLogger.removeFilter
+      ~ImagepypelinesLogger.removeHandler
+      ~ImagepypelinesLogger.setLevel
+      ~ImagepypelinesLogger.warn
+      ~ImagepypelinesLogger.warning
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: ENABLE_LOG_COLOR
+   .. autoattribute:: manager
+   .. autoattribute:: root
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: addFilter
+   .. automethod:: addHandler
+   .. automethod:: callHandlers
+   .. automethod:: critical
+   .. automethod:: debug
+   .. automethod:: error
+   .. automethod:: exception
+   .. automethod:: fatal
+   .. automethod:: filter
+   .. automethod:: findCaller
+   .. automethod:: getChild
+   .. automethod:: getEffectiveLevel
+   .. automethod:: handle
+   .. automethod:: hasHandlers
+   .. automethod:: info
+   .. automethod:: isEnabledFor
+   .. automethod:: log
+   .. automethod:: makeRecord
+   .. automethod:: removeFilter
+   .. automethod:: removeHandler
+   .. automethod:: setLevel
+   .. automethod:: warn
+   .. automethod:: warning

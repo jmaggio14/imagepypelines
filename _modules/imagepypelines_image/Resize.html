@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines_image.Resize &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../examples/index.html">Examples</a></li>
+                <li><a href="../../blog/2020.html">Blog</a></li>
+                <li><a href="../../docs/core.html">Documentation</a></li>
+                <li><a href="../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines_image.Resize</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">dtype_type_check</span><span class="p">,</span>\
+                    <span class="n">interpolation_type_check</span><span class="p">,</span>\
+                    <span class="n">channel_type_check</span><span class="p">,</span>\
+                    <span class="n">get_cv2_interp_type</span>
+<span class="kn">from</span> <span class="nn">.imports</span> <span class="kn">import</span> <span class="n">import_opencv</span>
+<span class="kn">from</span> <span class="nn">.blocks</span> <span class="kn">import</span> <span class="n">ImageBlock</span>
+
+<span class="n">cv2</span> <span class="o">=</span> <span class="n">import_opencv</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">imagepypelines</span> <span class="k">as</span> <span class="nn">ip</span>
+
+
+<div class="viewcode-block" id="Resize"><a class="viewcode-back" href="../../api/imagepypelines_image.Resize.html#imagepypelines_image.Resize">[docs]</a><span class="k">class</span> <span class="nc">Resize</span><span class="p">(</span><span class="n">ImageBlock</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;splits images into separate component channels</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        w_scale_type(str): type of scaling used for image width, either</span>
+<span class="sd">            &quot;proportional&quot; or &quot;absolute&quot;</span>
+<span class="sd">        h_scale_type(str): type of scaling used for image height, either</span>
+<span class="sd">            &quot;proportional&quot; or &quot;absolute&quot;</span>
+<span class="sd">        h_param(int,float): vertical scale or absolute height to resize</span>
+<span class="sd">            image to</span>
+<span class="sd">        w_param(int,float): horizontal scale or absolute height to resize</span>
+<span class="sd">            image to</span>
+<span class="sd">        interp(str): interpolation type for resizing. One of</span>
+<span class="sd">            &#39;nearest&#39;, &#39;linear&#39;, &#39;area&#39;, &#39;cubic&#39;, &#39;lanczos4&#39;</span>
+
+<span class="sd">    Default Enforcement:</span>
+<span class="sd">        1) image</span>
+<span class="sd">            type: np.ndarray</span>
+<span class="sd">            shapes: [(None,None,None),(None,None)]</span>
+<span class="sd">            notes: image must be ordered [height,width,channels]</span>
+
+<span class="sd">    Batch Size:</span>
+<span class="sd">        &quot;each&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_h</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scale_w</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiates the object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            w(None,int): width to scale image to, must be None is scale_w is</span>
+<span class="sd">                defined</span>
+<span class="sd">            h(None,int): height to scale image to, must be None is scale_h is</span>
+<span class="sd">                defined</span>
+<span class="sd">            scale_h(None,float): vertical scale for the image, must be None</span>
+<span class="sd">                if &#39;h&#39; is defined</span>
+<span class="sd">            scale_w(None,float): horizontal scale for the image, must be None</span>
+<span class="sd">                if &#39;w&#39; is defined</span>
+<span class="sd">            interp(str): interpolation type for image scaling, must be one of:</span>
+<span class="sd">                &#39;nearest&#39;, &#39;linear&#39;, &#39;area&#39;, &#39;cubic&#39;, &#39;lanczos4&#39;</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s2">&quot;HWC&quot;</span><span class="p">)</span>
+
+        <span class="c1"># make sure either h or scale_h is defined</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">scale_h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;h&#39; or &#39;scale_h&#39; must be defined&quot;</span><span class="p">)</span>
+
+        <span class="c1"># make sure either w or scale_w is defined</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">scale_w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;w&#39; or &#39;scale_w&#39; must be defined&quot;</span><span class="p">)</span>
+
+        <span class="c1"># make sure only h or scale_h is defined</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">scale_h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only &#39;h&#39; or &#39;scale_h&#39; can be defined&quot;</span><span class="p">)</span>
+
+        <span class="c1"># make sure only w or scale_w is defined</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">scale_w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only &#39;w&#39; or &#39;scale_w&#39; can be defined&quot;</span><span class="p">)</span>
+
+        <span class="c1"># set w instance variables</span>
+        <span class="k">if</span> <span class="n">w</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w_scale_type</span> <span class="o">=</span> <span class="s1">&#39;proportional&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w_param</span> <span class="o">=</span> <span class="n">scale_w</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w_scale_type</span> <span class="o">=</span> <span class="s1">&#39;absolute&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">w_param</span> <span class="o">=</span> <span class="n">w</span>
+
+        <span class="c1"># set h instance variables</span>
+        <span class="k">if</span> <span class="n">h</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_scale_type</span> <span class="o">=</span> <span class="s1">&#39;proportional&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_param</span> <span class="o">=</span> <span class="n">scale_h</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_scale_type</span> <span class="o">=</span> <span class="s1">&#39;absolute&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">h_param</span> <span class="o">=</span> <span class="n">h</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__cv2_interp</span> <span class="o">=</span> <span class="n">get_cv2_interp_type</span><span class="p">(</span><span class="n">interp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interp</span> <span class="o">=</span> <span class="n">interp</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">enforce</span><span class="p">(</span><span class="s1">&#39;image&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">[(</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">),(</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">)])</span>
+
+<div class="viewcode-block" id="Resize.process"><a class="viewcode-back" href="../../api/imagepypelines_image.Resize.html#imagepypelines_image.Resize.process">[docs]</a>    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resizes the image to the specified dimensions</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            image(np.ndarray): image to resize, must be shaped</span>
+<span class="sd">                [height,width,channels]</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: resized image</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># get h dimension</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_scale_type</span> <span class="o">==</span> <span class="s2">&quot;proportional&quot;</span><span class="p">:</span>
+            <span class="n">new_h</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_param</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_param</span>
+
+        <span class="c1"># get w dimension</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_scale_type</span> <span class="o">==</span> <span class="s2">&quot;proportional&quot;</span><span class="p">:</span>
+            <span class="n">new_w</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w_param</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w_param</span>
+
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">rezize</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="p">(</span><span class="n">new_w</span><span class="p">,</span><span class="n">new_h</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__cv2_interp</span><span class="p">)</span></div></div>
+
+
+
+
+
+
+
+
+    <span class="c1"># END</span>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

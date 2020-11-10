@@ -1,0 +1,6 @@
+get_plugin_by_name
+==================
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: get_plugin_by_name

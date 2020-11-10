@@ -1,0 +1,6 @@
+linear
+======
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: linear

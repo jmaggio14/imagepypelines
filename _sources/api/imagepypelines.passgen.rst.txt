@@ -1,0 +1,6 @@
+passgen
+=======
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: passgen

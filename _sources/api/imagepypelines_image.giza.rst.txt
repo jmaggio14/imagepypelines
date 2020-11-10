@@ -1,0 +1,6 @@
+giza
+====
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: giza

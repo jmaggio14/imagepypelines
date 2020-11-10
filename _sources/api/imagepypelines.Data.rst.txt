@@ -1,0 +1,41 @@
+Data
+====
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: Data
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Data.container_type
+      ~Data.datum_type
+      ~Data.n_datums
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Data.as_all
+      ~Data.as_each
+      ~Data.grab
+      ~Data.is_homogenus_container
+      ~Data.n_batches_with
+      ~Data.pop
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: container_type
+   .. autoattribute:: datum_type
+   .. autoattribute:: n_datums
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: as_all
+   .. automethod:: as_each
+   .. automethod:: grab
+   .. automethod:: is_homogenus_container
+   .. automethod:: n_batches_with
+   .. automethod:: pop

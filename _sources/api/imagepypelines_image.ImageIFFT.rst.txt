@@ -1,0 +1,49 @@
+ImageIFFT
+=========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: ImageIFFT
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~ImageIFFT.args
+      ~ImageIFFT.id
+      ~ImageIFFT.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~ImageIFFT.__call__
+      ~ImageIFFT.check_setup
+      ~ImageIFFT.copy
+      ~ImageIFFT.deepcopy
+      ~ImageIFFT.enforce
+      ~ImageIFFT.get_default_node_attrs
+      ~ImageIFFT.postprocess
+      ~ImageIFFT.preprocess
+      ~ImageIFFT.process
+      ~ImageIFFT.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

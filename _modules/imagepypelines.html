@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../getting_started.html">Getting Started</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../blog/2020.html">Blog</a></li>
+                <li><a href="../docs/core.html">Documentation</a></li>
+                <li><a href="../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Email: jmaggio14@gmail.com</span>
+<span class="c1"># @Website: https://www.imagepypelines.org/</span>
+<span class="c1"># @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE</span>
+<span class="c1"># @github: https://github.com/jmaggio14/imagepypelines</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell</span>
+
+<span class="c1"># -------- setup a uuid for this imagepypelines session -------</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">uuid4</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">init_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="sd">&quot;&quot;&quot;unix time initiatization time for this imagepypelines session&quot;&quot;&quot;</span>
+<span class="n">session_uuid</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+<span class="sd">&quot;&quot;&quot;a universally unique id for this imagepypelines session&quot;&quot;&quot;</span>
+
+<span class="c1"># ----------- Setup the Root ImagePypelines Logger ---------------</span>
+<span class="c1"># import the master logger</span>
+<span class="kn">from</span> <span class="nn">.Logger</span> <span class="kn">import</span> <span class="n">MASTER_LOGGER</span><span class="p">,</span> <span class="n">get_logger</span><span class="p">,</span> <span class="n">ImagepypelinesLogger</span><span class="p">,</span> <span class="n">set_log_level</span><span class="p">,</span> <span class="n">get_master_logger</span>
+<span class="c1"># import master logger convienence function</span>
+<span class="c1"># NOTE: import logging constants our users can modify to change color behavior</span>
+
+
+<span class="c1"># ---------- import imagepypelines ----------</span>
+<span class="kn">from</span> <span class="nn">.version_info</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.core</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># ---------- import plugins ----------</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="n">LOADED_PLUGINS</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+<span class="sd">&quot;&quot;&quot;module level OrderedDict that contains the all loaded modules in the order in</span>
+<span class="sd">which they were loaded&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="add_plugin"><a class="viewcode-back" href="../api/imagepypelines.add_plugin.html#imagepypelines.add_plugin">[docs]</a><span class="k">def</span> <span class="nf">add_plugin</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="n">plugin_module</span><span class="p">,</span> <span class="n">add_to_namespace</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;adds the given plugin to ImagePypelines</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        plugin_name(str): the name of the desired plugin namespace</span>
+<span class="sd">        plugin_module(module): the valid module object for the plugin</span>
+<span class="sd">        add_to_namespace(bool): whether or not to add the plugin to the</span>
+<span class="sd">            ImagePypelines namespace so it&#39;s available as `ip.plugin_name`.</span>
+<span class="sd">            If False, then you will only be access your plugin namespace using</span>
+<span class="sd">            `ip.get_plugin_by_name`. Defaults to True.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">ip_module</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="vm">__name__</span><span class="p">]</span>
+    <span class="n">get_master_logger</span><span class="p">()</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;loading plugin &#39;</span><span class="si">{0}</span><span class="s2">&#39; - it will be available as imagepypelines.</span><span class="si">{0}</span><span class="s2">&quot;</span>\
+        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">add_to_namespace</span><span class="p">:</span>
+        <span class="c1"># add the plugin to the current namespace</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">ip_module</span><span class="p">,</span> <span class="n">plugin_name</span><span class="p">,</span> <span class="n">plugin_module</span><span class="p">)</span>
+
+    <span class="c1"># update the default shape functions if the plugin provides new ones</span>
+    <span class="n">SHAPE_FUNCS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="s1">&#39;SHAPE_FUNCS&#39;</span><span class="p">,</span> <span class="p">{})</span> <span class="p">)</span>
+
+    <span class="c1"># update the default homogenus containers if the plugin provides new ones</span>
+    <span class="n">HOMOGENUS_CONTAINERS</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="s1">&#39;HOMOGENUS_CONTAINERS&#39;</span><span class="p">,</span> <span class="p">[])</span> <span class="p">)</span>
+
+    <span class="c1"># add the plugin name to a global list for debugging</span>
+    <span class="n">LOADED_PLUGINS</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">plugin_module</span></div>
+
+<span class="c1"># define a function to load all the plugins so it&#39;s easier to keep the namespace</span>
+<span class="c1"># clean</span>
+<div class="viewcode-block" id="load_plugins"><a class="viewcode-back" href="../api/imagepypelines.load_plugins.html#imagepypelines.load_plugins">[docs]</a><span class="k">def</span> <span class="nf">load_plugins</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Load all installed plugins to the imagepypelines namespace&quot;&quot;&quot;</span>
+    <span class="c1"># import these again in case this function is called multiple times and it&#39;s</span>
+    <span class="c1"># deleted from the global namespace</span>
+    <span class="kn">import</span> <span class="nn">pkg_resources</span>
+    <span class="c1"># load in all installed python packages with our plugin entry_point</span>
+    <span class="n">required_objects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">plugins</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">entry_point</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">entry_point</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">entry_point</span>
+                <span class="ow">in</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">iter_entry_points</span><span class="p">(</span><span class="s1">&#39;imagepypelines.plugins&#39;</span><span class="p">)</span>
+                <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">plugin_name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span> <span class="n">plugins</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">):</span>
+        <span class="n">plugin_module</span> <span class="o">=</span> <span class="n">plugins</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]</span>
+        <span class="n">add_plugin</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">,</span> <span class="n">plugin_module</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
+
+<span class="c1"># load all of our plugins</span>
+<span class="n">load_plugins</span><span class="p">()</span>
+
+<span class="c1"># define a function to check if a plugin is loaded</span>
+<div class="viewcode-block" id="require"><a class="viewcode-back" href="../api/imagepypelines.require.html#imagepypelines.require">[docs]</a><span class="k">def</span> <span class="nf">require</span><span class="p">(</span><span class="o">*</span><span class="n">plugins</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;check to make sure the given plugin(s) are loaded and raise an error if</span>
+<span class="sd">    they can&#39;t be found</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        *plugins: names of plugins</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">master</span> <span class="o">=</span> <span class="n">get_master_logger</span><span class="p">()</span>
+
+    <span class="n">not_loaded</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">plg</span> <span class="ow">in</span> <span class="n">plugins</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">plg</span> <span class="ow">in</span> <span class="n">LOADED_PLUGINS</span><span class="p">):</span>
+            <span class="n">not_loaded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">not_loaded</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">plg</span> <span class="ow">in</span> <span class="n">not_loaded</span><span class="p">:</span>
+            <span class="n">master</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;unable to find &quot;</span><span class="si">{</span><span class="n">plg</span><span class="si">}</span><span class="s1">&quot;&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unable to find the required plugin(s): </span><span class="si">{</span><span class="n">not_loaded</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+
+<div class="viewcode-block" id="get_plugin_by_name"><a class="viewcode-back" href="../api/imagepypelines.get_plugin_by_name.html#imagepypelines.get_plugin_by_name">[docs]</a><span class="k">def</span> <span class="nf">get_plugin_by_name</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;fetches the plugin module using its name&quot;&quot;&quot;</span>
+    <span class="n">require</span><span class="p">(</span><span class="n">plugin_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">LOADED_PLUGINS</span><span class="p">[</span><span class="n">plugin_name</span><span class="p">]</span></div>
+
+
+<span class="c1"># ---------- delete namespace pollutants ----------</span>
+<span class="k">del</span> <span class="n">pkg_resources</span><span class="p">,</span> <span class="n">os</span><span class="p">,</span> <span class="n">uuid4</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">OrderedDict</span><span class="p">,</span> <span class="n">sys</span>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

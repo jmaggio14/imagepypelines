@@ -1,0 +1,6 @@
+standard_images
+===============
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: standard_images

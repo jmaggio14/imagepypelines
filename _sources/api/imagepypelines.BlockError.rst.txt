@@ -1,0 +1,6 @@
+BlockError
+==========
+
+.. currentmodule:: imagepypelines
+
+.. autoexception:: BlockError

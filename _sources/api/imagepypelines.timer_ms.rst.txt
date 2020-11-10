@@ -1,0 +1,6 @@
+timer_ms
+========
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: timer_ms

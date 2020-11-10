@@ -1,0 +1,49 @@
+Norm01
+======
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: Norm01
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Norm01.args
+      ~Norm01.id
+      ~Norm01.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Norm01.__call__
+      ~Norm01.check_setup
+      ~Norm01.copy
+      ~Norm01.deepcopy
+      ~Norm01.enforce
+      ~Norm01.get_default_node_attrs
+      ~Norm01.postprocess
+      ~Norm01.preprocess
+      ~Norm01.process
+      ~Norm01.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

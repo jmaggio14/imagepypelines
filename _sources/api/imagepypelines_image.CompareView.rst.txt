@@ -1,0 +1,49 @@
+CompareView
+===========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: CompareView
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~CompareView.args
+      ~CompareView.id
+      ~CompareView.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~CompareView.__call__
+      ~CompareView.check_setup
+      ~CompareView.copy
+      ~CompareView.deepcopy
+      ~CompareView.enforce
+      ~CompareView.get_default_node_attrs
+      ~CompareView.postprocess
+      ~CompareView.preprocess
+      ~CompareView.process
+      ~CompareView.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

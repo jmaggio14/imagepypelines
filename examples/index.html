@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gallery &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../getting_started.html">Getting Started</a></li>
+                <li><a href="#">Examples</a></li>
+                <li><a href="../blog/2020.html">Blog</a></li>
+                <li><a href="../docs/core.html">Documentation</a></li>
+                <li><a href="../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Gallery</a><ul>
+<li><a class="reference internal" href="#how-to-use-pipelines">How to Use Pipelines</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#imaging">Imaging</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+<form action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<div id="sourcelink">
+  <a href="../_sources/examples/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+       <dl class="field-list simple" id="sphx-glr-examples">
+<dt class="field-odd">orphan</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="section" id="gallery">
+<span id="tutorials-index"></span><span id="id1"></span><h1>Gallery<a class="headerlink" href="#gallery" title="Permalink to this headline">¶</a></h1>
+<div class="sphx-glr-clear"></div><div class="section" id="how-to-use-pipelines">
+<span id="how-to-use-pipelines-examples"></span><span id="sphx-glr-examples-how-to-use-pipelines"></span><h2>How to Use Pipelines<a class="headerlink" href="#how-to-use-pipelines" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="There are a few ways to do this"><div class="figure align-default" id="id2">
+<img alt="Process your data!" src="../_images/sphx_glr_data-processing_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="how-to-use-pipelines/data-processing.html#sphx-glr-examples-how-to-use-pipelines-data-processing-py"><span class="std std-ref">Process your data!</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Add additional tasks to your pipelines"><div class="figure align-default" id="id3">
+<img alt="Add additional tasks to your pipelines" src="../_images/sphx_glr_add_additional_tasks_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="how-to-use-pipelines/add_additional_tasks.html#sphx-glr-examples-how-to-use-pipelines-add-additional-tasks-py"><span class="std std-ref">Add additional tasks to your pipelines</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div></div>
+<div class="section" id="imaging">
+<span id="science-examples"></span><span id="sphx-glr-examples-imaging"></span><h2>Imaging<a class="headerlink" href="#imaging" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Download and Process Imagery from the Internet"><div class="figure align-default" id="id4">
+<img alt="Download and Process Imagery from the Internet" src="../_images/sphx_glr_download_and_process_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/download_and_process.html#sphx-glr-examples-imaging-download-and-process-py"><span class="std std-ref">Download and Process Imagery from the Internet</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Example for demonstrating the fetch capability"><div class="figure align-default" id="id5">
+<img alt="Example for demonstrating the fetch capability" src="../_images/sphx_glr_fetch_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/fetch.html#sphx-glr-examples-imaging-fetch-py"><span class="std std-ref">Example for demonstrating the fetch capability</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Save your processed imagery as a video"><div class="figure align-default" id="id6">
+<img alt="Save your processed imagery as a video" src="../_images/sphx_glr_save_as_video_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/save_as_video.html#sphx-glr-examples-imaging-save-as-video-py"><span class="std std-ref">Save your processed imagery as a video</span></a></span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Affine, Perspective, Control Point Transformations"><div class="figure align-default" id="id7">
+<img alt="Affine, Perspective, Control Point Transformations" src="../_images/sphx_glr_image_transformations_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/image_transformations.html#sphx-glr-examples-imaging-image-transformations-py"><span class="std std-ref">Affine, Perspective, Control Point Transformations</span></a></span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Show ConfigPermuter"><div class="figure align-default" id="id8">
+<img alt="Show ConfigPermuter" src="../_images/sphx_glr_try_every_combo_of_hyperparameters_thumb.png" />
+<p class="caption"><span class="caption-text"><span class="xref std std-ref">sphx_glr_examples_imaging_try_every_combo_of_hyperparameters.py</span></span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="How to leverage the syntax of ImagePypelines effectively!"><div class="figure align-default" id="id9">
+<img alt="Syntax Intro" src="../_images/sphx_glr_syntax_intro_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/syntax_intro.html#sphx-glr-examples-imaging-syntax-intro-py"><span class="std std-ref">Syntax Intro</span></a></span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Number and view a sequence of images"><div class="figure align-default" id="id10">
+<img alt="Number and View Images" src="../_images/sphx_glr_image_viewing_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/image_viewing.html#sphx-glr-examples-imaging-image-viewing-py"><span class="std std-ref">Number and View Images</span></a></span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Learn the basics with Hello World!"><div class="figure align-default" id="id11">
+<img alt="Hello World!" src="../_images/sphx_glr_hello_world_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/hello_world.html#sphx-glr-examples-imaging-hello-world-py"><span class="std std-ref">Hello World!</span></a></span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Swap Red and Blue Image Channels"><div class="figure align-default" id="id12">
+<img alt="Swap Red and Blue Image Channels" src="../_images/sphx_glr_swap_red_and_blue_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/swap_red_and_blue.html#sphx-glr-examples-imaging-swap-red-and-blue-py"><span class="std std-ref">Swap Red and Blue Image Channels</span></a></span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="1) Regular plot show and save 2) Same but interactive and iterative (plt.ion() -&gt; child threads..."><div class="figure align-default" id="id13">
+<img alt="Make a plot, save, and show it (with and without blocking)" src="../_images/sphx_glr_plotting_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/plotting.html#sphx-glr-examples-imaging-plotting-py"><span class="std std-ref">Make a plot, save, and show it (with and without blocking)</span></a></span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="Image Filtering"><div class="figure align-default" id="id14">
+<img alt="Image Filtering" src="../_images/sphx_glr_filter_images_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/filter_images.html#sphx-glr-examples-imaging-filter-images-py"><span class="std std-ref">Image Filtering</span></a></span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="1) Require ip.image 2) Build image histogram, PDF, and CDF blocks 2) Build LUT application bloc..."><div class="figure align-default" id="id15">
+<img alt="Re-reimplement histogram stretching, matching, and equalization and hist/pdf/cdf" src="../_images/sphx_glr_contrast_enhancement_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="imaging/contrast_enhancement.html#sphx-glr-examples-imaging-contrast-enhancement-py"><span class="std std-ref">Re-reimplement histogram stretching, matching, and equalization and hist/pdf/cdf</span></a></span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-clear"></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/bc82bea3a5dd7bdba60b65220891d9e5/examples_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">examples_python.zip</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/fb625db3c50d423b1b7881136ffdeec8/examples_jupyter.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">examples_jupyter.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/examples/index.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

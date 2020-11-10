@@ -1,0 +1,49 @@
+NumberImage
+===========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: NumberImage
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~NumberImage.args
+      ~NumberImage.id
+      ~NumberImage.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~NumberImage.__call__
+      ~NumberImage.check_setup
+      ~NumberImage.copy
+      ~NumberImage.deepcopy
+      ~NumberImage.enforce
+      ~NumberImage.get_default_node_attrs
+      ~NumberImage.postprocess
+      ~NumberImage.preprocess
+      ~NumberImage.process
+      ~NumberImage.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

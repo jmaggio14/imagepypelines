@@ -1,0 +1,6 @@
+set_log_level
+=============
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: set_log_level

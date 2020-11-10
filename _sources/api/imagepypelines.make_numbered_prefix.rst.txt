@@ -1,0 +1,6 @@
+make_numbered_prefix
+====================
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: make_numbered_prefix

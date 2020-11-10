@@ -1,0 +1,49 @@
+QuickView
+=========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: QuickView
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~QuickView.args
+      ~QuickView.id
+      ~QuickView.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~QuickView.__call__
+      ~QuickView.check_setup
+      ~QuickView.copy
+      ~QuickView.deepcopy
+      ~QuickView.enforce
+      ~QuickView.get_default_node_attrs
+      ~QuickView.postprocess
+      ~QuickView.preprocess
+      ~QuickView.process
+      ~QuickView.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

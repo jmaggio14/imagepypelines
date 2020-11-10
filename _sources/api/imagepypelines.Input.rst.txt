@@ -1,0 +1,57 @@
+Input
+=====
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: Input
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Input.args
+      ~Input.id
+      ~Input.loaded
+      ~Input.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Input.__call__
+      ~Input.check_setup
+      ~Input.copy
+      ~Input.deepcopy
+      ~Input.enforce
+      ~Input.get_default_node_attrs
+      ~Input.load
+      ~Input.postprocess
+      ~Input.preprocess
+      ~Input.process
+      ~Input.rename
+      ~Input.set_index
+      ~Input.unload
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: loaded
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: load
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename
+   .. automethod:: set_index
+   .. automethod:: unload

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines.core.Block &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../../examples/index.html">Examples</a></li>
+                <li><a href="../../../blog/2020.html">Blog</a></li>
+                <li><a href="../../../docs/core.html">Documentation</a></li>
+                <li><a href="../../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines.core.Block</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Email: jmaggio14@gmail.com</span>
+<span class="c1"># @Website: https://www.imagepypelines.org/</span>
+<span class="c1"># @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE</span>
+<span class="c1"># @github: https://github.com/jmaggio14/imagepypelines</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell</span>
+<span class="kn">from</span> <span class="nn">..Logger</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span> <span class="nn">..Logger</span> <span class="kn">import</span> <span class="n">ImagepypelinesLogger</span>
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="n">NUMPY_TYPES</span><span class="p">,</span> <span class="n">UUID_ORDER</span>
+<span class="kn">from</span> <span class="nn">.Exceptions</span> <span class="kn">import</span> <span class="n">BlockError</span>
+<span class="kn">from</span> <span class="nn">.arg_checking</span> <span class="kn">import</span> <span class="n">DEFAULT_SHAPE_FUNCS</span><span class="p">,</span> <span class="n">HOMOGENUS_CONTAINERS</span>
+<span class="kn">from</span> <span class="nn">.Data</span> <span class="kn">import</span> <span class="n">is_container</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">Timer</span>
+
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">uuid4</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<div class="viewcode-block" id="Block"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block">[docs]</a><span class="k">class</span> <span class="nc">Block</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;a contained algorithmic element used to construct pipelines. This class</span>
+<span class="sd">    is designed to be inherited from, or used in the form of one of its child</span>
+<span class="sd">    classes.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        you must overload `Block.process()` if you intend to inherit from this</span>
+<span class="sd">        class</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        uuid(str): hex uuid for this pipeline</span>
+<span class="sd">        name(str): user specified name for this pipeline, used to generate</span>
+<span class="sd">            the unique id. defaults to the name of your subclass</span>
+<span class="sd">        batch_type(str, int): the size of the batch fed into your process</span>
+<span class="sd">            function. Will be an integer, &quot;all&quot;, or &quot;each&quot;</span>
+<span class="sd">        void(bool): Boolean value. By default all blocks return a value or</span>
+<span class="sd">            values as output. However, if printing to screen, plotting, or</span>
+<span class="sd">            saving data to a file, a block may not have a meaningful output</span>
+<span class="sd">            that should be stored in a pipeline&#39;s output dictionary. In this</span>
+<span class="sd">            case, void should be set to True, so that the output of the block</span>
+<span class="sd">            is ignored. The associated var key in the pipeline output will</span>
+<span class="sd">            contain a value of :obj:`None`.</span>
+<span class="sd">        logger(:obj:`ImagepypelinesLogger`): Logger object for this block. When</span>
+<span class="sd">            run in a pipeline this logger is temporaily replaced with a child of</span>
+<span class="sd">            the Pipeline&#39;s logger</span>
+<span class="sd">        tags(:obj:`set`): tags to describe this block. unused as of March 2020</span>
+<span class="sd">        _arg_spec(:obj:`namedtuple`,None): a named tuple describing the</span>
+<span class="sd">            arguments for this block&#39;s process function. Only defined if the</span>
+<span class="sd">            property `block.args` is accessed.</span>
+<span class="sd">        skip_enforcement(bool): whether or not to enforce type and shape checking</span>
+<span class="sd">        types(:obj:`dict`): Dictionary of input types. If arg doesn&#39;t exist</span>
+<span class="sd">            as a key, or if the value is None, then no checking is done</span>
+<span class="sd">        shapes(:obj:`dict`): Dictionary of input shapes. If arg doesn&#39;t exist</span>
+<span class="sd">            as a key, or if the value is None, then no checking is done</span>
+<span class="sd">        containers(:obj:`dict`): Dictionary of input containers. If arg doesn&#39;t</span>
+<span class="sd">            exist as a key, or if the value is None, then no checking is done</span>
+<span class="sd">            *if batch_type is &quot;each&quot;, then the container is irrelevant and can</span>
+<span class="sd">            be safely ignored!*</span>
+<span class="sd">        shape_fns(:obj:`dict`): Dictionary of shape functions to retrieve. If</span>
+<span class="sd">            type(arg_datum) doesn&#39;t exist as a key, or if the value is None,</span>
+<span class="sd">            then no checking is done.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">batch_type</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                    <span class="n">types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">shapes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">containers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">void</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;instantiates the block</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name(str,None): the name of this block - how it will show up in the</span>
+<span class="sd">                graph.</span>
+<span class="sd">            batch_type(str, int): the type of the batch processing for your</span>
+<span class="sd">                process function. Either &quot;all&quot; or &quot;each&quot;. &quot;all&quot; means that all</span>
+<span class="sd">                argument data will be passed into to your function at once,</span>
+<span class="sd">                &quot;each&quot; means that each argument datum will be passed in</span>
+<span class="sd">                individually</span>
+<span class="sd">            types(:obj:`dict`,None): Dictionary of input types. If arg doesn&#39;t</span>
+<span class="sd">                exist as a key, or if the value is None, then no checking is</span>
+<span class="sd">                done. If not provided, then will default to args as keys, None</span>
+<span class="sd">                as values.</span>
+<span class="sd">            shapes(:obj:`dict`,None): Dictionary of input shapes. If arg doesn&#39;t</span>
+<span class="sd">                exist as a key, or if the value is None, then no checking is</span>
+<span class="sd">                done. If not provided, then will default to args as keys, None</span>
+<span class="sd">                as values.</span>
+<span class="sd">            containers(:obj:`dict`,None): Dictionary of input containers. If arg</span>
+<span class="sd">                doesn&#39;t exist as a key, or if the value is None, then no</span>
+<span class="sd">                checking is done. If not provided, then will default to args as</span>
+<span class="sd">                keys, None as values.</span>
+<span class="sd">                *if batch_type is &quot;each&quot;, then the container is irrelevant and can</span>
+<span class="sd">                be safely ignored!*</span>
+<span class="sd">            void(bool): Boolean value. By default all blocks return a value or</span>
+<span class="sd">                values as output. However, if printing to screen, plotting, or</span>
+<span class="sd">                saving data to a file, a block may not have a meaningful output</span>
+<span class="sd">                that should be stored in a pipeline&#39;s output dictionary. In this</span>
+<span class="sd">                case, void should be set to True, so that the output of the block</span>
+<span class="sd">                is ignored. The associated var key in the pipeline output will</span>
+<span class="sd">                contain a value of :obj:`None`. Default is False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">batch_type</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">,</span><span class="s2">&quot;each&quot;</span><span class="p">),</span><span class="s2">&quot;batch_type must be &#39;each&#39; or &#39;all&#39;&quot;</span>
+
+        <span class="c1"># setup absolutely unique id for this block</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+
+        <span class="c1"># ------ setting up instance variables</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_type</span> <span class="o">=</span> <span class="n">batch_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">void</span> <span class="o">=</span> <span class="n">void</span>
+
+        <span class="c1"># this will be defined in _pipeline_pair</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="p">)</span>
+
+        <span class="c1"># setup initial tags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># FullArgSpec for this block, defined in self.args for most blocks</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_arg_spec&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_arg_spec</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># TYPE AND SHAPE CHECKING VARS</span>
+        <span class="c1"># ----------------------------------------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip_enforcement</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># types</span>
+        <span class="k">if</span> <span class="n">types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="p">{</span><span class="n">arg</span> <span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">types</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;types&#39; must be a dictionary or None&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">types</span>
+
+        <span class="c1"># shapes</span>
+        <span class="k">if</span> <span class="n">shapes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span> <span class="o">=</span> <span class="p">{</span><span class="n">arg</span> <span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">shapes</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;shapes&#39; must be a dictionary or None&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span> <span class="o">=</span> <span class="n">shapes</span>
+
+        <span class="c1"># containers</span>
+        <span class="k">if</span> <span class="n">containers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">containers</span> <span class="o">=</span> <span class="p">{</span><span class="n">arg</span> <span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">containers</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;&#39;containers&#39; must be a dictionary or None&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">containers</span> <span class="o">=</span> <span class="n">containers</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape_fns</span> <span class="o">=</span> <span class="n">DEFAULT_SHAPE_FUNCS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Block</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span> <span class="c1"># for metaclass?</span>
+
+
+    <span class="c1">############################################################################</span>
+    <span class="c1">#                           overloadable</span>
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.process"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.process">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data_batches</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.check_setup"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.check_setup">[docs]</a>    <span class="k">def</span> <span class="nf">check_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;briefly checks setup with the provided task inputs.</span>
+
+<span class="sd">        This function can be overloaded to add additional functionality if</span>
+<span class="sd">        desired. By default it simply checks if too many or too few arguments</span>
+<span class="sd">        were provided.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            task_args(:obj:`tuple` of :obj:`str`): Arguments for this task</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Be very careful making task-specific modifications to the block</span>
+<span class="sd">            setup in this function. It&#39;s called once for every task this block</span>
+<span class="sd">            is in. Changes made for one task may not apply to another task.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># too few args</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_args</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_args</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Not enough arguments provided&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot; (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># too many args</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_args</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Too many arguments provided&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot; (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.preprocess"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.preprocess">[docs]</a>    <span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;runs before all batches are processed&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.postprocess"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.postprocess">[docs]</a>    <span class="k">def</span> <span class="nf">postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;runs after</span>
+
+<span class="sd">         all batches are processed&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+    <span class="c1">############################################################################</span>
+    <span class="c1">#                           primary frontend</span>
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.rename"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.rename">[docs]</a>    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;renames the block to the given name. The id is reset in this process&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="s2">&quot;name must be string&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;being renamed from &#39;</span><span class="si">%s</span><span class="s2">&#39; to &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">old_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="c1"># reset the logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unpair_logger</span><span class="p">()</span>
+        <span class="c1"># log the new name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;renamed from &#39;</span><span class="si">%s</span><span class="s2">&#39; to &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">old_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.copy"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;fetches a shallow copy of this block with the UUID updated&quot;&quot;&quot;</span>
+        <span class="c1"># NOTE: make sure this results in the same behavior as unpickling</span>
+        <span class="c1"># the uuid must be updated</span>
+        <span class="n">copied</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">copied</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+        <span class="k">return</span> <span class="n">copied</span></div>
+
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.deepcopy"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.deepcopy">[docs]</a>    <span class="k">def</span> <span class="nf">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;fetches a deep copy of this block with the UUID updated&quot;&quot;&quot;</span>
+        <span class="c1"># NOTE: make sure this results in the same behavior as unpickling</span>
+        <span class="c1"># the uuid must be updated</span>
+        <span class="n">deepcopied</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">deepcopied</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+        <span class="k">return</span> <span class="n">deepcopied</span></div>
+
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.enforce"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.enforce">[docs]</a>    <span class="k">def</span> <span class="nf">enforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">types</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shapes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">containers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;sets the block up to make sure the given arg is the assigned type</span>
+<span class="sd">        and shapes</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            arg(str): name the process function argument you want to enforce</span>
+<span class="sd">                checking on</span>
+<span class="sd">            types(:obj:`tuple` of :obj:`type`): the types to restrict this</span>
+<span class="sd">                argument to. If left as None, then no type checking will be</span>
+<span class="sd">                done</span>
+<span class="sd">            shapes(:obj:`tuple` of :obj:`type`):  the shapes to restrict this</span>
+<span class="sd">                argument to. If left as None, then no shape checking will be</span>
+<span class="sd">                done</span>
+<span class="sd">            containers(:obj:`tuple` of :obj:`type`):  the containers to restrict</span>
+<span class="sd">                this argument to. If left as None, then no container checking</span>
+<span class="sd">                will be done.</span>
+<span class="sd">                *if batch_type is &quot;each&quot;, then the container is irrelevant and</span>
+<span class="sd">                can be safely ignored!*</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :obj:`Block` : self</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This function must be called after the parent block is instantiated!</span>
+
+<span class="sd">            That is, in your `__init__` function, you must call</span>
+<span class="sd">            `super().__init__` before calling `self.enforce`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># make sure the parent block object is already instantiated before we</span>
+        <span class="c1"># run this function (i.e. call super().__init__ before enforcement)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;uuid&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="s2">&quot;Block __init__ must be called before enforcement&quot;</span><span class="p">)</span>
+
+        <span class="c1"># NOTE: force values to be lists of lists/None (ie add error checking)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">types</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">shapes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">containers</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="n">containers</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="c1">############################################################################</span>
+    <span class="c1">#                 called internally or by Pipeline</span>
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="nf">_pipeline_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">force_skip</span><span class="p">,</span> <span class="n">analytics</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;batches and processes data through the block&#39;s process function. This</span>
+<span class="sd">        function is called by Pipeline, and not intended to be called by the</span>
+<span class="sd">        user.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *data: Variable length list of data</span>
+<span class="sd">            logger(:obj:`ImagepypelinesLogger`): parent pipeline logger, which</span>
+<span class="sd">                will be used to create a new child block logger</span>
+<span class="sd">            force_skip(bool): whether or not to check batch types and shapes</span>
+<span class="sd">            analytics(dict): dictionary to store processing analytics for this</span>
+<span class="sd">                block.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (tuple): variable length tuple containing processed data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pair_logger</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
+        <span class="c1"># NOTE: add type checking here</span>
+
+        <span class="c1"># check data partity (same n_datums for every data)</span>
+        <span class="c1"># this still works even if len(data) is 0</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n_datums</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">n_datums</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">):</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Invalid data lengths! all data must have the same&quot;</span>\
+                    <span class="o">+</span> <span class="s2">&quot;number of items. </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="c1"># this adds a list (&quot;input_name.n_datums&quot;=)</span>
+            <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.n_datums=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">n_datums</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span><span class="n">data</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+        <span class="c1"># fetch the process id for this block</span>
+        <span class="n">analytics</span><span class="p">[</span><span class="s1">&#39;pid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getpid</span><span class="p">()</span>
+
+        <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">()</span>
+        <span class="c1"># run preprocess</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocess</span><span class="p">()</span>
+
+        <span class="c1"># root blocks don&#39;t need input data, and won&#39;t have any data</span>
+        <span class="c1"># passed in to batch. We only call process once for these</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_args</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># this separate statement is  necessary because we have to ensure</span>
+            <span class="c1"># that process is only called once not for every data batch</span>
+            <span class="c1"># (only if there are no inputs, ie no batches, into this block)</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">()</span>
+            <span class="c1"># put it a tuple if it isn&#39;t already</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># --------- CHECKING  ---------</span>
+            <span class="c1"># check the batches before processing</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">force_skip</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_enforcement</span><span class="p">):</span>
+                <span class="c1"># reset the lap timer</span>
+                <span class="n">timer</span><span class="o">.</span><span class="n">lap_ms</span><span class="p">()</span>
+                <span class="c1"># validate incoming data</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_check_batches</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">analytics</span><span class="p">[</span><span class="s1">&#39;validation_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">lap_ms</span><span class="p">()</span>
+
+
+            <span class="c1"># --------- ACTUAL PROCESSING ---------</span>
+            <span class="c1"># EACH - every batch is a datum</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_type</span> <span class="o">==</span> <span class="s2">&quot;each&quot;</span><span class="p">:</span>
+                <span class="c1"># construct the batch generators</span>
+                <span class="k">def</span> <span class="nf">_process_batches</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">):</span>
+                    <span class="n">batches</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">as_each</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">datums</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">batches</span><span class="p">):</span>
+                        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="o">*</span><span class="n">datums</span><span class="p">)</span>
+                        <span class="c1"># put it a tuple if it isn&#39;t already</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                            <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="p">)</span>
+                        <span class="k">yield</span> <span class="n">out</span>
+
+                <span class="n">ret</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">_process_batches</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">))</span> <span class="p">)</span>
+
+            <span class="c1"># ALL - process everything at once</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># if batch_type == &quot;all&quot;</span>
+                <span class="n">batches</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">as_all</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="o">*</span><span class="n">batches</span><span class="p">)</span>
+
+                <span class="c1"># if there is a return value for this block (most blocks)</span>
+                <span class="c1"># we make sure we can write this data to a graph edge</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">void</span><span class="p">:</span>
+                    <span class="c1"># put it a tuple if it isn&#39;t already</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                        <span class="n">ret</span> <span class="o">=</span> <span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="p">)</span>
+
+                    <span class="c1"># enforce container outputs on batch_type=&quot;all&quot; blocks</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">out</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ret</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_container</span><span class="p">(</span><span class="n">out</span><span class="p">):</span>
+                            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Blocks with batch_type=&#39;all&#39; must return containers of data (output </span><span class="si">%s</span><span class="s2"> is &#39;</span><span class="si">%s</span><span class="s2">&#39;, which is not an iterable type) or have their &#39;void&#39; attribute set to &#39;True&#39;. &quot;</span>
+                            <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                            <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+        <span class="n">analytics</span><span class="p">[</span><span class="s1">&#39;processing_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timer</span><span class="o">.</span><span class="n">time_ms</span><span class="p">()</span>
+        <span class="c1"># track the number of incoming datums to this block</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">analytics</span><span class="p">[</span><span class="s2">&quot;num_in&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n_datums</span>
+            <span class="n">analytics</span><span class="p">[</span><span class="s2">&quot;n_batches&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n_batches_with</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_type</span><span class="p">)</span>
+            <span class="n">analytics</span><span class="p">[</span><span class="s1">&#39;avg_time_per_datum&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">analytics</span><span class="p">[</span><span class="s1">&#39;processing_time&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">analytics</span><span class="p">[</span><span class="s1">&#39;num_in&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">ret</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="nf">_check_batches</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;checks argument batches to verify if they are the correct type and shapes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">as_all</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+        <span class="c1"># FOR EVERY ARG AND BATCH</span>
+        <span class="c1"># ======================================================================</span>
+        <span class="k">for</span> <span class="n">arg_name</span><span class="p">,</span><span class="n">data_container</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">all_data</span><span class="p">):</span>
+            <span class="c1"># ---------- CONTAINER CHECK ----------</span>
+            <span class="c1"># we have to check the container if datums aren&#39;t passed in individually</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_type</span> <span class="o">==</span> <span class="s2">&quot;all&quot;</span><span class="p">:</span>
+                <span class="n">okay_containers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">containers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">okay_containers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># check the container type is valid</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data_container</span><span class="p">,</span> <span class="n">okay_containers</span><span class="p">):</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;invalid container for &#39;</span><span class="si">{}</span><span class="s2">&#39;. must be </span><span class="si">{}</span><span class="s2">, not </span><span class="si">{}</span><span class="s2">. (you can disable this check with the &#39;skip_enforcement&#39; keyword)&quot;</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span> <span class="n">okay_containers</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">batch</span><span class="p">))</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+            <span class="c1"># check if it&#39;s a homogenus container</span>
+            <span class="c1"># for example if it&#39;s a numpy array, we can speed thing sup because</span>
+            <span class="c1"># we only have to check the first row</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data_container</span><span class="p">)</span> <span class="ow">in</span> <span class="n">HOMOGENUS_CONTAINERS</span><span class="p">:</span>
+                <span class="n">data_container</span> <span class="o">=</span> <span class="n">data_container</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+            <span class="c1"># FOR EVERY DATUM IN THE CONTAINER</span>
+            <span class="c1"># ==================================================================</span>
+            <span class="k">for</span> <span class="n">datum</span> <span class="ow">in</span> <span class="n">data_container</span><span class="p">:</span>
+                <span class="c1"># ---------------------------------------</span>
+                <span class="c1"># TYPE CHECKING</span>
+                <span class="c1"># ---------------------------------------</span>
+                <span class="c1"># fetch the accepted types for this arg</span>
+                <span class="n">arg_types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># if arg_types is None, then we will skip all type checking</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">arg_types</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">datum</span><span class="p">,</span> <span class="n">arg_types</span><span class="p">):</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;invalid type for &#39;</span><span class="si">{}</span><span class="s2">&#39;. must be </span><span class="si">{}</span><span class="s2">, not </span><span class="si">{}</span><span class="s2">. (you can disable this check with the &#39;skip_enforcement&#39; keyword)&quot;</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span> <span class="n">arg_types</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">batch</span><span class="p">))</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+                <span class="c1"># ---------------------------------------</span>
+                <span class="c1"># SHAPE CHECKING</span>
+                <span class="c1"># ---------------------------------------</span>
+                <span class="c1"># fetch the accepted shapes for this arg</span>
+                <span class="n">arg_shapes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="c1"># if arg_shapes is None, then we will skip all shape checking</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">arg_shapes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                    <span class="c1"># skip shape checking if we don&#39;t have a shape_fn</span>
+                    <span class="n">shape_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_fns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="nb">type</span><span class="p">(</span><span class="n">datum</span><span class="p">),</span> <span class="kc">None</span> <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">shape_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="c1"># retrieve datum shape</span>
+                    <span class="n">datum_shape</span> <span class="o">=</span> <span class="n">shape_fn</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+
+                    <span class="c1"># FOR ARG SHAPE in all possible arg shapes</span>
+                    <span class="c1"># ==========================================================</span>
+                    <span class="n">ndim_okay</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">axes_okay</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">for</span> <span class="n">arg_shape</span> <span class="ow">in</span> <span class="n">arg_shapes</span><span class="p">:</span>
+                        <span class="c1"># reject automatically unless at least one shape has</span>
+                        <span class="c1"># right number of dimensions</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg_shape</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">datum_shape</span><span class="p">):</span>
+                            <span class="k">continue</span>
+
+                        <span class="n">ndim_okay</span> <span class="o">=</span> <span class="kc">True</span>
+
+                        <span class="c1"># otherwise check every axis</span>
+                        <span class="k">for</span> <span class="n">arg_ax</span><span class="p">,</span><span class="n">d_ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">arg_shape</span><span class="p">,</span><span class="n">datum_shape</span><span class="p">):</span>
+                            <span class="c1"># no need to check if the arg_ax is None (any length)</span>
+                            <span class="k">if</span> <span class="n">arg_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="k">continue</span>
+                            <span class="c1"># compare every axis length</span>
+                            <span class="n">axes_okay</span> <span class="o">=</span> <span class="p">(</span><span class="n">axes_okay</span> <span class="ow">and</span> <span class="p">(</span><span class="n">arg_ax</span> <span class="o">==</span> <span class="n">d_ax</span><span class="p">))</span>
+
+                    <span class="c1"># raise a shape error</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">axes_okay</span> <span class="ow">and</span> <span class="n">ndim_okay</span><span class="p">):</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;invalid shape for &#39;</span><span class="si">{}</span><span class="s2">&#39;. must be </span><span class="si">{}</span><span class="s2">, not </span><span class="si">{}</span><span class="s2">&quot;</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arg_name</span><span class="p">,</span> <span class="n">arg_shapes</span><span class="p">,</span> <span class="n">datum_shape</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                        <span class="k">raise</span> <span class="n">BlockError</span><span class="p">(</span><span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot; (you can disable this check with the &#39;skip_enforcement&#39; keyword)&quot;</span><span class="p">)</span>
+
+
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="nf">_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;fetches a static summary of the block&quot;&quot;&quot;</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># instance vars</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;types&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;shapes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shapes</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;skip_enforcement&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_enforcement</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;batch_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_type</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;tags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="c1"># other data</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;class_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+        <span class="c1"># method documentation</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;DOCS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;DOCS&#39;</span><span class="p">][</span><span class="s1">&#39;class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;DOCS&#39;</span><span class="p">][</span><span class="s1">&#39;__init__&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+        <span class="n">summary</span><span class="p">[</span><span class="s1">&#39;DOCS&#39;</span><span class="p">][</span><span class="s1">&#39;process&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">summary</span>
+
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.get_default_node_attrs"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.get_default_node_attrs">[docs]</a>    <span class="k">def</span> <span class="nf">get_default_node_attrs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;all values must be json serializable&quot;&quot;&quot;</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s1">&#39;class_name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="s1">&#39;batch_type&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_type</span><span class="p">,</span>
+                <span class="c1"># string indicating</span>
+                <span class="s1">&#39;display_as&#39;</span><span class="p">:</span> <span class="s1">&#39;block&#39;</span><span class="p">,</span>
+                <span class="p">}</span>
+        <span class="k">return</span> <span class="n">attrs</span></div>
+
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="nf">_pair_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_logger</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;creates or fetches a new child logger of the pipeline for this block&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">pipeline_logger</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="nf">_unpair_logger</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;restores the original block logger&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+
+    <span class="c1">############################################################################</span>
+    <span class="c1">#                            special</span>
+    <span class="c1">############################################################################</span>
+<div class="viewcode-block" id="Block.__call__"><a class="viewcode-back" href="../../../api/imagepypelines.Block.html#imagepypelines.Block.__call__">[docs]</a>    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Allows any block to act as a callable, aliasing the process method&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;resets the uuid in the event of a copy&quot;&quot;&quot;</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+
+    <span class="c1">############################################################################</span>
+    <span class="c1">#                           properties</span>
+    <span class="c1">############################################################################</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;:obj:`list` of :obj:`str`: arguments in the order they are expected&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arg_spec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_arg_spec</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">)</span>
+        <span class="c1"># save the argspec in an instance variable if it hasn&#39;t been computed</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arg_spec</span><span class="o">.</span><span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># ignoring &#39;self&#39;</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arg_spec</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;int: Number of arguments for the process function&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c1">############################################################################</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;str: A unique id for this block</span>
+
+<span class="sd">        This id is a combination of the block&#39;s non-unique name and</span>
+<span class="sd">        part of it&#39;s uuid (last 6 characters by default).</span>
+<span class="sd">        The entropy of this id can be increased by increasing ImagePypelines</span>
+<span class="sd">        UUID_ORDER variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">#</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span><span class="p">[</span><span class="o">-</span><span class="n">UUID_ORDER</span><span class="p">:])</span></div>
+
+
+<span class="c1"># END</span>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

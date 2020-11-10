@@ -1,0 +1,6 @@
+blockify
+========
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: blockify

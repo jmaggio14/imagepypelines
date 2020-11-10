@@ -1,0 +1,49 @@
+Dimensions
+==========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: Dimensions
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Dimensions.args
+      ~Dimensions.id
+      ~Dimensions.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Dimensions.__call__
+      ~Dimensions.check_setup
+      ~Dimensions.copy
+      ~Dimensions.deepcopy
+      ~Dimensions.enforce
+      ~Dimensions.get_default_node_attrs
+      ~Dimensions.postprocess
+      ~Dimensions.preprocess
+      ~Dimensions.process
+      ~Dimensions.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

@@ -1,0 +1,49 @@
+NormDtype
+=========
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: NormDtype
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~NormDtype.args
+      ~NormDtype.id
+      ~NormDtype.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~NormDtype.__call__
+      ~NormDtype.check_setup
+      ~NormDtype.copy
+      ~NormDtype.deepcopy
+      ~NormDtype.enforce
+      ~NormDtype.get_default_node_attrs
+      ~NormDtype.postprocess
+      ~NormDtype.preprocess
+      ~NormDtype.process
+      ~NormDtype.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

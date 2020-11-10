@@ -1,0 +1,6 @@
+get_standard_image
+==================
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: get_standard_image

@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pipeline &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../getting_started.html">Getting Started</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../blog/2020.html">Blog</a></li>
+                <li><a href="../docs/core.html">Documentation</a></li>
+                <li><a href="../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <div class="section" id="pipeline">
+<h1>Pipeline<a class="headerlink" href="#pipeline" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="imagepypelines.Pipeline">
+<em class="property">class </em><code class="sig-prename descclassname">imagepypelines.</code><code class="sig-name descname">Pipeline</code><span class="sig-paren">(</span><em class="sig-param">tasks=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>processing algorithm manager for simple pipeline construction</p>
+<p>&lt; RYAN I NEED YOU HERE &gt;</p>
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.uuid">
+<code class="sig-name descname">uuid</code><a class="headerlink" href="#imagepypelines.Pipeline.uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>hex uuid for this pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.name">
+<code class="sig-name descname">name</code><a class="headerlink" href="#imagepypelines.Pipeline.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>user specified name for this pipeline, used to generate
+the unique id. defaults to “Pipeline” or the name of your subclass</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.logger">
+<code class="sig-name descname">logger</code><a class="headerlink" href="#imagepypelines.Pipeline.logger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logger object for this pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="imagepypelines.ImagepypelinesLogger.html#imagepypelines.ImagepypelinesLogger" title="imagepypelines.ImagepypelinesLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImagepypelinesLogger</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.graph">
+<code class="sig-name descname">graph</code><a class="headerlink" href="#imagepypelines.Pipeline.graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multi-Edge directed task graph
+which stores all data and algorithmic order</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">networkx.MultiDiGraph</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.vars">
+<code class="sig-name descname">vars</code><a class="headerlink" href="#imagepypelines.Pipeline.vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict to track the block that generates the each variable,
+keys are variable names, values are a subdictionary containing
+‘block_node_id’ and ‘block’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">indexed_inputs(:obj:`list` of</code></dt>
+<dd><p>obj:’str’): sorted list of indexed input
+variable names. (the indexed arguments for the process function)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">keyword_inputs(:obj:`list` of</code></dt>
+<dd><p>obj:’str’): alphabetically sorted list of
+unindexed input variable names (the keyword arguments for the
+process function)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline._inputs">
+<code class="sig-name descname">_inputs</code><a class="headerlink" href="#imagepypelines.Pipeline._inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>dictionary internally used to access Input objects for
+queuing data into the pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl>
+<dt>Pipeline Graph Information:</dt><dd><dl>
+<dt>Nodes are dictionaries representing tasks. They contain:</dt><dd><p>‘block’   : block object for this task,
+‘args’    : names of the task inputs for this block,
+‘outputs’ : names of the task outputs produced by this block,
+‘name’    : string name of the node for visualization purposes,
+‘color’   : color of the node for visualization purposes,
+‘shape’   : shape of the node for visualization purposes,
+‘class_name’ : name of the class, frequently identical to the name
+‘validation_time’: time required to validate incoming data if applicable
+‘processing_time’ : time required to process the data using this node
+‘avg_time_per_datum’: average processing time for each datum
+‘num_in’ : number of datums coming into this node
+‘n_batches’ : number of batches for this node
+‘pid’ : process id for this node
+‘status’: processing status. one of: (‘not started’, ‘processing’, ‘done’)
+&lt;plus other attributes defined by the user in Block.get_default_node_attrs()&gt;</p>
+</dd>
+<dt>Pipeline edges are dictionaries containing the following:</dt><dd><p>‘var_name’        : name of the variable in task definition
+‘out_index’       : output index from the source node,
+‘in_index’        : input index for the target node,
+‘name’            : name target block’s argument at the in_index
+‘same_type_for_all_datums’    : whether or not this data is a homogenus container
+‘data_stored_in’  : the type of the container used to house the data (list, ndarray, etc)
+‘n_datums’        : number of items of data in this edge
+‘datum_type’      : the type of data contained, this is only</p>
+<blockquote>
+<div><p>guarenteed to be accurate is same_type_for_all_datums is True</p>
+</div></blockquote>
+<p>‘node_a’          : source node uuid
+‘node_b’          : target node uuid
+‘data’            : data for this edge</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">imagepypelines</span> <span class="k">as</span> <span class="nn">ip</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ip</span><span class="o">.</span><span class="n">blockify</span><span class="p">(</span> <span class="n">kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">add_val</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">value</span><span class="p">,</span> <span class="n">b</span><span class="o">+</span><span class="n">value</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@ip</span><span class="o">.</span><span class="n">blockify</span><span class="p">(</span> <span class="n">kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">minus_val</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">a</span><span class="o">-</span><span class="n">value</span><span class="p">,</span> <span class="n">b</span><span class="o">-</span><span class="n">value</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tasks</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="c1"># inputs</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;zero&#39;</span> <span class="p">:</span> <span class="n">ip</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;one&#39;</span> <span class="p">:</span> <span class="n">ip</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="c1"># operations</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;ten&#39;</span><span class="p">,</span><span class="s1">&#39;eleven&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">add_val</span><span class="p">,</span> <span class="s1">&#39;zero&#39;</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;twenty&#39;</span><span class="p">,</span><span class="s1">&#39;eleven2&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">add_val</span><span class="p">,</span> <span class="s1">&#39;ten&#39;</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;fifteen&#39;</span><span class="p">,</span> <span class="s1">&#39;six&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">minus_val</span><span class="p">,</span> <span class="s1">&#39;twenty&#39;</span><span class="p">,</span> <span class="s1">&#39;eleven&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;twentyfive&#39;</span><span class="p">,</span><span class="s1">&#39;twentyone&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">add_val</span><span class="p">,</span> <span class="s1">&#39;fifteen&#39;</span><span class="p">,</span><span class="s1">&#39;eleven2&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;negativefour&#39;</span><span class="p">,</span> <span class="s1">&#39;negativefive&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">minus_val</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;zero&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">}</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># pipeline1 - raw construction</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline1</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">Pipeline</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="s1">&#39;Pipeline1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># pipeline1.draw(show=True)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">processed1</span> <span class="o">=</span> <span class="n">pipeline1</span><span class="o">.</span><span class="n">process</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># print(processed1)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># pipeline2 - construction from task dict</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">static_constructor</span> <span class="o">=</span> <span class="n">pipeline1</span><span class="o">.</span><span class="n">get_tasks</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline2</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">Pipeline</span><span class="p">(</span><span class="n">static_constructor</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Pipeline2&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">processed2</span> <span class="o">=</span> <span class="n">pipeline2</span><span class="o">.</span><span class="n">process</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">one</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="rubric">Attributes Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.args" title="imagepypelines.Pipeline.args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">args</span></code></a></p></td>
+<td><p>arguments in the order they are expected</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.blocks" title="imagepypelines.Pipeline.blocks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">blocks</span></code></a></p></td>
+<td><p>unordered set of pipeline blocks</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.containers" title="imagepypelines.Pipeline.containers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">containers</span></code></a></p></td>
+<td><p>container): the containers compatible for input arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.execution_order" title="imagepypelines.Pipeline.execution_order"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execution_order</span></code></a></p></td>
+<td><p>topologically sorted edges of the pipeline</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.id" title="imagepypelines.Pipeline.id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">id</span></code></a></p></td>
+<td><p>an unique id for this pipeline</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.n_args" title="imagepypelines.Pipeline.n_args"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_args</span></code></a></p></td>
+<td><p>number of arguments for the process function</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.noncomputable" title="imagepypelines.Pipeline.noncomputable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">noncomputable</span></code></a></p></td>
+<td><p>unordered set of every variable that can’t be computed because it relies on void data</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.shapes" title="imagepypelines.Pipeline.shapes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shapes</span></code></a></p></td>
+<td><p>tuple): the shapes compatible for input arguments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.types" title="imagepypelines.Pipeline.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span></code></a></p></td>
+<td><p>type): the types compatible for input arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.variables" title="imagepypelines.Pipeline.variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></a></p></td>
+<td><p>all variables in the pipeline</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.void_vars" title="imagepypelines.Pipeline.void_vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">void_vars</span></code></a></p></td>
+<td><p>unordered set of variables which won’t have data assigned to them during runtime</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.__call__" title="imagepypelines.Pipeline.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a>(*pos_data[, fetch, skip_enforcement])</p></td>
+<td><p>aliases self.process with same signature for more natural use</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.asblock" title="imagepypelines.Pipeline.asblock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">asblock</span></code></a>(*fetches)</p></td>
+<td><p>generates a block that runs this pipeline internally</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.assign_input_index" title="imagepypelines.Pipeline.assign_input_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assign_input_index</span></code></a>(var, index)</p></td>
+<td><p>reassigns the index for this variable in the process argument list</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.clear" title="imagepypelines.Pipeline.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
+<td><p>clears all edges in the graph and unloads the input nodes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.copy" title="imagepypelines.Pipeline.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>([name])</p></td>
+<td><p>returns a copy of the Pipeline, but not a copy of the blocks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.debug_serialization" title="imagepypelines.Pipeline.debug_serialization"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug_serialization</span></code></a>()</p></td>
+<td><p>helper function to debug what part of a block is not serializable</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.deepcopy" title="imagepypelines.Pipeline.deepcopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deepcopy</span></code></a>([name])</p></td>
+<td><p>returns a copy of the Pipeline including copies of all its blocks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.draw" title="imagepypelines.Pipeline.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>([show, ax])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.from_bytes" title="imagepypelines.Pipeline.from_bytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_bytes</span></code></a>(raw_bytes[, passwd, checksum, name])</p></td>
+<td><p>loads the pipeline from the given bytes</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.get_containers_for" title="imagepypelines.Pipeline.get_containers_for"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_containers_for</span></code></a>(var)</p></td>
+<td><p>fetches the enforced containers for this variable of the pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.get_predecessors" title="imagepypelines.Pipeline.get_predecessors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_predecessors</span></code></a>(var)</p></td>
+<td><p>fetches the names of the variables which must be computed/loaded before the given variable can be computed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.get_shapes_for" title="imagepypelines.Pipeline.get_shapes_for"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_shapes_for</span></code></a>(var)</p></td>
+<td><p>fetches the enforced shapes for the given variable</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.get_successors" title="imagepypelines.Pipeline.get_successors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_successors</span></code></a>(var)</p></td>
+<td><p>fetches the names of the variables which depend on this variable before they can be computed</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.get_tasks" title="imagepypelines.Pipeline.get_tasks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tasks</span></code></a>()</p></td>
+<td><p>generates a dictionary task represenation of the pipeline, which can be used to make other pipelines.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.get_types_for" title="imagepypelines.Pipeline.get_types_for"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_types_for</span></code></a>(var)</p></td>
+<td><p>fetches the enforced types for this variable of the pipeline.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.load" title="imagepypelines.Pipeline.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filename[, passwd, checksum, name])</p></td>
+<td><p>loads the pipeline from the given file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.process" title="imagepypelines.Pipeline.process"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process</span></code></a>(*pos_data[, fetch, skip_enforcement])</p></td>
+<td><p>processes input data through the pipeline</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.process_and_grab" title="imagepypelines.Pipeline.process_and_grab"><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_and_grab</span></code></a>(*pos_data, fetch[, …])</p></td>
+<td><p>processes input data through the pipeline, but returns a tuple with the specified fetches</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.rename" title="imagepypelines.Pipeline.rename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rename</span></code></a>(name)</p></td>
+<td><p>renames the Pipeline to the given name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.reset" title="imagepypelines.Pipeline.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a>()</p></td>
+<td><p>resets all edges in the graph, resets the inputs (and updates the dashboards)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.save" title="imagepypelines.Pipeline.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(filename[, passwd])</p></td>
+<td><p>serializes and saves a copy of the pipeline to the given filename.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.to_bytes" title="imagepypelines.Pipeline.to_bytes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_bytes</span></code></a>([passwd])</p></td>
+<td><p>serialized a copy of the pipeline, and returns the raw bytes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.Pipeline.update" title="imagepypelines.Pipeline.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>([tasks, predict_compatibility])</p></td>
+<td><p>updates the pipeline’s graph with a dict of tasks</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.args">
+<code class="sig-name descname">args</code><a class="headerlink" href="#imagepypelines.Pipeline.args" title="Permalink to this definition">¶</a></dt>
+<dd><p>arguments in the order they are expected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.blocks">
+<code class="sig-name descname">blocks</code><a class="headerlink" href="#imagepypelines.Pipeline.blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>unordered set of pipeline blocks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set</span></code></a> of <a class="reference internal" href="imagepypelines.Block.html#imagepypelines.Block" title="imagepypelines.Block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Block</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.containers">
+<code class="sig-name descname">containers</code><a class="headerlink" href="#imagepypelines.Pipeline.containers" title="Permalink to this definition">¶</a></dt>
+<dd><p>container): the containers compatible for input
+arguments. This is computed dynamically so it will automatically reflect
+changes to Blocks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>(obj</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><cite>dict</cite> of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.execution_order">
+<code class="sig-name descname">execution_order</code><a class="headerlink" href="#imagepypelines.Pipeline.execution_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>topologically sorted edges of the pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Generator</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.id">
+<code class="sig-name descname">id</code><a class="headerlink" href="#imagepypelines.Pipeline.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>an unique id for this pipeline</p>
+<p>This id is a combination of the pipeline’s non-unique name and
+part of it’s uuid (last 6 characters by default).
+The entropy of this id can be increased by increasing ImagePypelines
+UUID_ORDER variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.n_args">
+<code class="sig-name descname">n_args</code><a class="headerlink" href="#imagepypelines.Pipeline.n_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of arguments for the process function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.noncomputable">
+<code class="sig-name descname">noncomputable</code><a class="headerlink" href="#imagepypelines.Pipeline.noncomputable" title="Permalink to this definition">¶</a></dt>
+<dd><p>unordered set of every variable that can’t be computed because
+it relies on void data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.shapes">
+<code class="sig-name descname">shapes</code><a class="headerlink" href="#imagepypelines.Pipeline.shapes" title="Permalink to this definition">¶</a></dt>
+<dd><p>tuple): the shapes compatible for input
+arguments. This is computed dynamically so it will automatically reflect
+changes to Blocks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>(obj</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><cite>dict</cite> of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.types">
+<code class="sig-name descname">types</code><a class="headerlink" href="#imagepypelines.Pipeline.types" title="Permalink to this definition">¶</a></dt>
+<dd><p>type): the types compatible for input arguments.
+This is computed dynamically so it will automatically reflect changes to
+Blocks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>(obj</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><cite>dict</cite> of str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.variables">
+<code class="sig-name descname">variables</code><a class="headerlink" href="#imagepypelines.Pipeline.variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>all variables in the pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.Pipeline.void_vars">
+<code class="sig-name descname">void_vars</code><a class="headerlink" href="#imagepypelines.Pipeline.void_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>unordered set of variables which won’t have data assigned to them
+during runtime</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="method">
+<dt id="imagepypelines.Pipeline.__call__">
+<code class="sig-name descname">__call__</code><span class="sig-paren">(</span><em class="sig-param">*pos_data</em>, <em class="sig-param">fetch=None</em>, <em class="sig-param">skip_enforcement=False</em>, <em class="sig-param">**kwdata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.__call__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>aliases self.process with same signature for more natural use</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.asblock">
+<code class="sig-name descname">asblock</code><span class="sig-paren">(</span><em class="sig-param">*fetches</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.asblock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.asblock" title="Permalink to this definition">¶</a></dt>
+<dd><p>generates a block that runs this pipeline internally</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*fetches</strong> – variables to fetch from the pipeline in the order they
+should be outputed as</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Block which will run the pipeline internally and</dt><dd><p>retrieve the data specified by fetches</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="imagepypelines.Block.html#imagepypelines.Block" title="imagepypelines.Block"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Block</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.assign_input_index">
+<code class="sig-name descname">assign_input_index</code><span class="sig-paren">(</span><em class="sig-param">var</em>, <em class="sig-param">index</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.assign_input_index"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.assign_input_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>reassigns the index for this variable in the process argument list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>clears all edges in the graph and unloads the input nodes. Does not
+update the remote dashboard</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.copy">
+<code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a copy of the Pipeline, but not a copy of the blocks</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.debug_serialization">
+<code class="sig-name descname">debug_serialization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.debug_serialization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.debug_serialization" title="Permalink to this definition">¶</a></dt>
+<dd><p>helper function to debug what part of a block is not serializable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.deepcopy">
+<code class="sig-name descname">deepcopy</code><span class="sig-paren">(</span><em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.deepcopy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.deepcopy" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a copy of the Pipeline including copies of all its blocks</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">show=True</em>, <em class="sig-param">ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.draw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.draw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.from_bytes">
+<em class="property">static </em><code class="sig-name descname">from_bytes</code><span class="sig-paren">(</span><em class="sig-param">raw_bytes</em>, <em class="sig-param">passwd=None</em>, <em class="sig-param">checksum=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.from_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.from_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads the pipeline from the given bytes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_bytes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><em>bytes</em></a>) – the encoded pipeline in bytes format</p></li>
+<li><p><strong>passwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – password to decrypt the serialized pipeline with, defaults
+to None</p></li>
+<li><p><strong>checksum</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the sha256 checksum to check the bytes against</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – new name for the pipeline. If left as None, then
+defaults to the old name of the pipeline</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the loaded pipeline</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#imagepypelines.Pipeline" title="imagepypelines.Pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pipeline</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Serialized data can be a security risk! For sensitive applications,
+use the <cite>checksum</cite> parameter. ImagePypelines can use this to ensure
+the data hasn’t been tampered with.</p>
+<p>for more information about serialization security, see:
+<a class="reference external" href="https://docs.python.org/3.8/library/pickle.html">https://docs.python.org/3.8/library/pickle.html</a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.get_containers_for">
+<code class="sig-name descname">get_containers_for</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.get_containers_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.get_containers_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetches the enforced containers for this variable of the pipeline.</p>
+<p>More specifically, these are the containers that won’t throw an error
+within the block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the variable</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the containers enforced for</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a>)</p>
+</dd>
+</dl>
+<p>the given variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.get_predecessors">
+<code class="sig-name descname">get_predecessors</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.get_predecessors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.get_predecessors" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetches the names of the variables which must be computed/loaded
+before the given variable can be computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – name of variable to find predecessors for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>an unordered set of the variables that must be computed before</dt><dd><p>the given variable can be calculated.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.get_shapes_for">
+<code class="sig-name descname">get_shapes_for</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.get_shapes_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.get_shapes_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetches the enforced shapes for the given variable</p>
+<p>More specifically, these are the shapes that won’t throw an
+error within the block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the variable</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the shapes enforced for</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a>)</p>
+</dd>
+</dl>
+<p>the given variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.get_successors">
+<code class="sig-name descname">get_successors</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.get_successors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.get_successors" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetches the names of the variables which depend on this variable
+before they can be computed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – name of variable to find successors for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>an unordered set of the variables that can only be computed</dt><dd><p>once the given variable has been</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#set" title="(in Python v3.9)">set</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.get_tasks">
+<code class="sig-name descname">get_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.get_tasks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.get_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>generates a dictionary task represenation of the pipeline, which can
+be used to make other pipelines.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.get_types_for">
+<code class="sig-name descname">get_types_for</code><span class="sig-paren">(</span><em class="sig-param">var</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.get_types_for"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.get_types_for" title="Permalink to this definition">¶</a></dt>
+<dd><p>fetches the enforced types for this variable of the pipeline.</p>
+<p>More specifically, these are the types that won’t throw an error
+within the block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>var</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the name of the variable</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the types enforced for</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a>)</p>
+</dd>
+</dl>
+<p>the given variable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.load">
+<em class="property">classmethod </em><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">passwd=None</em>, <em class="sig-param">checksum=None</em>, <em class="sig-param">name=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>loads the pipeline from the given file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the filename to load the serialized pipeline from</p></li>
+<li><p><strong>passwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – password to decrypt the serialized pipeline with, defaults
+to None</p></li>
+<li><p><strong>checksum</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the sha256 checksum to check the file against</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – new name for the pipeline. If left as None, then
+defaults to the old name of the pipeline</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the loaded pipeline</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#imagepypelines.Pipeline" title="imagepypelines.Pipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pipeline</span></code></a></p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Serilized data can be a security risk! For sensitive applications,
+use the <cite>checksum</cite> parameter. ImagePypelines can use this to ensure
+the data hasn’t been tampered with.</p>
+<p>for more information about serialization security, see:
+<a class="reference external" href="https://docs.python.org/3.8/library/pickle.html">https://docs.python.org/3.8/library/pickle.html</a></p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.process">
+<code class="sig-name descname">process</code><span class="sig-paren">(</span><em class="sig-param">*pos_data</em>, <em class="sig-param">fetch=None</em>, <em class="sig-param">skip_enforcement=False</em>, <em class="sig-param">**kwdata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>processes input data through the pipeline</p>
+<p>process first resets this pipeline, before loading input data into the
+graph and processing it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The argument list for the Pipeline can be found with <cite>Pipeline.args</cite></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>MUST ADD FETCHES DOCUMENTATIONS</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.process_and_grab">
+<code class="sig-name descname">process_and_grab</code><span class="sig-paren">(</span><em class="sig-param">*pos_data</em>, <em class="sig-param">fetch</em>, <em class="sig-param">skip_enforcement=False</em>, <em class="sig-param">**kwdata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.process_and_grab"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.process_and_grab" title="Permalink to this definition">¶</a></dt>
+<dd><p>processes input data through the pipeline, but returns a tuple with
+the specified fetches</p>
+<p>process first resets this pipeline, before loading input data into the
+graph and processing it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The argument list for the Pipeline can be found with <cite>Pipeline.args</cite></p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>MUST ADD FETCHES DOCUMENTATIONS</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.rename">
+<code class="sig-name descname">rename</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>renames the Pipeline to the given name. The id is reset in this process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>resets all edges in the graph, resets the inputs (and updates the dashboards)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">passwd=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>serializes and saves a copy of the pipeline to the given filename.
+Pipeline can be optionally encrypted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – the filename to save the serialized pipeline to</p></li>
+<li><p><strong>passwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – password to encrypt the serialized pipeline with if
+desired, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the sha256 checksum for the saved file</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.to_bytes">
+<code class="sig-name descname">to_bytes</code><span class="sig-paren">(</span><em class="sig-param">passwd=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.to_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.to_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>serialized a copy of the pipeline, and returns the raw bytes. Can be
+optionally encrypted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>passwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><em>str</em></a>) – password to encrypt the serialized pipeline with if
+desired, defaults to None</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>tuple containing:</p>
+<blockquote>
+<div><p>bytes: the serialized and optionally encrypted pipeline
+str: the sha256 checksum for the raw bytes</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)">tuple</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.Pipeline.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">tasks=None</em>, <em class="sig-param">predict_compatibility=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/core/Pipeline.html#Pipeline.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.Pipeline.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>updates the pipeline’s graph with a dict of tasks</p>
+<p><cite>update</cite> will modify and change many instance variables of the pipeline.
+Despite its generic name, it can only add tasks to the pipeline, not
+remove them. <cite>update</cite> is called internally to the pipeline during
+instantiation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><em>dict</em></a>) – dictionary of tasks to define this pipeline’s graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/api/imagepypelines.Pipeline.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

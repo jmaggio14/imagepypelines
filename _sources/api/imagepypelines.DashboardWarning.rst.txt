@@ -1,0 +1,6 @@
+DashboardWarning
+================
+
+.. currentmodule:: imagepypelines
+
+.. autoexception:: DashboardWarning

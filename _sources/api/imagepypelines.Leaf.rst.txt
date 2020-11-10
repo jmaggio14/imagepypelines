@@ -1,0 +1,49 @@
+Leaf
+====
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: Leaf
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~Leaf.args
+      ~Leaf.id
+      ~Leaf.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~Leaf.__call__
+      ~Leaf.check_setup
+      ~Leaf.copy
+      ~Leaf.deepcopy
+      ~Leaf.enforce
+      ~Leaf.get_default_node_attrs
+      ~Leaf.postprocess
+      ~Leaf.preprocess
+      ~Leaf.process
+      ~Leaf.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

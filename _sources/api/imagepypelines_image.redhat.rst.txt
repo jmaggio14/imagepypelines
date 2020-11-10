@@ -1,0 +1,6 @@
+redhat
+======
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: redhat

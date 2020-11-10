@@ -1,0 +1,53 @@
+FuncBlock
+=========
+
+.. currentmodule:: imagepypelines
+
+.. autoclass:: FuncBlock
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~FuncBlock.args
+      ~FuncBlock.id
+      ~FuncBlock.kwargs
+      ~FuncBlock.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~FuncBlock.__call__
+      ~FuncBlock.check_setup
+      ~FuncBlock.copy
+      ~FuncBlock.deepcopy
+      ~FuncBlock.enforce
+      ~FuncBlock.get_default_node_attrs
+      ~FuncBlock.postprocess
+      ~FuncBlock.preprocess
+      ~FuncBlock.process
+      ~FuncBlock.rename
+      ~FuncBlock.tweak
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: kwargs
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename
+   .. automethod:: tweak

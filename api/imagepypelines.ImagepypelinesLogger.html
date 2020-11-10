@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>ImagepypelinesLogger &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../getting_started.html">Getting Started</a></li>
+                <li><a href="../examples/index.html">Examples</a></li>
+                <li><a href="../blog/2020.html">Blog</a></li>
+                <li><a href="../docs/core.html">Documentation</a></li>
+                <li><a href="../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <div class="section" id="imagepypelineslogger">
+<h1>ImagepypelinesLogger<a class="headerlink" href="#imagepypelineslogger" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="imagepypelines.ImagepypelinesLogger">
+<em class="property">class </em><code class="sig-prename descclassname">imagepypelines.</code><code class="sig-name descname">ImagepypelinesLogger</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">level=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Logger</span></code></a></p>
+<p>subclass of logging.Logger that can be pickled, also adds colored logging
+outputs if desired. the color, functionality and text attributes can be
+controlled by setting the module variables imagepypelines.LOG_COLORS,
+imagepypelines.ENABLE_LOG_COLOR, imagepypelines.LOG_TEXT_ATTRS</p>
+<dl class="attribute">
+<dt id="imagepypelines.ImagepypelinesLogger.ENABLE_LOG_COLOR">
+<code class="sig-name descname">ENABLE_LOG_COLOR</code><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.ENABLE_LOG_COLOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>class level variable controlling whether or not
+to markup log output with ANSI color codes. True by default</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.9)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Attributes Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.ENABLE_LOG_COLOR" title="imagepypelines.ImagepypelinesLogger.ENABLE_LOG_COLOR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENABLE_LOG_COLOR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.manager" title="imagepypelines.ImagepypelinesLogger.manager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">manager</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.root" title="imagepypelines.ImagepypelinesLogger.root"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.addFilter" title="imagepypelines.ImagepypelinesLogger.addFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addFilter</span></code></a>(filter)</p></td>
+<td><p>Add the specified filter to this handler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.addHandler" title="imagepypelines.ImagepypelinesLogger.addHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addHandler</span></code></a>(hdlr)</p></td>
+<td><p>Add the specified handler to this logger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.callHandlers" title="imagepypelines.ImagepypelinesLogger.callHandlers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">callHandlers</span></code></a>(record)</p></td>
+<td><p>Pass a record to all relevant handlers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.critical" title="imagepypelines.ImagepypelinesLogger.critical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">critical</span></code></a>(msg, *args, **kwargs)</p></td>
+<td><p>Log ‘msg % args’ with severity ‘CRITICAL’.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.debug" title="imagepypelines.ImagepypelinesLogger.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a>(msg, *args, **kwargs)</p></td>
+<td><p>Log ‘msg % args’ with severity ‘DEBUG’.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.error" title="imagepypelines.ImagepypelinesLogger.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a>(msg, *args, **kwargs)</p></td>
+<td><p>Log ‘msg % args’ with severity ‘ERROR’.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.exception" title="imagepypelines.ImagepypelinesLogger.exception"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exception</span></code></a>(msg, *args[, exc_info])</p></td>
+<td><p>Convenience method for logging an ERROR with exception information.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.fatal" title="imagepypelines.ImagepypelinesLogger.fatal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fatal</span></code></a>(msg, *args, **kwargs)</p></td>
+<td><p>Log ‘msg % args’ with severity ‘CRITICAL’.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.filter" title="imagepypelines.ImagepypelinesLogger.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code></a>(record)</p></td>
+<td><p>Determine if a record is loggable by consulting all the filters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.findCaller" title="imagepypelines.ImagepypelinesLogger.findCaller"><code class="xref py py-obj docutils literal notranslate"><span class="pre">findCaller</span></code></a>([stack_info, stacklevel])</p></td>
+<td><p>Find the stack frame of the caller so that we can note the source file name, line number and function name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.getChild" title="imagepypelines.ImagepypelinesLogger.getChild"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getChild</span></code></a>(*args, **kwargs)</p></td>
+<td><p>Get a logger which is a descendant to this one.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.getEffectiveLevel" title="imagepypelines.ImagepypelinesLogger.getEffectiveLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getEffectiveLevel</span></code></a>()</p></td>
+<td><p>Get the effective level for this logger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.handle" title="imagepypelines.ImagepypelinesLogger.handle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle</span></code></a>(record)</p></td>
+<td><p>Call the handlers for the specified record.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.hasHandlers" title="imagepypelines.ImagepypelinesLogger.hasHandlers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hasHandlers</span></code></a>()</p></td>
+<td><p>See if this logger has any handlers configured.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.info" title="imagepypelines.ImagepypelinesLogger.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>(msg, *args, **kwargs)</p></td>
+<td><p>Log ‘msg % args’ with severity ‘INFO’.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.isEnabledFor" title="imagepypelines.ImagepypelinesLogger.isEnabledFor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">isEnabledFor</span></code></a>(level)</p></td>
+<td><p>Is this logger enabled for level ‘level’?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.log" title="imagepypelines.ImagepypelinesLogger.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>(level, msg, *args, **kwargs)</p></td>
+<td><p>Log ‘msg % args’ with the integer severity ‘level’.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.makeRecord" title="imagepypelines.ImagepypelinesLogger.makeRecord"><code class="xref py py-obj docutils literal notranslate"><span class="pre">makeRecord</span></code></a>(name, level, fn, lno, msg, args, …)</p></td>
+<td><p>A factory method which can be overridden in subclasses to create specialized LogRecords.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.removeFilter" title="imagepypelines.ImagepypelinesLogger.removeFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">removeFilter</span></code></a>(filter)</p></td>
+<td><p>Remove the specified filter from this handler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.removeHandler" title="imagepypelines.ImagepypelinesLogger.removeHandler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">removeHandler</span></code></a>(hdlr)</p></td>
+<td><p>Remove the specified handler from this logger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.setLevel" title="imagepypelines.ImagepypelinesLogger.setLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setLevel</span></code></a>(level, *args, **kwargs)</p></td>
+<td><p>Set the logging level of this logger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.warn" title="imagepypelines.ImagepypelinesLogger.warn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn</span></code></a>(msg, *args, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#imagepypelines.ImagepypelinesLogger.warning" title="imagepypelines.ImagepypelinesLogger.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a>(msg, *args, **kwargs)</p></td>
+<td><p>Log ‘msg % args’ with severity ‘WARNING’.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<dl class="attribute">
+<dt>
+<code class="sig-name descname">ENABLE_LOG_COLOR</code><em class="property"> = True</em></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.ImagepypelinesLogger.manager">
+<code class="sig-name descname">manager</code><em class="property"> = &lt;logging.Manager object&gt;</em><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.manager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="imagepypelines.ImagepypelinesLogger.root">
+<code class="sig-name descname">root</code><em class="property"> = &lt;RootLogger root (WARNING)&gt;</em><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.root" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods Documentation</p>
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.addFilter">
+<code class="sig-name descname">addFilter</code><span class="sig-paren">(</span><em class="sig-param">filter</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.addFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the specified filter to this handler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.addHandler">
+<code class="sig-name descname">addHandler</code><span class="sig-paren">(</span><em class="sig-param">hdlr</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.addHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the specified handler to this logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.callHandlers">
+<code class="sig-name descname">callHandlers</code><span class="sig-paren">(</span><em class="sig-param">record</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.callHandlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pass a record to all relevant handlers.</p>
+<p>Loop through all handlers for this logger and its parents in the
+logger hierarchy. If no handler was found, output a one-off error
+message to sys.stderr. Stop searching up the hierarchy whenever a
+logger with the “propagate” attribute set to zero is found - that
+will be the last logger whose handlers are called.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.critical">
+<code class="sig-name descname">critical</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger.critical"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.critical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘CRITICAL’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.critical(“Houston, we have a %s”, “major disaster”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.debug">
+<code class="sig-name descname">debug</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger.debug"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.debug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘DEBUG’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.debug(“Houston, we have a %s”, “thorny problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.error">
+<code class="sig-name descname">error</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger.error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘ERROR’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.error(“Houston, we have a %s”, “major problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.exception">
+<code class="sig-name descname">exception</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">exc_info=True</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method for logging an ERROR with exception information.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.fatal">
+<code class="sig-name descname">fatal</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.fatal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘CRITICAL’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.critical(“Houston, we have a %s”, “major disaster”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.filter">
+<code class="sig-name descname">filter</code><span class="sig-paren">(</span><em class="sig-param">record</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a record is loggable by consulting all the filters.</p>
+<p>The default is to allow the record to be logged; any filter can veto
+this and the record is then dropped. Returns a zero value if a record
+is to be dropped, else non-zero.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.2: </span>Allow filters to be just callables.</p>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.findCaller">
+<code class="sig-name descname">findCaller</code><span class="sig-paren">(</span><em class="sig-param">stack_info=False</em>, <em class="sig-param">stacklevel=1</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.findCaller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the stack frame of the caller so that we can note the source
+file name, line number and function name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.getChild">
+<code class="sig-name descname">getChild</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger.getChild"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.getChild" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a logger which is a descendant to this one.</p>
+<p>This is a convenience method, such that</p>
+<p>logging.getLogger(‘abc’).getChild(‘def.ghi’)</p>
+<p>is the same as</p>
+<p>logging.getLogger(‘abc.def.ghi’)</p>
+<p>It’s useful, for example, when the parent logger is named using
+__name__ rather than a literal string.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.getEffectiveLevel">
+<code class="sig-name descname">getEffectiveLevel</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.getEffectiveLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the effective level for this logger.</p>
+<p>Loop through this logger and its parents in the logger hierarchy,
+looking for a non-zero logging level. Return the first one found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param">record</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the handlers for the specified record.</p>
+<p>This method is used for unpickled records received from a socket, as
+well as those created locally. Logger-level filtering is applied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.hasHandlers">
+<code class="sig-name descname">hasHandlers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.hasHandlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>See if this logger has any handlers configured.</p>
+<p>Loop through all handlers for this logger and its parents in the
+logger hierarchy. Return True if a handler was found, else False.
+Stop searching up the hierarchy whenever a logger with the “propagate”
+attribute set to zero is found - that will be the last logger which
+is checked for the existence of handlers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.info">
+<code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘INFO’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.info(“Houston, we have a %s”, “interesting problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.isEnabledFor">
+<code class="sig-name descname">isEnabledFor</code><span class="sig-paren">(</span><em class="sig-param">level</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.isEnabledFor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is this logger enabled for level ‘level’?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.log">
+<code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param">level</em>, <em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with the integer severity ‘level’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.log(level, “We have a %s”, “mysterious problem”, exc_info=1)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.makeRecord">
+<code class="sig-name descname">makeRecord</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">level</em>, <em class="sig-param">fn</em>, <em class="sig-param">lno</em>, <em class="sig-param">msg</em>, <em class="sig-param">args</em>, <em class="sig-param">exc_info</em>, <em class="sig-param">func=None</em>, <em class="sig-param">extra=None</em>, <em class="sig-param">sinfo=None</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.makeRecord" title="Permalink to this definition">¶</a></dt>
+<dd><p>A factory method which can be overridden in subclasses to create
+specialized LogRecords.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.removeFilter">
+<code class="sig-name descname">removeFilter</code><span class="sig-paren">(</span><em class="sig-param">filter</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.removeFilter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the specified filter from this handler.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.removeHandler">
+<code class="sig-name descname">removeHandler</code><span class="sig-paren">(</span><em class="sig-param">hdlr</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.removeHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the specified handler from this logger.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.setLevel">
+<code class="sig-name descname">setLevel</code><span class="sig-paren">(</span><em class="sig-param">level</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger.setLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.setLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the logging level of this logger.  level must be an int or a str.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.warn">
+<code class="sig-name descname">warn</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.warn" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="imagepypelines.ImagepypelinesLogger.warning">
+<code class="sig-name descname">warning</code><span class="sig-paren">(</span><em class="sig-param">msg</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/imagepypelines/Logger.html#ImagepypelinesLogger.warning"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#imagepypelines.ImagepypelinesLogger.warning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log ‘msg % args’ with severity ‘WARNING’.</p>
+<p>To pass exception information, use the keyword argument exc_info with
+a true value, e.g.</p>
+<p>logger.warning(“Houston, we have a %s”, “bit of a problem”, exc_info=1)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../_sources/api/imagepypelines.ImagepypelinesLogger.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

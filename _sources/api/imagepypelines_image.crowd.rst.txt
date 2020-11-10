@@ -1,0 +1,6 @@
+crowd
+=====
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: crowd

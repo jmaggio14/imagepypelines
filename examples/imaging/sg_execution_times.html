@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Computation times &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../getting_started.html">Getting Started</a></li>
+                <li><a href="../index.html">Examples</a></li>
+                <li><a href="../../blog/2020.html">Blog</a></li>
+                <li><a href="../../docs/core.html">Documentation</a></li>
+                <li><a href="../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Computation times</a></li>
+</ul>
+<li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<div id="sourcelink">
+  <a href="../../_sources/examples/imaging/sg_execution_times.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+        </div>
+      </div>
+    <div class="body col-md-9 content" role="main">
+       <div class="section" id="computation-times">
+<span id="sphx-glr-examples-imaging-sg-execution-times"></span><h1>Computation times<a class="headerlink" href="#computation-times" title="Permalink to this headline">¶</a></h1>
+<p><strong>00:23.208</strong> total execution time for <strong>examples_imaging</strong> files:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 86%" />
+<col style="width: 8%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="swap_red_and_blue.html#sphx-glr-examples-imaging-swap-red-and-blue-py"><span class="std std-ref">Swap Red and Blue Image Channels</span></a> (<code class="docutils literal notranslate"><span class="pre">swap_red_and_blue.py</span></code>)</p></td>
+<td><p>00:15.776</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="contrast_enhancement.html#sphx-glr-examples-imaging-contrast-enhancement-py"><span class="std std-ref">Re-reimplement histogram stretching, matching, and equalization and hist/pdf/cdf</span></a> (<code class="docutils literal notranslate"><span class="pre">contrast_enhancement.py</span></code>)</p></td>
+<td><p>00:02.596</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="filter_images.html#sphx-glr-examples-imaging-filter-images-py"><span class="std std-ref">Image Filtering</span></a> (<code class="docutils literal notranslate"><span class="pre">filter_images.py</span></code>)</p></td>
+<td><p>00:02.312</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="image_viewing.html#sphx-glr-examples-imaging-image-viewing-py"><span class="std std-ref">Number and View Images</span></a> (<code class="docutils literal notranslate"><span class="pre">image_viewing.py</span></code>)</p></td>
+<td><p>00:01.882</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="plotting.html#sphx-glr-examples-imaging-plotting-py"><span class="std std-ref">Make a plot, save, and show it (with and without blocking)</span></a> (<code class="docutils literal notranslate"><span class="pre">plotting.py</span></code>)</p></td>
+<td><p>00:00.635</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="hello_world.html#sphx-glr-examples-imaging-hello-world-py"><span class="std std-ref">Hello World!</span></a> (<code class="docutils literal notranslate"><span class="pre">hello_world.py</span></code>)</p></td>
+<td><p>00:00.005</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="syntax_intro.html#sphx-glr-examples-imaging-syntax-intro-py"><span class="std std-ref">Syntax Intro</span></a> (<code class="docutils literal notranslate"><span class="pre">syntax_intro.py</span></code>)</p></td>
+<td><p>00:00.002</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="xref std std-ref">sphx_glr_examples_imaging_try_every_combo_of_hyperparameters.py</span> (<code class="docutils literal notranslate"><span class="pre">try_every_combo_of_hyperparameters.py</span></code>)</p></td>
+<td><p>00:00.000</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="fetch.html#sphx-glr-examples-imaging-fetch-py"><span class="std std-ref">Example for demonstrating the fetch capability</span></a> (<code class="docutils literal notranslate"><span class="pre">fetch.py</span></code>)</p></td>
+<td><p>00:00.000</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="save_as_video.html#sphx-glr-examples-imaging-save-as-video-py"><span class="std std-ref">Save your processed imagery as a video</span></a> (<code class="docutils literal notranslate"><span class="pre">save_as_video.py</span></code>)</p></td>
+<td><p>00:00.000</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="image_transformations.html#sphx-glr-examples-imaging-image-transformations-py"><span class="std std-ref">Affine, Perspective, Control Point Transformations</span></a> (<code class="docutils literal notranslate"><span class="pre">image_transformations.py</span></code>)</p></td>
+<td><p>00:00.000</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="download_and_process.html#sphx-glr-examples-imaging-download-and-process-py"><span class="std std-ref">Download and Process Imagery from the Internet</span></a> (<code class="docutils literal notranslate"><span class="pre">download_and_process.py</span></code>)</p></td>
+<td><p>00:00.000</p></td>
+<td><p>0.0 MB</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/examples/imaging/sg_execution_times.rst.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

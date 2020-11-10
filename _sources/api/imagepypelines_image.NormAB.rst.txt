@@ -1,0 +1,49 @@
+NormAB
+======
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: NormAB
+   :show-inheritance:
+
+   .. rubric:: Attributes Summary
+
+   .. autosummary::
+
+      ~NormAB.args
+      ~NormAB.id
+      ~NormAB.n_args
+
+   .. rubric:: Methods Summary
+
+   .. autosummary::
+
+      ~NormAB.__call__
+      ~NormAB.check_setup
+      ~NormAB.copy
+      ~NormAB.deepcopy
+      ~NormAB.enforce
+      ~NormAB.get_default_node_attrs
+      ~NormAB.postprocess
+      ~NormAB.preprocess
+      ~NormAB.process
+      ~NormAB.rename
+
+   .. rubric:: Attributes Documentation
+
+   .. autoattribute:: args
+   .. autoattribute:: id
+   .. autoattribute:: n_args
+
+   .. rubric:: Methods Documentation
+
+   .. automethod:: __call__
+   .. automethod:: check_setup
+   .. automethod:: copy
+   .. automethod:: deepcopy
+   .. automethod:: enforce
+   .. automethod:: get_default_node_attrs
+   .. automethod:: postprocess
+   .. automethod:: preprocess
+   .. automethod:: process
+   .. automethod:: rename

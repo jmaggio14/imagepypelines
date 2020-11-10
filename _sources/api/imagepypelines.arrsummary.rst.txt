@@ -1,0 +1,6 @@
+arrsummary
+==========
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: arrsummary

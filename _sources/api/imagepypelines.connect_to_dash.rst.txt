@@ -1,0 +1,6 @@
+connect_to_dash
+===============
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: connect_to_dash

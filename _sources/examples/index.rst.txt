@@ -1,0 +1,367 @@
+:orphan:
+
+
+
+.. _sphx_glr_examples:
+
+:orphan:
+
+.. _tutorials-index:
+
+.. _gallery:
+
+=======
+Gallery
+=======
+
+
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_how-to-use-pipelines:
+
+.. _how-to-use-pipelines_examples:
+
+How to Use Pipelines
+====================
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="There are a few ways to do this">
+
+.. only:: html
+
+ .. figure:: /examples/how-to-use-pipelines/images/thumb/sphx_glr_data-processing_thumb.png
+     :alt: Process your data!
+
+     :ref:`sphx_glr_examples_how-to-use-pipelines_data-processing.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/how-to-use-pipelines/data-processing
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Add additional tasks to your pipelines">
+
+.. only:: html
+
+ .. figure:: /examples/how-to-use-pipelines/images/thumb/sphx_glr_add_additional_tasks_thumb.png
+     :alt: Add additional tasks to your pipelines
+
+     :ref:`sphx_glr_examples_how-to-use-pipelines_add_additional_tasks.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/how-to-use-pipelines/add_additional_tasks
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_examples_imaging:
+
+.. _science_examples:
+
+Imaging
+=======
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Download and Process Imagery from the Internet">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_download_and_process_thumb.png
+     :alt: Download and Process Imagery from the Internet
+
+     :ref:`sphx_glr_examples_imaging_download_and_process.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/download_and_process
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Example for demonstrating the fetch capability">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_fetch_thumb.png
+     :alt: Example for demonstrating the fetch capability
+
+     :ref:`sphx_glr_examples_imaging_fetch.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/fetch
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Save your processed imagery as a video">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_save_as_video_thumb.png
+     :alt: Save your processed imagery as a video
+
+     :ref:`sphx_glr_examples_imaging_save_as_video.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/save_as_video
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Affine, Perspective, Control Point Transformations">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_image_transformations_thumb.png
+     :alt: Affine, Perspective, Control Point Transformations
+
+     :ref:`sphx_glr_examples_imaging_image_transformations.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/image_transformations
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Show ConfigPermuter">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_try_every_combo_of_hyperparameters_thumb.png
+     :alt: Show ConfigPermuter
+
+     :ref:`sphx_glr_examples_imaging_try_every_combo_of_hyperparameters.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/try_every_combo_of_hyperparameters
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="How to leverage the syntax of ImagePypelines effectively!">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_syntax_intro_thumb.png
+     :alt: Syntax Intro
+
+     :ref:`sphx_glr_examples_imaging_syntax_intro.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/syntax_intro
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Number and view a sequence of images">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_image_viewing_thumb.png
+     :alt: Number and View Images
+
+     :ref:`sphx_glr_examples_imaging_image_viewing.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/image_viewing
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Learn the basics with Hello World!">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_hello_world_thumb.png
+     :alt: Hello World!
+
+     :ref:`sphx_glr_examples_imaging_hello_world.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/hello_world
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Swap Red and Blue Image Channels">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_swap_red_and_blue_thumb.png
+     :alt: Swap Red and Blue Image Channels
+
+     :ref:`sphx_glr_examples_imaging_swap_red_and_blue.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/swap_red_and_blue
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="1) Regular plot show and save 2) Same but interactive and iterative (plt.ion() -&gt; child threads...">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_plotting_thumb.png
+     :alt: Make a plot, save, and show it (with and without blocking)
+
+     :ref:`sphx_glr_examples_imaging_plotting.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/plotting
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Image Filtering">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_filter_images_thumb.png
+     :alt: Image Filtering
+
+     :ref:`sphx_glr_examples_imaging_filter_images.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/filter_images
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="1) Require ip.image 2) Build image histogram, PDF, and CDF blocks 2) Build LUT application bloc...">
+
+.. only:: html
+
+ .. figure:: /examples/imaging/images/thumb/sphx_glr_contrast_enhancement_thumb.png
+     :alt: Re-reimplement histogram stretching, matching, and equalization and hist/pdf/cdf
+
+     :ref:`sphx_glr_examples_imaging_contrast_enhancement.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/imaging/contrast_enhancement
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-gallery
+
+
+  .. container:: sphx-glr-download sphx-glr-download-python
+
+    :download:`Download all examples in Python source code: examples_python.zip </examples/examples_python.zip>`
+
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+    :download:`Download all examples in Jupyter notebooks: examples_jupyter.zip </examples/examples_jupyter.zip>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

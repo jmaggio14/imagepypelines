@@ -1,0 +1,6 @@
+prevent_overwrite
+=================
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: prevent_overwrite

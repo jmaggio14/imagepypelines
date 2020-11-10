@@ -1,0 +1,6 @@
+gecko
+=====
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: gecko

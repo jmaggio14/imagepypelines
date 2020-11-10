@@ -1,0 +1,6 @@
+add_plugin
+==========
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: add_plugin

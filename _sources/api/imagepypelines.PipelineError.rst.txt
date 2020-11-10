@@ -1,0 +1,6 @@
+PipelineError
+=============
+
+.. currentmodule:: imagepypelines
+
+.. autoexception:: PipelineError

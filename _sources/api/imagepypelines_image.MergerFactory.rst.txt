@@ -1,0 +1,7 @@
+MergerFactory
+=============
+
+.. currentmodule:: imagepypelines_image
+
+.. autoclass:: MergerFactory
+   :show-inheritance:

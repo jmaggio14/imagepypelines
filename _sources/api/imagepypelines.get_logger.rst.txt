@@ -1,0 +1,6 @@
+get_logger
+==========
+
+.. currentmodule:: imagepypelines
+
+.. autofunction:: get_logger

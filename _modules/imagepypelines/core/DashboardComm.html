@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>imagepypelines.core.DashboardComm &#8212; ImagePypelines 0.3.2-alpha documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/ip_custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery-dataframe.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/clipboard.min.js"></script>
+    <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/copybutton.js"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+  
+<style type="text/css">
+  ul.ablog-archive {
+    list-style: none;
+    overflow: auto;
+    margin-left: 0px;
+  }
+  ul.ablog-archive li {
+    float: left;
+    margin-right: 5px;
+    font-size: 80%;
+  }
+  ul.postlist a {
+    font-style: italic;
+  }
+  ul.postlist-style-disc {
+    list-style-type: disc;
+  }
+  ul.postlist-style-none {
+    list-style-type: none;
+  }
+  ul.postlist-style-circle {
+    list-style-type: circle;
+  }
+</style>
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default ">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/ip_logo.svg"></span>
+          ImagePypelines</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../../getting_started.html">Getting Started</a></li>
+                <li><a href="../../../examples/index.html">Examples</a></li>
+                <li><a href="../../../blog/2020.html">Blog</a></li>
+                <li><a href="../../../docs/core.html">Documentation</a></li>
+                <li><a href="../../../plugins.html">Plugins</a></li>
+                <li><a href="https://github.com/jmaggio14/imagepypelines">Github</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html"> <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+       <h1>Source code for imagepypelines.core.DashboardComm</h1><div class="highlight"><pre>
+<span></span><span class="c1"># @Email: jmaggio14@gmail.com</span>
+<span class="c1"># @Website: https://www.imagepypelines.org/</span>
+<span class="c1"># @License: https://github.com/jmaggio14/imagepypelines/blob/master/LICENSE</span>
+<span class="c1"># @github: https://github.com/jmaggio14/imagepypelines</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2018 - 2020 Jeff Maggio, Jai Mehra, Ryan Hartzell</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="kn">import</span> <span class="n">TCPClient</span>
+<span class="kn">from</span> <span class="nn">..Logger</span> <span class="kn">import</span> <span class="n">get_master_logger</span>
+<span class="kn">from</span> <span class="nn">.Exceptions</span> <span class="kn">import</span> <span class="n">DashboardWarning</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<div class="viewcode-block" id="connect_to_dash"><a class="viewcode-back" href="../../../api/imagepypelines.connect_to_dash.html#imagepypelines.connect_to_dash">[docs]</a><span class="k">def</span> <span class="nf">connect_to_dash</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Connects every pipeline in this session to</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n_dashboards</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># if this is our first dashboard</span>
+        <span class="c1"># add a logging handler to support log messages</span>
+        <span class="c1"># initialize_dash_logging()</span>
+        <span class="k">pass</span>
+    <span class="n">DashboardComm</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="n_dashboards"><a class="viewcode-back" href="../../../api/imagepypelines.n_dashboards.html#imagepypelines.n_dashboards">[docs]</a><span class="k">def</span> <span class="nf">n_dashboards</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;returns the number of connected dashboards&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">DashboardComm</span><span class="o">.</span><span class="n">clients</span><span class="p">)</span></div>
+
+    <span class="c1"># TODO: update the logging handler to send logging messages to the dashboard</span>
+
+
+<span class="k">class</span> <span class="nc">DashboardLoggingHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dashcomm</span> <span class="o">=</span> <span class="n">DashboardComm</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dashcomm</span><span class="o">.</span><span class="n">write_log</span><span class="p">(</span> <span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">()</span> <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">initialize_dash_logging</span><span class="p">():</span>
+    <span class="n">handler</span> <span class="o">=</span> <span class="n">DashboardLoggingHandler</span><span class="p">()</span>
+
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                                <span class="p">{</span>
+                                 <span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;log&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%(pipeline_id)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="c1"># {name}.{last 6 chars of uuid}</span>
+                                 <span class="s1">&#39;uuid&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%(pipeline_uuid)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="c1"># universal unique id for obj</span>
+                                 <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%(pipeline_name)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="c1"># obj name</span>
+                                 <span class="s1">&#39;source_type&#39;</span><span class="p">:</span><span class="s1">&#39;logger&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;payload&#39;</span><span class="p">:{</span>
+                                     <span class="s1">&#39;level&#39;</span><span class="p">:</span><span class="s1">&#39;</span><span class="si">%(levelname)8s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="c1"># INFO, WARNING, ERROR, etc</span>
+                                     <span class="s1">&#39;time&#39;</span><span class="p">:</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="c1"># datetime as YYYY-MM-DD HH:MM:SS, msecs’</span>
+                                     <span class="s1">&#39;logger_name&#39;</span><span class="p">:</span><span class="s1">&#39;</span><span class="si">%(name)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="c1"># name of the logger, often identical to &#39;id&#39;</span>
+                                     <span class="s1">&#39;message&#39;</span><span class="p">:</span><span class="s1">&#39;</span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="c1"># Logging message</span>
+                                     <span class="p">}</span>
+                                 <span class="p">}</span>
+                             <span class="p">))</span>
+
+    <span class="n">handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+
+    <span class="n">get_master_logger</span><span class="p">()</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+
+
+<span class="c1">################################################################################</span>
+<span class="c1"># TODO: This dashboard system currently relies on the connect_to_dash() being called</span>
+<span class="c1"># before the Pipeline has been instanitated. This needs to be corrected</span>
+<span class="c1"># TODO: add method to disconnect from a specific dashboard</span>
+<span class="c1"># TODO: better docstring</span>
+<div class="viewcode-block" id="DashboardComm"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm">[docs]</a><span class="k">class</span> <span class="nc">DashboardComm</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Object to send messages from the pipelines to dashboard(s)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">clients</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;list of :obj:`TCPClient`: class level variable containing a list of all</span>
+<span class="sd">    TCPclients that are connected&quot;&quot;&quot;</span>
+    <span class="n">graphs_msg_cache</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="sd">&quot;&quot;&quot;cache of pipeline update messages, these are messages that the dashboard</span>
+<span class="sd">    needs to interpret the pipeline status messages&quot;&quot;&quot;</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.connect"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.connect">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;establishes a connection with the Dashboard Chatroom at the given</span>
+<span class="sd">        host and port</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name(str): human readable name of</span>
+
+<span class="sd">            host(str): ip address for the dashboard</span>
+
+<span class="sd">            port(int): port on host for the dashboard</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">raise_warning</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">new_client</span> <span class="o">=</span> <span class="n">TCPClient</span><span class="p">()</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">clients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_client</span>
+
+            <span class="c1"># send the pipeline graph messages to new clients so they can interpret new</span>
+            <span class="c1"># status and reset messages</span>
+            <span class="c1"># (@Jai, will these work being send one after another like this????)</span>
+            <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">graphs_msg_cache</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">new_client</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">ConnectionRefusedError</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;unable to connect to Dashboard at </span><span class="si">{</span><span class="n">host</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">get_master_logger</span><span class="p">()</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="n">raise_warning</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+        <span class="c1"># if raise_warning:</span>
+        <span class="c1">#     raise DashboardWarning(msg)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.disconnect_all"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.disconnect_all">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">disconnect_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;disconnects from all dashboard servers&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">cli</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">cli</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.disconnect"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.disconnect">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;disconnects from an individual dashboard server&quot;&quot;&quot;</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">clients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">total</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns total number of connected dashboards&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.write"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;sends the given message to all connected dashboard servers</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            msg(str): a string to send</span>
+
+<span class="sd">            names(tuple(str)): iterable of names specifying a whitelist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.read"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;send delete messages to all dashboard servers&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">BlockingIOError</span><span class="p">:</span>  <span class="c1"># Case for no data ready</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="n">msg</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.write_graph"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.write_graph">[docs]</a>    <span class="k">def</span> <span class="nf">write_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_id</span><span class="p">,</span> <span class="n">graph_msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;send pipeline graph or task changes to the Dashboard&quot;&quot;&quot;</span>
+        <span class="c1"># # DEBUG ONLY</span>
+        <span class="c1"># with open(&quot;graph.json&quot;,&#39;w&#39;) as f:</span>
+        <span class="c1">#     f.write(graph_msg)</span>
+        <span class="c1"># # END DEBUG</span>
+        <span class="c1"># update internal variable tracking pipeline graph messages</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graphs_msg_cache</span><span class="p">[</span><span class="n">pipeline_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">graph_msg</span>
+        <span class="c1"># send messages to all servers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">graph_msg</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.write_status"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.write_status">[docs]</a>    <span class="k">def</span> <span class="nf">write_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;send status changes to all Dashboards&quot;&quot;&quot;</span>
+        <span class="c1"># # DEBUG ONLY</span>
+        <span class="c1"># with open(&quot;status.json&quot;,&#39;w&#39;) as f:</span>
+        <span class="c1">#     f.write(status_msg)</span>
+        <span class="c1"># # END DEBUG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">status_msg</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.write_reset"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.write_reset">[docs]</a>    <span class="k">def</span> <span class="nf">write_reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reset_msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;send reset messages to all dashboard servers&quot;&quot;&quot;</span>
+        <span class="c1"># # DEBUG ONLY</span>
+        <span class="c1"># with open(&quot;reset.json&quot;,&#39;w&#39;) as f:</span>
+        <span class="c1">#     f.write(reset_msg)</span>
+        <span class="c1"># # END DEBUG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">reset_msg</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.write_error"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.write_error">[docs]</a>    <span class="k">def</span> <span class="nf">write_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;send error messages to all dashboard servers&quot;&quot;&quot;</span>
+        <span class="c1"># # DEBUG ONLY</span>
+        <span class="c1"># with open(&quot;error.json&quot;,&#39;w&#39;) as f:</span>
+        <span class="c1">#     f.write(error_msg)</span>
+        <span class="c1"># # END DEBUG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.write_delete"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.write_delete">[docs]</a>    <span class="k">def</span> <span class="nf">write_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delete_msg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;send delete messages to all dashboard servers&quot;&quot;&quot;</span>
+        <span class="c1"># # DEBUG ONLY</span>
+        <span class="c1"># with open(&quot;delete.json&quot;,&#39;w&#39;) as f:</span>
+        <span class="c1">#     f.write(delete_msg)</span>
+        <span class="c1"># # END DEBUG</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">delete_msg</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="DashboardComm.write_log"><a class="viewcode-back" href="../../../api/imagepypelines.DashboardComm.html#imagepypelines.DashboardComm.write_log">[docs]</a>    <span class="k">def</span> <span class="nf">write_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_msg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">log_msg</span><span class="p">)</span></div></div>
+
+
+    <span class="c1"># IN THE FUTURE</span>
+    <span class="c1"># def read()</span>
+</pre></div>
+<div class="section">
+   
+</div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+      
+    </p>
+    <p>
+        &copy; Copyright  2018-2020 Jeff Maggio, Ryan Hartzell, Jai Mehra, and collaborators.<br/>
+      Last updated on Nov 10, 2020.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

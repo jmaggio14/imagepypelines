@@ -1,0 +1,6 @@
+carlenna
+========
+
+.. currentmodule:: imagepypelines_image
+
+.. autofunction:: carlenna
