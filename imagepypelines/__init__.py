@@ -91,14 +91,21 @@ def load_plugins():
 load_plugins()
 
 # define a function to check if a plugin is loaded
-def require(plugin_name):
-    """check to make sure the given plugin is loaded and raise an error if it
-    is not in the imagepypelines namespace
-    """
-    import sys
+def require(*plugins):
+    """check to make sure the given plugin(s) are loaded and raise an error if
+    they can't be found
 
-    if not plugin_name in LOADED_PLUGINS.keys():
-        raise RuntimeError('unable to find required plugin "%s"' % plugin_name)
+    Args:
+        *plugins: names of plugins
+    """
+    not_found = []
+
+    for plugin in plugins:
+        if not plugin in LOADED_PLUGINS.keys():
+            not_found.append(plugin)
+
+    if not_found:
+        raise RuntimeError('unable to find required plugin(s) "%s"' % not_found)
 
 
 def get_plugin_by_name(plugin_name):

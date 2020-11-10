@@ -7,8 +7,6 @@ Add additional tasks to your pipelines
 import numpy as np
 import imagepypelines as ip
 
-
-###############################################################################
 @ip.blockify()
 def add1(a, b):
     return a+1, b+1
@@ -49,12 +47,14 @@ pipeline.update(more_tasks)
 ###############################################################################
 # Let's process some data!
 # ------------------------
+
 # Let's create the inputs
 a = [10]
 b = [-10]
 
-# Number and view the images!
+# process
 processed = pipeline.process(a,b)
 
+# and check
 assert processed['average_a'][0] == a[0]
 assert processed['average_b'][0] == b[0]
