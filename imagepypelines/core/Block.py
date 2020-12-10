@@ -181,14 +181,14 @@ class Block(metaclass=ABCMeta):
         """
         # too few args
         if len(task_args) < self.n_args:
-            msg = "Not enough arguments provided"
+            msg = f"Not enough arguments provided for {self.name}, args are: {tuple(self.args)}, but got {tuple(task_args)}"
             self.logger.error(msg)
-            raise BlockError(msg + " (%s)" % self.name)
+            raise BlockError(msg)
         # too many args
         elif len(task_args) > self.n_args:
-            msg = "Too many arguments provided"
+            msg = f"Too many arguments provided for {self.name}, args are: {tuple(self.args)}, but got {tuple(task_args)}"
             self.logger.error(msg)
-            raise BlockError(msg + " (%s)" % self.name)
+            raise BlockError(msg)
 
     ############################################################################
     def preprocess(self):
@@ -298,6 +298,8 @@ class Block(metaclass=ABCMeta):
             (tuple): variable length tuple containing processed data
         """
         self._pair_logger(logger)
+
+        # self.logger.info(f"beggining {self.name}...")
         # NOTE: add type checking here
 
         # check data partity (same n_datums for every data)
@@ -306,7 +308,7 @@ class Block(metaclass=ABCMeta):
             msg = "Invalid data lengths! all data must have the same"\
                     + "number of items. {}"
             # this adds a list ("input_name.n_datums"=)
-            msg.format(",".join("{}.n_datums={}".format(d.n_datums) for i,d in zip(self.inputs,data)))
+            msg = msg.format(", ".join("{}.n_datums={}".format(a,d.n_datums) for a,d in zip(self.args,data)))
             self.logger.error(msg)
             raise RuntimeError(msg)
 
@@ -383,6 +385,8 @@ class Block(metaclass=ABCMeta):
             analytics["n_batches"] = data[0].n_batches_with(self.batch_type)
             analytics['avg_time_per_datum'] = analytics['processing_time'] / analytics['num_in']
 
+        # self.logger.info(f"completed in {analytics['processing_time']}ms")
+
         return ret
 
     ############################################################################
@@ -425,7 +429,7 @@ class Block(metaclass=ABCMeta):
                 if not (arg_types is None):
                     if not isinstance(datum, arg_types):
                         msg = "invalid type for '{}'. must be {}, not {}. (you can disable this check with the 'skip_enforcement' keyword)"
-                        msg = msg.format(arg_name, arg_types, type(batch))
+                        msg = msg.format(arg_name, arg_types, type(datum))
                         self.logger.error(msg)
                         raise BlockError(msg)
 

@@ -15,3 +15,6 @@ pytest-cov
 coverage
 codecov
 pytest-doctest-ellipsis-markers
+opencv-python
+imagepypelines_astro
+imagepypelines_image

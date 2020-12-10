@@ -76,8 +76,12 @@ class Pipeline(object):
         keyword_inputs(:obj:`list` of :obj:'str'): alphabetically sorted list of
             unindexed input variable names (the keyword arguments for the
             process function)
+        task_idx(int,None): index of current task, does not account for blocks used in
+            internal tracking. None if no process is running
         _inputs(dict): dictionary internally used to access Input objects for
             queuing data into the pipeline
+        __n_tasks (int): number of tasks in this pipeline, used internally for
+            speed
 
     Pipeline Graph Information:
         Nodes are dictionaries representing tasks. They contain:
@@ -177,6 +181,7 @@ class Pipeline(object):
         self.indexed_inputs = [] # sorted list of indexed input variable names
         self.keyword_inputs = [] # alphabetically sorted list of unindexed inputs
         self._inputs = {} # dict of input_name: Input_object
+        self.task_idx = None # integer of which task we are in the pipeline
 
         # If a pipeline is passed in, then retrieve tasks and replicate our
         # pipeline
@@ -522,7 +527,6 @@ class Pipeline(object):
         # send along the new graph in a message to the Dashboards
         self.__send_graph_msg_to_dash()
 
-
     ############################################################################
     def process(self, *pos_data, fetch=None, skip_enforcement=False, **kwdata):
         """processes input data through the pipeline
@@ -583,6 +587,7 @@ class Pipeline(object):
         # --------------------------------------------------------------
         # PROCESS
         # --------------------------------------------------------------
+        self.__n_tasks = self.n_tasks
         self.__compute(skip_enforcement)
 
         # populate the output dictionary
@@ -968,6 +973,7 @@ class Pipeline(object):
             __compute function
         """
         try:
+            # set node status to "processing"
             self.graph.nodes[node_id]['status'] = STATUS_PROCESSING
 
             # UPDATE THE DASHBOARD
@@ -985,12 +991,14 @@ class Pipeline(object):
             arg_data_dict = {e['in_index'] : e['data'] for e in in_edges}
             args = [arg_data_dict[k] for k in sorted( arg_data_dict.keys() )]
 
-            # assign the task outputs to their appropriate edge
-            analytics = {}
+            # msg = f"beginning task {task_idx+1} of {self.__n_tasks} | {task_name}"
+            # self.logger.info(msg)
+
 
             # COMPUTE DATA IN THE BLOCK
             # -----------------------------------
             # (args will be empty for root blocks)
+            analytics = {}
             outputs = block._pipeline_process(*args,
                                                     logger=self.logger,
                                                     force_skip=skip_enforcement,
@@ -1019,12 +1027,23 @@ class Pipeline(object):
                     out_edge['n_datums'] = data.n_datums
                     out_edge['datum_type'] = data.datum_type
 
-            # update node status
+            # update node status to "complete"
             self.graph.nodes[node_id]['status'] = STATUS_COMPLETE
-
 
             # update the dashboard
             self.__send_status_msg_to_dash(node_id)
+
+            # log task completion unless it's a leaf Block
+            if not isinstance(block, Leaf):
+                # DEBUG
+                # if 'processing_time' not in analytics:
+                #     import pdb; pdb.set_trace()
+                # END DEBUG
+                task_name = f"{block.name}{self.graph.nodes[node_id]['args']}"
+                msg = f"completed task {self.task_idx} of {self.__n_tasks} in {round(analytics['processing_time'],1)}ms | {task_name}"
+                self.logger.info(msg)
+                self.task_idx += 1
+
 
         except Exception as error:
             self.__send_block_error_msg_to_dash(node_id, error)
@@ -1036,6 +1055,10 @@ class Pipeline(object):
         ## NOTE:
         # add warning that for edges that are non-computable
         ###
+        # self.logger.info(f"task order is {self.task_order}")
+        self.logger.info("starting...")
+        t = Timer()
+        self.task_idx = 1
         for node_a, node_b, edge_idx in self.execution_order:
             # check if node_a is a root node (no incoming edges)
             # these nodes can be computed and the edge populated
@@ -1053,6 +1076,20 @@ class Pipeline(object):
             data_is_queued = all((e[2]['data'] is not None) for e in in_edges)
             if all((e[2]['data'] is not None) for e in in_edges):
                 self.__compute_block(node_b, skip_enforcement)
+
+        self.logger.info(f"pipeline completed in {t.time()}sec")
+
+        self.task_idx = None
+
+    ############################################################################
+    def _get_var_data(self,var):
+        """fetches the data object associated with the variable"""
+        block_id = self.vars[var]['block_node_id']
+
+        for _,_,edge in self.graph.edges(data=True):
+            if edge['var_name'] == var:
+              return edge['data']
+
 
     ############################################################################
     #                               util
@@ -1438,6 +1475,44 @@ class Pipeline(object):
         return nx.topological_sort( nx.line_graph(self.graph) )
 
     ############################################################################
+    # @property
+    # def task_order(self):
+    #     """list: tasks in the order they will be computed in"""
+    #     tasks = []
+    #
+    #     # create a lambda function to quick fetch the name of the task
+    #     get_task_name = lambda node : f"{node['name']}({node['args']})"
+    #
+    #     edge_idx = 0
+    #     for node_id, _, _ in self.execution_order:
+    #         # import pdb; pdb.set_trace()
+    #         # fetch the number of incoming edges into the block
+    #         n_in = self.graph.in_degree(node_id)
+    #         node = self.graph.nodes[node_id]
+    #         block = node['block']
+    #         task_name = f"{node['name']}{node['args']}"
+    #
+    #         # if this is a "Leaf Node", they don't add it to the task list
+    #         # because they aren't user blocks
+    #         if isinstance(block, Leaf):
+    #             continue
+    #             edge_idx = 0
+    #
+    #         # if this is a root node, we can just add it to the task list
+    #         if n_in == 0:
+    #             tasks.append( task_name )
+    #             edge_idx = 0
+    #         # otherwise this is a typical node and we only it to the stack
+    #         # if we've finished iterating over all its edges
+    #         elif n_in == edge_idx:
+    #             tasks.append( task_name )
+    #             edge_idx = 0
+    #
+    #         edge_idx += 1
+    #
+    #     return tasks
+
+    ############################################################################
     @property
     def args(self):
         """:obj:`list` of :obj:`str`: arguments in the order they are expected"""
@@ -1448,6 +1523,12 @@ class Pipeline(object):
     def n_args(self):
         """int: number of arguments for the process function"""
         return len(self.args)
+
+    ############################################################################
+    @property
+    def n_tasks(self):
+        """:obj:`int`: number of tasks in this pipeline"""
+        return len( self.get_tasks() )
 
     ############################################################################
     @property
